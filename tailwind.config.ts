@@ -11,12 +11,17 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: '1rem',
       screens: {
         '2xl': '1400px'
       }
     },
-    extend: {}
+    extend: {
+      fontFamily: {
+        poppins: ['var(--font-poppins)', 'sans-serif'],
+        sourceCodePro: ['var(--font-source-code-pro)', 'monospace']
+      }
+    }
   },
   darkMode: 'class',
   plugins: [

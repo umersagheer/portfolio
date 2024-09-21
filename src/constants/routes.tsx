@@ -1,9 +1,9 @@
-import { ThemeSwitcher } from '@/app/components/theme-switcher'
+import { ThemeSwitcher } from '@/components/theme-switcher'
 import {
   FolderCodeIcon,
   GanttChartSquareIcon,
   HomeIcon,
-  PhoneIcon
+  MessageSquareShare
 } from 'lucide-react'
 
 export const links = [
@@ -17,17 +17,23 @@ export const links = [
 
   {
     title: 'Posts',
-    icon: <GanttChartSquareIcon className='h-full w-full text-secondary' />,
+    icon: (
+      <GanttChartSquareIcon className='h-full w-full text-neutral-500 dark:text-neutral-300' />
+    ),
     href: '/posts'
   },
   {
     title: 'Projects',
-    icon: <FolderCodeIcon className='h-full w-full text-warning' />,
+    icon: (
+      <FolderCodeIcon className='h-full w-full text-neutral-500 dark:text-neutral-300' />
+    ),
     href: '/projects'
   },
   {
     title: 'Contact',
-    icon: <PhoneIcon className='h-full w-full text-success' />,
+    icon: (
+      <MessageSquareShare className='h-full w-full text-neutral-500 dark:text-neutral-300' />
+    ),
     href: '/contact'
   },
   {

@@ -1,7 +1,6 @@
 'use client'
 
-import { Switch } from '@nextui-org/react'
-import { LucideSquare, MoonIcon, SunIcon } from 'lucide-react'
+import { LucideSquare } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 

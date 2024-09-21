@@ -9,7 +9,7 @@ import {
   useSpring,
   useTransform
 } from 'framer-motion'
-import { LayoutListIcon, SquareStackIcon } from 'lucide-react'
+import { SquareStackIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
