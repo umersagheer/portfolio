@@ -4,7 +4,7 @@ import { links } from '@/constants/routes'
 
 export default function Navbar() {
   return (
-    <div className='fixed bottom-5 flex w-full items-center justify-center'>
+    <div className='fixed bottom-5 z-50 flex w-full items-center justify-center'>
       <FloatingDock items={links} />
     </div>
   )

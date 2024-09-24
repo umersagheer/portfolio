@@ -2,8 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* for code highlighting from sugar-high */
+:root {
+  --sh-class: #d2a8ff; /* Class */
+  --sh-identifier: #c9d1d9; /* Identifiers */
+  --sh-sign: #79c0ff; /* Signs (operators, punctuation) */
+  --sh-property: #7ee787; /* Properties */
+  --sh-entity: #ff7b72; /* Entities (HTML tags, JSX) */
+  --sh-jsxliterals: #79c0ff; /* JSX Literals (e.g., numbers) */
+  --sh-string: #a5d6ff; /* Strings */
+  --sh-keyword: #ff7b72; /* Keywords */
+  --sh-comment: #8b949e; /* Comments */
+}
+
 @layer base {
   .title {
     @apply font-sourceCodePro text-3xl font-bold underline decoration-2 underline-offset-8;
+  }
+  .prose pre {
+    @apply font-sourceCodePro leading-snug dark:bg-zinc-900;
   }
 }

@@ -25,6 +25,7 @@ const config: Config = {
   },
   darkMode: 'class',
   plugins: [
+    require('@tailwindcss/typography'),
     nextui({
       addCommonColors: true,
       themes: {
@@ -58,8 +59,9 @@ const config: Config = {
               800: '#002e62',
               900: '#001731',
               foreground: '#FFFFFF',
-              DEFAULT: '#006FEE'
-            }
+              DEFAULT: '#7828c8'
+            },
+            focus: '#9353d3'
             // ... rest of the colors
           }
         },
@@ -94,7 +96,8 @@ const config: Config = {
               900: '#e6f1fe',
               foreground: '#FFFFFF',
               DEFAULT: '#338ef7'
-            }
+            },
+            focus: '#9353d3'
           }
           // ... rest of the colors
         }

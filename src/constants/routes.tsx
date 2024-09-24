@@ -17,23 +17,17 @@ export const links = [
 
   {
     title: 'Posts',
-    icon: (
-      <GanttChartSquareIcon className='h-full w-full text-neutral-500 dark:text-neutral-300' />
-    ),
+    icon: <GanttChartSquareIcon className='h-full w-full text-warning' />,
     href: '/posts'
   },
   {
     title: 'Projects',
-    icon: (
-      <FolderCodeIcon className='h-full w-full text-neutral-500 dark:text-neutral-300' />
-    ),
+    icon: <FolderCodeIcon className='h-full w-full text-secondary' />,
     href: '/projects'
   },
   {
     title: 'Contact',
-    icon: (
-      <MessageSquareShare className='h-full w-full text-neutral-500 dark:text-neutral-300' />
-    ),
+    icon: <MessageSquareShare className='h-full w-full text-success' />,
     href: '/contact'
   },
   {

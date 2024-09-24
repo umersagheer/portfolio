@@ -1,15 +1,13 @@
-import { Link } from '@nextui-org/react'
+import PostsWithSearch from '@/components/posts-with-search'
+import { getPosts } from '@/libs/posts'
 import React from 'react'
 
-export default function Posts() {
+export default async function PostsPage() {
+  const posts = await getPosts()
   return (
-    <div>
-      <h1>Posts Page</h1>
-      <ul>
-        <Link href={'/posts/intro-to-mdx'} isBlock>
-          <li>intro to mdx</li>
-        </Link>
-      </ul>
+    <div className='space-y-4'>
+      <h1 className='font-sourceCodePro text-xl font-bold'>Posts</h1>
+      <PostsWithSearch posts={posts} />
     </div>
   )
 }

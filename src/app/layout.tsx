@@ -30,7 +30,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${sourceCodePro.variable}`}>
         <NextuiProvider>
           <Navbar />
-          <main className='container min-h-screen max-w-6xl py-5'>
+          <main className='container min-h-screen max-w-4xl py-10'>
             {children}
           </main>
         </NextuiProvider>

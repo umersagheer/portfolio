@@ -1,15 +1,22 @@
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
 import { Image, Link } from '@nextui-org/react'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 
-import { getPostById } from '@/libs/posts'
+import { getPostById, getPosts } from '@/libs/posts'
 import formatDate from '@/libs/utils'
+import MDXContent from '@/components/mdx-content'
 
 type PostProps = {
   params: {
     postId: string
   }
+}
+
+export async function generateStaticParams() {
+  const posts = await getPosts()
+  const staticPosts = posts.map(post => ({ postId: post.postId }))
+
+  return staticPosts
 }
 
 export default async function Post({ params }: PostProps) {
@@ -20,15 +27,15 @@ export default async function Post({ params }: PostProps) {
   }
 
   const { metadata, content } = post
-  const { title, summary, image, author, publishedAt } = metadata
+  const { title, image, author, publishedAt } = metadata
   return (
-    <section className='pb-20 pt-10'>
-      <div className=''>
-        <Link href={'/posts'} isBlock>
+    <section className='pb-20'>
+      <div className='space-y-4'>
+        <Link href={'/posts'} color='foreground' isBlock>
           <ArrowLeftIcon className='mr-2 size-5' />
-          Back to posts
+          <p className='font-medium'>Back to posts</p>
         </Link>
-        {image && <Image src={image} alt={title} width={800} height={400} />}
+        {image && <Image src={image} alt={title} />}
         <header>
           <h1 className='title'>{title}</h1>
           <p className='pt-2 text-small'>
@@ -36,8 +43,8 @@ export default async function Post({ params }: PostProps) {
           </p>
         </header>
 
-        <main className='prose'>
-          <MDXRemote source={content} />
+        <main className='prose-znc prose mt-10 max-w-6xl dark:prose-invert'>
+          <MDXContent source={content} />
         </main>
       </div>
     </section>

@@ -1,0 +1,39 @@
+import { PostMetadata } from '@/libs/posts'
+import formatDate from '@/libs/utils'
+import { Link } from '@nextui-org/react'
+import React from 'react'
+
+type PostProps = {
+  posts: PostMetadata[]
+}
+
+export default function Posts({ posts }: PostProps) {
+  return (
+    <ul className='space-y-5'>
+      {posts.map(post => (
+        <li key={post.postId}>
+          <Link
+            href={`/posts/${post.postId}`}
+            color='foreground'
+            isBlock
+            className='flex items-start justify-between gap-4 p-2'
+          >
+            <div className='gap-1'>
+              <p className='font-sourceCodePro text-lg font-semibold'>
+                {post.title}
+              </p>
+              <p className='max-w-xl text-sm tracking-wide dark:text-zinc-200'>
+                {post.summary}
+              </p>
+            </div>
+            {post.publishedAt && (
+              <p className='text-sm font-medium'>
+                {formatDate(post.publishedAt)}
+              </p>
+            )}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
