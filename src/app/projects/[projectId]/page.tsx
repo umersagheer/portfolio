@@ -2,38 +2,40 @@ import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
 import { Image, Link } from '@nextui-org/react'
 
-import { getPostById, getPosts } from '@/libs/posts'
+import { getProjectById, getProjects } from '@/libs/projects'
 import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 
-type PostProps = {
+type ProjectProps = {
   params: {
-    postId: string
+    projectId: string
   }
 }
 
 export async function generateStaticParams() {
-  const posts = await getPosts()
-  const staticPosts = posts.map(post => ({ postId: post.postId }))
+  const projects = await getProjects()
+  const staticProjects = projects.map(project => ({
+    projectId: project.projectId
+  }))
 
-  return staticPosts
+  return staticProjects
 }
 
-export default async function Post({ params }: PostProps) {
-  const { postId } = params
-  const post = await getPostById(postId)
-  if (!post) {
+export default async function Project({ params }: ProjectProps) {
+  const { projectId } = params
+  const project = await getProjectById(projectId)
+  if (!project) {
     notFound()
   }
 
-  const { metadata, content } = post
+  const { metadata, content } = project
   const { title, image, author, publishedAt } = metadata
   return (
     <section className='pb-20'>
       <div className='space-y-4'>
-        <Link href={'/posts'} color='foreground' isBlock size='sm'>
+        <Link href={'/projects'} color='foreground' isBlock size='sm'>
           <ArrowLeftIcon className='mr-2 size-5' />
-          <p className='font-medium'>Back to posts</p>
+          <p className='font-medium'>Back to projects</p>
         </Link>
         {image && <Image src={image} alt={title} />}
         <header>

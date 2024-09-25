@@ -16,12 +16,14 @@ export default function Intro() {
           isZoomed
         />
         <div className=''>
-          <h2 className='font-sourceCodePro text-xl font-bold'>Umer Sagheer</h2>
+          <h2 className='font-sourceCodePro text-2xl font-bold'>
+            Umer Sagheer
+          </h2>
           <h3 className='text-sm font-medium'>Software Engineer</h3>
         </div>
       </div>
       <div className='mt-5 max-w-2xl space-y-1'>
-        <h3 className='font-sourceCodePro text-lg font-semibold'>About</h3>
+        <h3 className='font-sourceCodePro text-xl font-semibold'>About</h3>
         <p className='text-small tracking-wide'>
           I&apos;m a software engineer based in Pakistan specializing in
           web-based solutions. I build robust and innovative digital systems
