@@ -43,7 +43,7 @@ export default async function Post({ params }: PostProps) {
           </p>
         </header>
 
-        <main className='prose-znc prose mt-10 max-w-6xl dark:prose-invert'>
+        <main className='prose mt-10 max-w-6xl dark:prose-invert'>
           <MDXContent source={content} />
         </main>
       </div>

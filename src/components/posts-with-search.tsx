@@ -27,7 +27,7 @@ export default function PostsWithSearch({ posts }: props) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           label='Search by title...'
-          className='basis-1/3'
+          className='basis-1/2 md:basis-1/3'
           onClear={resetFilter}
           startContent={<SearchIcon size={20} />}
         />
