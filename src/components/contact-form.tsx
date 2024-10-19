@@ -23,7 +23,7 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false)
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
     handleSubmit
   } = useForm({
@@ -45,7 +45,7 @@ export default function ContactForm() {
       handleApiError(error)
     } finally {
       setLoading(false)
-      reset()
+      // reset()
     }
   }
 

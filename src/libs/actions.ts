@@ -5,7 +5,8 @@ import { ContactFormSchema } from './schemas'
 import ContactFormEmail from '../../emails/contact-form-email'
 import { Resend } from 'resend'
 
-const resend = new Resend('re_NFfQQgbp_MUsoJ7nNrVhfzy9qGYT1znwz')
+const resend = new Resend(process.env.RESEND_API_KEY)
+
 type ContactFormInputs = z.infer<typeof ContactFormSchema>
 
 export async function sendEmail(formData: ContactFormInputs) {
