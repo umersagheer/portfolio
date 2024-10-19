@@ -5,12 +5,13 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.env.exmaple
 
 # testing
 /coverage
 
 # next.js
-/.next/
+/.next/ 
 /out/
 
 # production

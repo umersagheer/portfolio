@@ -5,7 +5,6 @@ import { Toaster } from 'sonner'
 import './globals.css'
 import { NextuiProvider } from './nextui-provider'
 import Navbar from '@/components/navbar'
-import { toastOptions } from '@/constants/toast-options'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,7 +31,7 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${poppins.variable} ${sourceCodePro.variable}`}>
         <NextuiProvider>
-          <Toaster toastOptions={toastOptions} />
+          <Toaster richColors />
           <Navbar />
           <main className='container min-h-screen max-w-4xl py-10'>
             {children}

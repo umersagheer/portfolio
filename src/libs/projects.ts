@@ -28,6 +28,7 @@ export async function getProjectById(
 
     return { metadata: { ...data, projectId }, content }
   } catch (error) {
+    console.log('[getProjectById]', error)
     return null
   }
 }

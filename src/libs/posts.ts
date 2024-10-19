@@ -26,6 +26,7 @@ export async function getPostById(postId: string): Promise<Post | null> {
 
     return { metadata: { ...data, postId }, content }
   } catch (error) {
+    console.log('[getPostById]', error)
     return null
   }
 }

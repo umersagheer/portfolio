@@ -16,6 +16,8 @@ import {
 } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { sendEmail } from '@/libs/actions'
+import { handleApiError } from '@/libs/handle-api-error'
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false)
@@ -35,23 +37,16 @@ export default function ContactForm() {
   })
 
   const onSubmit = async (data: z.infer<typeof ContactFormSchema>) => {
-    setLoading(true)
-
-    const result = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    // if (result?.error) {
-    //   toast.error(result.error)
-    //   return
-    // }
-
-    toast.success('Message sent!')
-    setLoading(false)
-    reset()
+    try {
+      setLoading(true)
+      await sendEmail(data)
+      toast.success("Thanks! I'll be in touch.")
+    } catch (error) {
+      handleApiError(error)
+    } finally {
+      setLoading(false)
+      reset()
+    }
   }
 
   return (
@@ -72,6 +67,7 @@ export default function ContactForm() {
               />
             )}
           />
+
           <Controller
             name='email'
             control={control}
@@ -86,6 +82,7 @@ export default function ContactForm() {
               />
             )}
           />
+
           <Controller
             name='message'
             control={control}
