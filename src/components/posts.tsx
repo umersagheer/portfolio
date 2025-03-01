@@ -1,5 +1,5 @@
-import { PostMetadata } from '@/libs/posts'
 import formatDate from '@/libs/utils'
+import { PostMetadata } from '@/types'
 import { Link } from '@nextui-org/react'
 import React from 'react'
 

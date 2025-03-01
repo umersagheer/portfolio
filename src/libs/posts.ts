@@ -1,20 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import matter from 'gray-matter'
-
-export type Post = {
-  metadata: PostMetadata
-  content: string
-}
-
-export type PostMetadata = {
-  title?: string
-  summary?: string
-  image?: string
-  author?: string
-  publishedAt?: string
-  postId: string
-}
+import { Post, PostMetadata } from '@/types'
 
 const rootDirectory = path.join(process.cwd(), 'src', 'content', 'posts')
 

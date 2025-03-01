@@ -32,6 +32,9 @@ dependencies:
   lucide-react:
     specifier: ^0.436.0
     version: 0.436.0(react@18.3.1)
+  mini-svg-data-uri:
+    specifier: ^1.4.4
+    version: 1.4.4
   next:
     specifier: 14.2.7
     version: 14.2.7(react-dom@18.3.1)(react@18.3.1)
@@ -60,8 +63,8 @@ dependencies:
     specifier: ^4.0.0
     version: 4.0.0(react-dom@18.3.1)(react@18.3.1)
   sonner:
-    specifier: ^1.5.0
-    version: 1.5.0(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^2.0.1
+    version: 2.0.1(react-dom@18.3.1)(react@18.3.1)
   sugar-high:
     specifier: ^0.7.0
     version: 0.7.0
@@ -6108,6 +6111,11 @@ packages:
       mime-db: 1.52.0
     dev: false
 
+  /mini-svg-data-uri@1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
+    dev: false
+
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
@@ -6955,11 +6963,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /sonner@1.5.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-FBjhG/gnnbN6FY0jaNnqZOMmB73R+5IiyYAw8yBj7L54ER7HB3fOSE5OFiQiE2iXWxeXKvg6fIP4LtVppHEdJA==}
+  /sonner@2.0.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-FRBphaehZ5tLdLcQ8g2WOIRE+Y7BCfWi5Zyd8bCvBjiW8TxxAyoWZIxS661Yz6TGPqFQ4VLzOF89WEYhfynSFQ==}
     peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

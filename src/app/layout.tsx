@@ -33,7 +33,9 @@ export default function RootLayout({
         <NextuiProvider>
           <Toaster richColors />
           <Navbar />
-          <main className='container min-h-screen max-w-4xl py-10'>
+          <main className='container mt-32 min-h-screen max-w-3xl py-10'>
+            <div className='pointer-events-none fixed inset-0 -z-10 flex items-center justify-center bg-white bg-dot-black/[0.2] dark:bg-black dark:bg-dot-white/[0.2]'></div>
+            <div className='pointer-events-none fixed inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_50%,black)] dark:bg-background'></div>
             {children}
           </main>
         </NextuiProvider>

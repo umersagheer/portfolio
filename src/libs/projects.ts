@@ -1,20 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import matter from 'gray-matter'
-
-export type Project = {
-  metadata: ProjectMetadata
-  content: string
-}
-
-export type ProjectMetadata = {
-  title?: string
-  summary?: string
-  image?: string
-  author?: string
-  publishedAt?: string
-  projectId: string
-}
+import { Project, ProjectMetadata } from '@/types'
 
 const rootDirectory = path.join(process.cwd(), 'src', 'content', 'projects')
 

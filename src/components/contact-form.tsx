@@ -12,12 +12,14 @@ import {
   Button,
   CardFooter,
   Textarea,
-  Link
+  Link,
+  Divider
 } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { sendEmail } from '@/libs/actions'
 import { handleApiError } from '@/libs/handle-api-error'
+import { MessageCircleHeartIcon } from 'lucide-react'
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false)
@@ -40,12 +42,12 @@ export default function ContactForm() {
     try {
       setLoading(true)
       await sendEmail(data)
-      toast.success("Thanks! I'll be in touch.")
+      toast.info("Thanks! I'll be in touch.")
     } catch (error) {
       handleApiError(error)
     } finally {
       setLoading(false)
-      // reset()
+      reset()
     }
   }
 
@@ -110,6 +112,22 @@ export default function ContactForm() {
             isLoading={loading}
           >
             Send
+          </Button>
+
+          <div className='flex w-full items-center justify-center gap-3'>
+            <Divider className='w-1/3' />
+            <p>OR</p>
+            <Divider className='w-1/3' />
+          </div>
+
+          <Button
+            color='success'
+            variant='solid'
+            fullWidth
+            endContent={<MessageCircleHeartIcon size={16} />}
+            onPress={() => window.open('https://wa.me/+923018155698', '_blank')}
+          >
+            Whatsapp
           </Button>
           <p className='justify-start text-small'>
             By submitting this form, I agree to the{' '}

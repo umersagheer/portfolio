@@ -1,9 +1,9 @@
 'use client'
-import { PostMetadata } from '@/libs/posts'
 import { Input } from '@nextui-org/react'
 import { useState } from 'react'
 import Posts from './posts'
 import { SearchIcon } from 'lucide-react'
+import { PostMetadata } from '@/types'
 
 type props = {
   posts: PostMetadata[]

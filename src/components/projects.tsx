@@ -1,6 +1,6 @@
-import { ProjectMetadata } from '@/libs/projects'
 import formatDate from '@/libs/utils'
-import { Image, Link } from '@nextui-org/react'
+import { ProjectMetadata } from '@/types'
+import { Link } from '@nextui-org/react'
 import React from 'react'
 
 type ProjectProps = {
