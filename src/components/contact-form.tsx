@@ -13,9 +13,9 @@ import {
   CardFooter,
   Textarea,
   Link,
-  Divider
-} from '@nextui-org/react'
-import { toast } from 'sonner'
+  Divider,
+  addToast
+} from '@heroui/react'
 import { z } from 'zod'
 import { sendEmail } from '@/libs/actions'
 import { handleApiError } from '@/libs/handle-api-error'
@@ -42,7 +42,12 @@ export default function ContactForm() {
     try {
       setLoading(true)
       await sendEmail(data)
-      toast.info("Thanks! I'll be in touch.")
+      addToast({
+        title: 'Thank you for your message!',
+        description: 'I will be in touch with you soon.',
+        color: 'success',
+        timeout: 5000
+      })
     } catch (error) {
       handleApiError(error)
     } finally {

@@ -1,7 +1,7 @@
 import { getPosts } from '@/libs/posts'
 import React from 'react'
 import Posts from './posts'
-import { Link } from '@nextui-org/react'
+import { Link } from "@heroui/react"
 import { ArrowRightIcon } from 'lucide-react'
 
 export default async function RecentPosts() {

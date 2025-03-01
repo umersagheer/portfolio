@@ -1,5 +1,5 @@
 'use client'
-import { Input } from '@nextui-org/react'
+import { Input } from "@heroui/react"
 import { useState } from 'react'
 import Posts from './posts'
 import { SearchIcon } from 'lucide-react'

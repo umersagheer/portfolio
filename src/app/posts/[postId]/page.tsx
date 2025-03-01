@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Image, Link } from '@nextui-org/react'
+import { Image, Link } from "@heroui/react"
 
 import { getPostById, getPosts } from '@/libs/posts'
 import formatDate from '@/libs/utils'

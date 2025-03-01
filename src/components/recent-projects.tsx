@@ -1,7 +1,7 @@
 import { getProjects } from '@/libs/projects'
 import React from 'react'
 import Projects from './projects'
-import { Link } from '@nextui-org/react'
+import { Link } from "@heroui/react"
 import { ArrowRightIcon } from 'lucide-react'
 
 export default async function RecentProjects() {
