@@ -1,16 +1,14 @@
-import { getProjects } from '@/libs/projects'
 import React from 'react'
-import Projects from './projects'
-import { Link } from "@heroui/react"
+import { Link } from '@heroui/react'
 import { ArrowRightIcon } from 'lucide-react'
+import Heading from './heading'
+import Projects from './projects'
+import { projects } from '@/content/projects'
 
 export default async function RecentProjects() {
-  const projects = await getProjects(3)
   return (
     <div className='flex flex-col gap-1'>
-      <h3 className='font-sourceCodePro text-xl font-semibold'>
-        Recent Projects
-      </h3>
+      <Heading>What I worked on...</Heading>
       <Projects projects={projects} />
       <Link
         href='/projects'

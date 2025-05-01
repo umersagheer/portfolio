@@ -3,7 +3,11 @@ import { Poppins, Source_Code_Pro } from 'next/font/google'
 
 import './globals.css'
 import { HerouiProvider } from './nextui-provider'
-import Navbar from '@/components/navbar'
+import { cn, ScrollShadow } from '@heroui/react'
+import { GridPattern } from '@/components/grid-patterns'
+import { Navbar } from '@/components/navbar'
+import { usePathname } from 'next/navigation'
+import Gradient from '@/components/gradient'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -31,9 +35,23 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${sourceCodePro.variable}`}>
         <HerouiProvider>
           <Navbar />
-          <main className='container min-h-screen max-w-3xl py-10'>
-            <div className='pointer-events-none fixed inset-0 -z-10 flex items-center justify-center bg-white bg-dot-black/[0.2] dark:bg-black dark:bg-dot-white/[0.2]'></div>
-            <div className='pointer-events-none fixed inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_50%,black)] dark:bg-background'></div>
+          <main className='container min-h-screen max-w-3xl py-20'>
+            <div className='fixed inset-0 z-[-1] max-w-3xl translate-x-1/3 opacity-70 md:translate-x-1/2'>
+              <Gradient />
+              <GridPattern
+                squares={[
+                  [3, 10],
+                  [8, 2],
+                  [5, 6],
+                  [8, 7],
+                  [6, 9]
+                ]}
+                className={cn(
+                  '[mask-image:linear-gradient(135deg,white_0%,white_30%,transparent_40%)]',
+                  'inset-x-0 inset-y-[-30%] h-[200%] skew-y-12'
+                )}
+              />
+            </div>
             {children}
           </main>
         </HerouiProvider>

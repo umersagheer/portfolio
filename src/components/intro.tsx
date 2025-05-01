@@ -1,6 +1,6 @@
 'use client'
 
-import { Image } from "@heroui/react"
+import { Image } from '@heroui/react'
 import React from 'react'
 
 export default function Intro() {
@@ -25,9 +25,8 @@ export default function Intro() {
       <div className='mt-5 max-w-2xl space-y-1'>
         <h3 className='font-sourceCodePro text-xl font-semibold'>About</h3>
         <p className='text-small tracking-wide'>
-          I&apos;m a software engineer based in Pakistan specializing in
-          web-based solutions. I build robust and innovative digital systems
-          tailored to your business needs&#44; driving efficiency and growth.
+          Hi, I&apos;m a software engineer from Pakistan 🇵🇰, turning ideas into
+          sleek web & mobile apps.
         </p>
       </div>
     </div>

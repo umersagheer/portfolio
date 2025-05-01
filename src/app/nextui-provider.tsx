@@ -14,7 +14,7 @@ export function HerouiProvider({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <ToastProvider />
+        <ToastProvider placement='top-right' />
         {children}
       </NextThemesProvider>
     </HeroUIProvider>
