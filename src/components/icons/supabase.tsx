@@ -1,16 +1,21 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 const IconSupabase = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    xmlns='http://www.w3.org/2000/svg'
-    viewBox='0 0 24 24'
-    width='1em'
-    height='1em'
-    fill='#3FCF8E'
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="icon icon-tabler icons-tabler-outline icon-tabler-brand-supabase"
     {...props}
   >
-    <title>{'Supabase'}</title>
-    <path d='M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z' />
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 14h8v7l8 -11h-8v-7l-8 11" />
   </svg>
-)
-export default IconSupabase
+);
+export default IconSupabase;
