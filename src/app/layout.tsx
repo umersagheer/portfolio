@@ -3,10 +3,9 @@ import { Poppins, Source_Code_Pro } from 'next/font/google'
 
 import './globals.css'
 import { HerouiProvider } from './nextui-provider'
-import { cn, ScrollShadow } from '@heroui/react'
+import { cn } from '@heroui/react'
 import { GridPattern } from '@/components/grid-patterns'
 import { Navbar } from '@/components/navbar'
-import { usePathname } from 'next/navigation'
 import Gradient from '@/components/gradient'
 
 const poppins = Poppins({

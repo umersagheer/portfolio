@@ -1,38 +1,29 @@
-import { ThemeSwitcher } from '@/components/theme-switcher'
 import {
-  FolderCodeIcon,
-  GanttChartSquareIcon,
-  HomeIcon,
-  MessageSquareShare
-} from 'lucide-react'
+  IconHomeFilled,
+  IconBookmarkFilled,
+  IconFolderFilled,
+  IconMailFilled
+} from '@tabler/icons-react'
 
-export const links = [
+export const navLinks = [
   {
     title: 'Home',
-    icon: (
-      <HomeIcon className='h-full w-full text-neutral-500 dark:text-neutral-300' />
-    ),
+    icon: IconHomeFilled,
     href: '/'
   },
-
   {
     title: 'Posts',
-    icon: <GanttChartSquareIcon className='h-full w-full text-warning' />,
+    icon: IconBookmarkFilled,
     href: '/posts'
   },
   {
     title: 'Projects',
-    icon: <FolderCodeIcon className='h-full w-full text-secondary' />,
+    icon: IconFolderFilled,
     href: '/projects'
   },
   {
     title: 'Contact',
-    icon: <MessageSquareShare className='h-full w-full text-success' />,
+    icon: IconMailFilled,
     href: '/contact'
-  },
-  {
-    title: 'Theme',
-    icon: <ThemeSwitcher />,
-    href: '#'
   }
 ]

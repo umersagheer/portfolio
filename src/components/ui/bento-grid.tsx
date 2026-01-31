@@ -71,7 +71,6 @@ const BentoCard = ({
             >
                 <Button
                     variant="light"
-                    asChild
                     size="sm"
                     className="pointer-events-auto p-0"
                 >
@@ -90,7 +89,6 @@ const BentoCard = ({
         >
             <Button
                 variant="light"
-                asChild
                 size="sm"
                 className="pointer-events-auto p-0"
             >
