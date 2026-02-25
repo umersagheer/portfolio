@@ -52,7 +52,7 @@ export const projects = [
     ]
   },
   {
-    id: 1,
+    id: 2,
     title: 'Student Donation App',
     subTitle: 'Adopt to Educate | ATE',
     image: '/images/projects/ate.png',

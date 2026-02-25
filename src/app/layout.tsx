@@ -7,6 +7,7 @@ import { cn } from '@heroui/react'
 import { GridPattern } from '@/components/grid-patterns'
 import { Navbar } from '@/components/navbar'
 import Gradient from '@/components/gradient'
+import Image from 'next/image'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -34,10 +35,13 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${sourceCodePro.variable}`}>
         <HerouiProvider>
           <Navbar />
+          <div className="fixed inset-0 -z-10">
+            <Image src="/backgrounds/bbblurry.svg" alt="" width={1920} height={1080} className="object-cover w-full h-full" />
+          </div>
           <main className='container min-h-screen max-w-3xl py-20'>
             <div className='fixed inset-0 z-[-1] max-w-3xl translate-x-1/3 opacity-70 md:translate-x-1/2'>
-              <Gradient />
-              <GridPattern
+              {/* <Gradient /> */}
+              {/* <GridPattern
                 squares={[
                   [3, 10],
                   [8, 2],
@@ -49,7 +53,7 @@ export default function RootLayout({
                   '[mask-image:linear-gradient(135deg,white_0%,white_30%,transparent_40%)]',
                   'inset-x-0 inset-y-[-30%] h-[200%] skew-y-12'
                 )}
-              />
+              /> */}
             </div>
             {children}
           </main>
