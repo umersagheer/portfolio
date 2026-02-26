@@ -18,6 +18,7 @@ import {
   MorphingDialogClose,
   useMorphingDialog
 } from '@/components/ui/morphing-dialog'
+import ScreenshotMarquee from '@/components/ui/screenshot-marquee'
 
 type ProjectProps = {
   projects: ProjectType[]
@@ -56,7 +57,7 @@ export default function Projects({ projects }: ProjectProps) {
           {/* Expanded Dialog */}
           <MorphingDialogContainer>
             <MorphingDialogContent
-              className='relative w-full max-w-xl overflow-hidden bg-content1 p-6 shadow-xl'
+              className='relative w-full max-w-2xl overflow-hidden bg-content1 p-6 shadow-xl'
               style={{ borderRadius: '0.75rem' }}
             >
               <MorphingDialogClose />
@@ -83,6 +84,15 @@ export default function Projects({ projects }: ProjectProps) {
 
               {/* Non-shared Content */}
               <MorphingDialogDescription className='mt-4 space-y-4'>
+                {/* Screenshot Marquee */}
+                {project.screenshots?.length > 0 && (
+                  <ScreenshotMarquee
+                    screenshots={project.screenshots}
+                    variant='3d'
+                    // speed={55}
+                  />
+                )}
+
                 {/* Links */}
                 <div className='flex items-center gap-2'>
                   {project.liveLink && (
@@ -135,7 +145,7 @@ export default function Projects({ projects }: ProjectProps) {
                 </div>
 
                 {/* Description & Features */}
-                <div className='max-h-72 overflow-y-auto pr-1'>
+                <div className='max-h-48 overflow-y-auto pr-1'>
                   <p className='text-sm'>{project.description}</p>
                   {project.features && (
                     <>

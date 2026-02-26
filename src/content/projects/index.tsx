@@ -49,6 +49,20 @@ export const projects = [
       { name: 'Prisma' },
       { name: 'Tailwind' },
       { name: 'NextUI' }
+    ],
+    screenshots: [
+      { src: '/images/rfc/Login.png', wide: false },
+      { src: '/images/rfc/OrderDetail.png', wide: true },
+      { src: '/images/rfc/OrderCard.png', wide: false },
+      { src: '/images/rfc/Payment.png', wide: true },
+      { src: '/images/rfc/Calendar.png', wide: false },
+      { src: '/images/rfc/CreateRole.png', wide: true },
+      { src: '/images/rfc/Variant.png', wide: false },
+      { src: '/images/rfc/Features.png', wide: true },
+      { src: '/images/rfc/StockIntake.png', wide: false },
+      { src: '/images/rfc/Users.png', wide: true },
+      { src: '/images/rfc/DisableOutlet.png', wide: false },
+      { src: '/images/rfc/OutletSettings.png', wide: true }
     ]
   },
   {
@@ -94,7 +108,8 @@ export const projects = [
       { name: 'Prisma' },
       { name: 'Tailwind' },
       { name: 'NextUI' }
-    ]
+    ],
+    screenshots: [] as { src: string; wide: boolean }[]
   }
 ]
 
