@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import matter from 'gray-matter'
 import { Post, PostMetadata } from '@/types'
+import { calculateReadingTime } from '@/libs/utils'
 
 const rootDirectory = path.join(process.cwd(), 'src', 'content', 'posts')
 
@@ -11,7 +12,14 @@ export async function getPostById(postId: string): Promise<Post | null> {
     const fileContents = fs.readFileSync(filePath, 'utf8')
     const { data, content } = matter(fileContents)
 
-    return { metadata: { ...data, postId }, content }
+    return {
+      metadata: {
+        ...data,
+        postId,
+        readingTime: calculateReadingTime(content)
+      },
+      content
+    }
   } catch (error) {
     console.log('[getPostById]', error)
     return null
@@ -43,6 +51,6 @@ function getPostMetadata(filepath: string): PostMetadata {
   const filePath = path.join(rootDirectory, filepath)
   const fileContent = fs.readFileSync(filePath, 'utf8')
 
-  const { data } = matter(fileContent)
-  return { ...data, postId }
+  const { data, content } = matter(fileContent)
+  return { ...data, postId, readingTime: calculateReadingTime(content) }
 }

@@ -9,6 +9,7 @@ export type PostMetadata = {
   image?: string
   author?: string
   publishedAt?: string
+  readingTime?: number
   postId: string
 }
 

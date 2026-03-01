@@ -1,6 +1,7 @@
 import formatDate from '@/libs/utils'
 import { PostMetadata } from '@/types'
-import { Link } from "@heroui/react"
+import { Image, Link } from '@heroui/react'
+import { ClockIcon } from 'lucide-react'
 import React from 'react'
 
 type PostProps = {
@@ -9,31 +10,52 @@ type PostProps = {
 
 export default function Posts({ posts }: PostProps) {
   return (
-    <ul className='space-y-5'>
+    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
       {posts.map(post => (
-        <li key={post.postId}>
-          <Link
-            href={`/posts/${post.postId}`}
-            color='foreground'
-            isBlock
-            className='flex items-start justify-between gap-4 p-2'
-          >
-            <div className='gap-1'>
-              <p className='font-sourceCodePro text-base font-semibold'>
+        <Link
+          key={post.postId}
+          href={`/posts/${post.postId}`}
+          className='group flex flex-col overflow-hidden rounded-xl border border-default-200 bg-default-50 transition-all duration-300 hover:scale-[1.02] hover:border-primary dark:border-default-100'
+        >
+          {post.image && (
+            <div className='aspect-video w-full overflow-hidden'>
+              <Image
+                src={post.image}
+                alt={post.title ?? ''}
+                classNames={{
+                  wrapper: 'w-full h-full !max-w-full',
+                  img: 'h-full w-full object-cover rounded-none'
+                }}
+                radius='none'
+              />
+            </div>
+          )}
+          <div className='flex flex-1 flex-col justify-between space-y-2 p-4'>
+            <div className='space-y-1'>
+              <p className='font-sourceCodePro text-base font-semibold text-foreground'>
                 {post.title}
               </p>
-              <p className='max-w-xl text-xs tracking-wide dark:text-zinc-200'>
+              <p className='line-clamp-2 text-sm text-default-500'>
                 {post.summary}
               </p>
             </div>
-            {post.publishedAt && (
-              <p className='text-xs font-medium'>
-                {formatDate(post.publishedAt)}
-              </p>
-            )}
-          </Link>
-        </li>
+            <div className='flex items-center gap-2 pt-2 text-xs text-default-400'>
+              {post.publishedAt && (
+                <span>{formatDate(post.publishedAt)}</span>
+              )}
+              {post.readingTime && (
+                <>
+                  <span>·</span>
+                  <span className='flex items-center gap-1'>
+                    <ClockIcon size={12} />
+                    {post.readingTime} min read
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </Link>
       ))}
-    </ul>
+    </div>
   )
 }

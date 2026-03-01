@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
 /* for code highlighting from sugar-high */
 :root {
   --sh-class: #d2a8ff; /* Class */

@@ -64,7 +64,8 @@ export function ExpandableTabs({
     const selectedIndex = React.useMemo(() => {
         return tabs.findIndex((tab) => {
             if (tab.type === "separator") return false;
-            return pathname === tab.href;
+            if (tab.href === "/") return pathname === "/";
+            return pathname.startsWith(tab.href);
         });
     }, [pathname, tabs]);
 

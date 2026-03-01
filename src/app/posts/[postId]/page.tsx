@@ -1,10 +1,12 @@
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Image, Link } from "@heroui/react"
+import { Image, Link } from '@heroui/react'
 
 import { getPostById, getPosts } from '@/libs/posts'
 import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
+import TableOfContents from '@/components/table-of-contents'
+import { extractToc } from '@/libs/toc'
 
 type PostProps = {
   params: {
@@ -28,6 +30,8 @@ export default async function Post({ params }: PostProps) {
 
   const { metadata, content } = post
   const { title, image, author, publishedAt } = metadata
+  const toc = extractToc(content)
+
   return (
     <section className='pb-20'>
       <div className='space-y-4'>
@@ -42,10 +46,16 @@ export default async function Post({ params }: PostProps) {
             {author} / {formatDate(publishedAt ?? '')}
           </p>
         </header>
+      </div>
 
-        <main className='prose mt-10 max-w-6xl dark:prose-invert'>
+      <div className='relative mt-10'>
+        <main className='prose max-w-3xl dark:prose-invert'>
           <MDXContent source={content} />
         </main>
+      </div>
+
+      <div className='fixed left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:block'>
+        <TableOfContents items={toc} />
       </div>
     </section>
   )
