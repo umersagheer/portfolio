@@ -220,6 +220,7 @@ function MorphingDialogTitle({
   return (
     <motion.div
       layoutId={`dialog-title-${uniqueId}`}
+      layout='position'
       className={className}
       transition={defaultTransition}
     >
@@ -244,6 +245,7 @@ function MorphingDialogSubtitle({
   return (
     <motion.div
       layoutId={`dialog-subtitle-${uniqueId}`}
+      layout='position'
       className={className}
       transition={defaultTransition}
     >

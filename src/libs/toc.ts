@@ -12,7 +12,7 @@ export function slugify(text: string): string {
 }
 
 export function extractToc(content: string): TocItem[] {
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm
+  const headingRegex = /^(#{2})\s+(.+)$/gm
   const toc: TocItem[] = []
   let match
 

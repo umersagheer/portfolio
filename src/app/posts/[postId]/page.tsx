@@ -6,6 +6,7 @@ import { getPostById, getPosts } from '@/libs/posts'
 import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
+import GemLikeButton from '@/components/gem-like-button'
 import { extractToc } from '@/libs/toc'
 
 type PostProps = {
@@ -56,6 +57,14 @@ export default async function Post({ params }: PostProps) {
 
       <div className='fixed left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:block'>
         <TableOfContents items={toc} />
+        <div className='mt-8'>
+          <GemLikeButton postId={postId} />
+        </div>
+      </div>
+
+      {/* Mobile floating orb */}
+      <div className='fixed bottom-6 right-6 z-50 xl:hidden'>
+        <GemLikeButton postId={postId} size='sm' />
       </div>
     </section>
   )

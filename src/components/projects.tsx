@@ -31,8 +31,8 @@ export default function Projects({ projects }: ProjectProps) {
         <MorphingDialog key={project.title}>
           {/* Card Trigger */}
           <MorphingDialogTrigger
-            className='cursor-pointer bg-content1 px-3 py-4 transition-colors duration-250 hover:bg-content2 active:bg-content3'
-            style={{ borderRadius: '0.5rem' }}
+            className='cursor-pointer overflow-hidden rounded-lg bg-content1 px-3 py-4 transition-colors duration-250 hover:bg-content2 active:bg-content3'
+            style={{ borderRadius: 8 }}
           >
             <div className='flex items-center gap-2'>
               <MorphingDialogImage className='flex-shrink-0'>
@@ -57,8 +57,8 @@ export default function Projects({ projects }: ProjectProps) {
           {/* Expanded Dialog */}
           <MorphingDialogContainer>
             <MorphingDialogContent
-              className='relative w-full max-w-2xl overflow-hidden bg-content1 p-6 shadow-xl'
-              style={{ borderRadius: '0.75rem' }}
+              className='relative w-full max-w-2xl overflow-hidden rounded-xl bg-content1 p-6 shadow-xl'
+              style={{ borderRadius: 12 }}
             >
               <MorphingDialogClose />
 

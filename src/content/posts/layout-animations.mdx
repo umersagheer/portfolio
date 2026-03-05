@@ -48,6 +48,10 @@ These are GPU-accelerated. The browser hands them off to the graphics card, whic
 
 But here's the catch: `transform: scale(2)` makes an element *look* bigger, but it doesn't actually change the layout. Sibling elements don't move out of the way. It's a visual trick, not a real size change.
 
+Toggle the demo below to see this in action. On the left, `transform: scaleX(2)` makes the middle box overlap its neighbors. On the right, changing the actual `width` pushes them aside — but triggers an expensive layout recalculation.
+
+<TransformVsLayoutDemo />
+
 So how do we get the best of both worlds — **real layout changes** that animate with **GPU-accelerated transforms**?
 
 ### See It In Action
@@ -139,17 +143,11 @@ This is where `layoutId` gets really interesting. When you give two elements the
 <motion.div layoutId="highlight" className="active-marker" />
 ```
 
-When one appears and the other disappears, Framer Motion morphs between them. Click the tabs below to see it in action:
+When one appears and the other disappears, Framer Motion morphs between them. Use the toggle below to compare — without `layoutId`, the indicator just pops into place. With it, the indicator *slides* smoothly:
 
 <LayoutIdDemo />
 
-Notice how the background indicator doesn't just fade — it *slides* from one tab to the next. That's `layoutId` matching the elements and running FLIP between them.
-
-This pattern is everywhere in polished UIs:
-- **Tab indicators** that slide between tabs
-- **Navigation highlights** that follow your cursor
-- **Cards that expand** into full modals
-- **List items** that morph between views
+This pattern is everywhere in polished UIs: tab indicators, navigation highlights, cards that expand into modals, and list items that morph between views.
 
 ## AnimatePresence: Animating Mount & Unmount
 
@@ -181,11 +179,11 @@ Three states, three props:
 - **`animate`** — how it looks when it's on screen
 - **`exit`** — how it should animate out *before* unmounting
 
-Try adding and removing items below:
+Try adding and removing items below. Toggle between modes to see the difference — without `AnimatePresence`, items vanish instantly:
 
 <AnimatePresenceDemo />
 
-Without `AnimatePresence`, removed items would just vanish. With it, they gracefully shrink and fade away. The `layout` prop on each item ensures the remaining items smoothly reflow into their new positions.
+The `layout` prop on each item ensures the remaining items smoothly reflow into their new positions.
 
 ## Spring Physics: Why Animations Feel Natural
 

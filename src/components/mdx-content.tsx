@@ -10,6 +10,7 @@ import AnimatePresenceDemo from '@/components/blog/layout-animations/animate-pre
 import FlipExplainer from '@/components/blog/layout-animations/flip-explainer'
 import SpringVisualizer from '@/components/blog/layout-animations/spring-visualizer'
 import MorphingDialogDemo from '@/components/blog/layout-animations/morphing-dialog-demo'
+import TransformVsLayoutDemo from '@/components/blog/layout-animations/transform-vs-layout-demo'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -76,7 +77,8 @@ const components = {
   AnimatePresenceDemo,
   FlipExplainer,
   SpringVisualizer,
-  MorphingDialogDemo
+  MorphingDialogDemo,
+  TransformVsLayoutDemo
 }
 
 export default function MDXContent(

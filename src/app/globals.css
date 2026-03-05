@@ -20,6 +20,16 @@ html {
   --sh-comment: #8b949e; /* Comments */
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   .title {
     @apply font-sourceCodePro text-3xl font-bold underline decoration-2 underline-offset-8;

@@ -26,6 +26,15 @@ const config: Config = {
       fontFamily: {
         poppins: ['var(--font-poppins)', 'sans-serif'],
         sourceCodePro: ['var(--font-source-code-pro)', 'monospace']
+      },
+      keyframes: {
+        'marquee-scroll-vertical': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(-50%)' }
+        }
+      },
+      animation: {
+        'marquee-scroll-vertical': 'marquee-scroll-vertical 25s linear infinite'
       }
     }
   },

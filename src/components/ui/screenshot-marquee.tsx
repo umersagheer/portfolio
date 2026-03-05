@@ -48,7 +48,7 @@ export default function ScreenshotMarquee({
         }
       >
         <div
-          className='group-hover:[animation-play-state:paused]'
+          className='animate-marquee-scroll-vertical group-hover:[animation-play-state:paused]'
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
@@ -56,7 +56,7 @@ export default function ScreenshotMarquee({
             gap: '0.75rem',
             width: '100%',
             maxWidth: '32rem',
-            animation: `marquee-scroll-vertical ${speed}s linear infinite`
+            animationDuration: `${speed}s`
           }}
         >
           {gridItems.map((item, i) => (
@@ -86,13 +86,6 @@ export default function ScreenshotMarquee({
       <div className='pointer-events-none absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t from-content1' />
       <div className='pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-content1' />
       <div className='pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-content1' />
-
-      <style>{`
-        @keyframes marquee-scroll-vertical {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
-        }
-      `}</style>
     </div>
   )
 }
