@@ -29,20 +29,29 @@ Do not invent new angles that are not supported by the blog, video, or demos.
 
 ## LinkedIn guidance
 
-- Lead with a strong but clear technical hook
-- Keep the body concise and skimmable with short paragraphs
-- Summarize the main lesson, not every section of the blog
-- Mention the concrete demos or examples included in the post
-- End with a direct CTA to read the full article on the portfolio
-- Avoid overly viral-style formatting, filler, or exaggerated claims
+* **The Hook:** Lead with a "Negative vs. Positive" technical hook. (e.g., "Why $X$ feels slow vs. how $Y$ makes it performant"). Address a common pain point engineers face.
+* **The "Why" over the "What":** Don't just list features. Explain the underlying engineering reason (e.g., "Rendering pipelines," "B-Trees," "Event loops"). 
+* **High-Signal Skimmability:** * Use 3-4 bullet points to summarize the "Aha!" moments.
+    * Use bolding for technical terms to catch the eye of senior peers.
+* **The "Interactive" Factor:** Always highlight the interactive demos or real-world examples. This is your unique selling point.
+* **CTA (Call to Action):** Use a clear "👉" emoji followed by the canonical URL.
+* **The "P.S." Strategy:** Mention the attached Remotion video in a post-script or a final sentence to connect the copy to the media.
+* **Tone:** Authoritative yet helpful. Avoid "low-effort" hype (e.g., "Game changer! 🚀"). Use "Senior Engineer" vocabulary (e.g., "Architecture," "Optimization," "Internals").
 
-## X guidance
+## X guidance (Free Tier - 280 Chars)
 
-- Keep the post within the free account limit
-- Assume the attached link uses part of the character budget
-- Focus on one hook, one compact takeaway, and one CTA
-- Mention the strongest concepts only
-- Skip threads unless explicitly requested
+* **The "Hook" Tweet (1/X):** * Must be under 280 characters. 
+    * Lead with a bold claim or a technical "Why." (e.g., "Animating layout properties like width/height is a performance trap. 🪤")
+    * End the first tweet with a "thread" emoji 🧵 to signal there is more value below.
+* **The "Value" Middle (2-4/X):** * Break the technical explanation into 2-3 supporting tweets.
+    * Focus on one concept per tweet (e.g., Tweet 2: The Problem, Tweet 3: The FLIP solution).
+    * Use 2-3 hashtags max per thread (e.g., #webdev #frontend).
+* **Character Conservation:** * Links take up exactly **23 characters** regardless of actual length. 
+    * Emojis count as **2 characters** each. 
+    * Media (images/Remotion video) does **NOT** count against the 280-character text limit.
+* **The "Anchor" Conclusion:** * The final tweet must contain the CTA and the link to the full post.
+    * Encourage a "Bookmark" 🔖—the 2026 algorithm prioritizes bookmarks over likes.
+* **Remotion Video:** Always attach the promo video to the **first tweet** of the thread to maximize the "Stop the scroll" effect.
 
 ## Recommended checklist
 

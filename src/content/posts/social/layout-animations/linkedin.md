@@ -4,20 +4,33 @@ Attach the Layout Animations Remotion promo video to this post.
 
 ## Ready to post
 
-Most explanations of layout animations start at the API surface.
+Ever noticed how some web animations feel "buttery smooth" while others feel like they’re fighting the browser?
 
-I wanted to start one layer lower: what is the browser actually doing when a box changes `width` or `height`, and why does that feel heavier than animating `transform`?
+It’s usually because we’re asking the browser to do the wrong kind of work.
 
-In this new post, I break layout animations down from browser internals to Framer Motion:
+Most tutorials tell you how to use an animation library. I wanted to go one layer deeper: What is the browser actually doing when a box changes size?
 
-- why `width`, `height`, `top`, and `left` trigger layout work
-- why `transform` and `opacity` are the safe, composited properties
-- how the FLIP technique bridges real layout changes with smooth motion
-- where `layout`, `layoutId`, `AnimatePresence`, and spring physics fit in
+I just published a deep dive into the internals of Layout Animations.
 
-I also built interactive demos for each concept: transform vs layout, a FLIP explainer, shared `layoutId` transitions, `AnimatePresence`, spring tuning, and a morphing dialog example from this portfolio.
+The Core Conflict: Layout vs. Compositing
+When you animate width or height, you force the browser to recalculate the entire page geometry 60 times per second. That’s "Layout" work, and it’s expensive.
 
-And I turned the article into a short Remotion promo video so the core idea is easier to scan before diving deeper.
+The secret to 60fps performance? Moving the work to the GPU using transform and opacity. But transforms don't "push" other elements out of the way... or do they?
 
-If you want the full breakdown, the article and demos are live here:
-https://umersagheer.dev/posts/layout-animations
+What’s inside the guide:
+The FLIP Technique: A breakdown of how we "fake" layout changes using math and GPU-accelerated transforms.
+
+Framer Motion Internals: How layout and layoutId automate the complex "Measure -> Invert -> Play" cycle.
+
+Spring Physics: Why your UI feels more natural when it’s driven by velocity, not just a duration.
+
+The Morphing Dialog: A real-world breakdown of the shared element transitions I use on my own portfolio.
+
+I didn’t just write about it—I built 6 interactive demos so you can toggle the "expensive" vs. "optimized" versions and see the difference in the browser's rendering pipeline yourself.
+
+Check out the full breakdown and play with the demos here:
+👉 https://umersagheer.dev/posts/layout-animations
+
+(P.S. The attached video is a short Remotion promo showing these concepts in action!)
+
+#WebDevelopment #Frontend #ReactJS #FramerMotion #CSS #Performance
