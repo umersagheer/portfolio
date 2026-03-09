@@ -55,14 +55,16 @@ export default async function Post({ params }: PostProps) {
         </main>
       </div>
 
-      <div className='fixed left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:block'>
-        <TableOfContents items={toc} />
-        <div className='mt-8'>
+      <div className='fixed bottom-6 left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:flex xl:flex-col'>
+        <div className='min-h-0 flex-1'>
+          <TableOfContents items={toc} />
+        </div>
+        <div className='flex shrink-0 justify-center pt-6'>
           <GemLikeButton postId={postId} />
         </div>
       </div>
 
-      {/* Mobile floating orb */}
+      {/* Mobile floating crystal */}
       <div className='fixed bottom-6 right-6 z-50 xl:hidden'>
         <GemLikeButton postId={postId} size='sm' />
       </div>

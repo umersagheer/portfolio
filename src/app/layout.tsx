@@ -40,20 +40,6 @@ export default function RootLayout({
           </div>
           <main className='container min-h-screen max-w-3xl py-20'>
             <div className='fixed inset-0 z-[-1] max-w-3xl translate-x-1/3 opacity-70 md:translate-x-1/2'>
-              {/* <Gradient /> */}
-              {/* <GridPattern
-                squares={[
-                  [3, 10],
-                  [8, 2],
-                  [5, 6],
-                  [8, 7],
-                  [6, 9]
-                ]}
-                className={cn(
-                  '[mask-image:linear-gradient(135deg,white_0%,white_30%,transparent_40%)]',
-                  'inset-x-0 inset-y-[-30%] h-[200%] skew-y-12'
-                )}
-              /> */}
             </div>
             {children}
           </main>

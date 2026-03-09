@@ -54,9 +54,9 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
   if (items.length === 0) return null
 
   return (
-    <nav className='flex max-h-[calc(100vh-35rem)] flex-col mb-14'>
+    <nav className='mb-14 flex min-h-0 max-h-[calc(100vh-35rem)] flex-col xl:mb-0 '>
       <p className='mb-4 text-sm font-semibold'>On this page</p>
-      <ScrollShadow className='-mr-2 flex-1 overflow-y-auto pr-2 scrollbar-hide'>
+      <ScrollShadow className='-mr-2 min-h-0 flex-1 overflow-y-auto pr-2 scrollbar-hide'>
         <ul className='relative text-sm'>
           {items.map(item => (
             <li

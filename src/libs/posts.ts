@@ -6,6 +6,13 @@ import { calculateReadingTime } from '@/libs/utils'
 
 const rootDirectory = path.join(process.cwd(), 'src', 'content', 'posts')
 
+function getPostFiles() {
+  return fs
+    .readdirSync(rootDirectory, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith('.mdx'))
+    .map(entry => entry.name)
+}
+
 export async function getPostById(postId: string): Promise<Post | null> {
   try {
     const filePath = path.join(rootDirectory, `${postId}.mdx`)
@@ -27,9 +34,7 @@ export async function getPostById(postId: string): Promise<Post | null> {
 }
 
 export async function getPosts(limit?: number) {
-  const files = fs.readdirSync(rootDirectory)
-
-  const posts = files
+  const posts = getPostFiles()
     .map(file => getPostMetadata(file))
     .sort((a, b) => {
       if (new Date(a.publishedAt ?? '') < new Date(b.publishedAt ?? '')) {

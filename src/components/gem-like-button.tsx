@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion, useAnimation } from 'framer-motion'
 import axios from 'axios'
 
@@ -9,20 +9,36 @@ type GemLikeButtonProps = {
   size?: 'sm' | 'md'
 }
 
+type ParticleKind = 'shard' | 'spark'
+
 type Particle = {
   id: number
+  kind: ParticleKind
   angle: number
   distance: number
   size: number
   hue: number
+  delay: number
+  rotation: number
+}
+
+type LikesPayload = {
+  globalCount: number
+  userCount: number
+  visitorId: string
 }
 
 const MAX_CLICKS = 10
 const VID_KEY = 'sparkle_vid'
 
-const PRISMATIC_HUES = [280, 260, 310, 200, 330, 240, 290, 180]
-
-const MAX_LABELS = ['Maxed out!', 'Stack overflow!', '409 Conflict', 'Heap full!', 'Overflow!']
+const CRYSTAL_HUES = [272, 286, 254, 198, 304, 214]
+const MAX_LABELS = [
+  'Fully charged',
+  'Crystal capped',
+  'Peak resonance',
+  'Charge complete',
+  'Locked in'
+]
 
 function generateFingerprint(): string {
   const raw = [
@@ -39,61 +55,58 @@ function generateFingerprint(): string {
     hash = (hash << 5) - hash + raw.charCodeAt(i)
     hash |= 0
   }
+
   return Math.abs(hash).toString(36)
 }
 
 function getVisitorId(): string {
   if (typeof window === 'undefined') return ''
+
   let vid = localStorage.getItem(VID_KEY)
   if (!vid) {
     vid = crypto.randomUUID()
     localStorage.setItem(VID_KEY, vid)
   }
+
   return vid
 }
 
 function playClickTone() {
-  try {
-    const ctx = new AudioContext()
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
+  if (typeof window === 'undefined' || !('AudioContext' in window)) return
 
-    osc.type = 'sine'
-    osc.frequency.value = 523.25 // C5
-    gain.gain.setValueAtTime(0.3, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08)
+  const ctx = new window.AudioContext()
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
 
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-    osc.start(ctx.currentTime)
-    osc.stop(ctx.currentTime + 0.08)
+  osc.type = 'triangle'
+  osc.frequency.setValueAtTime(392, ctx.currentTime)
+  osc.frequency.exponentialRampToValueAtTime(587.33, ctx.currentTime + 0.08)
+  gain.gain.setValueAtTime(0.0001, ctx.currentTime)
+  gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01)
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16)
 
-    setTimeout(() => ctx.close(), 200)
-  } catch {
-    // Web Audio not available
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.start(ctx.currentTime)
+  osc.stop(ctx.currentTime + 0.16)
+
+  window.setTimeout(() => {
+    void ctx.close().catch(error => {
+      console.error('Failed to close like-button audio context', error)
+    })
+  }, 220)
+}
+
+function hsla(hue: number, saturation: number, lightness: number, alpha = 1) {
+  return `hsla(${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%, ${alpha})`
+}
+
+function getParticlePath(kind: ParticleKind) {
+  if (kind === 'spark') {
+    return 'M12 1 L14.8 9.2 L23 12 L14.8 14.8 L12 23 L9.2 14.8 L1 12 L9.2 9.2 Z'
   }
-}
 
-function getGemFill(intensity: number): string {
-  // Interpolate from pale lavender (hsl 270 60% 85%) to vivid violet (hsl 270 90% 45%)
-  const s = 60 + intensity * 30
-  const l = 85 - intensity * 40
-  return `hsl(270, ${s}%, ${l}%)`
-}
-
-function getGemHighlight(intensity: number): string {
-  const l = 92 - intensity * 15
-  return `hsl(270, 80%, ${l}%)`
-}
-
-function getGemShadow(intensity: number): string {
-  const l = 70 - intensity * 35
-  return `hsl(275, 85%, ${l}%)`
-}
-
-function getGemDark(intensity: number): string {
-  const l = 55 - intensity * 30
-  return `hsl(280, 90%, ${l}%)`
+  return 'M12 1 L18 9 L12 23 L6 9 Z'
 }
 
 export default function GemLikeButton({
@@ -105,79 +118,111 @@ export default function GemLikeButton({
   const [particles, setParticles] = useState<Particle[]>([])
   const [showMaxLabel, setShowMaxLabel] = useState(false)
   const [maxLabel, setMaxLabel] = useState('')
+  const [hovered, setHovered] = useState(false)
+  const [burstKey, setBurstKey] = useState(0)
   const particleId = useRef(0)
   const isMounted = useRef(false)
   const visitorId = useRef('')
   const fingerprint = useRef('')
-  const gemControls = useAnimation()
+  const timeouts = useRef<number[]>([])
+  const crystalControls = useAnimation()
+  const svgId = useId().replace(/:/g, '')
 
-  const baseSize = size === 'sm' ? 36 : 48
+  const scheduleTimeout = useCallback((callback: () => void, delay: number) => {
+    const timeout = window.setTimeout(() => {
+      timeouts.current = timeouts.current.filter(value => value !== timeout)
+      callback()
+    }, delay)
+
+    timeouts.current.push(timeout)
+  }, [])
+
+  const applyLikesData = useCallback((data: LikesPayload) => {
+    if (!isMounted.current) return
+
+    setGlobalCount(data.globalCount)
+    setUserClicks(data.userCount)
+
+    if (data.visitorId && data.visitorId !== visitorId.current) {
+      visitorId.current = data.visitorId
+      localStorage.setItem(VID_KEY, data.visitorId)
+    }
+  }, [])
+
+  const loadLikes = useCallback(async () => {
+    try {
+      const { data } = await axios.get<LikesPayload>(`/api/posts/${postId}/likes`, {
+        params: { vid: visitorId.current, fp: fingerprint.current }
+      })
+
+      applyLikesData(data)
+    } catch (error) {
+      console.error('Failed to load like-button state', error)
+    }
+  }, [applyLikesData, postId])
 
   useEffect(() => {
     isMounted.current = true
     visitorId.current = getVisitorId()
     fingerprint.current = generateFingerprint()
 
-    axios
-      .get(`/api/posts/${postId}/likes`, {
-        params: { vid: visitorId.current, fp: fingerprint.current }
-      })
-      .then(({ data }) => {
-        if (!isMounted.current) return
-        setGlobalCount(data.globalCount)
-        setUserClicks(data.userCount)
-        if (data.visitorId && data.visitorId !== visitorId.current) {
-          visitorId.current = data.visitorId
-          localStorage.setItem(VID_KEY, data.visitorId)
-        }
-      })
-      .catch(() => {})
+    void loadLikes()
 
     return () => {
       isMounted.current = false
+      timeouts.current.forEach(timeout => window.clearTimeout(timeout))
+      timeouts.current = []
     }
-  }, [postId])
+  }, [loadLikes])
 
-  const spawnParticles = useCallback(() => {
-    const count = 6 + Math.floor(Math.random() * 3) // 6-8
+  const spawnParticles = useCallback((energy: number) => {
+    const count = 5 + Math.round(energy * 4) + Math.floor(Math.random() * 2)
     const newParticles: Particle[] = []
+
     for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5
       newParticles.push({
         id: particleId.current++,
+        kind: Math.random() > 0.45 ? 'shard' : 'spark',
         angle,
-        distance: 25 + Math.random() * 30,
-        size: 2 + Math.random() * 4,
-        hue: PRISMATIC_HUES[i % PRISMATIC_HUES.length]
+        distance: 24 + energy * 20 + Math.random() * 18,
+        size: 10 + Math.random() * 6 + energy * 5,
+        hue: CRYSTAL_HUES[i % CRYSTAL_HUES.length],
+        delay: Math.random() * 0.08,
+        rotation: Math.random() * 160 - 80
       })
     }
+
     setParticles(prev => [...prev, ...newParticles])
 
-    setTimeout(() => {
-      const ids = new Set(newParticles.map(p => p.id))
-      setParticles(prev => prev.filter(p => !ids.has(p.id)))
-    }, 700)
-  }, [])
+    scheduleTimeout(() => {
+      const ids = new Set(newParticles.map(particle => particle.id))
+      setParticles(prev => prev.filter(particle => !ids.has(particle.id)))
+    }, 900)
+  }, [scheduleTimeout])
 
   const handleClick = useCallback(async () => {
-    playClickTone()
-    spawnParticles()
+    const nextIntensity = Math.min(userClicks + 1, MAX_CLICKS) / MAX_CLICKS
 
-    // Spring squash animation
-    gemControls.start({
-      scale: [1, 0.7, 1.2, 1],
+    playClickTone()
+    spawnParticles(nextIntensity)
+    setBurstKey(prev => prev + 1)
+
+    void crystalControls.start({
+      scale: [1, 0.88, 1.05, 1],
+      rotate: [0, -3, 1.5, 0],
+      y: [0, 4, -2, 0],
       transition: {
-        type: 'spring',
-        stiffness: 500,
-        damping: 15,
-        duration: 0.5
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
+        times: [0, 0.22, 0.7, 1]
       }
     })
 
     if (userClicks >= MAX_CLICKS) {
       setMaxLabel(MAX_LABELS[Math.floor(Math.random() * MAX_LABELS.length)])
       setShowMaxLabel(true)
-      setTimeout(() => setShowMaxLabel(false), 1200)
+      scheduleTimeout(() => setShowMaxLabel(false), 1200)
       return
     }
 
@@ -185,195 +230,368 @@ export default function GemLikeButton({
     setGlobalCount(prev => prev + 1)
 
     try {
-      const { data } = await axios.post(`/api/posts/${postId}/likes`, {
+      const { data } = await axios.post<LikesPayload>(`/api/posts/${postId}/likes`, {
         visitorId: visitorId.current,
         fingerprint: fingerprint.current
       })
+
+      applyLikesData(data)
+    } catch (error) {
+      console.error('Failed to increment like-button state', error)
       if (isMounted.current) {
-        setGlobalCount(data.globalCount)
-        setUserClicks(data.userCount)
+        void loadLikes()
       }
-    } catch {}
-  }, [postId, userClicks, spawnParticles, gemControls])
+    }
+  }, [
+    applyLikesData,
+    crystalControls,
+    loadLikes,
+    postId,
+    scheduleTimeout,
+    spawnParticles,
+    userClicks
+  ])
 
   const intensity = userClicks / MAX_CLICKS
-  const gemScale = 1 + intensity * 0.12
+  const accentStrength = Math.max(0, intensity - 0.45) / 0.55
 
-  const fillColor = getGemFill(intensity)
-  const highlightColor = getGemHighlight(intensity)
-  const shadowColor = getGemShadow(intensity)
-  const darkColor = getGemDark(intensity)
+  const baseWidth = size === 'sm' ? 42 : 58
+  const crystalWidth = baseWidth + intensity * (size === 'sm' ? 6 : 10)
+  const crystalHeight = crystalWidth * 1.2
 
-  const glowOpacity = 0.15 + intensity * 0.6
-  const glowSpread = 4 + intensity * 18
+  const topY = 12 - intensity * 5
+  const shoulderY = 34 - intensity * 3
+  const leftShoulderX = 34 - intensity * 5
+  const rightShoulderX = 120 - leftShoulderX
+  const leftEdgeX = 22 - intensity * 7
+  const rightEdgeX = 120 - leftEdgeX
+  const beltY = 58 + intensity * 3
+  const beltInset = 12 - intensity * 2
+  const coreTopY = shoulderY + 11 + intensity * 2
+  const coreBottomY = 78 + intensity * 8
+  const baseY = 112 + intensity * 10
+
+  const outerPath = `M60 ${topY} L${leftShoulderX} ${shoulderY} L${leftEdgeX} ${beltY} L60 ${baseY} L${rightEdgeX} ${beltY} L${rightShoulderX} ${shoulderY} Z`
+  const capPath = `M60 ${topY} L${leftShoulderX} ${shoulderY} L60 ${coreTopY} L${rightShoulderX} ${shoulderY} Z`
+  const leftFacetPath = `M${leftShoulderX} ${shoulderY} L${leftEdgeX} ${beltY} L${60 - beltInset} ${beltY} L60 ${coreTopY} Z`
+  const rightFacetPath = `M${rightShoulderX} ${shoulderY} L${rightEdgeX} ${beltY} L${60 + beltInset} ${beltY} L60 ${coreTopY} Z`
+  const corePath = `M60 ${coreTopY} L${60 - beltInset} ${beltY} L60 ${coreBottomY} L${60 + beltInset} ${beltY} Z`
+  const leftBasePath = `M${leftEdgeX} ${beltY} L60 ${baseY} L60 ${coreBottomY} L${60 - beltInset} ${beltY} Z`
+  const rightBasePath = `M${rightEdgeX} ${beltY} L60 ${baseY} L60 ${coreBottomY} L${60 + beltInset} ${beltY} Z`
+  const highlightPath = `M64 ${topY + 9} L79 ${shoulderY + 4} L66 ${beltY - 4} L61 ${beltY - 18} Z`
+  const accentPath = `M${60 - beltInset + 2} ${beltY + 2} L60 ${coreBottomY - 8} L${60 + beltInset - 2} ${beltY + 2}`
+
+  const shellTop = hsla(256, 12 + intensity * 20, 9 + intensity * 8)
+  const shellMid = hsla(264, 18 + intensity * 38, 11 + intensity * 12)
+  const shellBottom = hsla(278, 22 + intensity * 42, 15 + intensity * 16)
+  const capStart = hsla(280, 14 + intensity * 54, 18 + intensity * 18)
+  const capEnd = hsla(254, 10 + intensity * 28, 11 + intensity * 12)
+  const leftFacetFill = hsla(282, 18 + intensity * 60, 14 + intensity * 24, 0.96)
+  const rightFacetFill = hsla(250, 14 + intensity * 46, 13 + intensity * 18, 0.96)
+  const coreStart = hsla(276, 24 + intensity * 62, 18 + intensity * 24)
+  const coreMid = hsla(286, 18 + intensity * 56, 15 + intensity * 20)
+  const coreEnd = hsla(
+    198 + accentStrength * 16,
+    18 + accentStrength * 74,
+    16 + intensity * 26
+  )
+  const leftBaseFill = hsla(274, 18 + intensity * 58, 11 + intensity * 16, 0.96)
+  const rightBaseFill = hsla(248, 14 + intensity * 40, 10 + intensity * 12, 0.98)
+  const outlineColor = hsla(228 + intensity * 26, 16 + intensity * 46, 32 + intensity * 38, 0.92)
+  const seamColor = hsla(220 + accentStrength * 12, 24 + intensity * 36, 62 + intensity * 16, 0.28 + intensity * 0.24)
+  const countColor = hsla(236 + intensity * 14, 14 + intensity * 24, 66 + intensity * 14, 0.92)
+  const persistentGlowOpacity = intensity === 0 ? 0 : 0.08 + intensity * 0.22
+  const auraStroke = hsla(278, 88, 64, 0.36 + intensity * 0.28)
+  const auraAccent = hsla(196, 92, 70, 0.18 + accentStrength * 0.36)
+
+  const shellGradientId = `${svgId}-shell-gradient`
+  const capGradientId = `${svgId}-cap-gradient`
+  const coreGradientId = `${svgId}-core-gradient`
+  const innerGlowId = `${svgId}-inner-glow`
+  const highlightGradientId = `${svgId}-highlight-gradient`
+  const edgeGradientId = `${svgId}-edge-gradient`
+  const ambientGradientId = `${svgId}-ambient-gradient`
+  const glowFilterId = `${svgId}-glow-filter`
 
   return (
     <div className='flex flex-col items-center gap-2'>
-      <button
+      <motion.button
         type='button'
         onClick={handleClick}
+        onHoverStart={() => setHovered(true)}
+        onHoverEnd={() => setHovered(false)}
         aria-label={`Like this post (${userClicks} of ${MAX_CLICKS})`}
-        className='relative flex cursor-pointer items-center justify-center'
+        aria-pressed={userClicks > 0}
+        className='relative flex cursor-pointer items-center justify-center rounded-full'
       >
         <motion.div
           className='relative'
-          animate={gemControls}
-          whileHover={{ scale: 1.1 }}
+          animate={crystalControls}
+          whileHover={{
+            scale: 1.04,
+            rotate: -0.8 - intensity,
+            y: -2
+          }}
+          whileTap={{ scale: 0.96 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 22 }}
           style={{
-            width: baseSize * gemScale,
-            height: baseSize * gemScale * 1.2,
-            filter: `drop-shadow(0 0 ${glowSpread}px rgba(168, 85, 247, ${glowOpacity}))`
+            width: crystalWidth,
+            height: crystalHeight
           }}
         >
-          <svg
-            viewBox='0 0 100 120'
+          <AnimatePresence initial={false}>
+            {burstKey > 0 && (
+              <motion.svg
+                key={burstKey}
+                className='pointer-events-none absolute -inset-[20%]'
+                viewBox='0 0 120 140'
+                fill='none'
+                initial={{ opacity: 0, scale: 0.82 }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  scale: [0.82, 1.08, 1.2]
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <path
+                  d={outerPath}
+                  stroke={auraStroke}
+                  strokeWidth='5'
+                  strokeLinejoin='round'
+                  strokeLinecap='round'
+                  style={{ filter: 'blur(10px)' }}
+                />
+                <path
+                  d={outerPath}
+                  stroke={auraAccent}
+                  strokeWidth='2'
+                  strokeLinejoin='round'
+                  strokeLinecap='round'
+                />
+              </motion.svg>
+            )}
+          </AnimatePresence>
+
+          <motion.svg
+            viewBox='0 0 120 140'
             width='100%'
             height='100%'
-            xmlns='http://www.w3.org/2000/svg'
+            initial={false}
+            animate={{
+              filter: `saturate(${0.9 + intensity * 0.4}) brightness(${0.94 + intensity * 0.18})`
+            }}
+            transition={{ duration: 0.25 }}
           >
-            {/* Gem shape: diamond with faceted top */}
-            {/* Top triangle (crown) */}
-            <polygon
-              points='50,0 20,35 80,35'
-              fill={highlightColor}
-              stroke={darkColor}
-              strokeWidth='1.5'
+            <defs>
+              <linearGradient id={shellGradientId} x1='50%' y1='0%' x2='50%' y2='100%'>
+                <stop offset='0%' stopColor={shellTop} />
+                <stop offset='55%' stopColor={shellMid} />
+                <stop offset='100%' stopColor={shellBottom} />
+              </linearGradient>
+              <linearGradient id={capGradientId} x1='20%' y1='12%' x2='80%' y2='100%'>
+                <stop offset='0%' stopColor={capStart} />
+                <stop offset='100%' stopColor={capEnd} />
+              </linearGradient>
+              <linearGradient id={coreGradientId} x1='25%' y1='10%' x2='82%' y2='100%'>
+                <stop offset='0%' stopColor={coreStart} />
+                <stop offset='58%' stopColor={coreMid} />
+                <stop offset='100%' stopColor={coreEnd} />
+              </linearGradient>
+              <radialGradient id={innerGlowId} cx='50%' cy='40%' r='60%'>
+                <stop offset='0%' stopColor={hsla(282, 96, 80, 0.48 + intensity * 0.12)} />
+                <stop offset='65%' stopColor={hsla(196, 98, 72, accentStrength * 0.35)} />
+                <stop offset='100%' stopColor={hsla(280, 100, 50, 0)} />
+              </radialGradient>
+              <radialGradient id={ambientGradientId} cx='50%' cy='46%' r='52%'>
+                <stop offset='0%' stopColor={hsla(278, 96, 66, persistentGlowOpacity)} />
+                <stop
+                  offset='72%'
+                  stopColor={hsla(198, 100, 68, accentStrength * 0.24)}
+                />
+                <stop offset='100%' stopColor={hsla(280, 100, 50, 0)} />
+              </radialGradient>
+              <linearGradient
+                id={highlightGradientId}
+                x1='45%'
+                y1='0%'
+                x2='70%'
+                y2='100%'
+              >
+                <stop offset='0%' stopColor={hsla(0, 0, 100, 0)} />
+                <stop offset='42%' stopColor={hsla(0, 0, 100, 0.78)} />
+                <stop offset='100%' stopColor={hsla(0, 0, 100, 0)} />
+              </linearGradient>
+              <linearGradient id={edgeGradientId} x1='18%' y1='0%' x2='80%' y2='100%'>
+                <stop offset='0%' stopColor={hsla(214, 42, 74, 0.5 + intensity * 0.14)} />
+                <stop offset='55%' stopColor={outlineColor} />
+                <stop offset='100%' stopColor={hsla(192, 88, 72, accentStrength * 0.65)} />
+              </linearGradient>
+              <filter
+                id={glowFilterId}
+                x='-60%'
+                y='-60%'
+                width='220%'
+                height='220%'
+              >
+                <feGaussianBlur stdDeviation='8' />
+              </filter>
+            </defs>
+
+            <path
+              d={outerPath}
+              fill={`url(#${ambientGradientId})`}
+              filter={`url(#${glowFilterId})`}
+              opacity={persistentGlowOpacity}
             />
-            {/* Top-left facet */}
-            <polygon
-              points='50,0 20,35 35,35'
-              fill={fillColor}
-              opacity='0.8'
+
+            <path
+              d={outerPath}
+              fill={`url(#${shellGradientId})`}
+              stroke={outlineColor}
+              strokeWidth='1.4'
+              strokeLinejoin='round'
             />
-            {/* Top-right facet */}
-            <polygon
-              points='50,0 65,35 80,35'
-              fill={shadowColor}
-              opacity='0.7'
+            <path d={capPath} fill={`url(#${capGradientId})`} opacity='0.94' />
+            <path d={leftFacetPath} fill={leftFacetFill} />
+            <path d={rightFacetPath} fill={rightFacetFill} />
+            <path d={corePath} fill={`url(#${coreGradientId})`} />
+            <path d={corePath} fill={`url(#${innerGlowId})`} opacity={0.16 + intensity * 0.34} />
+            <path d={leftBasePath} fill={leftBaseFill} />
+            <path d={rightBasePath} fill={rightBaseFill} />
+
+            <motion.path
+              d={highlightPath}
+              fill={`url(#${highlightGradientId})`}
+              initial={false}
+              animate={
+                hovered
+                  ? {
+                      opacity: [0, 0.62, 0],
+                      x: [-10, 2, 12]
+                    }
+                  : {
+                      opacity: 0.12 + intensity * 0.18,
+                      x: -4
+                    }
+              }
+              transition={
+                hovered
+                  ? {
+                      duration: 0.85,
+                      ease: 'easeInOut'
+                    }
+                  : {
+                      duration: 0.2
+                    }
+              }
+              style={{
+                transformBox: 'fill-box',
+                transformOrigin: 'center'
+              }}
             />
-            {/* Center band left */}
-            <polygon
-              points='20,35 5,50 50,50 35,35'
-              fill={fillColor}
-            />
-            {/* Center band right */}
-            <polygon
-              points='80,35 95,50 50,50 65,35'
-              fill={shadowColor}
-            />
-            {/* Bottom-left pavilion */}
-            <polygon
-              points='5,50 50,120 50,50'
-              fill={shadowColor}
-              opacity='0.85'
-            />
-            {/* Bottom-right pavilion */}
-            <polygon
-              points='95,50 50,120 50,50'
-              fill={darkColor}
-              opacity='0.75'
-            />
-            {/* Highlight shine */}
-            <polygon
-              points='50,0 35,35 50,50'
-              fill='white'
-              opacity={0.15 + intensity * 0.2}
-            />
-            {/* Outer stroke */}
-            <polygon
-              points='50,0 20,35 5,50 50,120 95,50 80,35'
+
+            <path
+              d={accentPath}
               fill='none'
-              stroke={darkColor}
+              stroke={hsla(196, 94, 72, accentStrength * 0.8)}
+              strokeWidth='1.35'
+              strokeLinejoin='round'
+              strokeLinecap='round'
+            />
+            <path
+              d={`M${leftShoulderX} ${shoulderY} L60 ${coreBottomY}`}
+              fill='none'
+              stroke={seamColor}
+              strokeWidth='1'
+            />
+            <path
+              d={`M${rightShoulderX} ${shoulderY} L60 ${coreBottomY}`}
+              fill='none'
+              stroke={seamColor}
+              strokeWidth='1'
+            />
+            <path
+              d={`M60 ${coreTopY} L60 ${baseY}`}
+              fill='none'
+              stroke={hsla(0, 0, 100, 0.06 + intensity * 0.16)}
+              strokeWidth='1'
+            />
+
+            <path
+              d={outerPath}
+              fill='none'
+              stroke={`url(#${edgeGradientId})`}
               strokeWidth='2'
               strokeLinejoin='round'
             />
-          </svg>
-
-          {/* Pulsing ring at high intensity */}
-          {intensity > 0.3 && (
-            <motion.div
-              className='pointer-events-none absolute inset-0'
-              animate={{
-                scale: [1, 1.4, 1],
-                opacity: [intensity * 0.3, 0, intensity * 0.3]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }}
-            >
-              <svg
-                viewBox='0 0 100 120'
-                width='100%'
-                height='100%'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <polygon
-                  points='50,0 20,35 5,50 50,120 95,50 80,35'
-                  fill='none'
-                  stroke={`hsla(270, 80%, 60%, ${intensity * 0.4})`}
-                  strokeWidth='1.5'
-                  strokeLinejoin='round'
-                />
-              </svg>
-            </motion.div>
-          )}
+          </motion.svg>
         </motion.div>
 
-        {/* Prismatic ray particles */}
         <AnimatePresence>
-          {particles.map(p => (
-            <motion.div
-              key={p.id}
-              className='pointer-events-none absolute'
+          {particles.map(particle => (
+            <motion.svg
+              key={particle.id}
+              className='pointer-events-none absolute left-1/2 top-1/2 overflow-visible'
+              viewBox='0 0 24 24'
               style={{
-                width: p.size,
-                height: p.size * 2.5,
-                background: `linear-gradient(to bottom, hsla(${p.hue}, 90%, 70%, 0.9), hsla(${p.hue}, 80%, 50%, 0))`,
-                borderRadius: '50%',
-                transformOrigin: 'center center',
-                rotate: `${(p.angle * 180) / Math.PI + 90}deg`
+                width: particle.size,
+                height: particle.size
               }}
-              initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-              animate={{
-                x: Math.cos(p.angle) * p.distance,
-                y: Math.sin(p.angle) * p.distance,
+              initial={{
+                x: -particle.size / 2,
+                y: -particle.size / 2,
                 opacity: 0,
-                scale: 1.5
+                scale: 0.2,
+                rotate: particle.rotation - 18
               }}
-              exit={{ opacity: 0 }}
+              animate={{
+                x: -particle.size / 2 + Math.cos(particle.angle) * particle.distance,
+                y: -particle.size / 2 + Math.sin(particle.angle) * particle.distance,
+                opacity: [0, 1, 0],
+                scale: [0.2, 1, 0.55],
+                rotate: particle.rotation
+              }}
+              exit={{ opacity: 0, scale: 0.4 }}
               transition={{
-                duration: 0.6,
-                ease: 'easeOut'
+                duration: 0.7,
+                delay: particle.delay,
+                ease: [0.22, 1, 0.36, 1]
               }}
-            />
+            >
+              <path
+                d={getParticlePath(particle.kind)}
+                fill={hsla(particle.hue, 92, 74, 0.96)}
+                stroke={hsla(0, 0, 100, 0.42)}
+                strokeWidth='1'
+                strokeLinejoin='round'
+              />
+            </motion.svg>
           ))}
         </AnimatePresence>
 
-        {/* Max label */}
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='pointer-events-none absolute -top-8 whitespace-nowrap text-xs font-semibold text-purple-400'
-              initial={{ y: 4, opacity: 0, scale: 0.8 }}
+              className='pointer-events-none absolute -top-11 whitespace-nowrap rounded-full border border-white/10 bg-default-950/85 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-default-100 backdrop-blur'
+              initial={{ y: 6, opacity: 0, scale: 0.92 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 22 }}
             >
               {maxLabel}
             </motion.span>
           )}
         </AnimatePresence>
-      </button>
+      </motion.button>
 
-      {/* Animated count */}
       <motion.span
-        className='text-xs text-default-400'
+        className='text-[11px] font-medium tracking-[0.24em]'
+        style={{ color: countColor }}
         key={globalCount}
         initial={{ y: 8, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 22 }}
       >
         {globalCount.toLocaleString()}
       </motion.span>
