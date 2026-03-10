@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { Image, Link } from '@heroui/react'
 
 import { getPostById, getPosts } from '@/libs/posts'
-import { getAbsoluteUrl } from '@/libs/metadata'
+import { getAbsoluteUrl, getOpenGraphImageMetadata } from '@/libs/metadata'
 import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
@@ -36,6 +36,13 @@ export async function generateMetadata({
   const { title, summary, image, author, publishedAt } = post.metadata
   const postUrl = getAbsoluteUrl(`/posts/${params.postId}`)
   const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
+  const coverImage = image && coverImageUrl
+    ? {
+        url: coverImageUrl,
+        alt: title ?? params.postId,
+        ...getOpenGraphImageMetadata(image)
+      }
+    : undefined
 
   return {
     title,
@@ -52,14 +59,7 @@ export async function generateMetadata({
       siteName: 'Umer Sagheer',
       publishedTime: publishedAt,
       authors: author ? [author] : undefined,
-      images: coverImageUrl
-        ? [
-            {
-              url: coverImageUrl,
-              alt: title ?? params.postId
-            }
-          ]
-        : undefined
+      images: coverImage ? [coverImage] : undefined
     },
     twitter: {
       card: coverImageUrl ? 'summary_large_image' : 'summary',
