@@ -1,8 +1,10 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
 import { Image, Link } from '@heroui/react'
 
 import { getPostById, getPosts } from '@/libs/posts'
+import { getAbsoluteUrl } from '@/libs/metadata'
 import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
@@ -20,6 +22,52 @@ export async function generateStaticParams() {
   const staticPosts = posts.map(post => ({ postId: post.postId }))
 
   return staticPosts
+}
+
+export async function generateMetadata({
+  params
+}: PostProps): Promise<Metadata> {
+  const post = await getPostById(params.postId)
+
+  if (!post) {
+    return {}
+  }
+
+  const { title, summary, image, author, publishedAt } = post.metadata
+  const postUrl = getAbsoluteUrl(`/posts/${params.postId}`)
+  const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
+
+  return {
+    title,
+    description: summary,
+    authors: author ? [{ name: author }] : undefined,
+    alternates: {
+      canonical: postUrl
+    },
+    openGraph: {
+      type: 'article',
+      url: postUrl,
+      title,
+      description: summary,
+      siteName: 'Umer Sagheer',
+      publishedTime: publishedAt,
+      authors: author ? [author] : undefined,
+      images: coverImageUrl
+        ? [
+            {
+              url: coverImageUrl,
+              alt: title ?? params.postId
+            }
+          ]
+        : undefined
+    },
+    twitter: {
+      card: coverImageUrl ? 'summary_large_image' : 'summary',
+      title,
+      description: summary,
+      images: coverImageUrl ? [coverImageUrl] : undefined
+    }
+  }
 }
 
 export default async function Post({ params }: PostProps) {

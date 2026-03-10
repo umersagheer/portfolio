@@ -8,6 +8,7 @@ import { GridPattern } from '@/components/grid-patterns'
 import { Navbar } from '@/components/navbar'
 import Gradient from '@/components/gradient'
 import Image from 'next/image'
+import { getSiteUrl } from '@/libs/metadata'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -20,7 +21,10 @@ const sourceCodePro = Source_Code_Pro({
   variable: '--font-source-code-pro'
 })
 
+const siteUrl = getSiteUrl()
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: 'Umer Sagheer',
   description: 'Personal Portfolio of Umer Sagheer'
 }
