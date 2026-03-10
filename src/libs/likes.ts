@@ -1,6 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm'
-import { getDb } from '@/libs/connection'
-import { postLikes, postLikeVisitors } from '@/libs/db'
+import { getPrisma } from '@/libs/prisma'
 
 export type LikesResponse = {
   globalCount: number
@@ -8,70 +6,68 @@ export type LikesResponse = {
   visitorId: string
 }
 
-export function getGlobalCount(postId: string): number {
-  const db = getDb()
-  const rows = db
-    .select({ count: postLikes.count })
-    .from(postLikes)
-    .where(eq(postLikes.postId, postId))
-    .all()
-  return rows[0]?.count ?? 0
+export async function getGlobalCount(postId: string): Promise<number> {
+  const prisma = getPrisma()
+  const postLike = await prisma.postLike.findUnique({
+    where: { postId },
+    select: { count: true }
+  })
+
+  return postLike?.count ?? 0
 }
 
-export function getVisitorCount(
+export async function getVisitorCount(
   postId: string,
   visitorId: string,
   fingerprint: string
-): { count: number; resolvedVisitorId: string } {
-  const db = getDb()
+): Promise<{ count: number; resolvedVisitorId: string }> {
+  const prisma = getPrisma()
 
   // Try by visitorId first
   if (visitorId) {
-    const rows = db
-      .select({ count: postLikeVisitors.count })
-      .from(postLikeVisitors)
-      .where(
-        and(
-          eq(postLikeVisitors.postId, postId),
-          eq(postLikeVisitors.visitorId, visitorId)
-        )
-      )
-      .all()
-    if (rows.length > 0) {
-      return { count: rows[0].count, resolvedVisitorId: visitorId }
+    const visitor = await prisma.postLikeVisitor.findUnique({
+      where: {
+        postId_visitorId: {
+          postId,
+          visitorId
+        }
+      },
+      select: { count: true }
+    })
+
+    if (visitor) {
+      return { count: visitor.count, resolvedVisitorId: visitorId }
     }
   }
 
   // Fallback: match by fingerprint
   if (fingerprint) {
-    const rows = db
-      .select({
-        count: postLikeVisitors.count,
-        visitorId: postLikeVisitors.visitorId
-      })
-      .from(postLikeVisitors)
-      .where(
-        and(
-          eq(postLikeVisitors.postId, postId),
-          eq(postLikeVisitors.fingerprint, fingerprint)
-        )
-      )
-      .all()
-    if (rows.length > 0) {
-      return { count: rows[0].count, resolvedVisitorId: rows[0].visitorId }
+    const visitor = await prisma.postLikeVisitor.findFirst({
+      where: {
+        postId,
+        fingerprint
+      },
+      select: {
+        count: true,
+        visitorId: true
+      }
+    })
+
+    if (visitor) {
+      return { count: visitor.count, resolvedVisitorId: visitor.visitorId }
     }
   }
 
   return { count: 0, resolvedVisitorId: visitorId }
 }
 
-export function getLikes(
+export async function getLikes(
   postId: string,
   visitorId: string,
   fingerprint: string
-): LikesResponse {
-  const globalCount = getGlobalCount(postId)
-  const visitor = getVisitorCount(postId, visitorId, fingerprint)
+): Promise<LikesResponse> {
+  const globalCount = await getGlobalCount(postId)
+  const visitor = await getVisitorCount(postId, visitorId, fingerprint)
   return {
     globalCount,
     userCount: visitor.count,
@@ -79,44 +75,66 @@ export function getLikes(
   }
 }
 
-export function incrementLikes(
+export async function incrementLikes(
   postId: string,
   visitorId: string,
   fingerprint: string
-): LikesResponse {
-  const db = getDb()
+): Promise<LikesResponse> {
+  const prisma = getPrisma()
 
   // Check current visitor count
-  const visitor = getVisitorCount(postId, visitorId, fingerprint)
+  const visitor = await getVisitorCount(postId, visitorId, fingerprint)
   const resolvedId = visitor.resolvedVisitorId || visitorId
   if (visitor.count >= 10) {
     return {
-      globalCount: getGlobalCount(postId),
+      globalCount: await getGlobalCount(postId),
       userCount: visitor.count,
       visitorId: resolvedId
     }
   }
 
   // Increment global count
-  db.insert(postLikes)
-    .values({ postId, count: 1 })
-    .onConflictDoUpdate({
-      target: postLikes.postId,
-      set: { count: sql`${postLikes.count} + 1` }
-    })
-    .run()
+  await prisma.postLike.upsert({
+    where: { postId },
+    update: {
+      count: {
+        increment: 1
+      }
+    },
+    create: {
+      postId,
+      count: 1
+    }
+  })
 
   // Upsert visitor record
-  db.insert(postLikeVisitors)
-    .values({ postId, visitorId: resolvedId, fingerprint, count: 1 })
-    .onConflictDoUpdate({
-      target: [postLikeVisitors.postId, postLikeVisitors.visitorId],
-      set: { count: sql`${postLikeVisitors.count} + 1` }
-    })
-    .run()
+  await prisma.postLikeVisitor.upsert({
+    where: {
+      postId_visitorId: {
+        postId,
+        visitorId: resolvedId
+      }
+    },
+    update: {
+      count: {
+        increment: 1
+      }
+    },
+    create: {
+      postId,
+      visitorId: resolvedId,
+      fingerprint,
+      count: 1
+    }
+  })
+
+  const updatedPostLike = await prisma.postLike.findUnique({
+    where: { postId },
+    select: { count: true }
+  })
 
   return {
-    globalCount: getGlobalCount(postId),
+    globalCount: updatedPostLike?.count ?? 0,
     userCount: visitor.count + 1,
     visitorId: resolvedId
   }

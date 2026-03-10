@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model PostLike {
+  postId String @id @map("post_id")
+  count  Int    @default(0)
+
+  @@map("post_likes")
+}
+
+model PostLikeVisitor {
+  postId      String @map("post_id")
+  visitorId   String @map("visitor_id")
+  fingerprint String
+  count       Int    @default(0)
+
+  @@id([postId, visitorId])
+  @@index([postId, fingerprint], map: "idx_visitor_fingerprint")
+  @@map("post_like_visitors")
+}

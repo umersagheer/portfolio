@@ -16,6 +16,33 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment
+
+Create a `.env` file with:
+
+```bash
+DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require"
+RESEND_API_KEY="re_your_api_key"
+```
+
+If you are using Neon on Vercel, prefer its pooled Postgres connection string for `DATABASE_URL`.
+
+## Database setup
+
+This project now uses Prisma migrations for the blog likes tables. After pointing `DATABASE_URL` at a new Postgres database:
+
+```bash
+pnpm db:migrate -- --name init-likes
+```
+
+On deployment, apply any committed migrations with:
+
+```bash
+pnpm db:deploy
+```
+
+For Vercel, set the build command to `pnpm build:vercel` so migrations are applied before `next build`.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.

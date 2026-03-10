@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
   const { searchParams } = request.nextUrl
   const visitorId = searchParams.get('vid') ?? ''
   const fingerprint = searchParams.get('fp') ?? ''
-  const result = getLikes(postId, visitorId, fingerprint)
+  const result = await getLikes(postId, visitorId, fingerprint)
   return NextResponse.json(result)
 }
 
@@ -21,6 +21,6 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   const body = await request.json().catch(() => ({}))
   const visitorId = body.visitorId ?? ''
   const fingerprint = body.fingerprint ?? ''
-  const result = incrementLikes(postId, visitorId, fingerprint)
+  const result = await incrementLikes(postId, visitorId, fingerprint)
   return NextResponse.json(result)
 }
