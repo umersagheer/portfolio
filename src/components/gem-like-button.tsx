@@ -33,11 +33,14 @@ const VID_KEY = 'sparkle_vid'
 
 const CRYSTAL_HUES = [272, 286, 254, 198, 304, 214]
 const MAX_LABELS = [
-  'Fully charged',
-  'Crystal capped',
-  'Peak resonance',
-  'Charge complete',
-  'Locked in'
+  'MAXED OUT',
+  '409 conflict',
+  'OVERLOAD',
+  'CRYSTALLIZED',
+  'HEAP FULL',
+  'STACK OVERFLOW',
+  'OUT OF LIKES',
+  'TOO POPULAR'
 ]
 
 function generateFingerprint(): string {
