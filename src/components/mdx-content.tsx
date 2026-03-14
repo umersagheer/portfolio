@@ -11,6 +11,12 @@ import FlipExplainer from '@/components/blog/layout-animations/flip-explainer'
 import SpringVisualizer from '@/components/blog/layout-animations/spring-visualizer'
 import MorphingDialogDemo from '@/components/blog/layout-animations/morphing-dialog-demo'
 import TransformVsLayoutDemo from '@/components/blog/layout-animations/transform-vs-layout-demo'
+import HttpVsWebSocketDemo from '@/components/blog/websockets/http-vs-websocket-demo'
+import HandshakeExplainer from '@/components/blog/websockets/handshake-explainer'
+import LifecycleDemo from '@/components/blog/websockets/lifecycle-demo'
+import EnvelopePatternDemo from '@/components/blog/websockets/envelope-pattern-demo'
+import RoutingPatternsDemo from '@/components/blog/websockets/routing-patterns-demo'
+import PubSubScalingDemo from '@/components/blog/websockets/pub-sub-scaling-demo'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -78,7 +84,13 @@ const components = {
   FlipExplainer,
   SpringVisualizer,
   MorphingDialogDemo,
-  TransformVsLayoutDemo
+  TransformVsLayoutDemo,
+  HttpVsWebSocketDemo,
+  HandshakeExplainer,
+  LifecycleDemo,
+  EnvelopePatternDemo,
+  RoutingPatternsDemo,
+  PubSubScalingDemo
 }
 
 export default function MDXContent(

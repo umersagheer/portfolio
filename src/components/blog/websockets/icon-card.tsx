@@ -1,0 +1,39 @@
+'use client'
+
+import { forwardRef } from 'react'
+import { cn } from '@heroui/react'
+
+type IconCardProps = {
+  children: React.ReactNode
+  className?: string
+  label?: string
+}
+
+const IconCard = forwardRef<HTMLDivElement, IconCardProps>(
+  ({ children, className, label }, ref) => {
+    return (
+      <div className='flex flex-col items-center gap-1.5'>
+        <div
+          ref={ref}
+          className={cn(
+            'z-10 flex size-12 items-center justify-center rounded-xl border border-default-200 bg-default-100 shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] dark:border-default-700 dark:bg-default-800 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]',
+            className
+          )}
+        >
+          <div className='size-7 text-default-600 dark:text-default-400 [&>svg]:size-full'>
+            {children}
+          </div>
+        </div>
+        {label && (
+          <span className='text-[10px] font-medium text-default-500'>
+            {label}
+          </span>
+        )}
+      </div>
+    )
+  }
+)
+
+IconCard.displayName = 'IconCard'
+
+export default IconCard
