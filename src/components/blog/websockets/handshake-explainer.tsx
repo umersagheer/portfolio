@@ -10,6 +10,7 @@ import {
   IconCircleCheck
 } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
+import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
 import IconCard from './icon-card'
 
@@ -192,6 +193,11 @@ export default function HandshakeExplainer() {
         ref={containerRef}
         className='relative mb-5 flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-6'
       >
+        <DotPattern
+          width={16}
+          height={16}
+          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+        />
         <IconCard ref={clientRef} label='Client'>
           <IconSend size={28} />
         </IconCard>
@@ -230,6 +236,7 @@ export default function HandshakeExplainer() {
             duration={2}
             gradientStartColor='#22c55e'
             gradientStopColor='#3b82f6'
+            reverse
           />
         )}
         {current.beamDirection === 'both' && (

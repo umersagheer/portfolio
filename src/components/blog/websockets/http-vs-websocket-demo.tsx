@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
 import { IconDeviceLaptop, IconServer } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
+import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
 import IconCard from './icon-card'
 
@@ -88,6 +89,11 @@ function HttpMode() {
         ref={containerRef}
         className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-8 sm:px-12'
       >
+        <DotPattern
+          width={16}
+          height={16}
+          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+        />
         <IconCard ref={clientRef} label='Client'>
           <IconDeviceLaptop size={28} />
         </IconCard>
@@ -141,6 +147,7 @@ function HttpMode() {
             duration={1.5}
             gradientStartColor='#22c55e'
             gradientStopColor='#3b82f6'
+            reverse
           />
         )}
       </div>
@@ -209,6 +216,11 @@ function WebSocketMode() {
         ref={containerRef}
         className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-8 sm:px-12'
       >
+        <DotPattern
+          width={16}
+          height={16}
+          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+        />
         <IconCard ref={clientRef} label='Client'>
           <IconDeviceLaptop size={28} />
         </IconCard>
@@ -251,6 +263,7 @@ function WebSocketMode() {
         {connected && (
           <>
             <AnimatedBeam
+              key={`ws-out-${messageCount}`}
               containerRef={containerRef}
               fromRef={clientRef}
               toRef={serverRef}
@@ -262,6 +275,7 @@ function WebSocketMode() {
               gradientStopColor='#3b82f6'
             />
             <AnimatedBeam
+              key={`ws-in-${messageCount}`}
               containerRef={containerRef}
               fromRef={serverRef}
               toRef={clientRef}

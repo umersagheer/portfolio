@@ -10,6 +10,7 @@ import {
   IconCircleX
 } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
+import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
 import IconCard from './icon-card'
 
@@ -219,11 +220,24 @@ export default function LifecycleDemo() {
       </AnimatePresence>
 
       {/* Ping-pong visualization (only when OPEN) */}
-      {activeState === 1 && (
+      <motion.div
+        initial={false}
+        animate={{
+          height: activeState === 1 ? 'auto' : 0,
+          opacity: activeState === 1 ? 1 : 0
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className='overflow-hidden'
+      >
         <div
           ref={containerRef}
           className='relative mb-4 flex items-center justify-between rounded-lg border border-default-200 bg-background px-10 py-8'
         >
+          <DotPattern
+            width={16}
+            height={16}
+            className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+          />
           <IconCard ref={serverPingRef} label='Server'>
             <IconCircleCheck size={28} />
           </IconCard>
@@ -285,7 +299,7 @@ export default function LifecycleDemo() {
             />
           )}
         </div>
-      )}
+      </motion.div>
 
       {/* Controls */}
       <div className='flex justify-center gap-3'>

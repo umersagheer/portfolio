@@ -6,6 +6,7 @@ import {
   LayoutAnimationsPromo,
   layoutAnimationsPromoSchema,
 } from './blogs/layout-animations'
+import { WebSocketsCover } from './blogs/websockets'
 import { BlogCoverStill, blogCoverSchema } from './shared/stills/BlogCoverStill'
 
 import './shared/fonts'
@@ -28,6 +29,14 @@ export const Root: React.FC = () => {
           <Still
             id='LayoutAnimationsCover'
             component={LayoutAnimationsCover}
+            width={1280}
+            height={720}
+          />
+        </Folder>
+        <Folder name='websockets'>
+          <Still
+            id='WebSocketsCover'
+            component={WebSocketsCover}
             width={1280}
             height={720}
           />

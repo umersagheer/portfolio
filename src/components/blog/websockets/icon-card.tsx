@@ -16,11 +16,11 @@ const IconCard = forwardRef<HTMLDivElement, IconCardProps>(
         <div
           ref={ref}
           className={cn(
-            'z-10 flex size-12 items-center justify-center rounded-xl border border-default-200 bg-default-100 shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] dark:border-default-700 dark:bg-default-800 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]',
+            'z-10 flex size-12 items-center justify-center rounded-xl border border-default-200 bg-default-100 shadow-[inset_0_1px_4px_rgba(0,0,0,0.35)]',
             className
           )}
         >
-          <div className='size-7 text-default-600 dark:text-default-400 [&>svg]:size-full'>
+          <div className='size-7 text-default-600 [&>svg]:size-full'>
             {children}
           </div>
         </div>

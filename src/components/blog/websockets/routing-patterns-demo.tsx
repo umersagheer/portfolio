@@ -10,6 +10,7 @@ import {
   IconMessage
 } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
+import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
 import IconCard from './icon-card'
 
@@ -99,19 +100,21 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className='mb-4 flex flex-wrap gap-2'
+            className='overflow-hidden'
           >
-            {CLIENTS.map((c, i) => (
-              <Button
-                key={c.name}
-                size='sm'
-                variant={unicastTarget === i ? 'solid' : 'flat'}
-                color={unicastTarget === i ? 'primary' : 'default'}
-                onPress={() => setUnicastTarget(i)}
-              >
-                {c.name}
-              </Button>
-            ))}
+            <div className='mb-4 flex flex-wrap gap-2'>
+              {CLIENTS.map((c, i) => (
+                <Button
+                  key={c.name}
+                  size='sm'
+                  variant={unicastTarget === i ? 'solid' : 'flat'}
+                  color={unicastTarget === i ? 'primary' : 'default'}
+                  onPress={() => setUnicastTarget(i)}
+                >
+                  {c.name}
+                </Button>
+              ))}
+            </div>
           </motion.div>
         )}
         {pattern === 'multicast' && (
@@ -120,24 +123,26 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className='mb-4 flex gap-2'
+            className='overflow-hidden'
           >
-            <Button
-              size='sm'
-              variant={multicastRoom === 'A' ? 'solid' : 'flat'}
-              color={multicastRoom === 'A' ? 'secondary' : 'default'}
-              onPress={() => setMulticastRoom('A')}
-            >
-              Room A
-            </Button>
-            <Button
-              size='sm'
-              variant={multicastRoom === 'B' ? 'solid' : 'flat'}
-              color={multicastRoom === 'B' ? 'secondary' : 'default'}
-              onPress={() => setMulticastRoom('B')}
-            >
-              Room B
-            </Button>
+            <div className='mb-4 flex gap-2'>
+              <Button
+                size='sm'
+                variant={multicastRoom === 'A' ? 'solid' : 'flat'}
+                color={multicastRoom === 'A' ? 'secondary' : 'default'}
+                onPress={() => setMulticastRoom('A')}
+              >
+                Room A
+              </Button>
+              <Button
+                size='sm'
+                variant={multicastRoom === 'B' ? 'solid' : 'flat'}
+                color={multicastRoom === 'B' ? 'secondary' : 'default'}
+                onPress={() => setMulticastRoom('B')}
+              >
+                Room B
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -147,6 +152,11 @@ export default function RoutingPatternsDemo() {
         ref={containerRef}
         className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
       >
+        <DotPattern
+          width={16}
+          height={16}
+          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+        />
         {/* Server */}
         <div className='flex flex-col items-center'>
           <IconCard ref={serverRef} label='Server'>

@@ -9,6 +9,7 @@ import {
   IconDatabase
 } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
+import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
 import IconCard from './icon-card'
 
@@ -139,6 +140,11 @@ export default function PubSubScalingDemo() {
             ref={singleContainerRef}
             className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
           >
+            <DotPattern
+              width={16}
+              height={16}
+              className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+            />
             <IconCard ref={singleAliceRef} label='Alice'>
               <IconUser size={28} />
             </IconCard>
@@ -152,7 +158,7 @@ export default function PubSubScalingDemo() {
             </IconCard>
 
             {/* Alice → Server */}
-            {(animStep >= 1 || !animating) && (
+            {animStep >= 1 && animating && (
               <AnimatedBeam
                 containerRef={singleContainerRef}
                 fromRef={singleAliceRef}
@@ -163,7 +169,7 @@ export default function PubSubScalingDemo() {
               />
             )}
             {/* Server → Bob */}
-            {(animStep >= 2 || !animating) && (
+            {animStep >= 2 && animating && (
               <AnimatedBeam
                 containerRef={singleContainerRef}
                 fromRef={singleServerRef}
@@ -186,6 +192,11 @@ export default function PubSubScalingDemo() {
             ref={multiContainerRef}
             className='relative flex flex-col items-center gap-6 rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
           >
+            <DotPattern
+              width={16}
+              height={16}
+              className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+            />
             {/* Top row: Alice — Server1 — [Redis] — Server2 — Bob */}
             <div className='flex w-full items-center justify-between'>
               <IconCard ref={aliceRef} label='Alice'>
