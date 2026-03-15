@@ -11,19 +11,17 @@ const MESSAGE_TYPES = [
   { key: 'user:join', label: 'user:join' }
 ]
 
-function generateId() {
-  return 'msg_' + Math.random().toString(36).slice(2, 8)
-}
+const DEMO_MESSAGE_ID = 'msg_demo01'
+const DEMO_TIMESTAMP = '2026-03-15T12:34:56Z'
 
 export default function EnvelopePatternDemo() {
   const [message, setMessage] = useState('Hello team!')
   const [messageType, setMessageType] = useState('chat:message')
-  const [msgId] = useState(generateId)
 
   const envelope = {
     type: messageType,
-    id: msgId,
-    timestamp: new Date().toISOString().slice(0, 19) + 'Z',
+    id: DEMO_MESSAGE_ID,
+    timestamp: DEMO_TIMESTAMP,
     payload: {
       text: message || '...'
     },
@@ -104,7 +102,7 @@ export default function EnvelopePatternDemo() {
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='id' annotation='enables acks'>
-              &quot;<span className='text-secondary-500'>{msgId}</span>&quot;
+              &quot;<span className='text-secondary-500'>{envelope.id}</span>&quot;
             </EnvelopeLine>
             <EnvelopeLine
               label='timestamp'

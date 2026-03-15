@@ -18,6 +18,7 @@ import EnvelopePatternDemo from '@/components/blog/websockets/envelope-pattern-d
 import RoutingPatternsDemo from '@/components/blog/websockets/routing-patterns-demo'
 import PubSubScalingDemo from '@/components/blog/websockets/pub-sub-scaling-demo'
 import FrameDiagram from '@/components/blog/websockets/frame-diagram'
+import ProtocolComparisonTable from '@/components/blog/websockets/protocol-comparison-table'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -73,40 +74,11 @@ function Anchor({
   )
 }
 
-function Table(props: React.HTMLAttributes<HTMLTableElement>) {
-  return (
-    <div className='my-4 overflow-x-auto rounded-lg border border-default-200'>
-      <table className='w-full text-sm' {...props} />
-    </div>
-  )
-}
-
-function Th(props: React.ThHTMLAttributes<HTMLTableCellElement>) {
-  return (
-    <th
-      className='bg-default-100 px-4 py-2 text-left text-xs font-semibold text-default-600'
-      {...props}
-    />
-  )
-}
-
-function Td(props: React.TdHTMLAttributes<HTMLTableCellElement>) {
-  return (
-    <td
-      className='border-t border-default-100 px-4 py-2 text-xs text-default-500'
-      {...props}
-    />
-  )
-}
-
 const components = {
   code: Code,
   a: Anchor,
   h2: HeadingTwo,
   h3: HeadingThree,
-  table: Table,
-  th: Th,
-  td: Td,
   Counter,
   LayoutAnimationDemo,
   LayoutIdDemo,
@@ -121,7 +93,8 @@ const components = {
   EnvelopePatternDemo,
   RoutingPatternsDemo,
   PubSubScalingDemo,
-  FrameDiagram
+  FrameDiagram,
+  ProtocolComparisonTable
 }
 
 export default function MDXContent(

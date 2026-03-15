@@ -202,12 +202,7 @@ WebSockets aren't the only real-time protocol. Depending on your use case, alter
 
 **WebTransport** — The future. Built on HTTP/3 and QUIC, it offers multiple independent streams (no head-of-line blocking), unreliable datagrams (for real-time gaming), and better congestion control. Still emerging, but it addresses many of WebSocket's limitations.
 
-| Feature | WebSocket | SSE | WebRTC | WebTransport |
-|---|---|---|---|---|
-| Direction | Bidirectional | Server → Client | P2P | Bidirectional |
-| Protocol | TCP | HTTP | UDP (DTLS) | QUIC (HTTP/3) |
-| Reconnect | Manual | Automatic | Manual | Automatic |
-| Best for | Chat, collab | Live feeds | Video/audio | Gaming, streaming |
+<ProtocolComparisonTable />
 
 ## Wrapping Up
 

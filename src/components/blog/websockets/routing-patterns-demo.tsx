@@ -150,12 +150,17 @@ export default function RoutingPatternsDemo() {
       {/* Diagram */}
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
+        className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
       >
         <DotPattern
           width={16}
           height={16}
-          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+          style={{
+            maskImage:
+              'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+            maskComposite: 'intersect',
+            WebkitMaskComposite: 'source-in'
+          }}
         />
         {/* Server */}
         <div className='flex flex-col items-center'>

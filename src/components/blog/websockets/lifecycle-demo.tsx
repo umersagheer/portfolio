@@ -231,12 +231,17 @@ export default function LifecycleDemo() {
       >
         <div
           ref={containerRef}
-          className='relative mb-4 flex items-center justify-between rounded-lg border border-default-200 bg-background px-10 py-8'
+          className='relative mb-4 flex items-center justify-between rounded-lg border border-default-100 bg-background px-10 py-8'
         >
           <DotPattern
             width={16}
             height={16}
-            className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+            style={{
+              maskImage:
+                'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+              maskComposite: 'intersect',
+              WebkitMaskComposite: 'source-in'
+            }}
           />
           <IconCard ref={serverPingRef} label='Server'>
             <IconCircleCheck size={28} />

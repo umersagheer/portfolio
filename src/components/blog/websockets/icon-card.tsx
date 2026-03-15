@@ -16,7 +16,7 @@ const IconCard = forwardRef<HTMLDivElement, IconCardProps>(
         <div
           ref={ref}
           className={cn(
-            'z-10 flex size-12 items-center justify-center rounded-xl border border-default-200 bg-default-100 shadow-[inset_0_1px_4px_rgba(0,0,0,0.35)]',
+            'z-10 flex size-12 items-center justify-center rounded-xl border border-default-200 bg-gradient-to-b from-white/20 to-transparent backdrop-blur-md',
             className
           )}
         >

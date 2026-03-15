@@ -87,12 +87,17 @@ function HttpMode() {
     <>
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-8 sm:px-12'
+        className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-8 sm:px-12'
       >
         <DotPattern
           width={16}
           height={16}
-          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+          style={{
+            maskImage:
+              'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+            maskComposite: 'intersect',
+            WebkitMaskComposite: 'source-in'
+          }}
         />
         <IconCard ref={clientRef} label='Client'>
           <IconDeviceLaptop size={28} />
@@ -219,7 +224,12 @@ function WebSocketMode() {
         <DotPattern
           width={16}
           height={16}
-          className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+          style={{
+            maskImage:
+              'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+            maskComposite: 'intersect',
+            WebkitMaskComposite: 'source-in'
+          }}
         />
         <IconCard ref={clientRef} label='Client'>
           <IconDeviceLaptop size={28} />

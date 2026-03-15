@@ -138,12 +138,17 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={singleContainerRef}
-            className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
+            className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
           >
             <DotPattern
               width={16}
               height={16}
-              className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+              style={{
+                maskImage:
+                  'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'source-in'
+              }}
             />
             <IconCard ref={singleAliceRef} label='Alice'>
               <IconUser size={28} />
@@ -190,12 +195,18 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={multiContainerRef}
-            className='relative flex flex-col items-center gap-6 rounded-lg border border-default-200 bg-background px-6 py-8 sm:px-10'
+            className='relative flex flex-col items-center gap-6 rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
           >
             <DotPattern
               width={16}
+              glow
               height={16}
-              className='[mask-image:radial-gradient(250px_circle_at_center,white,transparent)]'
+              style={{
+                maskImage:
+                  'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'source-in'
+              }}
             />
             {/* Top row: Alice — Server1 — [Redis] — Server2 — Bob */}
             <div className='flex w-full items-center justify-between'>
