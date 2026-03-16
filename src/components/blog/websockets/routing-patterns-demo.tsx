@@ -3,15 +3,15 @@
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, Tab, Button } from '@heroui/react'
-import {
-  IconServer,
-  IconUser,
-  IconBroadcast,
-  IconMessage
-} from '@tabler/icons-react'
+import { IconBroadcast, IconMessage } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketPersonIcon,
+  WebSocketServerIcon
+} from './diagram-icons'
 import IconCard from './icon-card'
 
 const CLIENTS = [
@@ -153,6 +153,7 @@ export default function RoutingPatternsDemo() {
         className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
       >
         <DotPattern
+          glow
           width={16}
           height={16}
           style={{
@@ -165,7 +166,7 @@ export default function RoutingPatternsDemo() {
         {/* Server */}
         <div className='flex flex-col items-center'>
           <IconCard ref={serverRef} label='Server'>
-            <IconServer size={28} />
+            <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
           </IconCard>
         </div>
 
@@ -181,7 +182,7 @@ export default function RoutingPatternsDemo() {
               >
                 <div className='flex items-center gap-2'>
                   <IconCard ref={clientRefs[i]}>
-                    <IconUser size={28} />
+                    <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                   </IconCard>
                   <div className='flex flex-col'>
                     <span className='text-xs font-medium text-default-600'>
@@ -222,7 +223,9 @@ export default function RoutingPatternsDemo() {
               containerRef={containerRef}
               fromRef={serverRef}
               toRef={clientRefs[i]}
-              duration={2.5}
+              mode='loop'
+              duration={1.25}
+              repeatDelay={1.2}
               delay={i * 0.15}
               gradientStartColor={
                 pattern === 'broadcast'
@@ -251,7 +254,7 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className='rounded-full bg-primary-50 px-4 py-1.5 text-xs font-medium text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
+            className='rounded-full bg-primary-900/40 px-4 py-1.5 text-xs font-medium text-primary-900'
           >
             {label}
           </motion.span>

@@ -3,14 +3,15 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
-import {
-  IconServer,
-  IconUser,
-  IconDatabase
-} from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketBrokerIcon,
+  WebSocketPersonIcon,
+  WebSocketServerIcon
+} from './diagram-icons'
 import IconCard from './icon-card'
 
 type Mode = 'single' | 'no-broker' | 'redis'
@@ -19,6 +20,7 @@ export default function PubSubScalingDemo() {
   const [mode, setMode] = useState<Mode>('single')
   const [animating, setAnimating] = useState(false)
   const [animStep, setAnimStep] = useState(0)
+  const [runId, setRunId] = useState(0)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Single server refs
@@ -44,6 +46,7 @@ export default function PubSubScalingDemo() {
 
   const sendMessage = useCallback(() => {
     if (animating) return
+    setRunId(current => current + 1)
     setAnimating(true)
     setAnimStep(1) // Alice → Server
 
@@ -141,6 +144,7 @@ export default function PubSubScalingDemo() {
             className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
           >
             <DotPattern
+              glow
               width={16}
               height={16}
               style={{
@@ -151,39 +155,41 @@ export default function PubSubScalingDemo() {
               }}
             />
             <IconCard ref={singleAliceRef} label='Alice'>
-              <IconUser size={28} />
+              <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
             </IconCard>
 
             <IconCard ref={singleServerRef} label='Server'>
-              <IconServer size={28} />
+              <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
             </IconCard>
 
             <IconCard ref={singleBobRef} label='Bob'>
-              <IconUser size={28} />
+              <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
             </IconCard>
 
             {/* Alice → Server */}
-            {animStep >= 1 && animating && (
-              <AnimatedBeam
-                containerRef={singleContainerRef}
-                fromRef={singleAliceRef}
-                toRef={singleServerRef}
-                duration={2}
-                gradientStartColor='#7c3aed'
-                gradientStopColor='#3b82f6'
-              />
-            )}
+            <AnimatedBeam
+              containerRef={singleContainerRef}
+              fromRef={singleAliceRef}
+              toRef={singleServerRef}
+              mode='pulse'
+              animateOnMount={false}
+              triggerKey={animStep === 1 ? runId : undefined}
+              duration={1.05}
+              gradientStartColor='#7c3aed'
+              gradientStopColor='#3b82f6'
+            />
             {/* Server → Bob */}
-            {animStep >= 2 && animating && (
-              <AnimatedBeam
-                containerRef={singleContainerRef}
-                fromRef={singleServerRef}
-                toRef={singleBobRef}
-                duration={2}
-                gradientStartColor='#3b82f6'
-                gradientStopColor='#22c55e'
-              />
-            )}
+            <AnimatedBeam
+              containerRef={singleContainerRef}
+              fromRef={singleServerRef}
+              toRef={singleBobRef}
+              mode='pulse'
+              animateOnMount={false}
+              triggerKey={animStep === 2 ? runId : undefined}
+              duration={1.05}
+              gradientStartColor='#3b82f6'
+              gradientStopColor='#22c55e'
+            />
           </motion.div>
         )}
 
@@ -211,11 +217,11 @@ export default function PubSubScalingDemo() {
             {/* Top row: Alice — Server1 — [Redis] — Server2 — Bob */}
             <div className='flex w-full items-center justify-between'>
               <IconCard ref={aliceRef} label='Alice'>
-                <IconUser size={28} />
+                <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
               </IconCard>
 
               <IconCard ref={server1Ref} label='Server 1'>
-                <IconServer size={28} />
+                <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
               </IconCard>
 
               {mode === 'redis' ? (
@@ -224,7 +230,7 @@ export default function PubSubScalingDemo() {
                   label='Redis'
                   className='border-danger-300 dark:border-danger-800'
                 >
-                  <IconDatabase size={28} />
+                  <WebSocketBrokerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                 </IconCard>
               ) : (
                 <div className='flex flex-col items-center'>
@@ -232,7 +238,7 @@ export default function PubSubScalingDemo() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className='flex size-10 items-center justify-center rounded-full bg-danger-100 text-lg font-bold text-danger-500 dark:bg-danger-950'
+                      className='dark:bg-danger-950 flex size-10 items-center justify-center rounded-full bg-danger-100 text-lg font-bold text-danger-500'
                     >
                       ✕
                     </motion.div>
@@ -244,7 +250,7 @@ export default function PubSubScalingDemo() {
               )}
 
               <IconCard ref={server2Ref} label='Server 2'>
-                <IconServer size={28} />
+                <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
               </IconCard>
 
               <IconCard
@@ -256,60 +262,67 @@ export default function PubSubScalingDemo() {
                     : ''
                 }
               >
-                <IconUser size={28} />
+                <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
               </IconCard>
             </div>
 
             {/* Beams for multi-server modes */}
             {/* Alice → Server 1 */}
-            {animStep >= 1 && animating && (
-              <AnimatedBeam
-                containerRef={multiContainerRef}
-                fromRef={aliceRef}
-                toRef={server1Ref}
-                duration={1.8}
-                gradientStartColor='#7c3aed'
-                gradientStopColor='#3b82f6'
-              />
-            )}
+            <AnimatedBeam
+              containerRef={multiContainerRef}
+              fromRef={aliceRef}
+              toRef={server1Ref}
+              mode='pulse'
+              animateOnMount={false}
+              triggerKey={animStep === 1 ? runId : undefined}
+              duration={0.95}
+              gradientStartColor='#7c3aed'
+              gradientStopColor='#3b82f6'
+            />
 
             {mode === 'redis' && (
               <>
                 {/* Server 1 → Redis */}
-                {animStep >= 2 && animating && (
-                  <AnimatedBeam
-                    containerRef={multiContainerRef}
-                    fromRef={server1Ref}
-                    toRef={redisRef}
-                    duration={1.5}
-                    gradientStartColor='#3b82f6'
-                    gradientStopColor='#ef4444'
-                  />
-                )}
+                <AnimatedBeam
+                  containerRef={multiContainerRef}
+                  fromRef={server1Ref}
+                  toRef={redisRef}
+                  mode='pulse'
+                  animateOnMount={false}
+                  triggerKey={animStep === 2 ? runId : undefined}
+                  duration={0.9}
+                  gradientStartColor='#3b82f6'
+                  gradientStopColor='#ef4444'
+                />
                 {/* Redis → Server 2 */}
-                {animStep >= 3 && animating && (
-                  <AnimatedBeam
-                    containerRef={multiContainerRef}
-                    fromRef={redisRef}
-                    toRef={server2Ref}
-                    duration={1.5}
-                    gradientStartColor='#ef4444'
-                    gradientStopColor='#3b82f6'
-                  />
-                )}
-                {/* Server 2 → Bob */}
-                {animStep >= 4 && animating && (
-                  <AnimatedBeam
-                    containerRef={multiContainerRef}
-                    fromRef={server2Ref}
-                    toRef={bobRef}
-                    duration={1.8}
-                    gradientStartColor='#3b82f6'
-                    gradientStopColor='#22c55e'
-                  />
-                )}
+                <AnimatedBeam
+                  containerRef={multiContainerRef}
+                  fromRef={redisRef}
+                  toRef={server2Ref}
+                  mode='pulse'
+                  animateOnMount={false}
+                  triggerKey={animStep === 3 ? runId : undefined}
+                  duration={0.9}
+                  gradientStartColor='#ef4444'
+                  gradientStopColor='#3b82f6'
+                />
               </>
             )}
+
+            {/* Server 2 → Bob */}
+            <AnimatedBeam
+              containerRef={multiContainerRef}
+              fromRef={server2Ref}
+              toRef={bobRef}
+              mode='pulse'
+              animateOnMount={false}
+              triggerKey={
+                mode === 'redis' && animStep === 4 ? runId : undefined
+              }
+              duration={0.95}
+              gradientStartColor='#3b82f6'
+              gradientStopColor='#22c55e'
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -322,13 +335,12 @@ export default function PubSubScalingDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className={`text-xs font-medium ${
-              mode === 'no-broker' && animStep >= 2
+            className={`text-xs font-medium ${mode === 'no-broker' && animStep >= 2
                 ? 'text-danger-500'
                 : mode === 'redis' && animStep >= 4
                   ? 'text-success-500'
                   : 'text-default-500'
-            }`}
+              }`}
           >
             {statusText()}
           </motion.span>

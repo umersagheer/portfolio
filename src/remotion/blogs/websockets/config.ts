@@ -1,7 +1,7 @@
 import { brandDomain } from '../../shared/brand'
 
 export const webSocketsCoverContent = {
-  title: 'Real-Time From\nFirst Principles',
-  subtitle: 'WebSockets: handshakes, frames, heartbeats, and scaling',
+  title: 'Engineering\nReal-Time',
+  subtitle: 'A Deep Dive Into WebSockets,\nFrom Protocol to Production',
   footerDomain: brandDomain,
 } as const

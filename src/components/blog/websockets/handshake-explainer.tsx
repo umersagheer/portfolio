@@ -4,14 +4,15 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
 import { ChevronRightIcon, PlayIcon, PauseIcon } from 'lucide-react'
-import {
-  IconSend,
-  IconArrowBackUp,
-  IconCircleCheck
-} from '@tabler/icons-react'
+import { IconSend, IconArrowBackUp, IconCircleCheck } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketClientIcon,
+  WebSocketServerIcon
+} from './diagram-icons'
 import IconCard from './icon-card'
 
 const ROTATE_OFFSET = 18
@@ -58,7 +59,10 @@ Sec-WebSocket-Version: 13`,
     annotations: [
       { header: 'Upgrade: websocket', note: 'Asks to switch protocol' },
       { header: 'Sec-WebSocket-Key', note: 'Random token for verification' },
-      { header: 'Sec-WebSocket-Version: 13', note: 'Protocol version (RFC 6455)' }
+      {
+        header: 'Sec-WebSocket-Version: 13',
+        note: 'Protocol version (RFC 6455)'
+      }
     ]
   },
   {
@@ -194,6 +198,7 @@ export default function HandshakeExplainer() {
         className='relative mb-5 flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-6'
       >
         <DotPattern
+        glow
           width={16}
           height={16}
           style={{
@@ -204,7 +209,7 @@ export default function HandshakeExplainer() {
           }}
         />
         <IconCard ref={clientRef} label='Client'>
-          <IconSend size={28} />
+          <WebSocketClientIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         <div className='flex flex-col items-center'>
@@ -219,7 +224,7 @@ export default function HandshakeExplainer() {
         </div>
 
         <IconCard ref={serverRef} label='Server'>
-          <IconCircleCheck size={28} />
+          <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         {/* Beam animations based on step */}
@@ -228,7 +233,8 @@ export default function HandshakeExplainer() {
             containerRef={containerRef}
             fromRef={clientRef}
             toRef={serverRef}
-            duration={2}
+            mode='pulse'
+            duration={1.5}
             gradientStartColor='#7c3aed'
             gradientStopColor='#3b82f6'
           />
@@ -238,7 +244,8 @@ export default function HandshakeExplainer() {
             containerRef={containerRef}
             fromRef={serverRef}
             toRef={clientRef}
-            duration={2}
+            mode='pulse'
+            duration={1.5}
             gradientStartColor='#22c55e'
             gradientStopColor='#3b82f6'
             reverse
@@ -250,10 +257,12 @@ export default function HandshakeExplainer() {
               containerRef={containerRef}
               fromRef={clientRef}
               toRef={serverRef}
+              mode='loop'
               startYOffset={-6}
               endYOffset={-6}
               curvature={-15}
-              duration={2.5}
+              duration={1.2}
+              repeatDelay={1}
               gradientStartColor='#7c3aed'
               gradientStopColor='#3b82f6'
             />
@@ -261,10 +270,13 @@ export default function HandshakeExplainer() {
               containerRef={containerRef}
               fromRef={serverRef}
               toRef={clientRef}
+              mode='loop'
               startYOffset={6}
               endYOffset={6}
               curvature={15}
-              duration={2.5}
+              delay={0.4}
+              duration={1.2}
+              repeatDelay={1}
               gradientStartColor='#22c55e'
               gradientStopColor='#3b82f6'
               reverse
@@ -308,10 +320,7 @@ export default function HandshakeExplainer() {
             {/* Annotations */}
             <div className='mt-3 space-y-1.5'>
               {current.annotations.map(a => (
-                <div
-                  key={a.header}
-                  className='flex items-start gap-2 text-xs'
-                >
+                <div key={a.header} className='flex items-start gap-2 text-xs'>
                   <span className='shrink-0 font-mono text-primary-500'>
                     {a.header.length > 30
                       ? a.header.slice(0, 28) + '...'
@@ -327,12 +336,9 @@ export default function HandshakeExplainer() {
             key='established'
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className='flex flex-col items-center gap-2 rounded-md bg-success-50 py-6 dark:bg-success-950/30'
+            className='dark:bg-success-950/30 flex flex-col items-center gap-2 rounded-md bg-success-50 py-6'
           >
-            <IconCircleCheck
-              size={32}
-              className='text-success-500'
-            />
+            <IconCircleCheck size={32} className='text-success-500' />
             <span className='text-sm font-medium text-success-700 dark:text-success-400'>
               Tunnel Established — Full-Duplex Active
             </span>
@@ -353,14 +359,14 @@ export default function HandshakeExplainer() {
         >
           Back
         </Button>
-        <div className='flex items-center gap-2 rounded-md bg-primary-50 px-3 py-1.5 dark:bg-primary-950/40'>
+        <div className='flex items-center gap-2 rounded-full bg-primary-50 bg-primary-900/40 px-2 py-1'>
           <RotatingValue
-            value={<StepIcon size={16} className='shrink-0 text-primary-500' />}
+            value={<StepIcon size={16} className='shrink-0 text-primary-900' />}
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-xs italic text-primary-600 dark:text-primary-400'>
+              <span className='text-xs italic text-primary-900'>
                 {step === 0
                   ? 'Client sends HTTP Upgrade request...'
                   : step === 1

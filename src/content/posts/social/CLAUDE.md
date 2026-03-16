@@ -38,20 +38,14 @@ Do not invent new angles that are not supported by the blog, video, or demos.
 * **The "P.S." Strategy:** Mention the attached Remotion video in a post-script or a final sentence to connect the copy to the media.
 * **Tone:** Authoritative yet helpful. Avoid "low-effort" hype (e.g., "Game changer! 🚀"). Use "Senior Engineer" vocabulary (e.g., "Architecture," "Optimization," "Internals").
 
-## X guidance (Free Tier - 280 Chars)
+## X guidance (Pro Tier - 25,000 Chars)
 
-* **The "Hook" Tweet (1/X):** * Must be under 280 characters. 
-    * Lead with a bold claim or a technical "Why." (e.g., "Animating layout properties like width/height is a performance trap. 🪤")
-    * End the first tweet with a "thread" emoji 🧵 to signal there is more value below.
-* **The "Value" Middle (2-4/X):** * Break the technical explanation into 2-3 supporting tweets.
-    * Focus on one concept per tweet (e.g., Tweet 2: The Problem, Tweet 3: The FLIP solution).
-    * Use 2-3 hashtags max per thread (e.g., #webdev #frontend).
-* **Character Conservation:** * Links take up exactly **23 characters** regardless of actual length. 
-    * Emojis count as **2 characters** each. 
-    * Media (images/Remotion video) does **NOT** count against the 280-character text limit.
-* **The "Anchor" Conclusion:** * The final tweet must contain the CTA and the link to the full post.
-    * Encourage a "Bookmark" 🔖—the 2026 algorithm prioritizes bookmarks over likes.
-* **Remotion Video:** Always attach the promo video to the **first tweet** of the thread to maximize the "Stop the scroll" effect.
+* **Single post format:** No threads. Write one self-contained post: Hook → Value → CTA.
+* **The Hook:** Lead with a bold technical claim or a relatable pain point. (e.g., "Animating layout properties like width/height is a performance trap.")
+* **The Value:** 2-4 sentences summarizing what the post covers and why it matters. Mention key concepts, interactive demos, or unique angles. Keep it punchy — a long-form post is not an essay.
+* **CTA:** End with the canonical portfolio URL so readers can dive into the full breakdown.
+* **Remotion Video:** Always attach the promo video to maximize the "Stop the scroll" effect.
+* **Tone:** Direct and technical. No hashtag spam — skip hashtags on X entirely.
 
 ## Recommended checklist
 

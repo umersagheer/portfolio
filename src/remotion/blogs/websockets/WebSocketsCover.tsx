@@ -1,363 +1,410 @@
 import { AbsoluteFill, Img, staticFile } from 'remotion'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketBrokerIcon,
+  WebSocketClientIcon,
+  WebSocketServerIcon,
+} from '../../../components/blog/websockets/diagram-icons'
 import { BrandBackdrop } from '../../shared/components/BrandBackdrop'
+import { CoverBeam } from '../../shared/components/CoverBeam'
+import { CoverIconCard } from '../../shared/components/CoverIconCard'
+import { CoverPatternCard } from '../../shared/components/CoverPatternCard'
+import { SocialFooter } from '../../shared/components/SocialFooter'
 import { colors, fontFamily } from '../../shared/theme'
 import { webSocketsCoverContent } from './config'
+
+const stateLabels = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'] as const
+
+const StateChip: React.FC<{
+  label: string
+  active?: boolean
+}> = ({ label, active = false }) => {
+  return (
+    <div
+      style={{
+        padding: '7px 10px',
+        borderRadius: 999,
+        border: active
+          ? `1px solid ${colors.primaryLight}`
+          : '1px solid rgba(236, 237, 238, 0.08)',
+        background: active
+          ? 'rgba(147, 83, 211, 0.12)'
+          : 'rgba(255, 255, 255, 0.03)',
+        boxShadow: active ? '0 0 10px rgba(147, 83, 211, 0.14)' : 'none',
+        fontFamily: fontFamily.mono,
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: 0.25,
+        color: active ? colors.foreground : colors.muted,
+      }}
+    >
+      {label}
+    </div>
+  )
+}
+
+const FrameField: React.FC<{
+  label: string
+  flex: number
+  active?: boolean
+}> = ({ label, flex, active = false }) => {
+  return (
+    <div
+      style={{
+        flex,
+        height: 26,
+        borderRadius: 6,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: active
+          ? `1px solid ${colors.primaryLight}`
+          : '1px solid rgba(236, 237, 238, 0.06)',
+        background: active
+          ? 'rgba(147, 83, 211, 0.12)'
+          : 'rgba(255, 255, 255, 0.03)',
+        color: active ? colors.foreground : colors.muted,
+        fontFamily: fontFamily.mono,
+        fontSize: 8,
+        fontWeight: 700,
+        letterSpacing: 0.3,
+      }}
+    >
+      {label}
+    </div>
+  )
+}
 
 export const WebSocketsCover: React.FC = () => {
   return (
     <BrandBackdrop showGrid>
-      {/* Warning/amber tinted glow overlays */}
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 24% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 42%)',
-        }}
-      />
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 72% 75%, rgba(34, 197, 94, 0.08) 0%, transparent 36%)',
-        }}
-      />
-
-      {/* Visual motifs - upper right quadrant */}
       <div
         style={{
           position: 'absolute',
           top: 40,
           right: 50,
-          width: 520,
+          width: 540,
           height: 540,
         }}
       >
-        {/* Card 1: Client ↔ Server tunnel */}
-        <div
+        <CoverPatternCard
+          width={280}
+          height={110}
+          padding='12px 14px'
+          showDots
           style={{
-            position: 'absolute',
             top: 0,
             left: 0,
             transform: 'rotate(1deg)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0,
-            padding: 16,
-            background: colors.codeBg,
-            border: `1px solid ${colors.codeBorder}`,
-            borderRadius: 14,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-          }}
-        >
-          {/* Client box */}
-          <div
-            style={{
-              padding: '8px 14px',
-              borderRadius: 8,
-              background: colors.surfaceSoft,
-              border: `1px solid ${colors.border}`,
-              fontFamily: fontFamily.mono,
-              fontSize: 11,
-              fontWeight: 600,
-              color: colors.foreground,
-            }}
-          >
-            Client
-          </div>
-          {/* Gradient line */}
-          <div
-            style={{
-              width: 80,
-              height: 3,
-              borderRadius: 2,
-              background: `linear-gradient(90deg, #f59e0b, #22c55e)`,
-            }}
-          />
-          {/* Server box */}
-          <div
-            style={{
-              padding: '8px 14px',
-              borderRadius: 8,
-              background: colors.surfaceSoft,
-              border: `1px solid ${colors.border}`,
-              fontFamily: fontFamily.mono,
-              fontSize: 11,
-              fontWeight: 600,
-              color: colors.foreground,
-            }}
-          >
-            Server
-          </div>
-        </div>
-
-        {/* Card 2: Envelope JSON snippet */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 10,
-            right: 0,
-            transform: 'rotate(-1.5deg)',
-            padding: '14px 16px',
-            background: colors.codeBg,
-            border: `1px solid ${colors.codeBorder}`,
-            borderRadius: 14,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-            maxWidth: 240,
           }}
         >
           <div
             style={{
-              fontFamily: fontFamily.mono,
-              fontSize: 10,
-              lineHeight: 1.6,
-              color: colors.muted,
-              whiteSpace: 'pre',
-            }}
-          >
-            <span style={{ color: '#f59e0b' }}>{'{'}</span>
-            {'\n'}
-            {'  '}
-            <span style={{ color: '#9353d3' }}>{'"type"'}</span>
-            <span style={{ color: colors.muted }}>: </span>
-            <span style={{ color: '#22c55e' }}>{'"chat:message"'}</span>
-            <span style={{ color: colors.muted }}>,</span>
-            {'\n'}
-            {'  '}
-            <span style={{ color: '#9353d3' }}>{'"payload"'}</span>
-            <span style={{ color: colors.muted }}>: </span>
-            <span style={{ color: '#f59e0b' }}>{'{ ... }'}</span>
-            {'\n'}
-            <span style={{ color: '#f59e0b' }}>{'}'}</span>
-          </div>
-        </div>
-
-        {/* Card 3: State machine row */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 110,
-            left: 10,
-            right: 10,
-            transform: 'rotate(-2deg)',
-            padding: '16px 20px',
-            background: colors.codeBg,
-            border: `1px solid ${colors.codeBorder}`,
-            borderRadius: 14,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 12,
-          }}
-        >
-          {[
-            { label: 'CONNECTING', color: '#f59e0b' },
-            { label: 'OPEN', color: '#22c55e' },
-            { label: 'CLOSING', color: '#f59e0b' },
-            { label: 'CLOSED', color: colors.muted },
-          ].map((state, i, arr) => (
-            <div
-              key={state.label}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 4,
-                }}
-              >
-                <div
-                  style={{
-                    width: 18,
-                    height: 18,
-                    borderRadius: '50%',
-                    background: state.color,
-                    boxShadow: `0 0 12px ${state.color}44`,
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: fontFamily.mono,
-                    fontSize: 7,
-                    color: state.color,
-                    fontWeight: 600,
-                  }}
-                >
-                  {state.label}
-                </span>
-              </div>
-              {i < arr.length - 1 && (
-                <div
-                  style={{
-                    width: 20,
-                    height: 2,
-                    background: colors.border,
-                    borderRadius: 1,
-                    marginBottom: 14,
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Card 4: Pub/Sub card */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 210,
-            left: 0,
-            width: 260,
-            transform: 'rotate(2deg)',
-            padding: '14px 18px',
-            background: colors.codeBg,
-            border: `1px solid ${colors.codeBorder}`,
-            borderRadius: 14,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 10,
-          }}
-        >
-          {[
-            { label: 'Server 1', color: colors.secondary },
-            { label: 'Redis', color: '#ef4444' },
-            { label: 'Server 2', color: colors.secondary },
-          ].map((node, i, arr) => (
-            <div
-              key={node.label}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 4,
-                }}
-              >
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: '50%',
-                    background: node.color,
-                    boxShadow: `0 0 10px ${node.color}44`,
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: fontFamily.mono,
-                    fontSize: 8,
-                    color: colors.muted,
-                    fontWeight: 600,
-                  }}
-                >
-                  {node.label}
-                </span>
-              </div>
-              {i < arr.length - 1 && (
-                <div
-                  style={{
-                    width: 16,
-                    height: 2,
-                    background: `linear-gradient(90deg, ${node.color}, ${arr[i + 1].color})`,
-                    borderRadius: 1,
-                    marginBottom: 16,
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Card 5: Frame bits preview */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 230,
-            right: 20,
-            width: 200,
-            transform: 'rotate(3deg)',
-            background: colors.codeBg,
-            border: `1px solid ${colors.codeBorder}`,
-            borderRadius: 14,
-            overflow: 'hidden',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
-          }}
-        >
-          <div
-            style={{
-              padding: '10px 12px',
               display: 'flex',
-              gap: 3,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: '100%',
             }}
           >
-            {[
-              { label: 'FIN', color: '#9353d3', flex: 1 },
-              { label: 'RSV', color: colors.border, flex: 3 },
-              { label: 'OP', color: '#338ef7', flex: 4 },
-              { label: 'M', color: '#f59e0b', flex: 1 },
-              { label: 'LEN', color: '#22c55e', flex: 7 },
-            ].map(f => (
-              <div
-                key={f.label}
+            <CoverIconCard
+              icon={
+                <WebSocketClientIcon
+                  size={WEBSOCKET_NODE_ICON_SIZE}
+                  stroke={1.7}
+                  color={colors.foreground}
+                />
+              }
+              label='Client'
+            />
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <div style={{ width: 86, height: 16 }}>
+                <CoverBeam width={86} height={16} />
+              </div>
+              <span
                 style={{
-                  flex: f.flex,
-                  height: 24,
-                  borderRadius: 4,
-                  background: `${f.color}22`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   fontFamily: fontFamily.mono,
-                  fontSize: 7,
-                  fontWeight: 700,
-                  color: f.color,
+                  fontSize: 9,
+                  color: colors.muted,
+                  letterSpacing: 0.2,
                 }}
               >
-                {f.label}
-              </div>
-            ))}
+                persistent tunnel
+              </span>
+            </div>
+
+            <CoverIconCard
+              icon={
+                <WebSocketServerIcon
+                  size={WEBSOCKET_NODE_ICON_SIZE}
+                  stroke={1.7}
+                  color={colors.foreground}
+                />
+              }
+              label='Server'
+            />
           </div>
+        </CoverPatternCard>
+
+        <CoverPatternCard
+          width={212}
+          height={102}
+          padding='12px 14px'
+          style={{
+            top: 6,
+            right: 0,
+            transform: 'rotate(-1.3deg)',
+          }}
+        >
           <div
             style={{
-              padding: '6px 12px 10px',
               display: 'flex',
               flexDirection: 'column',
-              gap: 3,
+              gap: 8,
+              height: '100%',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: fontFamily.mono,
+                fontSize: 9,
+                color: colors.muted,
+                letterSpacing: 0.3,
+              }}
+            >
+              message envelope
+            </span>
+            <div
+              style={{
+                fontFamily: fontFamily.mono,
+                fontSize: 9,
+                lineHeight: 1.65,
+                color: colors.foreground,
+                whiteSpace: 'pre',
+              }}
+            >
+              <span style={{ color: colors.primaryLight }}>{'{'}</span>
+              {'\n'}
+              {'  '}
+              <span style={{ color: colors.primaryLight }}>{'"type"'}</span>
+              : <span>{'"chat:message"'}</span>
+              {','}
+              {'\n'}
+              {'  '}
+              <span style={{ color: colors.primaryLight }}>{'"payload"'}</span>
+              : <span>{'{ ... }'}</span>
+              {'\n'}
+              <span style={{ color: colors.primaryLight }}>{'}'}</span>
+            </div>
+          </div>
+        </CoverPatternCard>
+
+        <CoverPatternCard
+          width={500}
+          height={92}
+          padding='12px 14px'
+          style={{
+            top: 124,
+            left: 6,
+            transform: 'rotate(-1.7deg)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
             }}
           >
             <div
               style={{
-                height: 6,
-                width: '100%',
-                background: `${colors.border}`,
-                borderRadius: 3,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
               }}
-            />
+            >
+              {stateLabels.map((label, index) => (
+                <div
+                  key={label}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
+                  <StateChip label={label} active={index === 1} />
+                  {index < stateLabels.length - 1 ? (
+                    <div style={{ width: 18, height: 4 }}>
+                      <CoverBeam
+                        width={18}
+                        height={4}
+                        pathWidth={1.35}
+                        pathColor='rgba(255, 255, 255, 0.08)'
+                        gradientStartColor='rgba(174, 126, 222, 0.7)'
+                        gradientStopColor='rgba(147, 83, 211, 0.72)'
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
             <div
               style={{
-                height: 6,
-                width: '70%',
-                background: `${colors.border}`,
-                borderRadius: 3,
+                display: 'flex',
+                justifyContent: 'center',
+                fontFamily: fontFamily.mono,
+                fontSize: 9,
+                color: colors.muted,
+                letterSpacing: 0.3,
               }}
+            >
+              readyState lifecycle
+            </div>
+          </div>
+        </CoverPatternCard>
+
+        <CoverPatternCard
+          width={276}
+          height={108}
+          padding='12px 14px'
+          showDots
+          style={{
+            top: 246,
+            left: 0,
+            transform: 'rotate(1.8deg)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: '100%',
+            }}
+          >
+            <CoverIconCard
+              icon={
+                <WebSocketServerIcon
+                  size={WEBSOCKET_NODE_ICON_SIZE}
+                  stroke={1.7}
+                  color={colors.foreground}
+                />
+              }
+              label='Server 1'
+            />
+
+            <div style={{ width: 34, height: 12 }}>
+              <CoverBeam width={34} height={12} />
+            </div>
+
+            <CoverIconCard
+              icon={
+                <WebSocketBrokerIcon
+                  size={WEBSOCKET_NODE_ICON_SIZE}
+                  stroke={1.7}
+                  color={colors.foreground}
+                />
+              }
+              label='Redis'
+              accentColor='rgba(255, 255, 255, 0.45)'
+            />
+
+            <div style={{ width: 34, height: 12 }}>
+              <CoverBeam width={34} height={12} reverse />
+            </div>
+
+            <CoverIconCard
+              icon={
+                <WebSocketServerIcon
+                  size={WEBSOCKET_NODE_ICON_SIZE}
+                  stroke={1.7}
+                  color={colors.foreground}
+                />
+              }
+              label='Server 2'
             />
           </div>
-        </div>
+        </CoverPatternCard>
+
+        <CoverPatternCard
+          width={196}
+          height={104}
+          padding='12px 12px 10px'
+          style={{
+            top: 260,
+            right: 16,
+            transform: 'rotate(3deg)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: fontFamily.mono,
+                fontSize: 9,
+                color: colors.muted,
+                letterSpacing: 0.3,
+              }}
+            >
+              frame structure
+            </span>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: 4,
+              }}
+            >
+              <FrameField label='FIN' flex={2} active />
+              <FrameField label='OP' flex={4} active />
+              <FrameField label='MASK' flex={3} />
+              <FrameField label='LEN' flex={5} />
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 6,
+              }}
+            >
+              <div
+                style={{
+                  height: 6,
+                  width: '100%',
+                  borderRadius: 999,
+                  background: 'rgba(255, 255, 255, 0.08)',
+                }}
+              />
+              <div
+                style={{
+                  height: 6,
+                  width: '72%',
+                  borderRadius: 999,
+                  background: 'rgba(147, 83, 211, 0.18)',
+                }}
+              />
+            </div>
+          </div>
+        </CoverPatternCard>
       </div>
 
-      {/* Main content */}
       <AbsoluteFill
         style={{
           padding: 60,
@@ -382,11 +429,11 @@ export const WebSocketsCover: React.FC = () => {
         <div
           style={{
             fontFamily: fontFamily.poppins,
-            fontSize: 48,
+            fontSize: 52,
             fontWeight: 900,
             color: colors.foreground,
-            lineHeight: 1.15,
-            maxWidth: 600,
+            lineHeight: 1.06,
+            maxWidth: 520,
             whiteSpace: 'pre-wrap',
           }}
         >
@@ -398,26 +445,22 @@ export const WebSocketsCover: React.FC = () => {
             fontFamily: fontFamily.poppins,
             fontSize: 22,
             color: colors.muted,
-            marginTop: 16,
-            maxWidth: 500,
+            marginTop: 18,
+            maxWidth: 560,
             lineHeight: 1.4,
+            whiteSpace: 'pre-wrap',
           }}
         >
           {webSocketsCoverContent.subtitle}
         </div>
 
-        <div
+        <SocialFooter
           style={{
             position: 'absolute',
-            bottom: 40,
+            bottom: 34,
             right: 50,
-            fontFamily: fontFamily.mono,
-            fontSize: 18,
-            color: colors.muted,
           }}
-        >
-          {webSocketsCoverContent.footerDomain}
-        </div>
+        />
       </AbsoluteFill>
     </BrandBackdrop>
   )

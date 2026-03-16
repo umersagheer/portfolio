@@ -12,6 +12,11 @@ import {
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketClientIcon,
+  WebSocketServerIcon
+} from './diagram-icons'
 import IconCard from './icon-card'
 
 const STATES = [
@@ -141,23 +146,17 @@ export default function LifecycleDemo() {
                     cleanup()
                     setActiveState(i)
                     setPingPongActive(i === 1)
-                    setStatus(
-                      i === 1 ? 'Heartbeat active' : `State: ${s.name}`
-                    )
+                    setStatus(i === 1 ? 'Heartbeat active' : `State: ${s.name}`)
                   }
                 }}
-                className={`flex flex-col items-center gap-1 rounded-lg px-2 py-2 transition-all sm:px-3 ${
-                  isActive
-                    ? 'scale-105'
-                    : 'opacity-50 hover:opacity-75'
-                }`}
+                className={`flex flex-col items-center gap-1 rounded-lg px-2 py-2 transition-all sm:px-3 ${isActive ? 'scale-105' : 'opacity-50 hover:opacity-75'
+                  }`}
               >
                 <div
-                  className={`flex size-10 items-center justify-center rounded-full transition-colors ${
-                    isActive
+                  className={`flex size-10 items-center justify-center rounded-full transition-colors ${isActive
                       ? stateColors[s.color]
                       : 'bg-default-200 dark:bg-default-700'
-                  }`}
+                    }`}
                 >
                   <Icon
                     size={20}
@@ -165,11 +164,8 @@ export default function LifecycleDemo() {
                   />
                 </div>
                 <span
-                  className={`text-[10px] font-bold ${
-                    isActive
-                      ? stateTextColors[s.color]
-                      : 'text-default-400'
-                  }`}
+                  className={`text-[10px] font-bold ${isActive ? stateTextColors[s.color] : 'text-default-400'
+                    }`}
                 >
                   {s.name}
                 </span>
@@ -179,11 +175,10 @@ export default function LifecycleDemo() {
               </button>
               {i < 3 && (
                 <div
-                  className={`mx-1 h-px w-4 sm:w-8 ${
-                    i < activeState
+                  className={`mx-1 h-px w-4 sm:w-8 ${i < activeState
                       ? 'bg-primary-300'
                       : 'bg-default-200 dark:bg-default-700'
-                  }`}
+                    }`}
                 />
               )}
             </div>
@@ -234,6 +229,7 @@ export default function LifecycleDemo() {
           className='relative mb-4 flex items-center justify-between rounded-lg border border-default-100 bg-background px-10 py-8'
         >
           <DotPattern
+            glow
             width={16}
             height={16}
             style={{
@@ -244,16 +240,15 @@ export default function LifecycleDemo() {
             }}
           />
           <IconCard ref={serverPingRef} label='Server'>
-            <IconCircleCheck size={28} />
+            <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
           </IconCard>
 
           <div className='flex flex-col items-center gap-1'>
             <span
-              className={`text-xs font-medium ${
-                ghostMode
+              className={`text-xs font-medium ${ghostMode
                   ? 'text-danger-500'
                   : 'text-success-600 dark:text-success-400'
-              }`}
+                }`}
             >
               {status}
             </span>
@@ -269,7 +264,7 @@ export default function LifecycleDemo() {
             label='Client'
             className={ghostMode ? 'opacity-30' : ''}
           >
-            <IconLoader size={28} />
+            <WebSocketClientIcon size={WEBSOCKET_NODE_ICON_SIZE} />
           </IconCard>
 
           {/* PING: server → client */}
@@ -278,10 +273,12 @@ export default function LifecycleDemo() {
               containerRef={containerRef}
               fromRef={serverPingRef}
               toRef={clientPongRef}
+              mode='loop'
               startYOffset={-6}
               endYOffset={-6}
               curvature={-15}
-              duration={2}
+              duration={0.85}
+              repeatDelay={1.65}
               gradientStartColor='#f59e0b'
               gradientStopColor='#22c55e'
             />
@@ -293,10 +290,12 @@ export default function LifecycleDemo() {
               containerRef={containerRef}
               fromRef={clientPongRef}
               toRef={serverPingRef}
+              mode='loop'
               startYOffset={6}
               endYOffset={6}
               curvature={15}
-              duration={2}
+              duration={0.85}
+              repeatDelay={1.65}
               delay={0.8}
               gradientStartColor='#22c55e'
               gradientStopColor='#f59e0b'
@@ -319,7 +318,12 @@ export default function LifecycleDemo() {
           </Button>
         )}
         {(ghostMode || activeState === 3) && (
-          <Button size='sm' variant='flat' color='primary' onPress={handleReset}>
+          <Button
+            size='sm'
+            variant='flat'
+            color='primary'
+            onPress={handleReset}
+          >
             Reset
           </Button>
         )}

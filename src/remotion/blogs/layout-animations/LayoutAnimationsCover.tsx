@@ -1,5 +1,6 @@
 import { AbsoluteFill, Img, staticFile } from 'remotion'
 import { BrandBackdrop } from '../../shared/components/BrandBackdrop'
+import { SocialFooter } from '../../shared/components/SocialFooter'
 import { colors, fontFamily, gradient } from '../../shared/theme'
 import { layoutAnimationsCoverContent } from './config'
 
@@ -324,18 +325,13 @@ export const LayoutAnimationsCover: React.FC = () => {
           {layoutAnimationsCoverContent.subtitle}
         </div>
 
-        <div
+        <SocialFooter
           style={{
             position: 'absolute',
-            bottom: 40,
+            bottom: 34,
             right: 50,
-            fontFamily: fontFamily.mono,
-            fontSize: 18,
-            color: colors.muted,
           }}
-        >
-          {layoutAnimationsCoverContent.footerDomain}
-        </div>
+        />
       </AbsoluteFill>
     </BrandBackdrop>
   )

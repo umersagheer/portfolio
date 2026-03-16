@@ -33,14 +33,15 @@ const VID_KEY = 'sparkle_vid'
 
 const CRYSTAL_HUES = [272, 286, 254, 198, 304, 214]
 const MAX_LABELS = [
-  'MAXED OUT',
-  '409 conflict',
-  'OVERLOAD',
-  'CRYSTALLIZED',
-  'HEAP FULL',
   'STACK OVERFLOW',
-  'OUT OF LIKES',
-  'TOO POPULAR'
+  '429 RATE LIMITED',
+  'BUFFER OVERFLOW',
+  'QUOTA EXCEEDED',
+  'OUT OF MEMORY',
+  'CPU 100%',
+  'DISK FULL',
+  'SIGSEGV',
+  'KERNEL PANIC'
 ]
 
 function generateFingerprint(): string {
@@ -576,7 +577,7 @@ export default function GemLikeButton({
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='pointer-events-none absolute -top-11 whitespace-nowrap rounded-full border border-white/10 bg-default-950/85 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-default-100 backdrop-blur'
+              className='pointer-events-none absolute -top-11 backdrop-blur px-1.5 py-1 text-tiny text-primary-800 font-sourceCodePro w-full min-w-32'
               initial={{ y: 6, opacity: 0, scale: 0.92 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}

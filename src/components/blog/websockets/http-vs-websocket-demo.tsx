@@ -3,10 +3,14 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
-import { IconDeviceLaptop, IconServer } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+  WEBSOCKET_NODE_ICON_SIZE,
+  WebSocketClientIcon,
+  WebSocketServerIcon
+} from './diagram-icons'
 import IconCard from './icon-card'
 
 type Protocol = 'http' | 'websocket'
@@ -90,6 +94,7 @@ function HttpMode() {
         className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-8 sm:px-12'
       >
         <DotPattern
+          glow
           width={16}
           height={16}
           style={{
@@ -100,7 +105,7 @@ function HttpMode() {
           }}
         />
         <IconCard ref={clientRef} label='Client'>
-          <IconDeviceLaptop size={28} />
+          <WebSocketClientIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         <div className='flex flex-col items-center gap-1'>
@@ -128,7 +133,7 @@ function HttpMode() {
         </div>
 
         <IconCard ref={serverRef} label='Server'>
-          <IconServer size={28} />
+          <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         {/* Request beam: client → server */}
@@ -137,6 +142,7 @@ function HttpMode() {
             containerRef={containerRef}
             fromRef={clientRef}
             toRef={serverRef}
+            mode='pulse'
             duration={1.5}
             gradientStartColor='#7c3aed'
             gradientStopColor='#3b82f6'
@@ -149,6 +155,7 @@ function HttpMode() {
             containerRef={containerRef}
             fromRef={serverRef}
             toRef={clientRef}
+            mode='pulse'
             duration={1.5}
             gradientStartColor='#22c55e'
             gradientStopColor='#3b82f6'
@@ -159,9 +166,8 @@ function HttpMode() {
 
       <div className='mt-4 flex items-center justify-between'>
         <span className='font-mono text-xs text-default-400'>
-          {requestCount} request{requestCount !== 1 ? 's' : ''} ={' '}
-          {requestCount} connection{requestCount !== 1 ? 's' : ''} opened &
-          closed
+          {requestCount} request{requestCount !== 1 ? 's' : ''} = {requestCount}{' '}
+          connection{requestCount !== 1 ? 's' : ''} opened & closed
         </span>
         <Button
           size='sm'
@@ -222,6 +228,7 @@ function WebSocketMode() {
         className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-8 sm:px-12'
       >
         <DotPattern
+          glow
           width={16}
           height={16}
           style={{
@@ -232,7 +239,7 @@ function WebSocketMode() {
           }}
         />
         <IconCard ref={clientRef} label='Client'>
-          <IconDeviceLaptop size={28} />
+          <WebSocketClientIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         <div className='flex flex-col items-center gap-1'>
@@ -254,7 +261,7 @@ function WebSocketMode() {
         </div>
 
         <IconCard ref={serverRef} label='Server'>
-          <IconServer size={28} />
+          <WebSocketServerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
         </IconCard>
 
         {/* Handshake beams */}
@@ -263,6 +270,7 @@ function WebSocketMode() {
             containerRef={containerRef}
             fromRef={clientRef}
             toRef={serverRef}
+            mode='pulse'
             duration={2}
             gradientStartColor='#f59e0b'
             gradientStopColor='#7c3aed'
@@ -273,26 +281,31 @@ function WebSocketMode() {
         {connected && (
           <>
             <AnimatedBeam
-              key={`ws-out-${messageCount}`}
               containerRef={containerRef}
               fromRef={clientRef}
               toRef={serverRef}
+              mode='pulse'
+              triggerKey={messageCount === 0 ? undefined : messageCount}
+              animateOnMount={false}
               startYOffset={-6}
               endYOffset={-6}
               curvature={-15}
-              duration={3}
+              duration={1.1}
               gradientStartColor='#7c3aed'
               gradientStopColor='#3b82f6'
             />
             <AnimatedBeam
-              key={`ws-in-${messageCount}`}
               containerRef={containerRef}
               fromRef={serverRef}
               toRef={clientRef}
+              mode='pulse'
+              triggerKey={messageCount === 0 ? undefined : messageCount}
+              animateOnMount={false}
               startYOffset={6}
               endYOffset={6}
               curvature={15}
-              duration={3}
+              delay={0.35}
+              duration={1.1}
               gradientStartColor='#22c55e'
               gradientStopColor='#3b82f6'
               reverse
@@ -307,12 +320,7 @@ function WebSocketMode() {
         </span>
         <div className='flex gap-2'>
           {!connected && !handshaking && (
-            <Button
-              size='sm'
-              variant='flat'
-              color='success'
-              onPress={connect}
-            >
+            <Button size='sm' variant='flat' color='success' onPress={connect}>
               Connect
             </Button>
           )}
