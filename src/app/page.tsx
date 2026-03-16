@@ -1,12 +1,8 @@
 import Intro from '@/components/intro'
 import RecentPosts from '@/components/recent-posts'
 import RecentProjects from '@/components/recent-projects'
-import ContactPage from './contact/page'
 import TechStackGrid from '@/components/tech-stack-grid'
 import { BlurFade } from '@/components/blur-fade'
-import { GlowCardTest } from '@/components/glow-card-test'
-import { IconReact } from '@/components/icons'
-import { AnimatedBeamDemo } from '@/components/beam-demos/demo'
 
 export default function Home() {
   return (
