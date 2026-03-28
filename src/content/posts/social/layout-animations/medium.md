@@ -50,7 +50,7 @@ But here's the catch: `transform: scale(2)` makes an element *look* bigger, but 
 
 Picture three boxes in a row. If you use `transform: scaleX(2)` on the middle one, it visually doubles in width but overlaps its neighbors — the layout hasn't changed. If you change the actual `width`, the neighbors get pushed aside, but the browser has to recalculate everything.
 
-*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 So how do we get the best of both worlds — **real layout changes** that animate with **GPU-accelerated transforms**?
 
@@ -58,7 +58,7 @@ So how do we get the best of both worlds — **real layout changes** that animat
 
 Imagine two boxes side by side. The left one changes size by updating its `width` directly — it just snaps to the new size instantly. The right one uses Framer Motion's `layout` prop and springs smoothly to its new dimensions using transforms under the hood.
 
-*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 The right side looks effortless, right? Under the hood, it's using a clever technique called **FLIP**.
 
@@ -88,7 +88,7 @@ The beauty of this approach is that the actual animation only uses `transform` �
 
 Think of it like a magic trick: the element has already teleported to its destination, but you apply a transform so the audience still sees it at the start. Then you smoothly remove that transform, and it looks like a seamless movement.
 
-*👉 Want to step through FLIP visually? [Play with the interactive explainer on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to step through FLIP visually? [Play with the interactive explainer on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 ### The 100ms Window
 
@@ -145,7 +145,7 @@ This is where `layoutId` gets really interesting. When you give two elements the
 
 When one appears and the other disappears, Framer Motion morphs between them. Imagine a tab bar with four tabs. Without `layoutId`, the active highlight just pops from one tab to another. With `layoutId`, it smoothly slides across — same element, different position.
 
-*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 This pattern is everywhere in polished UIs: tab indicators, navigation highlights, cards that expand into modals, and list items that morph between views.
 
@@ -181,7 +181,7 @@ Three states, three props:
 
 Without `AnimatePresence`, removing an item from a list makes it vanish instantly. With it, the item scales down and fades out gracefully while the remaining items spring into their new positions.
 
-*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to see this in action? [Play with the interactive demo on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 The `layout` prop on each item ensures the remaining items smoothly reflow into their new positions.
 
@@ -201,7 +201,7 @@ Springs in Framer Motion are controlled by three values:
 - **Damping** — how much friction resists the motion. Higher = less bounce.
 - **Mass** — how heavy the object feels. Higher = more momentum, slower to start/stop.
 
-*👉 Want to experiment with these values? [Play with the interactive spring visualizer on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to experiment with these values? [Play with the interactive spring visualizer on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 ### Quick Rules of Thumb
 
@@ -248,7 +248,7 @@ Here's the simplified pattern:
 
 Each `layoutId` pair is like a magical thread connecting two DOM nodes. Framer Motion measures both ends and uses FLIP to create a seamless transition.
 
-*👉 Want to try clicking the card yourself? [Play with the interactive morphing dialog on my blog](https://umersagheer.com/posts/layout-animations).*
+*👉 Want to try clicking the card yourself? [Play with the interactive morphing dialog on my blog](https://umersagheer.dev/posts/layout-animations).*
 
 ## Wrapping Up
 
@@ -269,7 +269,7 @@ Here's what we covered:
 
 This article was adapted from my blog, where every concept has a **live, interactive demo** you can play with — toggle animations, adjust spring parameters, step through the FLIP technique, and morph dialogs yourself.
 
-**👉 Read the full interactive version here: [umersagheer.com/posts/layout-animations](https://umersagheer.com/posts/layout-animations)**
+**👉 Read the full interactive version here: [umersagheer.dev/posts/layout-animations](https://umersagheer.dev/posts/layout-animations)**
 
 ---
 
