@@ -2,6 +2,7 @@ import { JSX } from 'react'
 import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
+import { Checkbox } from '@heroui/react'
 import Counter from '@/components/counter'
 import { slugify } from '@/libs/toc'
 import LayoutAnimationDemo from '@/components/blog/layout-animations/layout-animation-demo'
@@ -29,6 +30,9 @@ import ORMComparisonDemo from '@/components/blog/timezone/orm-comparison-demo'
 import OffByOneBugDemo from '@/components/blog/timezone/off-by-one-bug-demo'
 import ATTimeZoneTrapDemo from '@/components/blog/timezone/at-timezone-trap-demo'
 import StandupBugDemo from '@/components/blog/timezone/standup-bug-demo'
+import ISOStringAnatomy from '@/components/blog/timezone/iso-string-anatomy'
+import GetHoursComparisonTable from '@/components/blog/timezone/get-hours-comparison-table'
+import LibraryComparisonTable from '@/components/blog/timezone/library-comparison-table'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -84,6 +88,16 @@ function Anchor({
   )
 }
 
+function CheckItem({ label }: { label: string }) {
+  return (
+    <div className='my-1'>
+      <Checkbox defaultSelected={false} size='sm' radius='sm'>
+        <span className='text-sm text-foreground'>{label}</span>
+      </Checkbox>
+    </div>
+  )
+}
+
 const components = {
   code: Code,
   a: Anchor,
@@ -114,7 +128,11 @@ const components = {
   ORMComparisonDemo,
   OffByOneBugDemo,
   ATTimeZoneTrapDemo,
-  StandupBugDemo
+  StandupBugDemo,
+  ISOStringAnatomy,
+  GetHoursComparisonTable,
+  LibraryComparisonTable,
+  CheckItem
 }
 
 export default function MDXContent(

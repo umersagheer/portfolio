@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Select, SelectItem } from '@heroui/react'
+import { Button, Select, SelectItem, TimeInput } from '@heroui/react'
+import { Time } from '@internationalized/date'
 import DemoContainer from './demo-container'
 
 const ZONES = [
@@ -11,11 +12,6 @@ const ZONES = [
     { key: 'America/Los_Angeles', label: 'Los Angeles' },
     { key: 'Europe/London', label: 'London' }
 ]
-
-const HOURS = Array.from({ length: 24 }, (_, i) => ({
-    key: String(i),
-    label: `${i.toString().padStart(2, '0')}:00`
-}))
 
 type SimState = 'idle' | 'advancing' | 'done'
 
@@ -80,21 +76,17 @@ export default function ScheduleSimulatorDemo() {
             description='Schedule an event, then fast-forward through a DST transition to see what breaks'
         >
             <div className='mb-4 flex flex-col gap-3 sm:flex-row'>
-                <Select
+                <TimeInput
                     size='sm'
                     label='Time'
-                    selectedKeys={[String(hour)]}
-                    onSelectionChange={keys => {
-                        const val = Array.from(keys)[0]
-                        if (val !== undefined) setHour(Number(val))
+                    value={new Time(hour) as any}
+                    onChange={val => {
+                        if (val) setHour(val.hour)
                         reset()
                     }}
                     className='sm:w-40'
-                >
-                    {HOURS.map(h => (
-                        <SelectItem key={h.key}>{h.label}</SelectItem>
-                    ))}
-                </Select>
+                    hourCycle={12}
+                />
                 <Select
                     size='sm'
                     label='Timezone'
@@ -113,16 +105,16 @@ export default function ScheduleSimulatorDemo() {
             </div>
 
             <div className='mb-4 grid gap-3 sm:grid-cols-2'>
-                <div className='rounded-lg border border-danger-200 bg-danger-50 p-4 dark:border-danger-900 dark:bg-danger-950/20'>
+                <div className='rounded-lg border border-danger-200 bg-danger-50 p-4'>
                     <div className='mb-2 flex items-center gap-2'>
                         <span className='text-sm'>❌</span>
-                        <span className='text-xs font-medium text-danger-600 dark:text-danger-400'>
+                        <span className='text-xs font-medium text-danger-600'>
                             Stored as UTC at schedule time
                         </span>
                     </div>
                     <div className='space-y-1 font-mono text-xs'>
                         <p className='text-default-500'>
-                            stored: <span className='text-danger-600 dark:text-danger-400'>{winterUTC}</span>
+                            stored: <span className='text-danger-600'>{winterUTC}</span>
                         </p>
                         <AnimatePresence mode='wait'>
                             <motion.p
@@ -135,7 +127,7 @@ export default function ScheduleSimulatorDemo() {
                                 <span
                                     className={
                                         isDSTActive && utcChanged
-                                            ? 'font-bold text-danger-600 dark:text-danger-400'
+                                            ? 'font-bold text-danger-600'
                                             : 'text-foreground'
                                     }
                                 >
@@ -148,17 +140,17 @@ export default function ScheduleSimulatorDemo() {
                     </div>
                 </div>
 
-                <div className='rounded-lg border border-success-200 bg-success-50 p-4 dark:border-success-900 dark:bg-success-950/20'>
+                <div className='rounded-lg border border-success-200 bg-success-50 p-4'>
                     <div className='mb-2 flex items-center gap-2'>
                         <span className='text-sm'>✅</span>
-                        <span className='text-xs font-medium text-success-600 dark:text-success-400'>
+                        <span className='text-xs font-medium text-success-600'>
                             Stored as wall time + timezone
                         </span>
                     </div>
                     <div className='space-y-1 font-mono text-xs'>
                         <p className='text-default-500'>
                             stored:{' '}
-                            <span className='text-success-600 dark:text-success-400'>
+                            <span className='text-success-600'>
                                 {hour.toString().padStart(2, '0')}:00 + {zoneName}
                             </span>
                         </p>
@@ -176,7 +168,7 @@ export default function ScheduleSimulatorDemo() {
                                 className='text-default-400'
                             >
                                 computed UTC:{' '}
-                                <span className='text-success-600 dark:text-success-400'>
+                                <span className='text-success-600'>
                                     {isDSTActive ? summerUTC : winterUTC}
                                 </span>
                                 {isDSTActive && utcChanged && (
@@ -197,25 +189,25 @@ export default function ScheduleSimulatorDemo() {
                                 ? 'Advancing through days...'
                                 : 'DST transition complete'}
                     </span>
-                    <span className='text-xs font-mono text-default-400'>
+                    <span className='font-mono text-xs text-default-400'>
                         Day {simDay + 1}/{daysBeforeDST + 1}
                     </span>
                 </div>
 
                 <div className='flex gap-1'>
-                    {Array.from({ length: daysBeforeDST + 1 }, (_, i) => {
+                    {(['Mon', 'Tue', 'Wed', 'DST', 'Fri', 'Sat'] as const).map((dayLabel, i) => {
                         const isDSTDay = i === dstDay
                         const isPast = i <= simDay
                         return (
                             <motion.div
                                 key={i}
-                                className={`relative h-8 flex-1 rounded ${isDSTDay && isPast
-                                        ? 'bg-warning-200 dark:bg-warning-900'
-                                        : isPast
-                                            ? i < dstDay
-                                                ? 'bg-primary-200 dark:bg-primary-800'
-                                                : 'bg-primary-300 dark:bg-primary-700'
-                                            : 'bg-default-100 dark:bg-default-200'
+                                className={`relative flex h-10 flex-1 flex-col items-center justify-center rounded ${isDSTDay && isPast
+                                    ? 'bg-warning-200'
+                                    : isPast
+                                        ? i < dstDay
+                                            ? 'bg-primary-200'
+                                            : 'bg-primary-300'
+                                        : 'bg-default-100'
                                     }`}
                                 animate={
                                     i === simDay
@@ -223,11 +215,14 @@ export default function ScheduleSimulatorDemo() {
                                         : {}
                                 }
                             >
-                                {isDSTDay && (
-                                    <span className='absolute inset-0 flex items-center justify-center text-[9px] font-bold text-warning-700 dark:text-warning-300'>
-                                        DST
-                                    </span>
-                                )}
+                                <span className={`text-[9px] font-bold ${isDSTDay
+                                    ? 'text-warning-700'
+                                    : isPast
+                                        ? 'text-primary-700'
+                                        : 'text-default-400'
+                                    }`}>
+                                    {dayLabel}
+                                </span>
                             </motion.div>
                         )
                     })}

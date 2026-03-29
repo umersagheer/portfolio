@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@heroui/react'
+import { Button, Alert } from '@heroui/react'
 import DemoContainer from './demo-container'
 
 const PRESETS = [
@@ -99,7 +99,7 @@ export default function ParseTrapDemo() {
                         transition={{ duration: 0.2 }}
                         className='space-y-3'
                     >
-                        <div className='grid gap-2 rounded-lg bg-default-100 p-4 dark:bg-default-50'>
+                        <div className='grid gap-2 rounded-lg bg-default-100 p-4'>
                             <Row label='Input' value={`new Date(${input})`} mono />
                             <Row
                                 label='.toISOString()'
@@ -134,37 +134,27 @@ export default function ParseTrapDemo() {
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
-                                className='flex items-start gap-2 rounded-lg border border-danger-200 bg-danger-50 p-3 dark:border-danger-900 dark:bg-danger-950/30'
                             >
-                                <span className='text-lg'>⚠️</span>
-                                <div className='text-xs text-danger-700 dark:text-danger-400'>
-                                    <p className='font-medium'>
-                                        Date shifted to previous day in UTC!
-                                    </p>
-                                    <p className='mt-1 text-danger-600 dark:text-danger-500'>
-                                        Without &quot;Z&quot; or an offset, JavaScript treats this as
-                                        local time and subtracts your timezone offset. Midnight local
-                                        time becomes the previous day in UTC.
-                                    </p>
-                                </div>
+                                <Alert
+                                    color='danger'
+                                    title='Date shifted to previous day in UTC!'
+                                    description='Without "Z" or an offset, JavaScript treats this as local time and subtracts your timezone offset. Midnight local time becomes the previous day in UTC.'
+                                />
                             </motion.div>
                         )}
 
                         {result.isDateOnly && (
-                            <div className='flex items-start gap-2 rounded-lg border border-success-200 bg-success-50 p-3 dark:border-success-900 dark:bg-success-950/30'>
-                                <span className='text-lg'>✅</span>
-                                <p className='text-xs text-success-700 dark:text-success-400'>
-                                    Date-only strings are parsed as UTC per the ECMAScript spec.
-                                    This is safe.
-                                </p>
-                            </div>
+                            <Alert
+                                color='success'
+                                description='Date-only strings are parsed as UTC per the ECMAScript spec. This is safe.'
+                            />
                         )}
                     </motion.div>
                 ) : (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className='rounded-lg bg-default-100 p-4 text-center text-sm text-default-400 dark:bg-default-50'
+                        className='rounded-lg bg-default-100 p-4 text-center text-sm text-default-400'
                     >
                         Invalid date string — try a different format
                     </motion.div>
@@ -210,9 +200,9 @@ function Row({
     highlight?: 'success' | 'danger' | 'warning'
 }) {
     const colorMap = {
-        success: 'text-success-600 dark:text-success-400',
-        danger: 'text-danger-600 dark:text-danger-400',
-        warning: 'text-warning-600 dark:text-warning-400'
+        success: 'text-success-600',
+        danger: 'text-danger-600',
+        warning: 'text-warning-600'
     }
 
     return (

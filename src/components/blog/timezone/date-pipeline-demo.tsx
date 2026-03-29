@@ -92,8 +92,8 @@ function StageNode({
             <div
                 ref={innerRef as React.RefObject<HTMLDivElement>}
                 className={`z-10 flex size-10 items-center justify-center rounded-lg border text-base transition-colors sm:size-12 ${isActive
-                        ? 'border-primary-300 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/40'
-                        : 'border-default-200 bg-background'
+                    ? 'border-primary-300 bg-primary-50'
+                    : 'border-default-200 bg-background'
                     }`}
             >
                 {icon}
@@ -231,7 +231,7 @@ export default function DatePipelineDemo() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.15 }}
-                    className='rounded-lg bg-default-100 p-4 dark:bg-default-50'
+                    className='rounded-lg bg-default-100 p-4'
                 >
                     <div className='mb-1 flex items-center gap-2'>
                         <span className='text-base'>{stages[activeStage].icon}</span>
@@ -242,14 +242,14 @@ export default function DatePipelineDemo() {
                     <p className='mb-2 text-xs text-default-400'>
                         {stages[activeStage].detail}
                     </p>
-                    <code className='block rounded-md bg-background px-3 py-2 font-mono text-xs text-primary-600 dark:text-primary-400'>
+                    <code className='block rounded-md bg-background px-3 py-2 font-mono text-xs text-primary-600'>
                         {stages[activeStage].value}
                     </code>
                 </motion.div>
             </AnimatePresence>
 
             <div className='mt-4 flex items-center justify-between'>
-                <div className='flex gap-1'>
+                <div className='flex gap-1.5'>
                     {stages.map((_, i) => (
                         <button
                             key={i}
@@ -257,11 +257,19 @@ export default function DatePipelineDemo() {
                                 stopAutoPlay()
                                 setActiveStage(i)
                             }}
-                            className={`size-2 rounded-full transition-colors ${i === activeStage
-                                    ? 'bg-primary-500'
-                                    : 'bg-default-200 dark:bg-default-300'
-                                }`}
-                        />
+                            className='flex size-8 items-center justify-center'
+                        >
+                            <motion.div
+                                animate={{
+                                    scale: i === activeStage ? 1.3 : 1
+                                }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                className={`rounded-full transition-colors ${i === activeStage
+                                    ? 'size-4 bg-primary-500'
+                                    : 'size-3 bg-default-300'
+                                    }`}
+                            />
+                        </button>
                     ))}
                 </div>
                 <Button

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@heroui/react'
+import { Button, Alert } from '@heroui/react'
 import DemoContainer from './demo-container'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
@@ -66,8 +66,8 @@ export default function StandupBugDemo() {
                 <div className='flex items-center gap-2'>
                     <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${dstActive
-                                ? 'bg-warning-100 text-warning-700 dark:bg-warning-900 dark:text-warning-300'
-                                : 'bg-default-100 text-default-500'
+                            ? 'bg-warning-100 text-warning-700'
+                            : 'bg-default-100 text-default-500'
                             }`}
                     >
                         {dstActive ? '🌻 EDT (Summer)' : '❄️ EST (Winter)'}
@@ -93,8 +93,8 @@ export default function StandupBugDemo() {
                         <div
                             key={day}
                             className={`rounded-lg border p-2 text-center transition-colors ${broken
-                                    ? 'border-danger-300 bg-danger-50 dark:border-danger-800 dark:bg-danger-950/30'
-                                    : 'border-default-200 bg-background'
+                                ? 'border-danger-300 bg-danger-50'
+                                : 'border-default-200 bg-background'
                                 }`}
                         >
                             <span className='block text-[10px] font-medium text-default-400'>
@@ -108,8 +108,8 @@ export default function StandupBugDemo() {
                                     exit={{ y: -8, opacity: 0 }}
                                     transition={{ duration: 0.2 }}
                                     className={`mt-1 block font-mono text-xs font-bold ${broken
-                                            ? 'text-danger-600 dark:text-danger-400'
-                                            : 'text-foreground'
+                                        ? 'text-danger-600'
+                                        : 'text-foreground'
                                         }`}
                                 >
                                     {time}
@@ -120,13 +120,13 @@ export default function StandupBugDemo() {
                 })}
             </div>
 
-            <div className='grid gap-2 rounded-lg bg-default-100 p-3 dark:bg-default-50'>
+            <div className='grid gap-2 rounded-lg bg-default-100 p-3'>
                 <div className='flex items-baseline justify-between text-xs'>
                     <span className='text-default-400'>Strategy</span>
                     <span
                         className={`font-medium ${strategy === 'utc'
-                                ? 'text-danger-500'
-                                : 'text-success-500'
+                            ? 'text-danger-500'
+                            : 'text-success-500'
                             }`}
                     >
                         {strategy === 'utc' ? 'Fixed 14:00 UTC' : '09:00 + America/New_York'}
@@ -142,8 +142,8 @@ export default function StandupBugDemo() {
                     <span className='text-default-400'>Meeting fires at</span>
                     <span
                         className={`font-mono font-bold ${strategy === 'utc' && dstActive
-                                ? 'text-danger-600 dark:text-danger-400'
-                                : 'text-success-600 dark:text-success-400'
+                            ? 'text-danger-600'
+                            : 'text-success-600'
                             }`}
                     >
                         {strategy === 'utc' && dstActive
@@ -157,14 +157,12 @@ export default function StandupBugDemo() {
                 <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
-                    className='mt-3 rounded-lg border border-danger-200 bg-danger-50 p-3 dark:border-danger-900 dark:bg-danger-950/30'
+                    className='mt-3'
                 >
-                    <p className='text-xs text-danger-700 dark:text-danger-400'>
-                        The meeting was stored as <code>14:00 UTC</code> during winter
-                        (when EST is UTC-5, so 14:00 UTC = 9 AM). After spring forward,
-                        EDT is UTC-4, so 14:00 UTC = <strong>10:00 AM</strong>. The team
-                        shows up an hour late.
-                    </p>
+                    <Alert
+                        color='danger'
+                        description={`The meeting was stored as 14:00 UTC during winter (when EST is UTC-5, so 14:00 UTC = 9 AM). After spring forward, EDT is UTC-4, so 14:00 UTC = 10:00 AM. The team shows up an hour late.`}
+                    />
                 </motion.div>
             )}
         </DemoContainer>

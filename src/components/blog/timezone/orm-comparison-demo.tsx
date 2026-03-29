@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Tabs, Tab } from '@heroui/react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Tabs, Tab, Alert } from '@heroui/react'
 import DemoContainer from './demo-container'
 
 type ORM = 'prisma' | 'typeorm' | 'drizzle'
@@ -88,7 +89,7 @@ class Order {
 
 function CodeBlock({ code, highlight }: { code: string; highlight?: string }) {
     return (
-        <div className='overflow-x-auto rounded-md bg-default-100 p-3 font-mono text-xs leading-relaxed dark:bg-default-50'>
+        <div className='overflow-x-auto rounded-md bg-default-100 p-3 font-mono text-xs leading-relaxed'>
             {code.split('\n').map((line, i) => {
                 const isComment = line.trimStart().startsWith('//')
                 const isHighlighted = highlight && line.includes(highlight)
@@ -97,10 +98,10 @@ function CodeBlock({ code, highlight }: { code: string; highlight?: string }) {
                         key={i}
                         className={
                             isHighlighted
-                                ? 'text-primary-600 dark:text-primary-400'
+                                ? 'text-primary-600'
                                 : isComment
                                     ? 'text-default-400'
-                                    : 'text-default-600 dark:text-default-400'
+                                    : 'text-default-600'
                         }
                     >
                         {line || '\u00A0'}
@@ -149,13 +150,23 @@ export default function ORMComparisonDemo() {
                         {showFix ? 'Show default (problem)' : 'Show fix'}
                     </button>
                 </div>
-                <CodeBlock
-                    code={showFix ? data.fixSchema : data.schema}
-                    highlight={showFix ? data.fix : undefined}
-                />
+                <AnimatePresence mode='wait'>
+                    <motion.div
+                        key={`${orm}-${showFix}`}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <CodeBlock
+                            code={showFix ? data.fixSchema : data.schema}
+                            highlight={showFix ? data.fix : undefined}
+                        />
+                    </motion.div>
+                </AnimatePresence>
             </div>
 
-            <div className='grid gap-2 rounded-lg bg-default-100 p-3 dark:bg-default-50'>
+            <div className='grid gap-2 rounded-lg bg-default-100 p-3'>
                 <div className='flex items-baseline justify-between text-xs'>
                     <span className='text-default-400'>SQL Type</span>
                     <span className='font-mono text-foreground'>
@@ -166,8 +177,8 @@ export default function ORMComparisonDemo() {
                     <span className='text-default-400'>Timezone Aware?</span>
                     <span
                         className={`font-medium ${showFix
-                                ? 'text-success-600 dark:text-success-400'
-                                : 'text-danger-600 dark:text-danger-400'
+                            ? 'text-success-600'
+                            : 'text-danger-600'
                             }`}
                     >
                         {showFix ? 'Yes' : 'No (by default)'}
@@ -175,16 +186,18 @@ export default function ORMComparisonDemo() {
                 </div>
                 <div className='flex items-baseline justify-between text-xs'>
                     <span className='text-default-400'>Fix</span>
-                    <code className='text-primary-600 dark:text-primary-400'>
+                    <code className='text-primary-600'>
                         {data.fix}
                     </code>
                 </div>
             </div>
 
-            <div className='mt-3 rounded-lg border border-warning-200 bg-warning-50 p-3 dark:border-warning-900 dark:bg-warning-950/30'>
-                <p className='text-xs text-warning-700 dark:text-warning-400'>
-                    <span className='font-medium'>⚠️ Gotcha:</span> {data.gotcha}
-                </p>
+            <div className='mt-4'>
+                <Alert
+                    color='warning'
+                    description={data.gotcha}
+                    title='Gotcha'
+                />
             </div>
         </DemoContainer>
     )

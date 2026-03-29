@@ -50,8 +50,8 @@ function DigitDisplay({ value, size = 'lg' }: { value: string; size?: string }) 
                 exit={{ y: -12, opacity: 0 }}
                 transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 className={`inline-block font-mono font-bold tabular-nums ${size === 'lg'
-                        ? 'text-2xl sm:text-3xl'
-                        : 'text-base sm:text-lg'
+                    ? 'text-2xl sm:text-3xl'
+                    : 'text-base sm:text-lg'
                     }`}
             >
                 {value}
@@ -76,19 +76,19 @@ function ClockDisplay({
     className?: string
 }) {
     const borderColor = isGap
-        ? 'border-danger-300 dark:border-danger-800'
+        ? 'border-danger-300'
         : isJumped
-            ? 'border-warning-300 dark:border-warning-800'
+            ? 'border-warning-300'
             : isSecond
-                ? 'border-secondary-300 dark:border-secondary-800'
+                ? 'border-secondary-300'
                 : 'border-default-200'
 
     const bgColor = isGap
-        ? 'bg-danger-50 dark:bg-danger-950/30'
+        ? 'bg-danger-50'
         : isJumped
-            ? 'bg-warning-50 dark:bg-warning-950/30'
+            ? 'bg-warning-50'
             : isSecond
-                ? 'bg-secondary-50 dark:bg-secondary-950/30'
+                ? 'bg-secondary-50'
                 : 'bg-background'
 
     return (
@@ -98,10 +98,10 @@ function ClockDisplay({
             <DigitDisplay value={time} />
             <span
                 className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${isGap
-                        ? 'bg-danger-100 text-danger-600 dark:bg-danger-900 dark:text-danger-400'
-                        : isSecond
-                            ? 'bg-secondary-100 text-secondary-600 dark:bg-secondary-900 dark:text-secondary-400'
-                            : 'bg-default-100 text-default-500'
+                    ? 'bg-danger-100 text-danger-600'
+                    : isSecond
+                        ? 'bg-secondary-100 text-secondary-600'
+                        : 'bg-default-100 text-default-500'
                     }`}
             >
                 {label}
@@ -196,25 +196,34 @@ export default function DSTGapOverlapVisualizer() {
                 </div>
             </div>
 
-            <AnimatePresence mode='wait'>
-                {current.skip && 'note' in current && (
-                    <motion.div
-                        key={`note-${step}`}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        className={`mb-4 rounded-lg p-3 text-center text-sm font-medium ${transition === 'spring'
-                                ? 'bg-danger-50 text-danger-600 dark:bg-danger-950/30 dark:text-danger-400'
-                                : 'bg-secondary-50 text-secondary-600 dark:bg-secondary-950/30 dark:text-secondary-400'
-                            }`}
-                    >
-                        {current.note}{' '}
-                        {transition === 'spring'
-                            ? '2:00–2:59 AM never existed. The gap.'
-                            : '1:00–1:59 AM happens again. The overlap.'}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <div className='mb-4 min-h-[44px]'>
+                <AnimatePresence mode='wait'>
+                    {current.skip && 'note' in current ? (
+                        <motion.div
+                            key={`note-${step}`}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className={`rounded-lg p-3 text-center text-sm font-medium ${transition === 'spring'
+                                ? 'bg-danger-50 text-danger-600'
+                                : 'bg-secondary-50 text-secondary-600'
+                                }`}
+                        >
+                            {current.note}{' '}
+                            {transition === 'spring'
+                                ? '2:00–2:59 AM never existed. The gap.'
+                                : '1:00–1:59 AM happens again. The overlap.'}
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key='spacer'
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                        />
+                    )}
+                </AnimatePresence>
+            </div>
 
             <div className='mb-4 flex items-center gap-1'>
                 {sequence.map((s, i) => (
@@ -225,12 +234,12 @@ export default function DSTGapOverlapVisualizer() {
                             setStep(i)
                         }}
                         className={`h-2 flex-1 rounded-full transition-colors ${i === step
-                                ? s.skip
-                                    ? 'bg-danger-400'
-                                    : 'bg-primary-400'
-                                : i < step
-                                    ? 'bg-primary-200 dark:bg-primary-800'
-                                    : 'bg-default-200 dark:bg-default-300'
+                            ? s.skip
+                                ? 'bg-danger-400'
+                                : 'bg-primary-400'
+                            : i < step
+                                ? 'bg-primary-200'
+                                : 'bg-default-200'
                             }`}
                     />
                 ))}

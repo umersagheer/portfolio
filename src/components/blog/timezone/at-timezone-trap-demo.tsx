@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { Alert } from '@heroui/react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import DemoContainer from './demo-container'
 
@@ -26,7 +27,7 @@ export default function ATTimeZoneTrapDemo() {
                     {/* Source */}
                     <div
                         ref={sourceRef}
-                        className='z-10 rounded-lg border border-default-200 bg-default-50 px-4 py-3 text-center dark:bg-default-100'
+                        className='z-10 rounded-lg border border-default-200 bg-default-50 px-4 py-3 text-center'
                     >
                         <p className='text-[10px] text-default-400'>
                             Stored in DB (timestamp without tz)
@@ -45,33 +46,33 @@ export default function ATTimeZoneTrapDemo() {
                         <motion.button
                             onClick={() => setShowDouble(false)}
                             className={`flex-1 rounded-lg border p-4 text-left transition-colors sm:max-w-xs ${!showDouble
-                                    ? 'border-danger-300 bg-danger-50 dark:border-danger-800 dark:bg-danger-950/30'
-                                    : 'border-default-200 bg-background opacity-60'
+                                ? 'border-danger-300 bg-danger-50'
+                                : 'border-default-200 bg-background opacity-60'
                                 }`}
                         >
                             <div className='mb-2 flex items-center gap-2'>
                                 <span className='text-sm'>❌</span>
-                                <span className='text-xs font-medium text-danger-600 dark:text-danger-400'>
+                                <span className='text-xs font-medium text-danger-600'>
                                     Single AT TIME ZONE
                                 </span>
                             </div>
                             <div className='mb-2 overflow-x-auto rounded-md bg-background/60 p-2 font-mono text-[10px] leading-relaxed dark:bg-default-50'>
-                                <span className='text-default-600 dark:text-default-400'>
+                                <span className='text-default-600'>
                                     EXTRACT(HOUR FROM
                                 </span>
                                 <br />
-                                <span className='text-default-600 dark:text-default-400'>
+                                <span className='text-default-600'>
                                     {'  '}&quot;createdAt&quot;
                                 </span>
                                 <br />
                                 <span className='text-danger-500'>
                                     {'  '}AT TIME ZONE &apos;Asia/Karachi&apos;
                                 </span>
-                                <span className='text-default-600 dark:text-default-400'>)</span>
+                                <span className='text-default-600'>)</span>
                             </div>
                             <div ref={wrongRef} className='text-center'>
                                 <p className='text-[10px] text-default-400'>Result:</p>
-                                <p className='font-mono text-xl font-bold text-danger-600 dark:text-danger-400'>
+                                <p className='font-mono text-xl font-bold text-danger-600'>
                                     07:00
                                 </p>
                                 <p className='text-[10px] text-danger-500'>
@@ -86,22 +87,22 @@ export default function ATTimeZoneTrapDemo() {
                         <motion.button
                             onClick={() => setShowDouble(true)}
                             className={`flex-1 rounded-lg border p-4 text-left transition-colors sm:max-w-xs ${showDouble
-                                    ? 'border-success-300 bg-success-50 dark:border-success-800 dark:bg-success-950/30'
-                                    : 'border-default-200 bg-background opacity-60'
+                                ? 'border-success-300 bg-success-50'
+                                : 'border-default-200 bg-background opacity-60'
                                 }`}
                         >
                             <div className='mb-2 flex items-center gap-2'>
                                 <span className='text-sm'>✅</span>
-                                <span className='text-xs font-medium text-success-600 dark:text-success-400'>
+                                <span className='text-xs font-medium text-success-600'>
                                     Double AT TIME ZONE
                                 </span>
                             </div>
-                            <div className='mb-2 overflow-x-auto rounded-md bg-background/60 p-2 font-mono text-[10px] leading-relaxed dark:bg-default-50'>
-                                <span className='text-default-600 dark:text-default-400'>
+                            <div className='mb-2 overflow-x-auto rounded-md bg-background/60 p-2 font-mono text-[10px] leading-relaxed'>
+                                <span className='text-default-600'>
                                     EXTRACT(HOUR FROM
                                 </span>
                                 <br />
-                                <span className='text-default-600 dark:text-default-400'>
+                                <span className='text-default-600'>
                                     {'  '}(&quot;createdAt&quot;
                                 </span>
                                 <br />
@@ -112,11 +113,11 @@ export default function ATTimeZoneTrapDemo() {
                                 <span className='text-success-500'>
                                     {'  '}AT TIME ZONE &apos;Asia/Karachi&apos;
                                 </span>
-                                <span className='text-default-600 dark:text-default-400'>)</span>
+                                <span className='text-default-600'>)</span>
                             </div>
                             <div ref={rightRef} className='text-center'>
                                 <p className='text-[10px] text-default-400'>Result:</p>
-                                <p className='font-mono text-xl font-bold text-success-600 dark:text-success-400'>
+                                <p className='font-mono text-xl font-bold text-success-600'>
                                     17:00
                                 </p>
                                 <p className='text-[10px] text-success-500'>
@@ -157,21 +158,11 @@ export default function ATTimeZoneTrapDemo() {
             </div>
 
             {/* War story */}
-            <div className='rounded-lg border border-warning-200 bg-warning-50 p-3 dark:border-warning-900 dark:bg-warning-950/30'>
-                <p className='mb-1 text-xs font-medium text-warning-700 dark:text-warning-400'>
-                    Real Production Bug
-                </p>
-                <p className='text-xs text-warning-600 dark:text-warning-500'>
-                    In an analytics dashboard, orders placed at 5 PM PKT appeared in the
-                    7 AM bucket of the Peak Hours chart. The 10-hour shift (not 5)
-                    happened because single{' '}
-                    <code className='text-warning-700 dark:text-warning-400'>
-                        AT TIME ZONE
-                    </code>{' '}
-                    on a bare timestamp converts in the <em>wrong direction</em> — it
-                    subtracted 5 hours instead of adding them.
-                </p>
-            </div>
+            <Alert
+                color='warning'
+                title='Real Production Bug'
+                description='In an analytics dashboard, orders placed at 5 PM PKT appeared in the 7 AM bucket of the Peak Hours chart. The 10-hour shift (not 5) happened because single AT TIME ZONE on a bare timestamp converts in the wrong direction — it subtracted 5 hours instead of adding them.'
+            />
         </DemoContainer>
     )
 }
