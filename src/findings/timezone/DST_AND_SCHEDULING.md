@@ -31,9 +31,30 @@ better use of daylight during evening hours.
 | Winter (Nov → Mar) | **EST**      | Eastern Standard Time | UTC − 5    |
 | Summer (Mar → Nov) | **EDT**      | Eastern Daylight Time | UTC − 4    |
 
+**Think of it like a sign on a shop door:**
+
+- In winter, the sign reads "EST" — the shop (New York) is 5 hours behind UTC.
+- In summer, someone flips the sign to "EDT" — now it's only 4 hours behind UTC.
+- The shop didn't move. The sign just changed.
+
+So EST and EDT are **not two different timezones**. They are **two modes of the
+same timezone** (`America/New_York`). The "S" stands for Standard (the normal,
+winter mode). The "D" stands for Daylight (the shifted, summer mode). Every
+timezone that observes DST has this pair:
+
+| Timezone   | Standard (Winter) | Daylight (Summer) |
+| ---------- | ----------------- | ----------------- |
+| US Eastern | EST (UTC-5)       | EDT (UTC-4)       |
+| US Central | CST (UTC-6)       | CDT (UTC-5)       |
+| US Pacific | PST (UTC-8)       | PDT (UTC-7)       |
+| UK         | GMT (UTC+0)       | BST (UTC+1)       |
+
 **Key insight:** New York doesn't have one fixed offset. It alternates between
 UTC-5 and UTC-4 depending on the time of year. This is why you should never
-store an offset — it changes.
+store an offset — it changes. When someone says "EST" they mean the winter
+version. When someone says "EDT" they mean the summer version. But neither label
+captures the **switching rule itself** — only the IANA name `America/New_York`
+does.
 
 ### Who Observes DST?
 
@@ -226,23 +247,44 @@ function getNextFireTime(wallTime, timezone) {
 
 ### IANA Timezone Names
 
-The **IANA Time Zone Database** (also called "tz database" or "Olson database")
-lists timezone identifiers like:
+**IANA** stands for the **Internet Assigned Numbers Authority**. They're the
+organization that maintains the official list of all timezones in the world. You
+don't need to care about the organization itself — just know that when someone
+says "IANA timezone", they mean **the official, globally agreed-upon timezone
+name**.
+
+The IANA timezone database (also called "tz database" or "Olson database") is
+essentially a giant text file that says:
+
+> "New York is UTC-5 in winter, UTC-4 in summer, switches on the 2nd Sunday of
+> March and 1st Sunday of November, and here's every rule change since 1883."
+
+Every operating system, programming language, and phone in the world uses this
+same database. When your phone auto-adjusts for DST, it's reading from the IANA
+database.
+
+The names follow the format **`Continent/City`**:
 
 ```
-America/New_York
-Asia/Karachi
-Europe/London
-America/Chicago
-Pacific/Auckland
+America/New_York      ← US Eastern time (handles EST ↔ EDT switching)
+Asia/Karachi          ← Pakistan (always UTC+5, no switching)
+Europe/London         ← UK (handles GMT ↔ BST switching)
+America/Chicago       ← US Central time
+Pacific/Auckland      ← New Zealand
 ```
+
+**Why a city name and not a country?** Because a single country can have
+multiple timezones (the US has ~6, Russia has 11). And cities don't change, but
+country borders and timezone rules do. `America/New_York` has been a stable
+identifier for decades, even as DST rules changed around it.
 
 These names encode the **full history and future rules** of a timezone,
 including:
 
 - When DST starts and ends
-- What the offsets are
+- What the offsets are in each mode
 - Historical changes (e.g., when a country adopted or abolished DST)
+- Edge cases like when a country changed its base offset entirely
 
 ### Why Offsets Are Dangerous
 
@@ -321,7 +363,63 @@ const utcTime = event.toUTC()
   timezone: 'America/New_York',
   recurrence: 'RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR'
 }
+```
 
+#### What is that RRULE string?
+
+**RRULE** stands for **Recurrence Rule**. It comes from the **iCalendar (iCal)**
+specification — the same standard used by Google Calendar, Apple Calendar,
+Outlook, etc. to represent recurring events. Think of it as a mini-language for
+saying "repeat this event according to these rules."
+
+The format is simple — it's just key-value pairs separated by semicolons:
+
+```
+RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
+       │          │
+       │          └── BYDAY: only on Monday through Friday
+       └── FREQ: how often (DAILY, WEEKLY, MONTHLY, YEARLY)
+```
+
+More examples:
+
+```
+RRULE:FREQ=WEEKLY;BYDAY=MO
+→ "Every Monday"
+
+RRULE:FREQ=MONTHLY;BYMONTHDAY=15
+→ "On the 15th of every month"
+
+RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=23
+→ "Every March 23rd" (like a birthday)
+
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH
+→ "Every other week, on Tuesday and Thursday"
+
+RRULE:FREQ=DAILY;COUNT=10
+→ "Every day, but only 10 times total"
+
+RRULE:FREQ=DAILY;UNTIL=20261231T235959Z
+→ "Every day until December 31, 2026"
+```
+
+Common RRULE properties:
+
+| Property     | Meaning                  | Example values                 |
+| ------------ | ------------------------ | ------------------------------ |
+| `FREQ`       | Frequency (required)     | DAILY, WEEKLY, MONTHLY, YEARLY |
+| `INTERVAL`   | Every Nth occurrence     | 2 = every other                |
+| `BYDAY`      | Which days of the week   | MO, TU, WE, TH, FR, SA, SU     |
+| `BYMONTHDAY` | Which day of the month   | 1, 15, -1 (last day)           |
+| `BYMONTH`    | Which month              | 1–12                           |
+| `COUNT`      | Stop after N occurrences | 10                             |
+| `UNTIL`      | Stop after this date     | 20261231T235959Z               |
+
+You don't need to build these strings by hand. Libraries like **rrule.js**
+(`rrule` on npm) let you create and parse them, and they also handle expanding
+them into actual dates (accounting for DST, skipped days, etc.).
+
+```javascript
 // Compute next fire time dynamically:
 function getNextOccurrence(wallTime, timezone) {
   const [hour, minute] = wallTime.split(':').map(Number)
