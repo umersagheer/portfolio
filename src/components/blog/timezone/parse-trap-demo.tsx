@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Alert } from '@heroui/react'
 import DemoContainer from './demo-container'
+import {
+    formatMonthDay,
+    getTimeZoneOffsetLabel,
+    wallTimeToUTCDate
+} from './timezone-utils'
 
 const PRESETS = [
     { label: "'2026-03-29'", value: '2026-03-29' },
@@ -20,9 +25,9 @@ function parseAndAnalyze(input: string) {
 
         const isoString = d.toISOString()
         const utcDate = isoString.split('T')[0]
-        const inputDate = input.split('T')[0].replace(/'/g, '')
+        const inputDate = input.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? ''
         const hasExplicitTimezone = /[Zz]|[+-]\d{2}:\d{2}$/.test(input)
-        const isDateOnly = !input.includes('T') && !input.includes(' ')
+        const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(input)
         const parsedAsUTC = isDateOnly || hasExplicitTimezone
         const dateShifted = utcDate !== inputDate
 
@@ -41,20 +46,69 @@ function parseAndAnalyze(input: string) {
     }
 }
 
+function parseNaiveDateTimeParts(input: string) {
+    const match = input.match(
+        /^(\d{4})-(\d{2})-(\d{2})(?:T| )(\d{2}):(\d{2})(?::(\d{2}))?$/
+    )
+
+    if (!match) {
+        return null
+    }
+
+    const [, year, month, day, hour, minute, second] = match
+
+    return {
+        year: Number(year),
+        month: Number(month),
+        day: Number(day),
+        hour: Number(hour),
+        minute: Number(minute),
+        second: Number(second ?? '0')
+    }
+}
+
+const EXAMPLE_ZONES = [
+    { zone: 'UTC', label: 'UTC machine' },
+    { zone: 'Asia/Karachi', label: 'UTC+5 machine' },
+    { zone: 'America/New_York', label: 'UTC-4 machine' }
+]
+
 export default function ParseTrapDemo() {
     const [input, setInput] = useState("'2026-03-29T00:00:00'")
     const [activePreset, setActivePreset] = useState(1)
+    const inputId = useId()
 
     const cleanInput = input.replace(/^['"]|['"]$/g, '')
     const result = parseAndAnalyze(cleanInput)
+    const machineZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const parsedParts = parseNaiveDateTimeParts(cleanInput)
 
     const handlePreset = (index: number) => {
         setActivePreset(index)
         setInput(PRESETS[index].label)
     }
 
-    const isTrapped =
-        result && !result.parsedAsUTC && !result.isDateOnly && result.dateShifted
+    const isLocalTimeFormat =
+        !!result && !result.parsedAsUTC && !result.isDateOnly
+    const isNonStandardFormat = cleanInput.includes(' ') && !cleanInput.includes('T')
+
+    const simulatedExamples =
+        isLocalTimeFormat && parsedParts
+            ? EXAMPLE_ZONES.map(example => {
+                const simulatedDate = wallTimeToUTCDate(parsedParts, example.zone)
+                const simulatedISO = simulatedDate.toISOString()
+                const simulatedUTCDate = simulatedISO.split('T')[0]
+                const inputDate = cleanInput.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? ''
+
+                return {
+                    ...example,
+                    offset: getTimeZoneOffsetLabel(simulatedDate, example.zone),
+                    isoString: simulatedISO,
+                    shifted: simulatedUTCDate !== inputDate,
+                    utcDate: formatMonthDay(simulatedDate, 'UTC')
+                }
+            })
+            : []
 
     return (
         <DemoContainer
@@ -77,7 +131,11 @@ export default function ParseTrapDemo() {
             </div>
 
             <div className='mb-4'>
+                <label htmlFor={inputId} className='mb-2 block text-xs font-medium text-default-500'>
+                    Date string to parse
+                </label>
                 <input
+                    id={inputId}
                     type='text'
                     value={input}
                     onChange={e => {
@@ -101,11 +159,12 @@ export default function ParseTrapDemo() {
                     >
                         <div className='grid gap-2 rounded-lg bg-default-100 p-4'>
                             <Row label='Input' value={`new Date(${input})`} mono />
+                            <Row label='Your machine' value={machineZone} />
                             <Row
                                 label='.toISOString()'
                                 value={result.isoString}
                                 mono
-                                highlight={isTrapped ? 'danger' : 'success'}
+                                highlight={isLocalTimeFormat ? 'danger' : 'success'}
                             />
                             <Row
                                 label='UTC date'
@@ -124,23 +183,63 @@ export default function ParseTrapDemo() {
                                         ? 'UTC (date-only → spec says UTC)'
                                         : result.hasExplicitTimezone
                                             ? 'UTC (explicit Z or offset)'
-                                            : 'Local time (no Z, no offset → spec says local!)'
+                                            : 'Machine local time (no Z, no offset)'
                                 }
                                 highlight={result.parsedAsUTC ? 'success' : 'danger'}
                             />
                         </div>
 
-                        {isTrapped && (
+                        {isLocalTimeFormat && (
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                             >
                                 <Alert
                                     color='danger'
-                                    title='Date shifted to previous day in UTC!'
-                                    description='Without "Z" or an offset, JavaScript treats this as local time and subtracts your timezone offset. Midnight local time becomes the previous day in UTC.'
+                                    title={
+                                        isNonStandardFormat
+                                            ? 'This format is not ISO 8601 and is machine-dependent'
+                                            : 'This format depends on the machine timezone'
+                                    }
+                                    description={
+                                        isNonStandardFormat
+                                            ? `Some engines reject "${cleanInput}", others accept it as local time. If it is accepted, the UTC result depends on where the code runs.`
+                                            : `Without a Z or offset, JavaScript interprets "${cleanInput}" as local time. On your machine it becomes ${result.isoString}, but a machine in another timezone can produce a different UTC timestamp.`
+                                    }
                                 />
                             </motion.div>
+                        )}
+
+                        {simulatedExamples.length > 0 && (
+                            <div className='rounded-lg border border-default-200 p-3'>
+                                <p className='text-xs font-medium text-default-500'>
+                                    Same string, different machines
+                                </p>
+                                <div className='mt-3 space-y-2'>
+                                    {simulatedExamples.map(example => (
+                                        <div
+                                            key={example.zone}
+                                            className='flex flex-col gap-1 rounded-lg bg-default-100 px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between'
+                                        >
+                                            <div>
+                                                <p className='font-medium text-foreground'>
+                                                    {example.label}{' '}
+                                                    <span className='font-mono text-default-500'>
+                                                        ({example.offset})
+                                                    </span>
+                                                </p>
+                                                <p className='text-default-500'>
+                                                    Parses to UTC day {example.utcDate}
+                                                    {example.shifted ? ' ← day shifted' : ''}
+                                                </p>
+                                            </div>
+                                            <code className='font-mono text-[11px] text-primary-600'>
+                                                {example.isoString}
+                                            </code>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
 
                         {result.isDateOnly && (
@@ -174,7 +273,7 @@ export default function ParseTrapDemo() {
                         <span className='font-mono text-danger-500'>
                             YYYY-MM-DDTHH:mm:ss
                         </span>{' '}
-                        (no Z/offset) → parsed as <strong>local time</strong>
+                        (no Z/offset) → parsed as <strong>local time on the parsing machine</strong>
                     </p>
                     <p>
                         <span className='font-mono text-success-500'>

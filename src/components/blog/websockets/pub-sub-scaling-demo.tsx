@@ -3,8 +3,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
+import { IconCheck, IconX } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
+import IconCard from '@/components/blog/shared/icon-card'
 import DemoContainer from './demo-container'
 import {
   WEBSOCKET_NODE_ICON_SIZE,
@@ -12,7 +14,6 @@ import {
   WebSocketPersonIcon,
   WebSocketServerIcon
 } from './diagram-icons'
-import IconCard from './icon-card'
 
 type Mode = 'single' | 'no-broker' | 'redis'
 
@@ -102,7 +103,7 @@ export default function PubSubScalingDemo() {
     }
     if (mode === 'single') {
       if (animStep === 1) return 'Alice → Server...'
-      return 'Server → Bob ✓'
+      return 'Server → Bob delivered'
     }
     if (mode === 'no-broker') {
       if (animStep === 1) return 'Alice → Server 1...'
@@ -112,7 +113,7 @@ export default function PubSubScalingDemo() {
     if (animStep === 1) return 'Alice → Server 1...'
     if (animStep === 2) return 'Server 1 → Redis (PUBLISH)...'
     if (animStep === 3) return 'Redis → Server 2 (SUBSCRIBE)...'
-    return 'Server 2 → Bob ✓ Delivered via pub/sub!'
+    return 'Server 2 → Bob delivered via pub/sub'
   }
 
   return (
@@ -240,7 +241,7 @@ export default function PubSubScalingDemo() {
                       animate={{ opacity: 1, scale: 1 }}
                       className='dark:bg-danger-950 flex size-10 items-center justify-center rounded-full bg-danger-100 text-lg font-bold text-danger-500'
                     >
-                      ✕
+                      <IconX size={18} />
                     </motion.div>
                   )}
                   {(!animating || animStep < 2) && (
@@ -335,13 +336,15 @@ export default function PubSubScalingDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className={`text-xs font-medium ${mode === 'no-broker' && animStep >= 2
-                ? 'text-danger-500'
-                : mode === 'redis' && animStep >= 4
-                  ? 'text-success-500'
-                  : 'text-default-500'
+            className={`flex items-center gap-1.5 text-xs font-medium ${mode === 'no-broker' && animStep >= 2
+              ? 'text-danger-500'
+              : mode === 'redis' && animStep >= 4
+                ? 'text-success-500'
+                : 'text-default-500'
               }`}
           >
+            {mode === 'redis' && animStep >= 4 && <IconCheck size={14} />}
+            {mode === 'no-broker' && animStep >= 2 && <IconX size={14} />}
             {statusText()}
           </motion.span>
         </AnimatePresence>

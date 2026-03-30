@@ -20,6 +20,14 @@ bug, and almost every developer ships one at some point.
 This post is structured by **use case**, not skill level. Find the section that
 matches your problem, and start there.
 
+Before you jump sections, lock in one mental model:
+
+- **Past event** → one fixed moment already happened → store UTC
+- **Future event** → one wall time that has not happened yet → store wall time +
+  IANA timezone
+
+Everything else in this post is a consequence of that split.
+
 - **Section 1:** Your data is about the past (orders, logs, reports)
 - **Section 2:** Your data is about the future (scheduling, recurring events)
 - **Section 3:** The practical guide (databases, ORMs, the AT TIME ZONE trap,
@@ -455,8 +463,8 @@ where your code runs:
 every machine. **Never use `getHours()`, `getDay()`, or `getDate()` on the
 server** unless you intentionally want the server's local time.
 
-> **This is why "it works on my Mac but breaks in CI" happens.** Your Mac's
-> timezone is `Asia/Karachi` (UTC+5). The CI server is UTC. Code that uses
+> **This is why "it works on my laptop but breaks in CI" happens.** If your
+> laptop is in `Asia/Karachi` (UTC+5) and the CI server is UTC, code that uses
 > `getHours()` or `new Date('2026-03-29T00:00:00')` (local time parsing)
 > produces different results on each machine. Set `TZ=UTC` in your local `.env`
 > to match production.
@@ -549,6 +557,12 @@ AM in Pakistan (UTC+5) fall on the previous day in UTC:
 **Fix:** Convert the report's date range to UTC boundaries before grouping.
 "March 29 in Pakistan" = "March 28 19:00 UTC to March 29 18:59 UTC."
 
+**Fix recipe:**
+
+1. Take the requested business day in the business timezone.
+2. Convert local midnight and the next local midnight to UTC.
+3. Query between those UTC timestamps instead of grouping by raw UTC dates.
+
 ### Bug 2: The AT TIME ZONE Production Bug
 
 **Symptom:** Analytics Peak Hours chart shows orders in completely wrong time
@@ -562,6 +576,12 @@ converts in the wrong direction, causing a 10-hour shift instead of the expected
 The fix was a two-character change in the SQL query — adding
 `AT TIME ZONE 'UTC'` before the timezone conversion. Scroll back up to the AT
 TIME ZONE Trap demo to see it interactive.
+
+**Fix recipe:**
+
+1. Check whether the column is `timestamp` or `timestamptz`.
+2. If it is bare `timestamp`, label it as UTC first with `AT TIME ZONE 'UTC'`.
+3. Apply the second `AT TIME ZONE` to convert into the reporting timezone.
 
 ## Senior Engineer Checklist
 

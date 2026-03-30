@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Tab, Alert } from '@heroui/react'
+import { Tabs, Tab, Alert, Button } from '@heroui/react'
+import { IconArrowRight } from '@tabler/icons-react'
+import BrandIcon from '@/components/blog/shared/brand-icon'
 import DemoContainer from './demo-container'
 
 type ORM = 'prisma' | 'typeorm' | 'drizzle'
@@ -133,22 +135,39 @@ export default function ORMComparisonDemo() {
                 }}
                 className='mb-4'
             >
-                <Tab key='prisma' title='Prisma' />
-                <Tab key='typeorm' title='TypeORM' />
-                <Tab key='drizzle' title='Drizzle' />
+                <Tab
+                    key='prisma'
+                    title={<ORMTabTitle slug='prisma' label='Prisma' />}
+                />
+                <Tab
+                    key='typeorm'
+                    title={<ORMTabTitle slug='typeorm' label='TypeORM' />}
+                />
+                <Tab
+                    key='drizzle'
+                    title={<ORMTabTitle slug='drizzle' label='Drizzle' />}
+                />
             </Tabs>
+
+            <div className='mb-4 flex items-center gap-2 rounded-lg bg-default-100 px-3 py-2 text-xs text-default-500'>
+                <BrandIcon slug={orm} size={18} />
+                <span className='font-medium text-foreground'>{data.name}</span>
+                <IconArrowRight size={14} className='text-default-400' />
+                <BrandIcon slug='postgresql' size={18} />
+                <span>PostgreSQL timestamp mapping</span>
+            </div>
 
             <div className='mb-4'>
                 <div className='mb-2 flex items-center gap-2'>
-                    <span className={showFix ? 'text-sm' : 'text-sm font-bold'}>
-                        {showFix ? '✅' : '❌'}
-                    </span>
-                    <button
-                        onClick={() => setShowFix(f => !f)}
-                        className='text-xs font-medium text-primary-500 underline-offset-2 hover:underline'
+                    <Button
+                        size='sm'
+                        variant={showFix ? 'solid' : 'flat'}
+                        color={showFix ? 'success' : 'primary'}
+                        aria-pressed={showFix}
+                        onPress={() => setShowFix(f => !f)}
                     >
                         {showFix ? 'Show default (problem)' : 'Show fix'}
-                    </button>
+                    </Button>
                 </div>
                 <AnimatePresence mode='wait'>
                     <motion.div
@@ -200,5 +219,20 @@ export default function ORMComparisonDemo() {
                 />
             </div>
         </DemoContainer>
+    )
+}
+
+function ORMTabTitle({
+    label,
+    slug
+}: {
+    label: string
+    slug: 'drizzle' | 'prisma' | 'typeorm'
+}) {
+    return (
+        <div className='flex items-center gap-2'>
+            <BrandIcon slug={slug} size={16} />
+            <span>{label}</span>
+        </div>
     )
 }

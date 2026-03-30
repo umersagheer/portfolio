@@ -9,6 +9,7 @@ import {
   IconCircleMinus,
   IconCircleX
 } from '@tabler/icons-react'
+import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
@@ -17,7 +18,6 @@ import {
   WebSocketClientIcon,
   WebSocketServerIcon
 } from './diagram-icons'
-import IconCard from './icon-card'
 
 const STATES = [
   {
@@ -154,8 +154,8 @@ export default function LifecycleDemo() {
               >
                 <div
                   className={`flex size-10 items-center justify-center rounded-full transition-colors ${isActive
-                      ? stateColors[s.color]
-                      : 'bg-default-200 dark:bg-default-700'
+                    ? stateColors[s.color]
+                    : 'bg-default-200 dark:bg-default-700'
                     }`}
                 >
                   <Icon
@@ -176,8 +176,8 @@ export default function LifecycleDemo() {
               {i < 3 && (
                 <div
                   className={`mx-1 h-px w-4 sm:w-8 ${i < activeState
-                      ? 'bg-primary-300'
-                      : 'bg-default-200 dark:bg-default-700'
+                    ? 'bg-primary-300'
+                    : 'bg-default-200 dark:bg-default-700'
                     }`}
                 />
               )}
@@ -246,8 +246,8 @@ export default function LifecycleDemo() {
           <div className='flex flex-col items-center gap-1'>
             <span
               className={`text-xs font-medium ${ghostMode
-                  ? 'text-danger-500'
-                  : 'text-success-600 dark:text-success-400'
+                ? 'text-danger-500'
+                : 'text-success-600 dark:text-success-400'
                 }`}
             >
               {status}

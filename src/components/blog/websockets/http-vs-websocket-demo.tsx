@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
+import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
@@ -11,7 +12,6 @@ import {
   WebSocketClientIcon,
   WebSocketServerIcon
 } from './diagram-icons'
-import IconCard from './icon-card'
 
 type Protocol = 'http' | 'websocket'
 
@@ -115,13 +115,12 @@ function HttpMode() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
-                phase === 'idle'
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold ${phase === 'idle'
                   ? 'bg-default-100 text-default-500'
                   : phase === 'request'
                     ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
                     : 'bg-success-100 text-success-600 dark:bg-success-900 dark:text-success-300'
-              }`}
+                }`}
             >
               {phase === 'idle'
                 ? 'Connection Closed'
@@ -244,13 +243,12 @@ function WebSocketMode() {
 
         <div className='flex flex-col items-center gap-1'>
           <span
-            className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
-              connected
+            className={`rounded-full px-3 py-1 text-[10px] font-semibold ${connected
                 ? 'bg-success-100 text-success-600 dark:bg-success-900 dark:text-success-300'
                 : handshaking
                   ? 'bg-warning-100 text-warning-600 dark:bg-warning-900 dark:text-warning-300'
                   : 'bg-default-100 text-default-500'
-            }`}
+              }`}
           >
             {connected
               ? 'Tunnel Active'

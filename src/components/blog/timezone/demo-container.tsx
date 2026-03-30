@@ -1,5 +1,6 @@
 'use client'
 
+import { useId } from 'react'
 import { motion } from 'framer-motion'
 
 type DemoContainerProps = {
@@ -13,20 +14,33 @@ export default function DemoContainer({
     title,
     description
 }: DemoContainerProps) {
+    const titleId = useId()
+    const descriptionId = useId()
+
     return (
-        <motion.div
+        <motion.section
             layout
+            aria-labelledby={title ? titleId : undefined}
+            aria-describedby={description ? descriptionId : undefined}
             transition={{ layout: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
             style={{ overflow: 'hidden' }}
-            className='not-prose my-8 rounded-xl border border-default-200 bg-default-50 p-6'
+            className='not-prose my-8 rounded-2xl border border-default-200 bg-default-50 p-5 shadow-sm sm:p-6'
         >
             {title && (
-                <motion.p layout='position' className='mb-1 text-sm font-medium text-default-500'>
+                <motion.h3
+                    id={titleId}
+                    layout='position'
+                    className='mb-2 text-base font-semibold tracking-tight text-foreground'
+                >
                     {title}
-                </motion.p>
+                </motion.h3>
             )}
             {description && (
-                <motion.p layout='position' className='mb-4 text-xs text-default-400'>
+                <motion.p
+                    id={descriptionId}
+                    layout='position'
+                    className='mb-4 max-w-3xl text-sm leading-6 text-default-500'
+                >
                     {description}
                 </motion.p>
             )}
@@ -34,6 +48,6 @@ export default function DemoContainer({
             <motion.div layout='position'>
                 {children}
             </motion.div>
-        </motion.div>
+        </motion.section>
     )
 }

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { XIcon } from 'lucide-react'
+import { IconX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 const springTransition = { type: 'spring', stiffness: 350, damping: 30 }
@@ -96,7 +96,7 @@ export default function MorphingDialogDemo() {
                   onClick={() => setIsOpen(false)}
                   className='absolute right-3 top-3 rounded-full p-1.5 text-default-400 transition-colors hover:bg-default-100 hover:text-foreground'
                 >
-                  <XIcon size={16} />
+                  <IconX size={16} />
                 </button>
                 <motion.div
                   layout='preserve-aspect'

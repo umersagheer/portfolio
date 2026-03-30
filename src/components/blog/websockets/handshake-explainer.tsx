@@ -3,8 +3,15 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
-import { ChevronRightIcon, PlayIcon, PauseIcon } from 'lucide-react'
-import { IconSend, IconArrowBackUp, IconCircleCheck } from '@tabler/icons-react'
+import {
+  IconArrowBackUp,
+  IconChevronRight,
+  IconCircleCheck,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconSend
+} from '@tabler/icons-react'
+import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
@@ -13,7 +20,6 @@ import {
   WebSocketClientIcon,
   WebSocketServerIcon
 } from './diagram-icons'
-import IconCard from './icon-card'
 
 const ROTATE_OFFSET = 18
 
@@ -166,13 +172,12 @@ export default function HandshakeExplainer() {
             <button
               key={s.label}
               onClick={() => handleStepClick(i)}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
-                i === step
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${i === step
                   ? 'bg-primary-400 text-white'
                   : i < step
                     ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
                     : 'bg-default-100 text-default-400'
-              }`}
+                }`}
             >
               {i + 1}
             </button>
@@ -184,7 +189,7 @@ export default function HandshakeExplainer() {
           color={playing ? 'primary' : 'default'}
           isDisabled={playing}
           startContent={
-            playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />
+            playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />
           }
           onPress={handlePlayAll}
         >
@@ -198,7 +203,7 @@ export default function HandshakeExplainer() {
         className='relative mb-5 flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-6'
       >
         <DotPattern
-        glow
+          glow
           width={16}
           height={16}
           style={{
@@ -381,7 +386,7 @@ export default function HandshakeExplainer() {
         <Button
           size='sm'
           variant='flat'
-          endContent={step < 2 ? <ChevronRightIcon size={14} /> : undefined}
+          endContent={step < 2 ? <IconChevronRight size={14} /> : undefined}
           isDisabled={step === 2}
           onPress={() => handleStepClick(step + 1)}
         >

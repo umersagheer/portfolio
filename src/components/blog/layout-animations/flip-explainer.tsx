@@ -3,10 +3,12 @@
 import { useState, useRef, useCallback, useEffect, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
-import { ChevronRightIcon, PlayIcon, PauseIcon } from 'lucide-react'
 import {
   IconRulerMeasure,
   IconBolt,
+  IconChevronRight,
+  IconPlayerPause,
+  IconPlayerPlay,
   IconTransform,
   IconPlayerPlayFilled
 } from '@tabler/icons-react'
@@ -173,13 +175,12 @@ export default function FlipExplainer() {
             <button
               key={s.letter}
               onClick={() => handleStepClick(i)}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
-                i === step
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${i === step
                   ? 'bg-primary-400 text-white'
                   : i < step
                     ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
                     : 'bg-default-100 text-default-400'
-              }`}
+                }`}
             >
               {s.letter}
             </button>
@@ -190,7 +191,7 @@ export default function FlipExplainer() {
           variant='flat'
           color={playing ? 'primary' : 'default'}
           isDisabled={playing}
-          startContent={playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+          startContent={playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />}
           onPress={handlePlayAll}
         >
           {playing ? 'Playing...' : 'Play All'}
@@ -345,7 +346,7 @@ export default function FlipExplainer() {
           <Button
             size='sm'
             variant='flat'
-            endContent={step < 3 ? <ChevronRightIcon size={14} /> : undefined}
+            endContent={step < 3 ? <IconChevronRight size={14} /> : undefined}
             isDisabled={step === 3}
             onPress={() => handleStepClick(step + 1)}
           >

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
+import { IconCircleCheck, IconSnowflake, IconSun } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 const TIMEZONES_DISPLAY = [
@@ -78,10 +79,13 @@ export default function PastVsFutureStorageDemo() {
                     </div>
 
                     <div className='mt-3 rounded-md border border-primary-300 bg-primary-50 p-2'>
-                        <p className='text-[10px] text-primary-700'>
-                            ✅ UTC is perfect for past events. The moment is fixed — only the
-                            display changes.
-                        </p>
+                        <div className='flex items-start gap-2 text-[10px] text-primary-700'>
+                            <IconCircleCheck size={14} className='mt-0.5 shrink-0' />
+                            <p>
+                                UTC is perfect for past events. The moment is fixed
+                                and only the display changes.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -118,9 +122,16 @@ export default function PastVsFutureStorageDemo() {
                             size='sm'
                             variant='flat'
                             className='h-6 min-w-0 px-2 text-[10px]'
+                            startContent={
+                                dstToggle ? (
+                                    <IconSun size={12} />
+                                ) : (
+                                    <IconSnowflake size={12} />
+                                )
+                            }
                             onPress={() => setDstToggle(t => !t)}
                         >
-                            {dstToggle ? '🌻 Summer (EDT)' : '❄️ Winter (EST)'}
+                            {dstToggle ? 'Summer (EDT)' : 'Winter (EST)'}
                         </Button>
                     </div>
 
@@ -158,10 +169,13 @@ export default function PastVsFutureStorageDemo() {
                     </AnimatePresence>
 
                     <div className='mt-3 rounded-md border border-success-300 bg-success-50 p-2'>
-                        <p className='text-[10px] text-success-700'>
-                            ✅ Wall time stays 9:00 AM. The UTC equivalent shifts when DST
-                            changes — computed at fire time, not schedule time.
-                        </p>
+                        <div className='flex items-start gap-2 text-[10px] text-success-700'>
+                            <IconCircleCheck size={14} className='mt-0.5 shrink-0' />
+                            <p>
+                                Wall time stays 9:00 AM. The UTC equivalent shifts
+                                when DST changes and is computed at fire time.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

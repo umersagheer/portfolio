@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
+import { IconPlayerPlay } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 type Transition = 'spring' | 'fall'
@@ -17,7 +18,7 @@ const SPRING_SEQUENCE = [
         label: 'GAP',
         exists: false,
         skip: true,
-        note: '⏩ Clock jumps!'
+        note: 'Clock jumps forward.'
     },
     { wall: '3:00 AM', utc: '07:00', label: 'EDT', exists: true, jumped: true },
     { wall: '3:01 AM', utc: '07:01', label: 'EDT', exists: true }
@@ -32,7 +33,7 @@ const FALL_SEQUENCE = [
         label: 'REWIND',
         exists: false,
         skip: true,
-        note: '⏪ Clock rewinds!'
+        note: 'Clock rewinds.'
     },
     { wall: '1:00 AM', utc: '06:00', label: 'EST', exists: true, second: true },
     { wall: '1:30 AM', utc: '06:30', label: 'EST', exists: true, second: true },
@@ -166,8 +167,8 @@ export default function DSTGapOverlapVisualizer() {
                 onSelectionChange={key => setTransition(key as Transition)}
                 className='mb-4'
             >
-                <Tab key='spring' title='🌸 Spring Forward (Gap)' />
-                <Tab key='fall' title='🍂 Fall Back (Overlap)' />
+                <Tab key='spring' title='Spring Forward (Gap)' />
+                <Tab key='fall' title='Fall Back (Overlap)' />
             </Tabs>
 
             <div className='mb-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-8'>
@@ -229,19 +230,27 @@ export default function DSTGapOverlapVisualizer() {
                 {sequence.map((s, i) => (
                     <button
                         key={i}
+                        type='button'
+                        aria-label={`Jump to ${s.wall} (${s.label})`}
+                        aria-pressed={i === step}
+                        title={`${s.wall} (${s.label})`}
                         onClick={() => {
                             stop()
                             setStep(i)
                         }}
-                        className={`h-2 flex-1 rounded-full transition-colors ${i === step
-                            ? s.skip
-                                ? 'bg-danger-400'
-                                : 'bg-primary-400'
-                            : i < step
-                                ? 'bg-primary-200'
-                                : 'bg-default-200'
-                            }`}
-                    />
+                        className='flex flex-1 items-center rounded-lg py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
+                    >
+                        <span
+                            className={`h-2 w-full rounded-full transition-colors ${i === step
+                                ? s.skip
+                                    ? 'bg-danger-400'
+                                    : 'bg-primary-400'
+                                : i < step
+                                    ? 'bg-primary-200'
+                                    : 'bg-default-200'
+                                }`}
+                        />
+                    </button>
                 ))}
             </div>
 
@@ -262,9 +271,10 @@ export default function DSTGapOverlapVisualizer() {
                     variant='flat'
                     color='primary'
                     isDisabled={playing}
+                    startContent={<IconPlayerPlay size={14} />}
                     onPress={play}
                 >
-                    {playing ? 'Playing...' : '▶ Play'}
+                    {playing ? 'Playing...' : 'Play'}
                 </Button>
                 <Button
                     size='sm'

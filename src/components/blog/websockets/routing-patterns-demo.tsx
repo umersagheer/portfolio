@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, Tab, Button } from '@heroui/react'
 import { IconBroadcast, IconMessage } from '@tabler/icons-react'
+import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
@@ -12,7 +13,6 @@ import {
   WebSocketPersonIcon,
   WebSocketServerIcon
 } from './diagram-icons'
-import IconCard from './icon-card'
 
 const CLIENTS = [
   { name: 'Alice', room: 'A' },
@@ -190,11 +190,10 @@ export default function RoutingPatternsDemo() {
                     </span>
                     {pattern === 'multicast' && (
                       <span
-                        className={`text-[10px] ${
-                          client.room === multicastRoom
+                        className={`text-[10px] ${client.room === multicastRoom
                             ? 'font-semibold text-secondary-500'
                             : 'text-default-400'
-                        }`}
+                          }`}
                       >
                         Room {client.room}
                       </span>

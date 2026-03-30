@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 import { Button } from '@heroui/react'
-import { PlayIcon, RotateCcwIcon } from 'lucide-react'
+import { IconPlayerPlay, IconRefresh } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 const presets = [
@@ -124,7 +124,7 @@ export default function SpringVisualizer() {
         <Button
           size='sm'
           variant='flat'
-          startContent={<PlayIcon size={14} />}
+          startContent={<IconPlayerPlay size={14} />}
           onPress={play}
           isDisabled={isAnimating}
         >
@@ -133,7 +133,7 @@ export default function SpringVisualizer() {
         <Button
           size='sm'
           variant='flat'
-          startContent={<RotateCcwIcon size={14} />}
+          startContent={<IconRefresh size={14} />}
           onPress={reset}
           isDisabled={isAnimating}
         >

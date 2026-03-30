@@ -3,6 +3,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Alert } from '@heroui/react'
+import {
+    IconCircleCheck,
+    IconCircleX,
+    IconRefresh,
+    IconSnowflake,
+    IconSun
+} from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
@@ -48,29 +55,32 @@ export default function StandupBugDemo() {
                     size='sm'
                     variant={strategy === 'utc' ? 'solid' : 'flat'}
                     color={strategy === 'utc' ? 'danger' : 'default'}
+                    startContent={<IconCircleX size={14} />}
                     onPress={() => setStrategy('utc')}
                 >
-                    ❌ Stored as UTC
+                    Stored as UTC
                 </Button>
                 <Button
                     size='sm'
                     variant={strategy === 'wall' ? 'solid' : 'flat'}
                     color={strategy === 'wall' ? 'success' : 'default'}
+                    startContent={<IconCircleCheck size={14} />}
                     onPress={() => setStrategy('wall')}
                 >
-                    ✅ Stored as wall time + tz
+                    Stored as wall time + tz
                 </Button>
             </div>
 
             <div className='mb-4 flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
                     <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${dstActive
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${dstActive
                             ? 'bg-warning-100 text-warning-700'
                             : 'bg-default-100 text-default-500'
                             }`}
                     >
-                        {dstActive ? '🌻 EDT (Summer)' : '❄️ EST (Winter)'}
+                        {dstActive ? <IconSun size={12} /> : <IconSnowflake size={12} />}
+                        {dstActive ? 'EDT (Summer)' : 'EST (Winter)'}
                     </span>
                     <span className='text-xs text-default-400'>
                         {dstActive ? 'UTC-4' : 'UTC-5'}
@@ -79,10 +89,11 @@ export default function StandupBugDemo() {
                 <Button
                     size='sm'
                     variant='flat'
+                    startContent={<IconRefresh size={14} />}
                     onPress={toggleDST}
                     isDisabled={animating}
                 >
-                    {dstActive ? '↺ Revert to Winter' : '🌸 Spring Forward'}
+                    {dstActive ? 'Revert to Winter' : 'Spring Forward'}
                 </Button>
             </div>
 
@@ -148,7 +159,7 @@ export default function StandupBugDemo() {
                     >
                         {strategy === 'utc' && dstActive
                             ? '10:00 AM local (WRONG!)'
-                            : '9:00 AM local ✓'}
+                            : '9:00 AM local'}
                     </span>
                 </div>
             </div>

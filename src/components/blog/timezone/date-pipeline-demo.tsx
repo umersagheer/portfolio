@@ -3,6 +3,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
+import {
+    IconApi,
+    IconDatabase,
+    IconDeviceDesktop,
+    IconServer,
+    IconSettings,
+    IconUser,
+    type TablerIcon
+} from '@tabler/icons-react'
+import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
@@ -39,37 +49,37 @@ function getStagesForTimezone(tz: Timezone) {
     return [
         {
             label: 'User Input',
-            icon: '🧑',
+            icon: IconUser,
             value: `${localHour}:${localMin}`,
             detail: `User types "${localHour}:${localMin}" (${tzAbbr})`
         },
         {
             label: 'new Date()',
-            icon: '⚙️',
+            icon: IconSettings,
             value: now.toISOString(),
             detail: `Browser creates Date internally as UTC milliseconds`
         },
         {
             label: 'JSON.stringify',
-            icon: '📡',
+            icon: IconApi,
             value: `"2026-03-29T14:30:00.000Z"`,
             detail: 'Date.toJSON() always sends UTC with Z suffix'
         },
         {
             label: 'PostgreSQL',
-            icon: '🗄️',
+            icon: IconDatabase,
             value: '2026-03-29 14:30:00',
             detail: `Stored as timestamp — bare UTC value (no offset kept)`
         },
         {
             label: 'Prisma Read',
-            icon: '🔄',
+            icon: IconServer,
             value: now.toISOString(),
             detail: 'Prisma reads back and creates JS Date (UTC)'
         },
         {
             label: 'Frontend',
-            icon: '🖥️',
+            icon: IconDeviceDesktop,
             value: `${localHour}:${localMin} ${tzAbbr}`,
             detail: `Intl.DateTimeFormat converts UTC → ${tzAbbr} for display`
         }
@@ -78,30 +88,28 @@ function getStagesForTimezone(tz: Timezone) {
 
 function StageNode({
     innerRef,
-    icon,
+    Icon,
     label,
     isActive
 }: {
     innerRef: React.RefObject<HTMLDivElement | null>
-    icon: string
+    Icon: TablerIcon
     label: string
     isActive: boolean
 }) {
     return (
-        <div className='flex flex-col items-center gap-1'>
-            <div
-                ref={innerRef as React.RefObject<HTMLDivElement>}
-                className={`z-10 flex size-10 items-center justify-center rounded-lg border text-base transition-colors sm:size-12 ${isActive
-                    ? 'border-primary-300 bg-primary-50'
-                    : 'border-default-200 bg-background'
-                    }`}
-            >
-                {icon}
-            </div>
-            <span className='w-14 text-center text-[9px] font-medium text-default-500 sm:w-16 sm:text-[10px]'>
-                {label}
-            </span>
-        </div>
+        <IconCard
+            ref={innerRef as React.RefObject<HTMLDivElement>}
+            label={label}
+            className={
+                isActive
+                    ? 'border-primary-700/35 bg-gradient-to-b from-primary-500/20 to-transparent shadow-md shadow-primary-500/20'
+                    : undefined
+            }
+            iconClassName={isActive ? 'text-primary-800' : undefined}
+        >
+            <Icon stroke={1.8} />
+        </IconCard>
     )
 }
 
@@ -122,6 +130,8 @@ export default function DatePipelineDemo() {
     ]
 
     const stages = getStagesForTimezone(timezone)
+    const activeStageData = stages[activeStage]
+    const ActiveStageIcon = activeStageData.icon
 
     const stopAutoPlay = useCallback(() => {
         if (timerRef.current) clearTimeout(timerRef.current)
@@ -183,20 +193,19 @@ export default function DatePipelineDemo() {
                     glow
                     width={20}
                     height={20}
-                    className='opacity-40'
                     style={{
                         maskImage:
-                            'linear-gradient(to right, transparent, black 10%, black 90%, transparent), linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+                            'linear-gradient(to right, transparent, black 15%, black 85%, transparent), linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
                         maskComposite: 'intersect',
                         WebkitMaskComposite: 'source-in'
                     }}
                 />
-                <div className='relative z-10 flex items-center justify-between gap-1 sm:gap-2'>
+                <div className='relative z-10 flex  items-center justify-between gap-1 sm:gap-2'>
                     {stages.map((stage, i) => (
                         <StageNode
                             key={stage.label}
                             innerRef={refs[i]}
-                            icon={stage.icon}
+                            Icon={stage.icon}
                             label={stage.label}
                             isActive={i === activeStage}
                         />
@@ -213,13 +222,13 @@ export default function DatePipelineDemo() {
                         duration={1.2}
                         triggerKey={activeStage === i ? `${i}-active` : `${i}-idle`}
                         gradientStartColor={
-                            i === activeStage ? '#7c3aed' : 'var(--color-default-300)'
+                            i === activeStage ? '#a855f7' : 'var(--color-default-300)'
                         }
                         gradientStopColor={
-                            i === activeStage ? '#3b82f6' : 'var(--color-default-300)'
+                            i === activeStage ? '#c084fc' : 'var(--color-default-300)'
                         }
-                        pathOpacity={i === activeStage ? 0.4 : 0.15}
-                        pathWidth={i === activeStage ? 2 : 1}
+                        pathOpacity={i === activeStage ? 0.28 : 0.12}
+                        pathWidth={i === activeStage ? 1.5 : 1}
                     />
                 ))}
             </div>
@@ -231,19 +240,20 @@ export default function DatePipelineDemo() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.15 }}
+                    aria-live='polite'
                     className='rounded-lg bg-default-100 p-4'
                 >
                     <div className='mb-1 flex items-center gap-2'>
-                        <span className='text-base'>{stages[activeStage].icon}</span>
+                        <ActiveStageIcon size={18} className='text-default-500' />
                         <span className='text-sm font-medium text-foreground'>
-                            {stages[activeStage].label}
+                            {activeStageData.label}
                         </span>
                     </div>
                     <p className='mb-2 text-xs text-default-400'>
-                        {stages[activeStage].detail}
+                        {activeStageData.detail}
                     </p>
                     <code className='block rounded-md bg-background px-3 py-2 font-mono text-xs text-primary-600'>
-                        {stages[activeStage].value}
+                        {activeStageData.value}
                     </code>
                 </motion.div>
             </AnimatePresence>
@@ -253,22 +263,28 @@ export default function DatePipelineDemo() {
                     {stages.map((_, i) => (
                         <button
                             key={i}
+                            type='button'
+                            aria-label={`Show step ${i + 1}: ${stages[i].label}`}
+                            aria-pressed={i === activeStage}
+                            title={`Step ${i + 1}: ${stages[i].label}`}
                             onClick={() => {
                                 stopAutoPlay()
                                 setActiveStage(i)
                             }}
-                            className='flex size-8 items-center justify-center'
+                            className='flex size-10 items-center justify-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
                         >
                             <motion.div
                                 animate={{
                                     scale: i === activeStage ? 1.3 : 1
                                 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                                className={`rounded-full transition-colors ${i === activeStage
-                                    ? 'size-4 bg-primary-500'
-                                    : 'size-3 bg-default-300'
+                                className={`flex items-center justify-center rounded-full text-[10px] font-semibold transition-colors ${i === activeStage
+                                    ? 'size-6 bg-primary-500 text-primary-foreground'
+                                    : 'size-5 bg-default-300 text-default-600'
                                     }`}
-                            />
+                            >
+                                {i + 1}
+                            </motion.div>
                         </button>
                     ))}
                 </div>

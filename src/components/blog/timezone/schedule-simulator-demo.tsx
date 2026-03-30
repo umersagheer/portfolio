@@ -1,10 +1,16 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Select, SelectItem, TimeInput } from '@heroui/react'
-import { Time } from '@internationalized/date'
+import {
+    IconCircleCheck,
+    IconCircleX,
+    IconPlayerPlay,
+    IconRefresh
+} from '@tabler/icons-react'
 import DemoContainer from './demo-container'
+import { createTimeValue } from './timezone-utils'
 
 const ZONES = [
     { key: 'America/New_York', label: 'New York' },
@@ -37,6 +43,9 @@ export default function ScheduleSimulatorDemo() {
     const [zone, setZone] = useState('America/New_York')
     const [simState, setSimState] = useState<SimState>('idle')
     const [simDay, setSimDay] = useState(0)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => setMounted(true), [])
 
     const zoneName = ZONES.find(z => z.key === zone)?.label ?? zone
 
@@ -76,21 +85,24 @@ export default function ScheduleSimulatorDemo() {
             description='Schedule an event, then fast-forward through a DST transition to see what breaks'
         >
             <div className='mb-4 flex flex-col gap-3 sm:flex-row'>
-                <TimeInput
-                    size='sm'
-                    label='Time'
-                    value={new Time(hour) as any}
-                    onChange={val => {
-                        if (val) setHour(val.hour)
-                        reset()
-                    }}
-                    className='sm:w-40'
-                    hourCycle={12}
-                />
+                {mounted && (
+                    <TimeInput
+                        size='sm'
+                        label='Time'
+                        granularity='hour'
+                        hourCycle={12}
+                        value={createTimeValue(hour) as any}
+                        onChange={(value: any) => {
+                            if (value?.hour !== undefined) setHour(value.hour)
+                            reset()
+                        }}
+                        className='sm:w-40'
+                    />
+                )}
                 <Select
                     size='sm'
                     label='Timezone'
-                    selectedKeys={[zone]}
+                    selectedKeys={new Set([zone])}
                     onSelectionChange={keys => {
                         const val = Array.from(keys)[0]
                         if (val !== undefined) setZone(String(val))
@@ -107,7 +119,7 @@ export default function ScheduleSimulatorDemo() {
             <div className='mb-4 grid gap-3 sm:grid-cols-2'>
                 <div className='rounded-lg border border-danger-200 bg-danger-50 p-4'>
                     <div className='mb-2 flex items-center gap-2'>
-                        <span className='text-sm'>❌</span>
+                        <IconCircleX size={16} className='text-danger-500' />
                         <span className='text-xs font-medium text-danger-600'>
                             Stored as UTC at schedule time
                         </span>
@@ -133,7 +145,7 @@ export default function ScheduleSimulatorDemo() {
                                 >
                                     {isDSTActive && utcChanged
                                         ? `${parseInt(winterUTC) > parseInt(summerUTC) ? hour + 1 : hour - 1}:00 local (WRONG!)`
-                                        : `${hour.toString().padStart(2, '0')}:00 local ✓`}
+                                        : `${hour.toString().padStart(2, '0')}:00 local`}
                                 </span>
                             </motion.p>
                         </AnimatePresence>
@@ -142,7 +154,7 @@ export default function ScheduleSimulatorDemo() {
 
                 <div className='rounded-lg border border-success-200 bg-success-50 p-4'>
                     <div className='mb-2 flex items-center gap-2'>
-                        <span className='text-sm'>✅</span>
+                        <IconCircleCheck size={16} className='text-success-500' />
                         <span className='text-xs font-medium text-success-600'>
                             Stored as wall time + timezone
                         </span>
@@ -157,7 +169,7 @@ export default function ScheduleSimulatorDemo() {
                         <p className='text-default-500'>
                             fires at:{' '}
                             <span className='text-foreground'>
-                                {hour.toString().padStart(2, '0')}:00 local ✓
+                                {hour.toString().padStart(2, '0')}:00 local
                             </span>
                         </p>
                         <AnimatePresence mode='wait'>
@@ -235,13 +247,20 @@ export default function ScheduleSimulatorDemo() {
                     variant='flat'
                     color='primary'
                     isDisabled={simState === 'advancing'}
+                    startContent={
+                        simState === 'idle' ? (
+                            <IconPlayerPlay size={14} />
+                        ) : (
+                            <IconRefresh size={14} />
+                        )
+                    }
                     onPress={simState === 'idle' ? simulate : reset}
                 >
                     {simState === 'idle'
-                        ? '⏩ Fast Forward'
+                        ? 'Fast Forward'
                         : simState === 'advancing'
                             ? 'Advancing...'
-                            : '↺ Reset'}
+                            : 'Reset'}
                 </Button>
             </div>
         </DemoContainer>

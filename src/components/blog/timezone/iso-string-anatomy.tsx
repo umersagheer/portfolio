@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@heroui/react'
+import { Button, Tooltip } from '@heroui/react'
+import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 type Format = 'iso' | 'dateOnly' | 'noZ' | 'offset' | 'spaced'
@@ -125,14 +126,16 @@ const FORMATS: {
 
 export default function ISOStringAnatomy() {
     const [active, setActive] = useState<Format>('iso')
-    const [hovered, setHovered] = useState<number | null>(null)
+    const [selectedSegment, setSelectedSegment] = useState(0)
 
     const format = FORMATS.find(f => f.key === active)!
+    const highlightedSegment =
+        format.segments[selectedSegment] ?? format.segments.find(seg => seg.label)
 
     return (
         <DemoContainer
             title='Anatomy of a Date String'
-            description='Hover or tap each part to see what it means — then switch formats to spot the trap'
+            description='Select each labeled part to inspect it — then switch formats to spot the trap'
         >
             <div className='mb-4 flex flex-wrap gap-2'>
                 {FORMATS.map(f => (
@@ -149,7 +152,12 @@ export default function ISOStringAnatomy() {
                         }
                         onPress={() => {
                             setActive(f.key)
-                            setHovered(null)
+                            setSelectedSegment(
+                                Math.max(
+                                    0,
+                                    f.segments.findIndex(segment => segment.label)
+                                )
+                            )
                         }}
                         className='text-xs'
                     >
@@ -163,31 +171,39 @@ export default function ISOStringAnatomy() {
                 <div className='flex flex-wrap items-baseline font-mono text-lg font-bold sm:text-xl'>
                     {format.segments.map((seg, i) => {
                         const hasLabel = seg.label !== ''
+
+                        if (!hasLabel) {
+                            return (
+                                <motion.span
+                                    key={`${active}-${i}`}
+                                    initial={{ opacity: 0, y: 4 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.03 }}
+                                    className={`whitespace-pre ${seg.color}`}
+                                >
+                                    {seg.text}
+                                </motion.span>
+                            )
+                        }
+
                         return (
-                            <motion.span
-                                key={`${active}-${i}`}
-                                initial={{ opacity: 0, y: 4 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.03 }}
-                                className={`relative cursor-default ${seg.color} ${hovered === i ? 'scale-110' : ''
-                                    } transition-transform`}
-                                onMouseEnter={() => hasLabel && setHovered(i)}
-                                onMouseLeave={() => setHovered(null)}
-                                onClick={() =>
-                                    hasLabel && setHovered(hovered === i ? null : i)
-                                }
-                            >
-                                {seg.text}
-                                {hovered === i && hasLabel && (
-                                    <motion.span
-                                        initial={{ opacity: 0, y: 4 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className='absolute -top-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded bg-foreground px-2 py-0.5 text-[10px] font-medium text-background'
-                                    >
-                                        {seg.label}
-                                    </motion.span>
-                                )}
-                            </motion.span>
+                            <Tooltip key={`${active}-${i}`} content={seg.label} size='sm'>
+                                <motion.button
+                                    type='button'
+                                    initial={{ opacity: 0, y: 4 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.03 }}
+                                    aria-label={seg.label}
+                                    aria-pressed={selectedSegment === i}
+                                    className={`relative whitespace-pre rounded-sm bg-transparent p-0 font-inherit ${seg.color} ${selectedSegment === i ? 'scale-110 ring-2 ring-primary-300 ring-offset-2 ring-offset-default-100' : ''
+                                        } transition-transform focus-visible:outline-none`}
+                                    onMouseEnter={() => setSelectedSegment(i)}
+                                    onFocus={() => setSelectedSegment(i)}
+                                    onClick={() => setSelectedSegment(i)}
+                                >
+                                    {seg.text}
+                                </motion.button>
+                            </Tooltip>
                         )
                     })}
                 </div>
@@ -210,10 +226,21 @@ export default function ISOStringAnatomy() {
                         className={`font-bold ${format.safe ? 'text-success-600' : 'text-danger-600'
                             }`}
                     >
-                        {format.safe ? '✅ Yes' : '❌ No'}
+                        <span className='inline-flex items-center gap-1'>
+                            {format.safe ? (
+                                <IconCircleCheck size={14} />
+                            ) : (
+                                <IconCircleX size={14} />
+                            )}
+                            {format.safe ? 'Yes' : 'No'}
+                        </span>
                     </span>
                 </div>
-                <p className='mt-1 text-xs text-default-500'>{format.note}</p>
+                <p className='mt-1 text-xs text-default-500'>
+                    {highlightedSegment?.label
+                        ? `${highlightedSegment.label}: ${format.note}`
+                        : format.note}
+                </p>
             </div>
         </DemoContainer>
     )

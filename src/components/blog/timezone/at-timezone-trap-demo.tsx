@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Alert } from '@heroui/react'
+import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import DemoContainer from './demo-container'
 
@@ -23,6 +24,9 @@ export default function ATTimeZoneTrapDemo() {
                 ref={containerRef}
                 className='relative mb-4 rounded-lg border border-default-100 bg-background p-6'
             >
+                <p className='mb-4 text-center text-xs font-medium text-default-500'>
+                    Select a query path to compare the output.
+                </p>
                 <div className='flex flex-col items-center gap-8'>
                     {/* Source */}
                     <div
@@ -44,14 +48,17 @@ export default function ATTimeZoneTrapDemo() {
                     <div className='z-10 flex w-full flex-col gap-4 sm:flex-row sm:justify-center sm:gap-8'>
                         {/* Wrong path */}
                         <motion.button
+                            type='button'
+                            aria-pressed={!showDouble}
+                            aria-label='Inspect the incorrect single AT TIME ZONE query'
                             onClick={() => setShowDouble(false)}
-                            className={`flex-1 rounded-lg border p-4 text-left transition-colors sm:max-w-xs ${!showDouble
+                            className={`flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger-400 sm:max-w-xs ${!showDouble
                                 ? 'border-danger-300 bg-danger-50'
                                 : 'border-default-200 bg-background opacity-60'
                                 }`}
                         >
                             <div className='mb-2 flex items-center gap-2'>
-                                <span className='text-sm'>❌</span>
+                                <IconCircleX size={16} className='text-danger-500' />
                                 <span className='text-xs font-medium text-danger-600'>
                                     Single AT TIME ZONE
                                 </span>
@@ -85,14 +92,17 @@ export default function ATTimeZoneTrapDemo() {
 
                         {/* Right path */}
                         <motion.button
+                            type='button'
+                            aria-pressed={showDouble}
+                            aria-label='Inspect the correct double AT TIME ZONE query'
                             onClick={() => setShowDouble(true)}
-                            className={`flex-1 rounded-lg border p-4 text-left transition-colors sm:max-w-xs ${showDouble
+                            className={`flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success-400 sm:max-w-xs ${showDouble
                                 ? 'border-success-300 bg-success-50'
                                 : 'border-default-200 bg-background opacity-60'
                                 }`}
                         >
                             <div className='mb-2 flex items-center gap-2'>
-                                <span className='text-sm'>✅</span>
+                                <IconCircleCheck size={16} className='text-success-500' />
                                 <span className='text-xs font-medium text-success-600'>
                                     Double AT TIME ZONE
                                 </span>
@@ -123,7 +133,7 @@ export default function ATTimeZoneTrapDemo() {
                                 <p className='text-[10px] text-success-500'>
                                     First labels as UTC → then converts to PKT:
                                     <br />
-                                    12 + 5 = 17 (5 PM ✓)
+                                    12 + 5 = 17 (5 PM local)
                                 </p>
                             </div>
                         </motion.button>

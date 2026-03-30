@@ -3,17 +3,17 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tab, Tabs } from '@heroui/react'
-import { InfoIcon, PlusIcon, XIcon } from 'lucide-react'
+import { IconInfoCircle, IconPlus, IconX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
 const fruits = [
-  '🍎 Apple',
-  '🍊 Orange',
-  '🍇 Grape',
-  '🍓 Strawberry',
-  '🥝 Kiwi',
-  '🍑 Peach',
-  '🫐 Blueberry'
+  'Apple',
+  'Orange',
+  'Grape',
+  'Strawberry',
+  'Kiwi',
+  'Peach',
+  'Blueberry'
 ]
 
 let nextId = 0
@@ -52,7 +52,7 @@ export default function AnimatePresenceDemo() {
         onClick={() => removeItem(item.id)}
         className='rounded-full p-1 text-default-400 transition-colors hover:bg-danger-100 hover:text-danger-500'
       >
-        <XIcon size={14} />
+        <IconX size={14} />
       </button>
     </div>
   )
@@ -89,7 +89,7 @@ export default function AnimatePresenceDemo() {
                   onClick={() => removeItem(item.id)}
                   className='rounded-full p-1 text-default-400 transition-colors hover:bg-danger-100 hover:text-danger-500'
                 >
-                  <XIcon size={14} />
+                  <IconX size={14} />
                 </button>
               </motion.div>
             ))}
@@ -100,7 +100,7 @@ export default function AnimatePresenceDemo() {
       </div>
 
       <p className='mt-3 flex items-start gap-1.5 text-xs italic text-default-400'>
-        <InfoIcon size={14} className='mt-0.5 shrink-0' />
+        <IconInfoCircle size={14} className='mt-0.5 shrink-0' />
         {withPresence
           ? 'AnimatePresence delays unmounting until the exit animation completes, letting elements animate out gracefully.'
           : 'Items vanish instantly — React removes them from the DOM before any exit animation can play.'}
@@ -110,7 +110,7 @@ export default function AnimatePresenceDemo() {
         <Button
           size='sm'
           variant='flat'
-          startContent={<PlusIcon size={14} />}
+          startContent={<IconPlus size={14} />}
           onPress={addItem}
         >
           Add item
