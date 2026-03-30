@@ -11,7 +11,7 @@ const socialItemStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
-  padding: '8px 12px',
+  padding: '10px 14px',
   borderRadius: 999,
   border: `1px solid ${colors.codeBorder}`,
   background: 'rgba(13, 17, 23, 0.78)',
@@ -19,8 +19,8 @@ const socialItemStyle: React.CSSProperties = {
 }
 
 const iconStyle: React.CSSProperties = {
-  width: 14,
-  height: 14,
+  width: 16,
+  height: 16,
   fill: colors.foreground,
   color: colors.foreground,
   flexShrink: 0,
@@ -32,7 +32,7 @@ export const SocialFooter: React.FC<SocialFooterProps> = ({ style }) => {
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 12,
         ...style,
       }}
     >
@@ -41,7 +41,7 @@ export const SocialFooter: React.FC<SocialFooterProps> = ({ style }) => {
         <span
           style={{
             fontFamily: fontFamily.mono,
-            fontSize: 13,
+            fontSize: 14,
             color: colors.muted,
           }}
         >
@@ -54,7 +54,7 @@ export const SocialFooter: React.FC<SocialFooterProps> = ({ style }) => {
         <span
           style={{
             fontFamily: fontFamily.mono,
-            fontSize: 13,
+            fontSize: 14,
             color: colors.muted,
           }}
         >

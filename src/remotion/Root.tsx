@@ -6,6 +6,7 @@ import {
   LayoutAnimationsPromo,
   layoutAnimationsPromoSchema,
 } from './blogs/layout-animations'
+import { TimezonesCover } from './blogs/timezones'
 import { WebSocketsCover } from './blogs/websockets'
 import { BlogCoverStill, blogCoverSchema } from './shared/stills/BlogCoverStill'
 
@@ -37,6 +38,14 @@ export const Root: React.FC = () => {
           <Still
             id='WebSocketsCover'
             component={WebSocketsCover}
+            width={1280}
+            height={720}
+          />
+        </Folder>
+        <Folder name='timezones'>
+          <Still
+            id='TimezonesCover'
+            component={TimezonesCover}
             width={1280}
             height={720}
           />

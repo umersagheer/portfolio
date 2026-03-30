@@ -132,7 +132,7 @@ export default function OffByOneBugDemo() {
                     />
                 )}
 
-                <Button
+                {!hasOrder && <Button
                     size='sm'
                     color='primary'
                     variant={hasOrder ? 'flat' : 'solid'}
@@ -140,7 +140,7 @@ export default function OffByOneBugDemo() {
                     onPress={() => setOrderRunId(runId => runId + 1)}
                 >
                     Place order
-                </Button>
+                </Button>}
             </div>
 
             <AnimatePresence mode='wait'>
