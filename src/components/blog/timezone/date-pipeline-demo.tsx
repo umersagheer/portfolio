@@ -16,48 +16,47 @@ import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
 import DemoContainer from './demo-container'
+import {
+    getTimeZoneOffsetLabel,
+    getTimeZoneShortName,
+    getTimeZoneOffsetMinutes
+} from './timezone-utils'
 
 type Timezone = 'Asia/Karachi' | 'America/New_York' | 'Europe/London'
 
-const TIMEZONE_OPTIONS: { key: Timezone; label: string; offset: string }[] = [
-    { key: 'Asia/Karachi', label: 'Karachi (PKT)', offset: '+05:00' },
-    { key: 'America/New_York', label: 'New York (EDT)', offset: '-04:00' },
-    { key: 'Europe/London', label: 'London (BST)', offset: '+01:00' }
+const TIMEZONE_OPTIONS: { key: Timezone; label: string }[] = [
+    { key: 'Asia/Karachi', label: 'Karachi' },
+    { key: 'America/New_York', label: 'New York' },
+    { key: 'Europe/London', label: 'London' }
 ]
 
 function getStagesForTimezone(tz: Timezone) {
     const now = new Date('2026-03-29T14:30:00.000Z')
-    const offsetMap: Record<Timezone, number> = {
-        'Asia/Karachi': 5,
-        'America/New_York': -4,
-        'Europe/London': 1
-    }
-    const offset = offsetMap[tz]
-    const localHour = ((now.getUTCHours() + offset + 24) % 24)
-        .toString()
-        .padStart(2, '0')
-    const localMin = now.getUTCMinutes().toString().padStart(2, '0')
-    const tzAbbr =
-        tz === 'Asia/Karachi'
-            ? 'PKT'
-            : tz === 'America/New_York'
-                ? 'EDT'
-                : 'BST'
-    const tzOffset =
-        TIMEZONE_OPTIONS.find(o => o.key === tz)?.offset ?? '+00:00'
+    const offsetMinutes = getTimeZoneOffsetMinutes(now, tz)
+    const offsetHours = offsetMinutes / 60
+    const localHour = ((now.getUTCHours() * 60 + now.getUTCMinutes() + offsetMinutes + 1440) % 1440)
+    const localHourStr = Math.floor(localHour / 60).toString().padStart(2, '0')
+    const localMinStr = (localHour % 60).toString().padStart(2, '0')
+    const tzAbbr = getTimeZoneShortName(now, tz)
+    const tzOffset = getTimeZoneOffsetLabel(now, tz)
+    const utcHour = now.getUTCHours().toString().padStart(2, '0')
+    const utcMin = now.getUTCMinutes().toString().padStart(2, '0')
+    const sign = offsetHours >= 0 ? '−' : '+'
+    const absOffset = Math.abs(offsetHours)
+    const offsetStr = Number.isInteger(absOffset) ? `${absOffset}h` : `${absOffset}h`
 
     return [
         {
             label: 'User Input',
             icon: IconUser,
-            value: `${localHour}:${localMin}`,
-            detail: `User types "${localHour}:${localMin}" (${tzAbbr})`
+            value: `${localHourStr}:${localMinStr}`,
+            detail: `User types "${localHourStr}:${localMinStr}" (${tzAbbr}, ${tzOffset})`
         },
         {
             label: 'new Date()',
             icon: IconSettings,
             value: now.toISOString(),
-            detail: `Browser creates Date internally as UTC milliseconds`
+            detail: `${localHourStr}:${localMinStr} ${tzAbbr} ${sign} ${offsetStr} = ${utcHour}:${utcMin} UTC`
         },
         {
             label: 'JSON.stringify',
@@ -80,8 +79,8 @@ function getStagesForTimezone(tz: Timezone) {
         {
             label: 'Frontend',
             icon: IconDeviceDesktop,
-            value: `${localHour}:${localMin} ${tzAbbr}`,
-            detail: `Intl.DateTimeFormat converts UTC → ${tzAbbr} for display`
+            value: `${localHourStr}:${localMinStr} ${tzAbbr}`,
+            detail: `Intl.DateTimeFormat converts ${utcHour}:${utcMin} UTC → ${localHourStr}:${localMinStr} ${tzAbbr} for display`
         }
     ]
 }

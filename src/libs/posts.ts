@@ -34,21 +34,30 @@ export async function getPostById(postId: string): Promise<Post | null> {
 }
 
 export async function getPosts(limit?: number) {
-  const posts = getPostFiles()
-    .map(file => getPostMetadata(file))
-    .sort((a, b) => {
-      if (new Date(a.publishedAt ?? '') < new Date(b.publishedAt ?? '')) {
-        return 1
-      } else {
-        return -1
-      }
-    })
+  const posts = getAllPostMetadata()
 
   if (limit) {
     return posts.slice(0, limit)
   }
 
   return posts
+}
+
+export async function getAdjacentPosts(postId: string) {
+  const posts = getAllPostMetadata()
+  const currentIndex = posts.findIndex(post => post.postId === postId)
+
+  if (currentIndex === -1) {
+    return {
+      newerPost: null,
+      olderPost: null
+    }
+  }
+
+  return {
+    newerPost: currentIndex > 0 ? posts[currentIndex - 1] : null,
+    olderPost: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null
+  }
 }
 
 function getPostMetadata(filepath: string): PostMetadata {
@@ -58,4 +67,16 @@ function getPostMetadata(filepath: string): PostMetadata {
 
   const { data, content } = matter(fileContent)
   return { ...data, postId, readingTime: calculateReadingTime(content) }
+}
+
+function getAllPostMetadata() {
+  return getPostFiles()
+    .map(file => getPostMetadata(file))
+    .sort((a, b) => {
+      if (new Date(a.publishedAt ?? '') < new Date(b.publishedAt ?? '')) {
+        return 1
+      } else {
+        return -1
+      }
+    })
 }

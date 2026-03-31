@@ -85,7 +85,7 @@ export async function incrementLikes(
   // Check current visitor count
   const visitor = await getVisitorCount(postId, visitorId, fingerprint)
   const resolvedId = visitor.resolvedVisitorId || visitorId
-  if (visitor.count >= 10) {
+  if (visitor.count >= 5) {
     return {
       globalCount: await getGlobalCount(postId),
       userCount: visitor.count,

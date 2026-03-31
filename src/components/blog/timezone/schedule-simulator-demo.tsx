@@ -21,21 +21,37 @@ const ZONES = [
 
 type SimState = 'idle' | 'advancing' | 'done'
 
+type UTCResult = {
+    label: string
+    utcHour: number
+    offset: number
+    abbr: string
+}
+
 function getUTCForWallTime(
     hour: number,
     zone: string,
     isDST: boolean
-): string {
+): UTCResult {
     const offsets: Record<string, [number, number]> = {
         'America/New_York': [-5, -4],
         'America/Chicago': [-6, -5],
         'America/Los_Angeles': [-8, -7],
         'Europe/London': [0, 1]
     }
+    const abbrs: Record<string, [string, string]> = {
+        'America/New_York': ['EST', 'EDT'],
+        'America/Chicago': ['CST', 'CDT'],
+        'America/Los_Angeles': ['PST', 'PDT'],
+        'Europe/London': ['GMT', 'BST']
+    }
     const [std, dst] = offsets[zone] ?? [0, 0]
     const offset = isDST ? dst : std
-    const utcHour = ((hour - offset + 24) % 24).toString().padStart(2, '0')
-    return `${utcHour}:00 UTC`
+    const [stdAbbr, dstAbbr] = abbrs[zone] ?? ['STD', 'DST']
+    const abbr = isDST ? dstAbbr : stdAbbr
+    const utcHour = ((hour - offset + 24) % 24)
+    const utcHourStr = utcHour.toString().padStart(2, '0')
+    return { label: `${utcHourStr}:00 UTC`, utcHour, offset, abbr }
 }
 
 export default function ScheduleSimulatorDemo() {
@@ -49,9 +65,9 @@ export default function ScheduleSimulatorDemo() {
 
     const zoneName = ZONES.find(z => z.key === zone)?.label ?? zone
 
-    const winterUTC = getUTCForWallTime(hour, zone, false)
-    const summerUTC = getUTCForWallTime(hour, zone, true)
-    const utcChanged = winterUTC !== summerUTC
+    const winter = getUTCForWallTime(hour, zone, false)
+    const summer = getUTCForWallTime(hour, zone, true)
+    const utcChanged = winter.utcHour !== summer.utcHour
 
     const daysBeforeDST = 5
     const dstDay = 3
@@ -126,28 +142,39 @@ export default function ScheduleSimulatorDemo() {
                     </div>
                     <div className='space-y-1 font-mono text-xs'>
                         <p className='text-default-500'>
-                            stored: <span className='text-danger-600'>{winterUTC}</span>
+                            stored: <span className='text-danger-600'>{winter.label}</span>
+                            <span className='ml-1 text-default-400'>
+                                (during {winter.abbr})
+                            </span>
                         </p>
                         <AnimatePresence mode='wait'>
-                            <motion.p
+                            <motion.div
                                 key={`utc-${isDSTActive}`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className='text-default-500'
+                                className='space-y-1'
                             >
-                                fires at:{' '}
-                                <span
-                                    className={
-                                        isDSTActive && utcChanged
-                                            ? 'font-bold text-danger-600'
-                                            : 'text-foreground'
-                                    }
-                                >
-                                    {isDSTActive && utcChanged
-                                        ? `${parseInt(winterUTC) > parseInt(summerUTC) ? hour + 1 : hour - 1}:00 local (WRONG!)`
-                                        : `${hour.toString().padStart(2, '0')}:00 local`}
-                                </span>
-                            </motion.p>
+                                {isDSTActive && utcChanged && (
+                                    <p className='text-danger-600'>
+                                        {winter.label} {summer.offset < 0 ? '+' : '−'} {Math.abs(summer.offset)}h ({summer.abbr}) ={' '}
+                                        {((winter.utcHour + summer.offset + 24) % 24).toString().padStart(2, '0')}:00 local
+                                    </p>
+                                )}
+                                <p className='text-default-500'>
+                                    fires at:{' '}
+                                    <span
+                                        className={
+                                            isDSTActive && utcChanged
+                                                ? 'font-bold text-danger-600'
+                                                : 'text-foreground'
+                                        }
+                                    >
+                                        {isDSTActive && utcChanged
+                                            ? `${((winter.utcHour + summer.offset + 24) % 24).toString().padStart(2, '0')}:00 local (WRONG!)`
+                                            : `${hour.toString().padStart(2, '0')}:00 local`}
+                                    </span>
+                                </p>
+                            </motion.div>
                         </AnimatePresence>
                     </div>
                 </div>
@@ -173,20 +200,28 @@ export default function ScheduleSimulatorDemo() {
                             </span>
                         </p>
                         <AnimatePresence mode='wait'>
-                            <motion.p
+                            <motion.div
                                 key={`wall-${isDSTActive}`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className='text-default-400'
+                                className='space-y-1 text-default-400'
                             >
-                                computed UTC:{' '}
-                                <span className='text-success-600'>
-                                    {isDSTActive ? summerUTC : winterUTC}
-                                </span>
-                                {isDSTActive && utcChanged && (
-                                    <span className='ml-1 text-success-500'>(recalculated)</span>
-                                )}
-                            </motion.p>
+                                {(() => {
+                                    const active = isDSTActive ? summer : winter
+                                    const sign = active.offset < 0 ? '+' : '−'
+                                    return (
+                                        <p>
+                                            {hour.toString().padStart(2, '0')}:00 {sign} {Math.abs(active.offset)}h ({active.abbr}) ={' '}
+                                            <span className='text-success-600'>
+                                                {active.label}
+                                            </span>
+                                            {isDSTActive && utcChanged && (
+                                                <span className='ml-1 text-success-500'>(recalculated)</span>
+                                            )}
+                                        </p>
+                                    )
+                                })()}
+                            </motion.div>
                         </AnimatePresence>
                     </div>
                 </div>

@@ -2,14 +2,15 @@
 
 import { Image } from '@heroui/react'
 import React from 'react'
+import { siteProfile } from '@/constants/site-profile'
 
 export default function Intro() {
   return (
     <div className='flex flex-col items-start justify-center'>
       <div className='flex items-center justify-start gap-3'>
         <Image
-          src='/images/authors/intro.jpeg'
-          alt='Umer'
+          src={siteProfile.avatar}
+          alt={siteProfile.name}
           width={80}
           height={80}
           className='size-20 grayscale'
@@ -17,9 +18,9 @@ export default function Intro() {
         />
         <div className=''>
           <h2 className='font-sourceCodePro text-2xl font-bold'>
-            Umer Sagheer
+            {siteProfile.name}
           </h2>
-          <h3 className='text-sm font-medium'>Software Engineer</h3>
+          <h3 className='text-sm font-medium'>{siteProfile.role}</h3>
         </div>
       </div>
       <div className='mt-5 max-w-2xl space-y-1'>

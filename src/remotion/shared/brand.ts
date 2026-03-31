@@ -1,14 +1,10 @@
-export const brandDomain = 'umersagheer.dev'
+import { brandDomain, siteProfile } from '../../constants/site-profile'
+
+export { brandDomain }
 
 export const brandSocials = {
-  x: {
-    label: '@umersagheer_dev',
-    url: 'https://x.com/umersagheer_dev',
-  },
-  github: {
-    label: 'umersagheer',
-    url: 'https://github.com/umersagheer',
-  },
+  x: siteProfile.socials.x,
+  github: siteProfile.socials.github,
 } as const
 
 export const getBlogPostUrl = (slug: string) => `${brandDomain}/posts/${slug}`

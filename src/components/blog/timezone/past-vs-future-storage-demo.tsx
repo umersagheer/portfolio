@@ -155,6 +155,14 @@ export default function PastVsFutureStorageDemo() {
                                 </span>
                             </div>
                             <div className='flex items-center justify-between text-xs'>
+                                <span className='text-default-500'>Conversion</span>
+                                <span className='font-mono text-default-500'>
+                                    {dstToggle
+                                        ? '09:00 + 4h (EDT) = 13:00 UTC'
+                                        : '09:00 + 5h (EST) = 14:00 UTC'}
+                                </span>
+                            </div>
+                            <div className='flex items-center justify-between text-xs'>
                                 <span className='text-default-500'>Computed UTC</span>
                                 <span
                                     className={`font-mono font-bold ${dstToggle

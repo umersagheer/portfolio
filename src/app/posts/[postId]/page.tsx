@@ -1,14 +1,17 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Image } from '@heroui/react'
+import Link from 'next/link'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Image, Link } from '@heroui/react'
 
-import { getPostById, getPosts } from '@/libs/posts'
+import { siteProfile } from '@/constants/site-profile'
+import { getAdjacentPosts, getPostById, getPosts } from '@/libs/posts'
 import { getAbsoluteUrl, getOpenGraphImageMetadata } from '@/libs/metadata'
-import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
-import GemLikeButton from '@/components/gem-like-button'
+import SleekLikeButton from '@/components/sleek-like-button'
+import AuthorSidebar from '@/components/blog/author-sidebar'
+import AuthorCardInline from '@/components/blog/author-card-inline'
 import { extractToc } from '@/libs/toc'
 
 type PostProps = {
@@ -56,7 +59,7 @@ export async function generateMetadata({
       url: postUrl,
       title,
       description: summary,
-      siteName: 'Umer Sagheer',
+      siteName: siteProfile.name,
       publishedTime: publishedAt,
       authors: author ? [author] : undefined,
       images: coverImage ? [coverImage] : undefined
@@ -78,22 +81,22 @@ export default async function Post({ params }: PostProps) {
   }
 
   const { metadata, content } = post
-  const { title, image, author, publishedAt } = metadata
+  const { title, image, publishedAt, readingTime } = metadata
   const toc = extractToc(content)
+  const { newerPost, olderPost } = await getAdjacentPosts(postId)
 
   return (
     <section className='pb-20'>
       <div className='space-y-4'>
-        <Link href={'/posts'} color='foreground' isBlock size='sm'>
-          <ArrowLeftIcon className='mr-2 size-5' />
-          <p className='font-medium'>Back to posts</p>
-        </Link>
         {image && <Image src={image} alt={title} />}
         <header>
           <h1 className='title'>{title}</h1>
-          <p className='pt-2 text-small'>
-            {author} / {formatDate(publishedAt ?? '')}
-          </p>
+          <div className='xl:hidden'>
+            <AuthorCardInline
+              publishedAt={publishedAt ?? ''}
+              readingTime={readingTime ?? 1}
+            />
+          </div>
         </header>
       </div>
 
@@ -108,14 +111,63 @@ export default async function Post({ params }: PostProps) {
           <TableOfContents items={toc} />
         </div>
         <div className='flex shrink-0 justify-center pt-6'>
-          <GemLikeButton postId={postId} />
+          <SleekLikeButton postId={postId} />
         </div>
       </div>
 
+      <AuthorSidebar
+        adjacentPosts={{ newerPost, olderPost }}
+        publishedAt={publishedAt ?? ''}
+        readingTime={readingTime ?? 1}
+      />
+
       {/* Mobile floating crystal */}
       <div className='fixed bottom-6 right-6 z-50 xl:hidden'>
-        <GemLikeButton postId={postId} size='sm' />
+        <SleekLikeButton postId={postId} size='sm' />
       </div>
+
+      {/* Mobile prev/next nav */}
+      <nav className='mt-16 flex flex-col gap-4 border-t border-default-200 pt-6 xl:hidden'>
+        <div className='flex justify-between gap-4'>
+          {newerPost ? (
+            <Link
+              href={`/posts/${newerPost.postId}`}
+              className='flex flex-col gap-1'
+            >
+              <span className='text-[10px] uppercase tracking-wider text-default-400'>
+                Previous
+              </span>
+              <span className='line-clamp-1 text-sm text-default-600 transition-colors hover:text-primary'>
+                {newerPost.title}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {olderPost ? (
+            <Link
+              href={`/posts/${olderPost.postId}`}
+              className='flex flex-col items-end gap-1 text-right'
+            >
+              <span className='text-[10px] uppercase tracking-wider text-default-400'>
+                Next
+              </span>
+              <span className='line-clamp-1 text-sm text-default-600 transition-colors hover:text-primary'>
+                {olderPost.title}
+              </span>
+            </Link>
+          ) : (
+            <div />
+          )}
+        </div>
+        <Link
+          href='/posts'
+          className='flex items-center gap-1.5 text-xs text-default-500 transition-colors hover:text-primary'
+        >
+          <ArrowLeftIcon size={12} />
+          Back to posts
+        </Link>
+      </nav>
     </section>
   )
 }

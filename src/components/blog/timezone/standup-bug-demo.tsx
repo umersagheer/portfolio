@@ -150,6 +150,19 @@ export default function StandupBugDemo() {
                     </span>
                 </div>
                 <div className='flex items-baseline justify-between text-xs'>
+                    <span className='text-default-400'>Conversion</span>
+                    <span
+                        className={`font-mono ${strategy === 'utc' && dstActive
+                            ? 'text-danger-600'
+                            : 'text-default-500'
+                            }`}
+                    >
+                        {strategy === 'utc'
+                            ? `14:00 UTC − ${dstActive ? '4h (EDT)' : '5h (EST)'} = ${dstActive ? '10:00 AM' : '9:00 AM'}`
+                            : `09:00 wall → recompute: 09:00 + ${dstActive ? '4h (EDT)' : '5h (EST)'} = ${dstActive ? '13:00' : '14:00'} UTC`}
+                    </span>
+                </div>
+                <div className='flex items-baseline justify-between text-xs'>
                     <span className='text-default-400'>Meeting fires at</span>
                     <span
                         className={`font-mono font-bold ${strategy === 'utc' && dstActive

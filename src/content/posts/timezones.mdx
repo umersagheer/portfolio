@@ -151,22 +151,6 @@ enough. They can actually break your app.
 > reports), you can skip to **Section 3** for database and ORM best practices —
 > those apply regardless.
 
-### The Daily Standup Bug
-
-A team in New York sets a daily standup at 9:00 AM local time. You're a good
-developer — you store it in UTC: `14:00 UTC` (since 9 AM EST = 14:00 UTC during
-winter).
-
-Then March 8 rolls around. Clocks spring forward. EST (UTC-5) becomes EDT
-(UTC-4). Now `14:00 UTC` is **10:00 AM** local time. The team shows up an hour
-late.
-
-<StandupBugDemo />
-
-Toggle between the two strategies above. The UTC version breaks on DST. The wall
-time version stays at 9:00 AM because the UTC equivalent is _recomputed at fire
-time_, not baked in at schedule time.
-
 ### Past vs Future: Two Different Storage Rules
 
 This is the single most important mental model in this entire post:
@@ -215,6 +199,17 @@ const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
 // Returns: "America/New_York", "Asia/Karachi", etc.
 ```
 
+### EST vs EDT — Not Two Timezones
+
+Think of it like a sign on a shop door. In winter, the sign reads "EST" — the
+shop (New York) is 5 hours behind UTC. In summer, someone flips the sign to
+"EDT" — now it's only 4 hours behind. The shop didn't move. The sign just
+changed.
+
+EST and EDT are **two modes of the same timezone** (`America/New_York`). The "S"
+stands for Standard (winter). The "D" stands for Daylight (summer). Every
+timezone that observes DST has this pair: CST/CDT, PST/PDT, GMT/BST.
+
 ### Daylight Saving Time: Spring Forward and Fall Back
 
 DST is a practice where clocks shift by 1 hour twice a year. Not everyone
@@ -234,16 +229,20 @@ rewind to 1:00 AM. The hour 1:00–1:59 AM happens _twice_ — once in EDT (UTC-
 then again in EST (UTC-5). If someone schedules a task for 1:30 AM, which one do
 they mean?
 
-### EST vs EDT — Not Two Timezones
+### The Daily Standup Bug
 
-Think of it like a sign on a shop door. In winter, the sign reads "EST" — the
-shop (New York) is 5 hours behind UTC. In summer, someone flips the sign to
-"EDT" — now it's only 4 hours behind. The shop didn't move. The sign just
-changed.
+A team in New York sets a daily standup at 9:00 AM local time. You're a good
+developer — you store it in UTC: `14:00 UTC` (since 9 AM EST = 14:00 UTC during
+winter).
 
-EST and EDT are **two modes of the same timezone** (`America/New_York`). The "S"
-stands for Standard (winter). The "D" stands for Daylight (summer). Every
-timezone that observes DST has this pair: CST/CDT, PST/PDT, GMT/BST.
+Then March 8 rolls around — the DST transition we just covered. Now `14:00 UTC`
+is **10:00 AM** local time. The team shows up an hour late.
+
+<StandupBugDemo />
+
+Toggle between the two strategies above. The UTC version breaks on DST. The wall
+time version stays at 9:00 AM because the UTC equivalent is _recomputed at fire
+time_, not baked in at schedule time.
 
 ### Handling DST in Code
 
@@ -291,6 +290,23 @@ and fast-forward through the transition:
 
 <ScheduleSimulatorDemo />
 
+### When the User Changes Location
+
+What happens when a New York user who scheduled a 9 AM reminder flies to London?
+
+**Model A: Timezone on the event** (Google Calendar style). The event stays at 9
+AM New York time. In London, the user sees "9:00 AM EST (2:00 PM your time)."
+Best for shared meetings tied to a place.
+
+**Model B: Timezone on the user profile** (personal reminder style). The user
+updates their profile to London. Now the 9 AM reminder fires at 9 AM London
+time. Best for personal alarms.
+
+**Most apps need a hybrid:** shared events use Model A, personal events use
+Model B. You can auto-detect location changes from the browser using
+`Intl.DateTimeFormat().resolvedOptions().timeZone` and prompt the user: "It
+looks like you're in London now. Update your timezone?"
+
 ### iCal RRULE for Recurring Events
 
 If you're building recurring events (weekly meetings, monthly reports), you need
@@ -324,23 +340,6 @@ Each occurrence gets its own UTC calculation. Monday's standup might be 14:00
 UTC in winter and 13:00 UTC in summer — but it's always 9:00 AM on the user's
 clock.
 
-### When the User Changes Location
-
-What happens when a New York user who scheduled a 9 AM reminder flies to London?
-
-**Model A: Timezone on the event** (Google Calendar style). The event stays at 9
-AM New York time. In London, the user sees "9:00 AM EST (2:00 PM your time)."
-Best for shared meetings tied to a place.
-
-**Model B: Timezone on the user profile** (personal reminder style). The user
-updates their profile to London. Now the 9 AM reminder fires at 9 AM London
-time. Best for personal alarms.
-
-**Most apps need a hybrid:** shared events use Model A, personal events use
-Model B. You can auto-detect location changes from the browser using
-`Intl.DateTimeFormat().resolvedOptions().timeZone` and prompt the user: "It
-looks like you're in London now. Update your timezone?"
-
 Understanding the theory prevents bugs. The next section shows you where those
 bugs actually live — in your ORM, your database driver, and the code between
 your frontend and backend.
@@ -350,11 +349,32 @@ your frontend and backend.
 This section is the reference you'll bookmark. It covers the specific tools and
 patterns across your stack — databases, ORMs, Node.js, and the frontend.
 
+### PostgreSQL: Two Timestamp Types
+
+PostgreSQL has two timestamp types, and choosing the wrong one is the source of
+most database-level timezone bugs.
+
+**`timestamp without time zone`** — a bare number. PostgreSQL has no idea what
+timezone it's in. It's like writing "5:00" on a sticky note without saying AM/PM
+or which city. Ambiguous.
+
+**`timestamp with time zone` (timestamptz)** — PostgreSQL knows it's UTC. It can
+intelligently convert to any timezone. PostgreSQL internally stores everything
+as UTC regardless, but `timestamptz` tells it to _interpret_ inputs and _format_
+outputs with timezone awareness.
+
+PostgreSQL's own documentation recommends `timestamptz` for most applications.
+If you use `timestamptz` from the start, a single `AT TIME ZONE` just works —
+the dual-application trick below is only needed when you're stuck with bare
+`timestamp`.
+
 ### ORMs: What They Default To (and Why It's Wrong)
 
-Every major Node.js ORM maps `DateTime` to a timestamp type that is **not
-timezone-aware** by default. This works fine for simple apps but creates subtle
-bugs the moment you write raw SQL queries or work with multiple timezones.
+Now that you know the difference between the two types, let's see what ORMs
+actually default to. Every major Node.js ORM maps `DateTime` to a timestamp
+type that is **not timezone-aware** by default. This works fine for simple apps
+but creates subtle bugs the moment you write raw SQL queries or work with
+multiple timezones.
 
 <ORMComparisonDemo />
 
@@ -393,25 +413,6 @@ const result = await prisma.$queryRaw`
   WHERE ("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Karachi' > ${someDate}
 `
 ```
-
-### PostgreSQL: Two Timestamp Types
-
-PostgreSQL has two timestamp types, and choosing the wrong one is the source of
-most database-level timezone bugs.
-
-**`timestamp without time zone`** — a bare number. PostgreSQL has no idea what
-timezone it's in. It's like writing "5:00" on a sticky note without saying AM/PM
-or which city. Ambiguous.
-
-**`timestamp with time zone` (timestamptz)** — PostgreSQL knows it's UTC. It can
-intelligently convert to any timezone. PostgreSQL internally stores everything
-as UTC regardless, but `timestamptz` tells it to _interpret_ inputs and _format_
-outputs with timezone awareness.
-
-PostgreSQL's own documentation recommends `timestamptz` for most applications.
-If you use `timestamptz` from the start, a single `AT TIME ZONE` just works —
-the dual-application trick below is only needed when you're stuck with bare
-`timestamp`.
 
 ### The AT TIME ZONE Trap: A War Story
 
