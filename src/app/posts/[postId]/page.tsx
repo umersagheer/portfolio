@@ -10,6 +10,7 @@ import { getAbsoluteUrl, getOpenGraphImageMetadata } from '@/libs/metadata'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
 import SleekLikeButton from '@/components/sleek-like-button'
+import { ScrollProgress } from '@/components/ui/scroll-progress'
 import AuthorSidebar from '@/components/blog/author-sidebar'
 import AuthorCardInline from '@/components/blog/author-card-inline'
 import { extractToc } from '@/libs/toc'
@@ -87,6 +88,7 @@ export default async function Post({ params }: PostProps) {
 
   return (
     <section className='pb-20'>
+      <ScrollProgress className='h-[3px]' />
       <div className='space-y-4'>
         {image && <Image src={image} alt={title} />}
         <header>

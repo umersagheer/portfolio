@@ -113,7 +113,29 @@ export default function AuthorSidebar({
             <span className='text-[10px] uppercase tracking-wider text-default-400'>
               Previous Article
             </span>
-            <Tooltip content={newerPost.title} size='sm' delay={500} classNames={{ content: 'max-w-48' }}>
+            <Tooltip
+              size='sm'
+              delay={500}
+              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
+              content={
+                <div className='flex flex-col'>
+                  {newerPost.image && (
+                    <Image
+                      as={NextImage}
+                      src={newerPost.image}
+                      alt={newerPost.title ?? ''}
+                      width={208}
+                      height={117}
+                      className='aspect-video w-full rounded-none object-cover'
+                      classNames={{ wrapper: 'rounded-none' }}
+                    />
+                  )}
+                  <span className='px-2 py-1.5 text-xs'>
+                    {newerPost.title}
+                  </span>
+                </div>
+              }
+            >
               <Link
                 href={`/posts/${newerPost.postId}`}
                 className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
@@ -128,7 +150,29 @@ export default function AuthorSidebar({
             <span className='text-[10px] uppercase tracking-wider text-default-400'>
               Next Article
             </span>
-            <Tooltip content={olderPost.title} size='sm' delay={500} classNames={{ content: 'max-w-48' }}>
+            <Tooltip
+              size='sm'
+              delay={500}
+              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
+              content={
+                <div className='flex flex-col'>
+                  {olderPost.image && (
+                    <Image
+                      as={NextImage}
+                      src={olderPost.image}
+                      alt={olderPost.title ?? ''}
+                      width={208}
+                      height={117}
+                      className='aspect-video w-full rounded-none object-cover'
+                      classNames={{ wrapper: 'rounded-none' }}
+                    />
+                  )}
+                  <span className='px-2 py-1.5 text-xs'>
+                    {olderPost.title}
+                  </span>
+                </div>
+              }
+            >
               <Link
                 href={`/posts/${olderPost.postId}`}
                 className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
