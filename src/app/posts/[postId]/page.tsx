@@ -9,7 +9,7 @@ import { getAdjacentPosts, getPostById, getPosts } from '@/libs/posts'
 import { getAbsoluteUrl, getOpenGraphImageMetadata } from '@/libs/metadata'
 import MDXContent from '@/components/mdx-content'
 import TableOfContents from '@/components/table-of-contents'
-import SleekLikeButton from '@/components/sleek-like-button'
+import ChevronLikeButton from '@/components/chevron-like-button'
 import { ScrollProgress } from '@/components/ui/scroll-progress'
 import AuthorSidebar from '@/components/blog/author-sidebar'
 import AuthorCardInline from '@/components/blog/author-card-inline'
@@ -42,10 +42,10 @@ export async function generateMetadata({
   const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
   const coverImage = image && coverImageUrl
     ? {
-        url: coverImageUrl,
-        alt: title ?? params.postId,
-        ...getOpenGraphImageMetadata(image)
-      }
+      url: coverImageUrl,
+      alt: title ?? params.postId,
+      ...getOpenGraphImageMetadata(image)
+    }
     : undefined
 
   return {
@@ -108,12 +108,12 @@ export default async function Post({ params }: PostProps) {
         </main>
       </div>
 
-      <div className='fixed bottom-6 left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:flex xl:flex-col'>
+      <div className='fixed bottom-14 left-[calc(50%+384px+1.5rem)] top-24 hidden w-56 xl:flex xl:flex-col'>
         <div className='min-h-0 flex-1'>
           <TableOfContents items={toc} />
         </div>
         <div className='flex shrink-0 justify-center pt-6'>
-          <SleekLikeButton postId={postId} />
+          <ChevronLikeButton postId={postId} />
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export default async function Post({ params }: PostProps) {
 
       {/* Mobile floating crystal */}
       <div className='fixed bottom-6 right-6 z-50 xl:hidden'>
-        <SleekLikeButton postId={postId} size='sm' />
+        <ChevronLikeButton postId={postId} size='sm' />
       </div>
 
       {/* Mobile prev/next nav */}

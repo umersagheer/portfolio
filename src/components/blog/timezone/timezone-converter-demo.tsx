@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { IconClock } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
+import AnimatedTime from './animated-time'
 import { getTimeZoneOffsetLabel } from './timezone-utils'
 
 const TIMEZONES = [
@@ -14,14 +14,19 @@ const TIMEZONES = [
     { zone: 'Asia/Tokyo', city: 'Tokyo' }
 ]
 
-function formatTime(date: Date, zone: string) {
-    return new Intl.DateTimeFormat('en-US', {
+function getTimeParts(date: Date, zone: string) {
+    const parts = new Intl.DateTimeFormat('en-US', {
         timeZone: zone,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
         hour12: false
-    }).format(date)
+    }).formatToParts(date)
+    return {
+        hours: Number(parts.find(p => p.type === 'hour')?.value ?? 0),
+        minutes: Number(parts.find(p => p.type === 'minute')?.value ?? 0),
+        seconds: Number(parts.find(p => p.type === 'second')?.value ?? 0)
+    }
 }
 
 function formatDate(date: Date, zone: string) {
@@ -44,7 +49,7 @@ function ClockCard({
     now: Date
     isUTC: boolean
 }) {
-    const time = formatTime(now, zone)
+    const { hours, minutes, seconds } = getTimeParts(now, zone)
     const date = formatDate(now, zone)
     const offset = getTimeZoneOffsetLabel(now, zone)
 
@@ -57,14 +62,12 @@ function ClockCard({
                 }`}
         >
             <span className='text-[10px] font-medium text-default-400'>{city}</span>
-            <motion.span
-                key={time}
-                initial={{ opacity: 0.6 }}
-                animate={{ opacity: 1 }}
-                className='mt-1 font-mono text-lg font-bold tabular-nums text-foreground sm:text-xl'
-            >
-                {time}
-            </motion.span>
+            <AnimatedTime
+                hours={hours}
+                minutes={minutes}
+                seconds={seconds}
+                className='mt-1 font-mono text-lg font-bold text-foreground sm:text-xl'
+            />
             <span className='mt-0.5 text-[10px] text-default-400'>{date}</span>
             <span
                 className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${isUTC

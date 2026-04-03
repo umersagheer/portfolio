@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Button, Alert } from '@heroui/react'
 import {
     IconCircleCheck,
@@ -11,6 +11,7 @@ import {
     IconSun
 } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
+import AnimatedTime from './animated-time'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 
@@ -20,16 +21,14 @@ function getMeetingTime(
     day: number,
     strategy: Strategy,
     dstActive: boolean
-): { time: string; broken: boolean } {
+): { hour: number; minute: number; ampm: string; broken: boolean } {
     if (strategy === 'wall') {
-        return { time: '9:00 AM', broken: false }
+        return { hour: 9, minute: 0, ampm: 'AM', broken: false }
     }
-    // Stored as 14:00 UTC (9 AM EST, winter)
-    // After DST spring forward: 14:00 UTC = 10:00 AM EDT
     if (dstActive) {
-        return { time: '10:00 AM', broken: true }
+        return { hour: 10, minute: 0, ampm: 'AM', broken: true }
     }
-    return { time: '9:00 AM', broken: false }
+    return { hour: 9, minute: 0, ampm: 'AM', broken: false }
 }
 
 export default function StandupBugDemo() {
@@ -99,7 +98,7 @@ export default function StandupBugDemo() {
 
             <div className='mb-3 grid grid-cols-5 gap-2'>
                 {DAYS.map((day, i) => {
-                    const { time, broken } = getMeetingTime(i, strategy, dstActive)
+                    const { hour, minute, ampm, broken } = getMeetingTime(i, strategy, dstActive)
                     return (
                         <div
                             key={day}
@@ -111,21 +110,16 @@ export default function StandupBugDemo() {
                             <span className='block text-[10px] font-medium text-default-400'>
                                 {day}
                             </span>
-                            <AnimatePresence mode='wait'>
-                                <motion.span
-                                    key={`${time}-${broken}`}
-                                    initial={{ y: 8, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -8, opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    className={`mt-1 block font-mono text-xs font-bold ${broken
-                                        ? 'text-danger-600'
-                                        : 'text-foreground'
-                                        }`}
-                                >
-                                    {time}
-                                </motion.span>
-                            </AnimatePresence>
+                            <AnimatedTime
+                                hours={hour}
+                                minutes={minute}
+                                ampm={ampm}
+                                padHours={false}
+                                className={`mt-1 block font-mono text-xs font-bold ${broken
+                                    ? 'text-danger-600'
+                                    : 'text-foreground'
+                                    }`}
+                            />
                         </div>
                     )
                 })}

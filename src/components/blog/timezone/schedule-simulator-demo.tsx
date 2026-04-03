@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import NumberFlow from '@number-flow/react'
 import { Button, Select, SelectItem, TimeInput } from '@heroui/react'
 import {
     IconCircleCheck,
@@ -237,7 +238,7 @@ export default function ScheduleSimulatorDemo() {
                                 : 'DST transition complete'}
                     </span>
                     <span className='font-mono text-xs text-default-400'>
-                        Day {simDay + 1}/{daysBeforeDST + 1}
+                        Day <NumberFlow value={simDay + 1} transformTiming={{ duration: 300, easing: 'ease-out' }} spinTiming={{ duration: 300, easing: 'ease-out' }} />/{daysBeforeDST + 1}
                     </span>
                 </div>
 

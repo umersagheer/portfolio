@@ -30,6 +30,49 @@ html {
   }
 }
 
+/* Neon glow for chevron like button */
+.neon-glow {
+  position: relative;
+  box-shadow:
+    inset 0 0 0.4em 0 var(--glow-color),
+    0 0 0.4em 0 var(--glow-color);
+  transition:
+    --glow-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.neon-glow::before {
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  background: var(--glow-color);
+  top: 100%;
+  left: 10%;
+  width: 80%;
+  height: 100%;
+  transform: perspective(0.8em) rotateX(40deg) scale(1, 0.35);
+  filter: blur(0.8em);
+  opacity: var(--glow-intensity, 0.3);
+  transition:
+    opacity 0.4s ease,
+    background 0.4s ease;
+}
+
+.neon-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 1.2em 0.3em var(--glow-color);
+  opacity: var(--glow-intensity, 0.3);
+  background-color: var(--glow-color);
+  z-index: -1;
+  transition:
+    opacity 0.4s ease,
+    box-shadow 0.4s ease,
+    background-color 0.4s ease;
+}
+
 @layer base {
   .title {
     @apply font-sourceCodePro text-3xl font-bold underline decoration-2 underline-offset-8;

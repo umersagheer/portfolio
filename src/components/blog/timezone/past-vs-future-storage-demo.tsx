@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import NumberFlow from '@number-flow/react'
 import { Button } from '@heroui/react'
 import { IconCircleCheck, IconSnowflake, IconSun } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
@@ -170,7 +171,13 @@ export default function PastVsFutureStorageDemo() {
                                         : 'text-foreground'
                                         }`}
                                 >
-                                    {dstToggle ? summerUTC : winterUTC}
+                                    <NumberFlow
+                                        value={dstToggle ? 13 : 14}
+                                        format={{ minimumIntegerDigits: 2 }}
+                                        suffix=':00 UTC'
+                                        transformTiming={{ duration: 400, easing: 'ease-out' }}
+                                        spinTiming={{ duration: 400, easing: 'ease-out' }}
+                                    />
                                 </span>
                             </div>
                         </motion.div>

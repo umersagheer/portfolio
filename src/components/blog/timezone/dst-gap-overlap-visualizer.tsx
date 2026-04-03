@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Tabs, Tab } from '@heroui/react'
 import { IconPlayerPlay } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
+import AnimatedTime from './animated-time'
 
 type Transition = 'spring' | 'fall'
 
@@ -41,23 +42,49 @@ const FALL_SEQUENCE = [
     { wall: '2:00 AM', utc: '07:00', label: 'EST', exists: true }
 ]
 
-function DigitDisplay({ value, size = 'lg' }: { value: string; size?: string }) {
+function parseTimeString(time: string): { hours: number; minutes: number; ampm?: string; suffix?: string } | null {
+    const match12 = time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+    if (match12) return { hours: Number(match12[1]), minutes: Number(match12[2]), ampm: match12[3] }
+    const match24 = time.match(/^(\d{2}):(\d{2})(?:\s+(.+))?$/)
+    if (match24) return { hours: Number(match24[1]), minutes: Number(match24[2]), suffix: match24[3] }
+    return null
+}
+
+function TimeDisplay({ value, size = 'lg' }: { value: string; size?: string }) {
+    const parsed = parseTimeString(value)
+
+    if (!parsed) {
+        return (
+            <AnimatePresence mode='wait'>
+                <motion.span
+                    key={value}
+                    initial={{ y: 12, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -12, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                    className={`inline-block font-mono font-bold tabular-nums ${size === 'lg'
+                        ? 'text-2xl sm:text-3xl'
+                        : 'text-base sm:text-lg'
+                        }`}
+                >
+                    {value}
+                </motion.span>
+            </AnimatePresence>
+        )
+    }
+
     return (
-        <AnimatePresence mode='wait'>
-            <motion.span
-                key={value}
-                initial={{ y: 12, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -12, opacity: 0 }}
-                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className={`inline-block font-mono font-bold tabular-nums ${size === 'lg'
-                    ? 'text-2xl sm:text-3xl'
-                    : 'text-base sm:text-lg'
-                    }`}
-            >
-                {value}
-            </motion.span>
-        </AnimatePresence>
+        <AnimatedTime
+            hours={parsed.hours}
+            minutes={parsed.minutes}
+            ampm={parsed.ampm}
+            suffix={parsed.suffix ? ` ${parsed.suffix}` : undefined}
+            padHours={!parsed.ampm}
+            className={`inline-block font-mono font-bold ${size === 'lg'
+                ? 'text-2xl sm:text-3xl'
+                : 'text-base sm:text-lg'
+                }`}
+        />
     )
 }
 
@@ -96,7 +123,7 @@ function ClockDisplay({
         <div
             className={`flex flex-col items-center rounded-lg border p-3 ${borderColor} ${bgColor} ${className ?? ''}`}
         >
-            <DigitDisplay value={time} />
+            <TimeDisplay value={time} />
             <span
                 className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${isGap
                     ? 'bg-danger-100 text-danger-600'
