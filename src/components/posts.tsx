@@ -1,7 +1,7 @@
 import formatDate from '@/libs/utils'
-import { PostMetadata } from '@/types'
+import { PostCategory, PostMetadata } from '@/types'
 import { Image, Link } from '@heroui/react'
-import { ClockIcon } from 'lucide-react'
+import { IconClock, IconFileInvoice, IconFilePower, IconHelpSmall } from '@tabler/icons-react'
 import React from 'react'
 
 type PostProps = {
@@ -40,15 +40,22 @@ export default function Posts({ posts }: PostProps) {
               </p>
             </div>
             <div className='flex items-center gap-2 pt-2 text-xs text-default-400'>
-              {post.publishedAt && (
-                <span>{formatDate(post.publishedAt)}</span>
-              )}
+              {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
               {post.readingTime && (
                 <>
                   <span>·</span>
                   <span className='flex items-center gap-1'>
-                    <ClockIcon size={12} />
+                    <IconClock size={12} />
                     {post.readingTime} min read
+                  </span>
+                </>
+              )}
+              {post.category && (
+                <>
+                  <span>·</span>
+                  <span className='capitalize text-xs flex items-center gap-1'>
+                    {post.category === 'post' as PostCategory ? <IconFilePower size={12} /> : <IconFileInvoice size={12} />}
+                    {post.category}
                   </span>
                 </>
               )}

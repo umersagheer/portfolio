@@ -9,6 +9,8 @@ export const colors = {
   primaryDark: '#7828c8',
   secondary: '#338ef7',
   secondaryDark: '#006FEE',
+  success: '#17c964',
+  warning: '#f5a524',
   danger: '#f31260',
   border: '#27272a',
   codeBg: '#0d1117',
@@ -16,12 +18,12 @@ export const colors = {
   muted: '#71717a',
   surface: '#111318',
   surfaceSoft: '#171a21',
-  surfaceStrong: '#0b0d12',
+  surfaceStrong: '#0b0d12'
 }
 
 export const gradient = `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
 
 export const fontFamily = {
   poppins: poppinsFontFamily,
-  mono: sourceCodeProFontFamily,
+  mono: sourceCodeProFontFamily
 }

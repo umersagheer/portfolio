@@ -21,7 +21,7 @@ export async function getPostById(postId: string): Promise<Post | null> {
 
     return {
       metadata: {
-        ...data,
+        ...(data as Omit<PostMetadata, 'postId' | 'readingTime'>),
         postId,
         readingTime: calculateReadingTime(content)
       },
@@ -66,7 +66,12 @@ function getPostMetadata(filepath: string): PostMetadata {
   const fileContent = fs.readFileSync(filePath, 'utf8')
 
   const { data, content } = matter(fileContent)
-  return { ...data, postId, readingTime: calculateReadingTime(content) }
+
+  return {
+    ...(data as Omit<PostMetadata, 'postId' | 'readingTime'>),
+    postId,
+    readingTime: calculateReadingTime(content)
+  }
 }
 
 function getAllPostMetadata() {

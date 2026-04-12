@@ -3,6 +3,8 @@ export type Post = {
   content: string
 }
 
+export type PostCategory = 'post' | 'bite-sized'
+
 export type PostMetadata = {
   title?: string
   summary?: string
@@ -10,6 +12,7 @@ export type PostMetadata = {
   author?: string
   publishedAt?: string
   readingTime?: number
+  category: PostCategory
   postId: string
 }
 

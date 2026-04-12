@@ -4,8 +4,9 @@ import {
   LayoutAnimationsCover,
   layoutAnimationsComposition,
   LayoutAnimationsPromo,
-  layoutAnimationsPromoSchema,
+  layoutAnimationsPromoSchema
 } from './blogs/layout-animations'
+import { ExpoRouterProtectedRoutesCover } from './blogs/expo-router-protected-routes'
 import { TimezonesCover } from './blogs/timezones'
 import { WebSocketsCover } from './blogs/websockets'
 import { BlogCoverStill, blogCoverSchema } from './shared/stills/BlogCoverStill'
@@ -50,6 +51,14 @@ export const Root: React.FC = () => {
             height={720}
           />
         </Folder>
+        <Folder name='expo-router-protected-routes'>
+          <Still
+            id='ExpoRouterProtectedRoutesCover'
+            component={ExpoRouterProtectedRoutesCover}
+            width={1280}
+            height={720}
+          />
+        </Folder>
       </Folder>
 
       <Folder name='shared'>
@@ -61,7 +70,7 @@ export const Root: React.FC = () => {
           schema={blogCoverSchema}
           defaultProps={{
             title: 'Blog Post Title',
-            subtitle: 'A brief description of the post',
+            subtitle: 'A brief description of the post'
           }}
         />
       </Folder>

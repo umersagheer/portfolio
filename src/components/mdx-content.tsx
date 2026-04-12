@@ -33,6 +33,7 @@ import StandupBugDemo from '@/components/blog/timezone/standup-bug-demo'
 import ISOStringAnatomy from '@/components/blog/timezone/iso-string-anatomy'
 import GetHoursComparisonTable from '@/components/blog/timezone/get-hours-comparison-table'
 import LibraryComparisonTable from '@/components/blog/timezone/library-comparison-table'
+import ExpoProtectedRoutesDemo from '@/components/blog/expo-router/protected-routes-demo'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -132,6 +133,7 @@ const components = {
   ISOStringAnatomy,
   GetHoursComparisonTable,
   LibraryComparisonTable,
+  ExpoProtectedRoutesDemo,
   CheckItem
 }
 

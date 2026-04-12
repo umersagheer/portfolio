@@ -1,0 +1,122 @@
+---
+title: 'Stop Redirecting in useEffect: Use Expo Router Protected Routes Instead'
+summary: 'A bite-sized guide to modern auth routing in Expo Router: replace imperative redirects with guarded route groups, handle onboarding cleanly, and avoid root-layout timing bugs.'
+image: /images/posts/expo-router-protected-routes-cover.png
+author: 'Umer Sagheer'
+publishedAt: '2026-04-12'
+category: 'bite-sized'
+---
+
+One of the most common Expo auth snippets still looks like this:
+
+```tsx
+useEffect(() => {
+  if (!isLoaded) return
+
+  if (!session) {
+    router.replace('/sign-in')
+    return
+  }
+
+  if (!isOnboarded) {
+    router.replace('/onboarding')
+    return
+  }
+
+  router.replace('/home')
+}, [isLoaded, session, isOnboarded])
+```
+
+It works… until it doesn't.
+
+You end up juggling loading states, flashing wrong screens, and fighting root-layout timing bugs. Every OAuth flow in Expo hits this eventually.
+
+Expo Router now has a better model.
+
+## The Mental Model That Scales
+
+Stop thinking "where should I `router.replace()` next?"
+
+Think in route groups:
+
+- `(auth)` → signed-out users
+- `(onboarding)` → signed-in but not yet set up
+- `(app)` → fully ready users
+
+Auth routing becomes a question of which screens are allowed to exist right now. That's exactly what `Stack.Protected` does.
+
+## The Better Pattern
+
+```tsx
+import { Stack } from 'expo-router'
+
+function RootNavigator() {
+  const { isLoaded, isSignedIn } = useAuth()
+  const { data: userProfile, isLoading: isProfileLoading } =
+    useUserProfile(!!isSignedIn)
+
+  if (!isLoaded) return null
+
+  if (isSignedIn && isProfileLoading) {
+    return <FullScreenLoader />
+  }
+
+  const isOnboarded = !!userProfile?.businessProfile
+
+  return (
+    <Stack>
+      <Stack.Protected guard={!isSignedIn}>
+        <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!!isSignedIn && !isOnboarded}>
+        <Stack.Screen name='(onboarding)' options={{ headerShown: false }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!!isSignedIn && isOnboarded}>
+        <Stack.Screen name='(app)' options={{ headerShown: false }} />
+      </Stack.Protected>
+    </Stack>
+  )
+}
+```
+
+The shift:
+
+- **Old `useEffect` pattern:** render first, navigate later
+- **`Stack.Protected` pattern:** declare which branch is valid right now
+
+This is what the current Expo docs recommend for auth, onboarding, and role-based flows. Guards automatically redirect and clean up history.
+
+<ExpoProtectedRoutesDemo />
+
+## Why This Is Better Than Root-Level Redirects
+
+Reaching for `<Redirect>` in the root layout sounds clean—until your decision depends on fetched auth and profile data. Then you hit the classic "navigation before mount" error.
+
+The fix isn't a smarter `useEffect`.
+The fix is to stop making auth navigation an imperative side effect.
+
+## Two Caveats Worth Keeping
+
+- You still need a loading strategy while auth/profile state resolves (keep the splash screen or show a focused loader).
+- Protected Routes are client-side only. They are not backend security. Your APIs still need real auth checks.
+
+## The Practical Takeaway
+
+If your Expo app has auth, onboarding, or role-based entry flows, stop asking:
+
+"Which screen should I redirect to in `useEffect`?"
+
+Start asking:
+
+"Which route group should be available right now?"
+
+That single mindset shift makes the entire flow easier to reason about and maintain.
+
+
+## Further Reading
+
+- [Protected routes](https://docs.expo.dev/router/reference/protected-routes/)
+- [Authentication](https://docs.expo.dev/router/reference/authentication/)
+- [Expo Router v55 blog post](https://expo.dev/blog)

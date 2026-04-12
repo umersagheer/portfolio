@@ -40,13 +40,14 @@ export async function generateMetadata({
   const { title, summary, image, author, publishedAt } = post.metadata
   const postUrl = getAbsoluteUrl(`/posts/${params.postId}`)
   const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
-  const coverImage = image && coverImageUrl
-    ? {
-      url: coverImageUrl,
-      alt: title ?? params.postId,
-      ...getOpenGraphImageMetadata(image)
-    }
-    : undefined
+  const coverImage =
+    image && coverImageUrl
+      ? {
+          url: coverImageUrl,
+          alt: title ?? params.postId,
+          ...getOpenGraphImageMetadata(image)
+        }
+      : undefined
 
   return {
     title,
