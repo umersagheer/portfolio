@@ -54,7 +54,7 @@ export default function Posts({ posts }: PostProps) {
                 <>
                   <span>·</span>
                   <span className='capitalize text-xs flex items-center gap-1'>
-                    {post.category === 'post' as PostCategory ? <IconFilePower size={12} /> : <IconFileInvoice size={12} />}
+                    {post.category === 'bite-sized' as PostCategory ? <IconFilePower size={12} /> : <IconFileInvoice size={12} />}
                     {post.category}
                   </span>
                 </>

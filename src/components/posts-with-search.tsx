@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Posts from './posts'
 import { SearchIcon } from 'lucide-react'
 import { PostCategory, PostMetadata } from '@/types'
+import { IconFileInvoice, IconFileInvoiceFilled, IconFilePower, IconFilePowerFilled } from '@tabler/icons-react'
 
 type props = {
   posts: PostMetadata[]
@@ -34,17 +35,29 @@ export default function PostsWithSearch({ posts }: props) {
         variant='bordered'
         selectedKey={category}
         onSelectionChange={key => setCategory(key as PostFilter)}
+        className='mb-4'
       >
-        <Tab key='all' title={`All (${posts.length})`} />
+        <Tab key='all' title={`All`} />
         <Tab
           key='post'
-          title={`Posts (${posts.filter(post => post.category === 'post').length})`}
+          title={
+            <div className="flex items-center space-x-2">
+              <IconFileInvoiceFilled size={"18"}/>
+              <span>Posts</span>
+            </div>
+          }
         />
         <Tab
           key='bite-sized'
-          title={`Bite-sized (${posts.filter(post => post.category === 'bite-sized').length})`}
+          title={
+            <div className="flex items-center space-x-2">
+              <IconFilePowerFilled size={"18"}/>
+              <span>Bite-sized</span>
+            </div>
+          }
         />
       </Tabs>
+
       <Input
         labelPlacement='outside'
         type='text'
