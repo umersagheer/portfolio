@@ -5,7 +5,7 @@ import { Link } from "@heroui/react"
 import { ArrowRightIcon } from 'lucide-react'
 
 export default async function RecentPosts() {
-  const posts = await getPosts(3)
+  const posts = await getPosts(2)
   return (
     <div className='flex flex-col gap-1'>
       <h3 className='font-sourceCodePro text-xl font-semibold'>Recent Posts</h3>

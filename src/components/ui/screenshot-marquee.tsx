@@ -33,7 +33,7 @@ export default function ScreenshotMarquee({
     <div
       className={
         className ??
-        'group relative flex h-80 w-full items-center justify-center overflow-hidden'
+        'group relative flex h-72 w-full items-center justify-center overflow-hidden'
       }
       style={variant === '3d' ? { perspective: '300px' } : undefined}
     >

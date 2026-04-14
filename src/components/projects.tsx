@@ -1,10 +1,9 @@
 'use client'
 
-import { getIcon } from '@/libs/utils'
-import { addToast, Button, Chip, Link } from '@heroui/react'
+import { Accordion, AccordionItem, addToast,  Chip, Link, ScrollShadow } from '@heroui/react'
 import React from 'react'
 import { ProjectType } from '@/content/projects'
-import { IconBrandGithub, IconLink } from '@tabler/icons-react'
+import { IconBrandGithub,  IconEngineFilled, IconLink } from '@tabler/icons-react'
 import Image from 'next/image'
 import {
   MorphingDialog,
@@ -16,7 +15,6 @@ import {
   MorphingDialogImage,
   MorphingDialogDescription,
   MorphingDialogClose,
-  useMorphingDialog
 } from '@/components/ui/morphing-dialog'
 import ScreenshotMarquee from '@/components/ui/screenshot-marquee'
 
@@ -89,7 +87,7 @@ export default function Projects({ projects }: ProjectProps) {
                   <ScreenshotMarquee
                     screenshots={project.screenshots}
                     variant='3d'
-                    // speed={55}
+                  // speed={55}
                   />
                 )}
 
@@ -131,21 +129,29 @@ export default function Projects({ projects }: ProjectProps) {
                   )}
                 </div>
 
-                {/* Tech Chips */}
-                <div className='flex flex-wrap gap-1'>
-                  {project.tech.map(({ name }) => (
-                    <Chip
-                      key={name}
-                      startContent={getIcon(name)}
-                      size='sm'
-                    >
-                      {name}
-                    </Chip>
-                  ))}
-                </div>
+                {/* Tech Stack */}
+                <Accordion isCompact>
+                  <AccordionItem
+                    key='tech'
+                    aria-label='Tech Stack'
+                    title={<div className='flex items-center gap-2'><IconEngineFilled size={20}/><span>Tech Stack</span></div>}
+                    classNames={{ title: 'text-sm font-semibold' }}
+                  >
+                    <div className='flex flex-wrap gap-2 pb-2'>
+                      {project.tech.map(({ name, icon }) => (
+                        <Chip
+                          key={name}
+                          startContent={icon}
+                        >
+                          {name}
+                        </Chip>
+                      ))}
+                    </div>
+                  </AccordionItem>
+                </Accordion>
 
                 {/* Description & Features */}
-                <div className='max-h-48 overflow-y-auto pr-1'>
+                <ScrollShadow className='max-h-48 pr-1'>
                   <p className='text-sm'>{project.description}</p>
                   {project.features && (
                     <>
@@ -167,27 +173,12 @@ export default function Projects({ projects }: ProjectProps) {
                       </ul>
                     </>
                   )}
-                </div>
-
-                {/* Close Button */}
-                <div className='flex justify-end'>
-                  <CloseButton />
-                </div>
+                </ScrollShadow>
               </MorphingDialogDescription>
             </MorphingDialogContent>
           </MorphingDialogContainer>
         </MorphingDialog>
       ))}
     </div>
-  )
-}
-
-function CloseButton() {
-  const { setIsOpen } = useMorphingDialog()
-
-  return (
-    <Button variant='light' onPress={() => setIsOpen(false)}>
-      Close
-    </Button>
   )
 }
