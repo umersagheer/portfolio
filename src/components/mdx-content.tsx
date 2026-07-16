@@ -34,6 +34,7 @@ import ISOStringAnatomy from '@/components/blog/timezone/iso-string-anatomy'
 import GetHoursComparisonTable from '@/components/blog/timezone/get-hours-comparison-table'
 import LibraryComparisonTable from '@/components/blog/timezone/library-comparison-table'
 import ExpoProtectedRoutesDemo from '@/components/blog/expo-router/protected-routes-demo'
+import HashPlayground from '@/components/blog/git-internals/hash-playground'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -134,6 +135,7 @@ const components = {
   GetHoursComparisonTable,
   LibraryComparisonTable,
   ExpoProtectedRoutesDemo,
+  HashPlayground,
   CheckItem
 }
 

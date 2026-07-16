@@ -1,0 +1,162 @@
+---
+  title: 'Git, Under the Hood: An Interactive Tour of How Git Really Works'
+  summary: 'Stop memorizing Git commands and start understanding them. A hands-on walk through the object store and the pointers on top of it — blobs, trees, commits, branches, merge, rebase, reset, and reflog — with interactive demos you can poke at.'
+  image: /images/posts/git-internals-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-17'
+  category: 'post'
+---
+
+{/*
+  ============================================================================
+  BUILD SCAFFOLD — Git Internals blog.
+  Phase 0 = this outline: every heading + a 1–2 sentence intent note + commented
+  component placeholders. Real prose and the interactive components land phase by
+  phase (see repo-root plan.md). Only Phase 1's component (HashPlayground) is
+  wired now; the rest stay commented until their phase.
+  ============================================================================
+*/}
+
+You use Git every day, and most days it just works — until the day it doesn't.
+A rebase goes sideways at 11pm, a branch seems to vanish, and suddenly you're
+copy-pasting commands from Stack Overflow and hoping.
+
+The fix isn't memorizing more commands. It's a mental model. Underneath every
+command, Git is doing something surprisingly simple and consistent. Once you can
+picture the little **objects** it stores and the **pointers** it moves around,
+the scary commands stop being magic — they become obvious.
+
+This post builds that picture from the ground up, and it's meant to be *played
+with*. Every big idea comes with something you can poke at and watch respond.
+
+## Part 1 — The Object Store
+
+{/* Intent: frame Part 1. Git is, at heart, a tiny key-value store of content.
+    Everything else is built on top. This is a short bridge into the storage model. */}
+
+### What lives inside .git
+
+{/* Intent: the four things that make a repo — objects/, refs/, HEAD, index.
+    Delete this one folder and the history is gone; it IS the database. Plain-language
+    tour, no component (yet — a small annotated file listing in prose). */}
+
+### Content-addressable storage
+
+Here's the one idea that everything else in Git is built on: **Git names things by
+their content.**
+
+Normally you name a file first (`report.txt`) and then decide what goes in it. Git
+does the opposite. You hand it some content, and it hands you back a **hash** — a
+short-looking fingerprint of exactly those bytes. That hash becomes the _address_
+Git files the content under. Same bytes, same address. This is called
+**content-addressable storage**, and it's why the same word keeps showing up
+throughout this post.
+
+Play with it below. Type into either file and watch its hash recompute the instant
+the content changes:
+
+<HashPlayground />
+
+Two things fall out of this, and you can see both in the demo:
+
+- **Identical content is stored only once.** If two files (or two hundred, across a
+  hundred commits) contain the same bytes, they hash to the same address, so Git
+  keeps a single copy. Make the two files above match and watch them collapse into
+  one shared object. This is why a repo with thousands of commits isn't thousands of
+  full copies of your project.
+- **Corruption can't hide.** Because the address is derived from the content, if a
+  single byte of a stored object ever changed, its hash would no longer match the
+  name it's filed under — and Git would notice immediately. Try flipping one
+  character with the preset buttons: the whole hash scrambles. That sensitivity is a
+  feature.
+
+So Git isn't really a pile of files with names. It's a **key-value store** where the
+key is a hash of the value. Everything from here on — every commit, branch, and
+merge — is just objects in this store and pointers between them.
+
+### The three kinds of objects
+
+{/* Intent: blob (raw bytes, no name), tree (maps names → hashes, can nest trees),
+    commit (a tree + parent hash + author + message). This is the flagship: a live
+    editor where you edit content and watch a blob → tree → commit get built and stored. */}
+
+{/* <ObjectInspector /> — Phase 2 (flagship workbench) */}
+
+### Snapshots, not diffs
+
+{/* Intent: every commit is a FULL snapshot, not a diff. Unchanged files reuse the exact
+    same blob hash, so snapshots are cheap. Diffs are computed on demand, never stored. */}
+
+{/* <SnapshotVsDiff /> — Phase 3 */}
+
+## Part 2 — Pointers &amp; Commands
+
+{/* Intent: frame Part 2. Now that objects are clear, everything Git "does" is just
+    creating objects and moving pointers. Merge, rebase, reset, reflog — all pointers. */}
+
+### The commit graph (DAG)
+
+{/* Intent: commits chained by parent pointers form a directed acyclic graph. Family-tree
+    analogy (commit = person, parent edge = ancestry). Merge commits have two parents.
+    Arrows always point child → parent (backwards in time). */}
+
+{/* <DagExplorer /> — Phase 3 */}
+
+### Branches are just pointers
+
+{/* Intent: a branch is a 41-byte file holding one commit hash. HEAD is a pointer to a
+    branch (or, detached, straight to a commit). Committing = write object, move branch,
+    HEAD follows. Show the literal .git/HEAD and refs/heads/main file contents. */}
+
+{/* <BranchHeadSimulator /> — Phase 4 */}
+
+### The staging area (index)
+
+{/* Intent: the waiting room between working directory and history. working dir → git add
+    (blob written) → index → git commit (trees + commit written). Likely folded into the
+    flagship ObjectInspector; called out here so the narrative order is intact. */}
+
+### Merge
+
+{/* Intent: fast-forward (no divergence → just slide the pointer, zero new objects) vs
+    3-way merge (both sides moved → one brand-new merge commit with two parents). */}
+
+{/* <MergeSimulator /> — Phase 4 */}
+
+### Rebase
+
+{/* Intent: "moving commits" is a lie — objects are immutable. Rebase REPLAYS commits as
+    brand-new objects with new hashes and new parents; the originals are orphaned. This is
+    why you never rebase shared history. */}
+
+{/* <RebaseReplay /> — Phase 5 */}
+
+### Reset and revert
+
+{/* Intent: reset moves a branch pointer; soft/mixed/hard differ only in what they do to the
+    index and working directory. Revert moves nothing — it adds a new inverse commit on top. */}
+
+{/* <ResetModes /> — Phase 5 */}
+
+### Reflog — the safety net
+
+{/* Intent: Git journals every move HEAD makes (~90 days). "Lost" commits are only
+    unreferenced, still sitting in the object store. Recover one by finding its hash and
+    pointing a branch at it. Nothing is ever truly deleted. */}
+
+{/* <ReflogRescue /> — Phase 5 */}
+
+## Wrapping up
+
+{/* Intent: one-paragraph recap — it's all an object store (blobs/trees/commits) plus
+    pointers (branches/HEAD) moving across a DAG. Every command is some combination of
+    "write an object" and "move a pointer." */}
+
+### Further Reading
+
+{/* Intent: curate in a later phase. Seed list below. */}
+
+- [How Git Works Under the Hood](https://www.youtube.com/watch?v=Ala6PHlYjmw) — video walkthrough of the object model
+- [Git Internals — Commits, Branches, Merge, Rebase, Reflog](https://www.youtube.com/watch?v=Csd4lMKPC5g) — video on the pointer mechanics
+- [Pro Git — Git Internals: Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects) — the canonical reference
+- [A Visual Guide to Git Internals](https://www.freecodecamp.org/news/git-internals-objects-branches-create-repo/) — objects, branches, and building a repo by hand

@@ -1,0 +1,237 @@
+'use client'
+
+import { useMemo, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Chip, Textarea, cn } from '@heroui/react'
+import { CheckIcon, ArrowRightIcon } from 'lucide-react'
+
+import GitDemoContainer from './shared/git-demo-container'
+import GitObjectNode from './shared/git-object-node'
+import { hashContent, gitBlobHeader } from './shared/hashes'
+import { useGitMotion } from './shared/use-git-motion'
+
+/** One-character-different presets so the avalanche effect is obvious on a click. */
+const PRESETS = [
+  { label: 'hello', value: 'hello' },
+  { label: 'hello␣', value: 'hello ', note: 'trailing space' },
+  { label: 'Hello', value: 'Hello', note: 'capital H' },
+  { label: 'hello!', value: 'hello!', note: 'added !' }
+]
+
+/** How many of the 7 hash characters differ — a felt measure of "avalanche". */
+function charsDiffering(a: string, b: string): number {
+  let n = 0
+  for (let i = 0; i < 7; i++) if (a[i] !== b[i]) n++
+  return n
+}
+
+function Panel({
+  side,
+  value,
+  onChange,
+  onFocus,
+  focused
+}: {
+  side: 'A' | 'B'
+  value: string
+  onChange: (v: string) => void
+  onFocus: () => void
+  focused: boolean
+}) {
+  const hash = hashContent(value)
+  const { swap } = useGitMotion()
+
+  return (
+    <div
+      className={cn(
+        'flex flex-1 flex-col gap-3 rounded-xl border p-3 transition-colors',
+        focused ? 'border-primary-300 bg-primary-50/40' : 'border-default-200 bg-background'
+      )}
+    >
+      <div className='flex items-center justify-between'>
+        <span className='text-xs font-medium text-default-500'>File {side}</span>
+        <span className='text-[11px] text-default-400'>
+          {new TextEncoder().encode(value).length} bytes
+        </span>
+      </div>
+
+      <Textarea
+        aria-label={`Content of file ${side}`}
+        size='sm'
+        variant='bordered'
+        minRows={3}
+        maxRows={6}
+        value={value}
+        onValueChange={onChange}
+        onFocus={onFocus}
+        classNames={{ input: 'font-sourceCodePro text-sm' }}
+      />
+
+      <div className='flex items-center gap-2'>
+        <span className='text-[11px] uppercase tracking-wide text-default-400'>hash</span>
+        <div className='relative overflow-hidden'>
+          <AnimatePresence mode='popLayout' initial={false}>
+            <motion.code
+              key={hash}
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -8, opacity: 0 }}
+              transition={swap}
+              className='block font-sourceCodePro text-sm font-semibold text-secondary-600'
+            >
+              {hash}
+            </motion.code>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function HashPlayground() {
+  const [valueA, setValueA] = useState('hello')
+  const [valueB, setValueB] = useState('world')
+  const [focused, setFocused] = useState<'A' | 'B'>('A')
+  const { nodeAppear, fade, spring } = useGitMotion()
+
+  const hashA = useMemo(() => hashContent(valueA), [valueA])
+  const hashB = useMemo(() => hashContent(valueB), [valueB])
+  const identical = valueA === valueB
+  const diff = charsDiffering(hashA, hashB)
+
+  const loadPreset = (v: string) => {
+    if (focused === 'A') setValueA(v)
+    else setValueB(v)
+  }
+
+  return (
+    <GitDemoContainer
+      title='Content in, hash out'
+      description='Git names things by their content. Hand it some bytes, it hands back a hash — and that hash is the address it files the content under. Edit either file and watch its hash recompute live.'
+      caption={
+        <>
+          Real Git prepends a header — <code>{gitBlobHeader('hello')}</code>then the content
+          — and runs SHA-1 (or SHA-256) over the whole thing, giving a 40-character hash it
+          shows abbreviated to 7. We use a stand-in hash here; what matters is the behavior,
+          which is identical: same bytes in ⇒ same hash out, and a one-character change ⇒ a
+          completely different hash.
+        </>
+      }
+    >
+      <div className='flex flex-col gap-3 sm:flex-row'>
+        <Panel
+          side='A'
+          value={valueA}
+          onChange={setValueA}
+          onFocus={() => setFocused('A')}
+          focused={focused === 'A'}
+        />
+        <Panel
+          side='B'
+          value={valueB}
+          onChange={setValueB}
+          onFocus={() => setFocused('B')}
+          focused={focused === 'B'}
+        />
+      </div>
+
+      {/* Presets: one click shows how a tiny change scrambles the hash. */}
+      <div className='mt-4 flex flex-wrap items-center gap-2'>
+        <span className='text-xs text-default-400'>
+          Load into file {focused}:
+        </span>
+        {PRESETS.map(preset => (
+          <button
+            key={preset.label}
+            type='button'
+            onClick={() => loadPreset(preset.value)}
+            title={preset.note ? `"${preset.value}" — ${preset.note}` : `"${preset.value}"`}
+            className='rounded-md border border-default-200 bg-background px-2 py-1 font-sourceCodePro text-xs text-default-600 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
+          >
+            {preset.label}
+          </button>
+        ))}
+      </div>
+
+      {/* The payoff: what Git actually stores. Same content ⇒ one shared blob. */}
+      <div className='mt-5 rounded-xl border border-default-100 bg-default-50 p-4'>
+        <div className='mb-3 flex items-center justify-between'>
+          <span className='text-xs font-medium text-default-500'>
+            What Git stores in <code className='text-default-600'>.git/objects</code>
+          </span>
+          <AnimatePresence mode='wait'>
+            {identical ? (
+              <motion.span key='dedup' {...fade} aria-live='polite'>
+                <Chip
+                  size='sm'
+                  variant='flat'
+                  color='secondary'
+                  startContent={<CheckIcon size={13} />}
+                >
+                  stored once — deduplicated
+                </Chip>
+              </motion.span>
+            ) : (
+              <motion.span
+                key='distinct'
+                {...fade}
+                aria-live='polite'
+                className='text-[11px] text-default-400'
+              >
+                {diff}/7 hash characters differ
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <div className='flex items-center justify-center gap-6 py-2'>
+          <AnimatePresence mode='popLayout' initial={false}>
+            {identical ? (
+              // Byte-equal content collapses to a single shared blob.
+              <motion.div
+                key={`shared-${hashA}`}
+                layout
+                {...nodeAppear}
+                className='flex flex-col items-center gap-2'
+              >
+                <GitObjectNode type='blob' hash={hashA} state='new' />
+                <span className='text-[11px] text-default-400'>
+                  both files point here
+                </span>
+              </motion.div>
+            ) : (
+              // Different content ⇒ two distinct blobs, two distinct addresses.
+              <motion.div
+                key='two-blobs'
+                layout
+                {...fade}
+                className='flex items-center gap-6'
+              >
+                <div className='flex flex-col items-center gap-2'>
+                  <GitObjectNode type='blob' hash={hashA} label='file A' />
+                </div>
+                <motion.div
+                  layout
+                  transition={spring}
+                  className='hidden text-default-300 sm:block'
+                  aria-hidden
+                >
+                  <ArrowRightIcon size={18} className='rotate-90 sm:rotate-0' />
+                </motion.div>
+                <div className='flex flex-col items-center gap-2'>
+                  <GitObjectNode type='blob' hash={hashB} label='file B' />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <p className='mt-2 text-center text-xs text-default-400'>
+          {identical
+            ? 'Identical content produces an identical hash, so Git keeps just one copy — no matter how many files (or commits) share it.'
+            : 'Different content, different hash, different object. Make the two files match to see Git store it only once.'}
+        </p>
+      </div>
+    </GitDemoContainer>
+  )
+}
