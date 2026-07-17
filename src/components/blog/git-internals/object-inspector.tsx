@@ -8,6 +8,7 @@ import {
   FilesIcon,
   GitBranchIcon,
   ArrowRightIcon,
+  ChevronDownIcon,
   RotateCcwIcon,
   CheckIcon
 } from 'lucide-react'
@@ -268,20 +269,32 @@ function reducer(repo: Repo, action: Action): Repo {
 // Row 1 — the live .git pipeline (Working → Staging → Commit → Branch/HEAD)
 // ────────────────────────────────────────────────────────────────────────────
 
+/**
+ * One stage of the pipeline. `basis` sets its relative width on wide screens —
+ * Working/Staging are usually near-empty so they stay narrow, while Commit and
+ * History (which hold real objects + pointers) get the room they need.
+ */
 function Lane({
   title,
   hint,
+  basis,
   children
 }: {
   title: string
   hint: string
+  basis: string
   children: React.ReactNode
 }) {
   return (
-    <div className='flex min-w-0 flex-1 flex-col rounded-xl border border-default-200 bg-default-50 p-3'>
-      <div className='mb-0.5 text-xs font-semibold text-foreground'>{title}</div>
-      <div className='mb-2 text-[10px] leading-4 text-default-400'>{hint}</div>
-      <div className='flex min-h-[4.5rem] flex-1 flex-wrap content-start items-start gap-2'>
+    <div
+      className={cn(
+        'flex min-w-0 flex-col rounded-lg border border-default-200 bg-default-50 p-2.5',
+        basis
+      )}
+    >
+      <div className='text-[11px] font-semibold text-foreground'>{title}</div>
+      <div className='mb-1.5 text-[10px] leading-4 text-default-500'>{hint}</div>
+      <div className='flex flex-1 flex-wrap content-start items-start gap-1.5'>
         {children}
       </div>
     </div>
@@ -290,20 +303,72 @@ function Lane({
 
 function LaneArrow() {
   return (
-    <div className='flex shrink-0 items-center justify-center px-0.5 text-default-300'>
-      <ArrowRightIcon size={18} />
+    <div className='flex shrink-0 items-center justify-center text-default-400 lg:px-0'>
+      <ArrowRightIcon size={16} />
     </div>
   )
 }
 
 function EmptyLane({ label }: { label: string }) {
   return (
-    <span className='py-4 text-center text-[10px] text-default-300'>{label}</span>
+    <span className='py-3 text-center text-[10px] text-default-400'>{label}</span>
+  )
+}
+
+/**
+ * A compact vertical commit timeline (VS Code / GitLens style): newest on top,
+ * dots joined by a line, with `main` + HEAD pills attached to the commit they
+ * point at. Makes the pointer relationship visible instead of implied.
+ */
+function HistoryTimeline({ repo }: { repo: Repo }) {
+  const { spring } = useGitMotion()
+  const commits = [...repo.history].reverse() // newest first
+
+  return (
+    <div className='flex flex-col gap-0'>
+      {commits.map((hash, i) => {
+        const commit = repo.store[hash]
+        if (!commit || commit.kind !== 'commit') return null
+        const isHead = hash === repo.main
+        const isLast = i === commits.length - 1
+        return (
+          <div key={hash} className='flex gap-2'>
+            {/* rail: dot + connecting line */}
+            <div className='flex flex-col items-center'>
+              <span
+                className={cn(
+                  'mt-1 size-2.5 shrink-0 rounded-full border-2',
+                  isHead ? 'border-primary bg-primary' : 'border-default-400 bg-default-50'
+                )}
+              />
+              {!isLast && <span className='w-px flex-1 bg-default-300' />}
+            </div>
+            {/* row content */}
+            <div className={cn('flex min-w-0 flex-1 flex-col pb-2', isLast && 'pb-0')}>
+              <div className='flex flex-wrap items-center gap-1.5'>
+                <code className='font-sourceCodePro text-xs font-semibold text-foreground'>
+                  {shortHash(hash)}
+                </code>
+                {isHead && (
+                  <motion.span layout transition={spring} className='flex flex-wrap gap-1'>
+                    <RefTag name='main' variant='branch' />
+                    <RefTag name='HEAD' variant='head' />
+                  </motion.span>
+                )}
+              </div>
+              <span className='truncate text-[10px] text-default-500' title={commit.message}>
+                {commit.message}
+              </span>
+            </div>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
 function GitPipeline({ repo }: { repo: Repo }) {
-  const { nodeAppear, fade, spring } = useGitMotion()
+  const { nodeAppear, fade, hold } = useGitMotion()
   const isFresh = (hash: string) => repo.fresh.includes(hash)
 
   const modified = FILE_ORDER.filter(n => {
@@ -317,12 +382,10 @@ function GitPipeline({ repo }: { repo: Repo }) {
     headCommit && headCommit.kind === 'commit'
       ? repo.store[headCommit.tree]
       : undefined
-  const parentOfHead =
-    headCommit && headCommit.kind === 'commit' ? headCommit.parent : null
 
   return (
-    <div className='rounded-2xl border border-default-200 bg-default-100 p-3 sm:p-4'>
-      <div className='mb-3 flex items-center gap-2'>
+    <div className='rounded-xl border border-default-200 bg-default-100 p-2.5 sm:p-3'>
+      <div className='mb-2 flex items-center gap-2'>
         <span className='rounded-md bg-default-200 px-2 py-0.5 font-sourceCodePro text-[11px] font-semibold text-foreground'>
           .git
         </span>
@@ -331,9 +394,13 @@ function GitPipeline({ repo }: { repo: Repo }) {
         </span>
       </div>
 
-      <div className='flex flex-col gap-2 lg:flex-row lg:items-stretch'>
-        {/* 1 · Working directory → blobs of changed files */}
-        <Lane title='Working directory' hint='files you edit (not yet stored)'>
+      <div className='flex flex-col gap-1.5 lg:flex-row lg:items-stretch'>
+        {/* 1 · Working directory → blobs of changed files (narrow) */}
+        <Lane
+          title='Working directory'
+          hint='files you edit (not yet stored)'
+          basis='lg:basis-[15%]'
+        >
           {modified.length === 0 ? (
             <EmptyLane label='no changes' />
           ) : (
@@ -344,6 +411,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
                   hash={hashContent(repo.files[name].working, 'blob')}
                   label={name}
                   hideBadge
+                  compact
                 />
               </motion.div>
             ))
@@ -352,8 +420,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
 
         <LaneArrow />
 
-        {/* 2 · Staging (index) → blobs written by `git add` */}
-        <Lane title='Staging area (index)' hint='blobs written by git add'>
+        {/* 2 · Staging (index) → blobs written by `git add` (narrow) */}
+        <Lane
+          title='Staging area (index)'
+          hint='blobs written by git add'
+          basis='lg:basis-[15%]'
+        >
           {staged.length === 0 ? (
             <EmptyLane label='nothing staged' />
           ) : (
@@ -370,6 +442,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
                   label={name}
                   state={isFresh(hashContent(repo.index[name] as string, 'blob')) ? 'new' : 'normal'}
                   hideBadge
+                  compact
                 />
               </motion.div>
             ))
@@ -378,21 +451,31 @@ function GitPipeline({ repo }: { repo: Repo }) {
 
         <LaneArrow />
 
-        {/* 3 · Commit → tree + commit objects */}
-        <Lane title='Commit' hint='a tree + a commit object'>
+        {/* 3 · Commit → tree stacked over commit (vertical, so it never overflows) */}
+        <Lane title='Commit' hint='a tree + a commit' basis='lg:basis-[26%]'>
           {headTree && headTree.kind === 'tree' ? (
-            <motion.div layout {...(isFresh(headTree.hash) ? nodeAppear : {})} className='flex flex-wrap items-start gap-2'>
-              <GitObjectNode
-                type='tree'
-                hash={headTree.hash}
-                state={isFresh(headTree.hash) ? 'new' : 'normal'}
-              />
-              <GitObjectNode
-                type='commit'
-                hash={repo.main}
-                label={headCommit && headCommit.kind === 'commit' ? headCommit.message : undefined}
-                state={isFresh(repo.main) ? 'new' : 'head'}
-              />
+            <motion.div
+              layout
+              {...(isFresh(repo.main) ? nodeAppear : {})}
+              className='flex flex-col items-start gap-1'
+            >
+              <motion.div {...(isFresh(headTree.hash) ? hold : {})}>
+                <GitObjectNode
+                  type='tree'
+                  hash={headTree.hash}
+                  state={isFresh(headTree.hash) ? 'new' : 'normal'}
+                  compact
+                />
+              </motion.div>
+              <ChevronDownIcon size={14} className='ml-3 shrink-0 text-default-400' />
+              <motion.div {...(isFresh(repo.main) ? hold : {})}>
+                <GitObjectNode
+                  type='commit'
+                  hash={repo.main}
+                  state={isFresh(repo.main) ? 'new' : 'head'}
+                  compact
+                />
+              </motion.div>
             </motion.div>
           ) : (
             <EmptyLane label='—' />
@@ -401,20 +484,9 @@ function GitPipeline({ repo }: { repo: Repo }) {
 
         <LaneArrow />
 
-        {/* 4 · Branch / HEAD → the pointers */}
-        <Lane title='Branch & HEAD' hint='pointers to a commit'>
-          <motion.div layout transition={spring} className='flex flex-col gap-1.5'>
-            <RefTag name='main' variant='branch' />
-            <RefTag name='HEAD' variant='head' />
-            <span className='mt-1 font-sourceCodePro text-[10px] text-default-400'>
-              → {shortHash(repo.main)}
-            </span>
-            {parentOfHead && (
-              <span className='font-sourceCodePro text-[10px] text-default-300'>
-                parent {shortHash(parentOfHead)}
-              </span>
-            )}
-          </motion.div>
+        {/* 4 · History → the commit timeline with pointers attached (widest) */}
+        <Lane title='History' hint='commits, newest first' basis='lg:basis-[30%]'>
+          <HistoryTimeline repo={repo} />
         </Lane>
       </div>
 
@@ -817,7 +889,7 @@ export default function ObjectInspector() {
         </>
       }
     >
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-3'>
         {/* Row 1 — the live .git pipeline */}
         <GitPipeline repo={repo} />
 

@@ -27,6 +27,8 @@ type GitObjectNodeProps = {
   state?: GitNodeState
   /** Hide the "blob"/"tree"/"commit" badge when the context already makes it obvious. */
   hideBadge?: boolean
+  /** Tighter padding + smaller footprint, for dense layouts like the pipeline. */
+  compact?: boolean
   className?: string
   /** Optional click handler — makes the node a real button when provided. */
   onClick?: () => void
@@ -41,7 +43,17 @@ type GitObjectNodeProps = {
  */
 const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
   (
-    { type, hash, label, state = 'normal', hideBadge = false, className, onClick, title },
+    {
+      type,
+      hash,
+      label,
+      state = 'normal',
+      hideBadge = false,
+      compact = false,
+      className,
+      onClick,
+      title
+    },
     ref
   ) => {
     const styles = OBJECT_STYLES[type]
@@ -67,8 +79,13 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
             : undefined
         }
         className={cn(
-          'inline-flex flex-col gap-1 rounded-xl border p-2.5 transition-shadow',
-          isCommit ? 'min-w-[7.5rem]' : 'min-w-[6.5rem]',
+          'inline-flex flex-col rounded-lg border transition-shadow',
+          compact ? 'gap-0.5 p-1.5' : 'gap-1 rounded-xl p-2.5',
+          compact
+            ? 'min-w-[5.5rem]'
+            : isCommit
+              ? 'min-w-[7.5rem]'
+              : 'min-w-[6.5rem]',
           styles.container,
           STATE_STYLES[state],
           interactive &&
@@ -76,12 +93,13 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           className
         )}
       >
-        <div className='flex items-center gap-1.5'>
-          <Glyph size={14} className={styles.accent} aria-hidden />
+        <div className={cn('flex items-center', compact ? 'gap-1' : 'gap-1.5')}>
+          <Glyph size={compact ? 12 : 14} className={styles.accent} aria-hidden />
           {!hideBadge && (
             <span
               className={cn(
-                'rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                'rounded font-semibold uppercase tracking-wide',
+                compact ? 'px-1 py-0 text-[9px]' : 'px-1.5 py-0.5 text-[10px]',
                 styles.badge
               )}
             >
@@ -90,12 +108,24 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           )}
         </div>
 
-        <code className={cn('font-sourceCodePro text-sm font-semibold', styles.accent)}>
+        <code
+          className={cn(
+            'font-sourceCodePro font-semibold',
+            compact ? 'text-xs' : 'text-sm',
+            styles.accent
+          )}
+        >
           {hash}
         </code>
 
         {label && (
-          <span className='max-w-[9rem] truncate text-[11px] text-default-500' title={label}>
+          <span
+            className={cn(
+              'truncate text-default-500',
+              compact ? 'max-w-[7rem] text-[10px]' : 'max-w-[9rem] text-[11px]'
+            )}
+            title={label}
+          >
             {label}
           </span>
         )}
