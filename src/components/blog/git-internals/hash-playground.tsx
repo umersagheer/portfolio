@@ -45,7 +45,7 @@ function Panel({
     <div
       className={cn(
         'flex flex-1 flex-col gap-3 rounded-xl border p-3 transition-colors',
-        focused ? 'border-primary-300 bg-primary-50/40' : 'border-default-200 bg-background'
+        focused ? 'border-primary bg-default-100' : 'border-default-200 bg-background'
       )}
     >
       <div className='flex items-center justify-between'>
@@ -77,7 +77,7 @@ function Panel({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -8, opacity: 0 }}
               transition={swap}
-              className='block font-sourceCodePro text-sm font-semibold text-secondary-600'
+              className='block font-sourceCodePro text-sm font-semibold text-secondary'
             >
               {hash}
             </motion.code>
@@ -146,7 +146,7 @@ export default function HashPlayground() {
             type='button'
             onClick={() => loadPreset(preset.value)}
             title={preset.note ? `"${preset.value}" — ${preset.note}` : `"${preset.value}"`}
-            className='rounded-md border border-default-200 bg-background px-2 py-1 font-sourceCodePro text-xs text-default-600 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
+            className='rounded-md border border-default-200 bg-background px-2 py-1 font-sourceCodePro text-xs text-default-600 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
           >
             {preset.label}
           </button>

@@ -76,11 +76,48 @@ merge — is just objects in this store and pointers between them.
 
 ### The three kinds of objects
 
-{/* Intent: blob (raw bytes, no name), tree (maps names → hashes, can nest trees),
-    commit (a tree + parent hash + author + message). This is the flagship: a live
-    editor where you edit content and watch a blob → tree → commit get built and stored. */}
+We said Git is a key-value store of content. But content alone isn't enough — you also
+need filenames, folders, and a sense of history. Git builds all of that out of just
+**three kinds of objects**, and they stack neatly on top of each other.
 
-{/* <ObjectInspector /> — Phase 2 (flagship workbench) */}
+**A blob is raw content.** When you stage a file, Git stores its bytes as a _blob_ — and
+that's it. A blob has no name, no path, no timestamp. It's a naked chunk of content,
+addressed by its hash. Two files with identical contents share one blob (that's the
+dedup you saw above).
+
+**A tree gives blobs their names.** If blobs have no filenames, where do names live? In a
+_tree_ object. A tree is basically a directory listing: a set of entries, each mapping a
+name to a hash. `app.py → <blob hash>`, `utils.py → <blob hash>`. A tree can also point at
+_other_ trees — that's how Git represents subfolders. So a tree is a snapshot of one
+directory, and trees-pointing-at-trees is your whole project structure.
+
+**A commit wraps a tree in history.** A _commit_ ties everything together. It points at a
+single tree (the complete snapshot of your project at that moment) and adds the metadata
+you actually think of as "a commit": the author, the message, and — crucially — the hash
+of the **parent** commit that came before it. That parent pointer is what strings commits
+into a history.
+
+Here's the thing to internalize: `git add` and `git commit` do different jobs.
+**`git add` writes a blob** (right then, the moment you stage). **`git commit` is what
+builds the tree and the commit object** and moves your branch forward. The workbench below
+lets you watch exactly that happen. Edit a file, stage it, give it a message, and commit —
+and keep your eye on the object store on the right:
+
+<ObjectInspector />
+
+Drive the editor on the bottom and keep your eye on the `.git` pipeline up top. Try this:
+
+- **Edit `app.py`** in the editor and watch its blue **blob** hash change as you type —
+  before you've stored anything.
+- **Open the Source Control tab** (the branch icon) and **check the file to stage it.** The
+  moment you do, its blob lands in the object store — that's all `git add` really is.
+- **Write a message and hit Commit.** _Now_ a purple **tree** and a new **commit** appear,
+  the commit links back to its parent, and `main`/`HEAD` slide forward together.
+- **Change the message** and commit again: the commit hash comes out different, because the
+  message is part of what gets hashed.
+- **`git reset --hard`** moves the branch pointer back one commit — and notice the commit you
+  just made doesn't vanish. It becomes _unreferenced_ (we'll rescue exactly this kind of
+  "lost" commit with the reflog near the end of the post).
 
 ### Snapshots, not diffs
 

@@ -1,15 +1,17 @@
 /**
  * The shared visual language for every Git-internals component.
  *
- * One place to tweak how a blob / tree / commit / ref looks, so the whole post
- * reads as a single coherent teaching tool. Components import these class
- * bundles instead of hardcoding colors, which keeps blobs blue and trees purple
- * *everywhere* in the post.
+ * Deliberately a *small, flat* system: only base semantic tokens — gray
+ * (`default`), `primary`, `secondary`, plus `success` / `danger` for the two
+ * states that need them. No tint/shade ladders (`-400`, `-500`, …), no opacity
+ * fills, no hardcoded hex. Base tokens (`primary`, `secondary`, `success`, …)
+ * already adapt to light/dark on their own, so we lean on them everywhere.
  *
- * Tokens map to the app's semantic Tailwind palette:
- *   blob   → secondary (blue)
- *   tree   → primary   (purple)
- *   commit → default, with a primary ring when it's the HEAD commit
+ *   blob   → secondary   (blue)
+ *   tree   → primary     (purple)
+ *   commit → default     (gray), with a primary ring when it is HEAD
+ *   ref    → success     (branch / HEAD tags)
+ *   added / staged → success   |   removed → danger
  */
 
 export type GitObjectType = 'blob' | 'tree' | 'commit'
@@ -24,50 +26,54 @@ type ObjectStyle = {
   accent: string
 }
 
-/** Resting styles per object type. State overlays (new/orphaned/head) apply on top. */
+/**
+ * Resting styles per object type — base tokens only. Surfaces use the neutral
+ * `default-100` gray (reads correctly in both themes); accents use the color's
+ * base token. State overlays (new / orphaned / head) apply on top.
+ */
 export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
   blob: {
-    container: 'border-secondary-200 bg-secondary-50 dark:border-secondary-800',
-    badge: 'bg-secondary-100 text-secondary-700 dark:bg-secondary-900/50',
-    accent: 'text-secondary-600'
+    container: 'border-secondary bg-default-50',
+    badge: 'bg-secondary text-secondary-foreground',
+    accent: 'text-secondary'
   },
   tree: {
-    container: 'border-primary-200 bg-primary-50 dark:border-primary-800',
-    badge: 'bg-primary-100 text-primary-700 dark:bg-primary-900/50',
-    accent: 'text-primary-600'
+    container: 'border-primary bg-default-50',
+    badge: 'bg-primary text-primary-foreground',
+    accent: 'text-primary'
   },
   commit: {
-    container: 'border-default-200 bg-default-100 dark:border-default-100',
-    badge: 'bg-default-200 text-default-700 dark:bg-default-200',
+    container: 'border-default-300 bg-default-100',
+    badge: 'bg-default-200 text-foreground',
     accent: 'text-foreground'
   }
 }
 
-/** State overlays layered on top of the resting object style. */
+/** State overlays layered on top of the resting object style — base tokens only. */
 export const STATE_STYLES: Record<GitNodeState, string> = {
   normal: '',
-  /** Freshly created object — purple glow to draw the eye on first appearance. */
-  new: 'ring-2 ring-primary-400/60 shadow-lg shadow-primary-500/20',
-  /** Unreferenced / orphaned — dashed + dimmed, teeing up reflog recovery. */
-  orphaned: 'border-dashed opacity-45 saturate-50',
-  /** The commit HEAD currently points at — purple ring, always the focal point. */
-  head: 'ring-2 ring-primary-500'
+  /** Freshly created object — a primary ring to draw the eye on first appearance. */
+  new: 'ring-2 ring-primary',
+  /** Unreferenced / orphaned — dashed gray border + muted gray text. */
+  orphaned: 'border-dashed border-default-300 text-default-400',
+  /** The commit HEAD currently points at — a primary ring, the focal point. */
+  head: 'ring-2 ring-primary'
 }
 
-/** Branch / HEAD sticky-note pills. */
+/** Branch / HEAD sticky-note pills — success for branches, primary outline for HEAD. */
 export const REF_STYLES = {
-  branch:
-    'border-success-300 bg-success-50 text-success-700 dark:border-success-700 dark:bg-success-900/40 dark:text-success-300',
-  head: 'border-primary-400 bg-background text-primary-600 dark:border-primary-500',
-  detached: 'border-warning-400 bg-warning-50 text-warning-700 dark:bg-warning-900/40'
+  branch: 'border-success bg-default-50 text-success',
+  head: 'border-primary bg-default-50 text-primary',
+  detached: 'border-danger bg-default-50 text-danger'
 }
 
 /**
- * Edges connecting nodes (always drawn child → parent by the caller).
- * The `--heroui-*` vars hold HSL channels, so they must be wrapped in hsl().
+ * Edges connecting nodes (always drawn child → parent by the caller). The
+ * `--heroui-*` vars hold HSL channels, so they must be wrapped in hsl(). Base
+ * tokens only: neutral gray by default, primary when newly drawn.
  */
 export const EDGE = {
-  stroke: 'hsl(var(--heroui-default-400))',
+  stroke: 'hsl(var(--heroui-default-300))',
   strokeNew: 'hsl(var(--heroui-primary))',
   strokeOrphaned: 'hsl(var(--heroui-default-300))'
 }
