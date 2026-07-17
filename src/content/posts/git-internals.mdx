@@ -105,12 +105,15 @@ and keep your eye on the object store on the right:
 
 <ObjectInspector />
 
-Drive the editor on the bottom and keep your eye on the `.git` pipeline up top. Try this:
+Drive the editor at the bottom and keep your eye on the `.git` panel up top — it has two
+sides: your **files** on the left, and the **object store** (what Git actually keeps) on
+the right. Try this:
 
-- **Edit `app.py`** in the editor and watch its blue **blob** hash change as you type —
-  before you've stored anything.
-- **Open the Source Control tab** (the branch icon) and **check the file to stage it.** The
-  moment you do, its blob lands in the object store — that's all `git add` really is.
+- **Edit `app.py`** in the editor. It shows up as a _modified file_ on the left — still just
+  a file. The hash Git _would_ give its contents shows next to the filename in the editor.
+- **Open the Source Control tab** (the branch icon) and **check the file to stage it.** Watch
+  a blue **blob** appear in the object store on the right — that's all `git add` really is:
+  it turns your file into a stored object.
 - **Write a message and hit Commit.** _Now_ a purple **tree** and a new **commit** appear,
   the commit links back to its parent, and `main`/`HEAD` slide forward together.
 - **Change the message** and commit again: the commit hash comes out different, because the

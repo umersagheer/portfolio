@@ -266,52 +266,58 @@ function reducer(repo: Repo, action: Action): Repo {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Row 1 — the live .git pipeline (Working → Staging → Commit → Branch/HEAD)
+// Row 1 — the two worlds of Git: the FILES you edit, and the OBJECT STORE that
+// Git actually keeps. Staging a file writes a blob into the store; committing
+// builds a tree + commit. This is the part VS Code hides.
 // ────────────────────────────────────────────────────────────────────────────
 
-/**
- * One stage of the pipeline. `basis` sets its relative width on wide screens —
- * Working/Staging are usually near-empty so they stay narrow, while Commit and
- * History (which hold real objects + pointers) get the room they need.
- */
-function Lane({
+/** A titled panel with a one-line explanation under the heading. */
+function Zone({
   title,
   hint,
-  basis,
+  className,
   children
 }: {
-  title: string
+  title: React.ReactNode
   hint: string
-  basis: string
+  className?: string
   children: React.ReactNode
 }) {
   return (
     <div
       className={cn(
-        'flex min-w-0 flex-col rounded-lg border border-default-200 bg-default-50 p-2.5',
-        basis
+        'flex min-w-0 flex-col rounded-lg border border-default-200 bg-default-50 p-3',
+        className
       )}
     >
-      <div className='text-[11px] font-semibold text-foreground'>{title}</div>
-      <div className='mb-1.5 text-[10px] leading-4 text-default-500'>{hint}</div>
-      <div className='flex flex-1 flex-wrap content-start items-start gap-1.5'>
-        {children}
-      </div>
+      <div className='text-xs font-semibold text-foreground'>{title}</div>
+      <div className='mb-2 text-[10px] leading-4 text-default-500'>{hint}</div>
+      {children}
     </div>
   )
 }
 
-function LaneArrow() {
+/** One file row in the Files world: a filename + a status dot. No objects here. */
+function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
+  const meta = {
+    committed: { dot: 'bg-default-300', label: '' },
+    modified: { dot: 'bg-warning', label: 'modified' },
+    staged: { dot: 'bg-success', label: 'staged' },
+    'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
+  }[status]
   return (
-    <div className='flex shrink-0 items-center justify-center text-default-400 lg:px-0'>
-      <ArrowRightIcon size={16} />
+    <div className='flex items-center gap-2 rounded-md border border-default-200 bg-background px-2 py-1'>
+      <FileIcon size={13} className='shrink-0 text-default-400' />
+      <span className='flex-1 truncate font-sourceCodePro text-xs text-foreground'>
+        {name}
+      </span>
+      {meta.label && (
+        <>
+          <span className={cn('size-1.5 shrink-0 rounded-full', meta.dot)} />
+          <span className='shrink-0 text-[10px] text-default-500'>{meta.label}</span>
+        </>
+      )}
     </div>
-  )
-}
-
-function EmptyLane({ label }: { label: string }) {
-  return (
-    <span className='py-3 text-center text-[10px] text-default-400'>{label}</span>
   )
 }
 
@@ -371,10 +377,6 @@ function GitPipeline({ repo }: { repo: Repo }) {
   const { nodeAppear, fade, hold } = useGitMotion()
   const isFresh = (hash: string) => repo.fresh.includes(hash)
 
-  const modified = FILE_ORDER.filter(n => {
-    const s = fileStatus(repo, n)
-    return s === 'modified' || s === 'staged-modified'
-  })
   const staged = FILE_ORDER.filter(n => repo.index[n] !== undefined)
 
   const headCommit = repo.store[repo.main]
@@ -382,6 +384,23 @@ function GitPipeline({ repo }: { repo: Repo }) {
     headCommit && headCommit.kind === 'commit'
       ? repo.store[headCommit.tree]
       : undefined
+
+  // Every blob currently in the object store, labelled with the file(s) whose
+  // content it holds (working copy, staged copy, or the committed snapshot).
+  const blobsInStore = Object.values(repo.store)
+    .filter((o): o is Extract<StoreObject, { kind: 'blob' }> => o.kind === 'blob')
+    .map(blob => {
+      const names = FILE_ORDER.filter(name => {
+        const f = repo.files[name]
+        return (
+          hashContent(f.working, 'blob') === blob.hash ||
+          hashContent(f.committed, 'blob') === blob.hash ||
+          (repo.index[name] !== undefined &&
+            hashContent(repo.index[name] as string, 'blob') === blob.hash)
+        )
+      })
+      return { hash: blob.hash, label: names.join(', ') || undefined }
+    })
 
   return (
     <div className='rounded-xl border border-default-200 bg-default-100 p-2.5 sm:p-3'>
@@ -395,99 +414,140 @@ function GitPipeline({ repo }: { repo: Repo }) {
       </div>
 
       <div className='flex flex-col gap-1.5 lg:flex-row lg:items-stretch'>
-        {/* 1 · Working directory → blobs of changed files (narrow) */}
-        <Lane
-          title='Working directory'
-          hint='files you edit (not yet stored)'
-          basis='lg:basis-[15%]'
+        {/* ── The Files world (working dir + index): filenames, not objects ── */}
+        <Zone
+          title='Your files'
+          hint='the working directory & staging area — plain files, in different states'
+          className='lg:basis-[34%]'
         >
-          {modified.length === 0 ? (
-            <EmptyLane label='no changes' />
-          ) : (
-            modified.map(name => (
-              <motion.div key={name} layout {...fade} className='flex flex-col items-center gap-1'>
-                <GitObjectNode
-                  type='blob'
-                  hash={hashContent(repo.files[name].working, 'blob')}
-                  label={name}
-                  hideBadge
-                  compact
-                />
-              </motion.div>
-            ))
-          )}
-        </Lane>
+          <div className='flex flex-col gap-2'>
+            <div>
+              <div className='mb-1 text-[10px] uppercase tracking-wide text-default-400'>
+                working directory
+              </div>
+              <div className='flex flex-col gap-1'>
+                {FILE_ORDER.map(name => (
+                  <FileRow key={name} name={name} status={fileStatus(repo, name)} />
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className='mb-1 text-[10px] uppercase tracking-wide text-default-400'>
+                staging area (index)
+              </div>
+              {staged.length === 0 ? (
+                <span className='block rounded-md border border-dashed border-default-200 px-2 py-2 text-center text-[10px] text-default-400'>
+                  nothing staged — check a file in the panel below
+                </span>
+              ) : (
+                <div className='flex flex-col gap-1'>
+                  {staged.map(name => (
+                    <FileRow key={name} name={name} status={fileStatus(repo, name)} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </Zone>
 
-        <LaneArrow />
+        {/* The bridge: staging/committing turns files into objects. */}
+        <div className='flex shrink-0 items-center justify-center'>
+          <div className='flex flex-col items-center gap-0.5 text-default-400'>
+            <ArrowRightIcon size={18} className='hidden lg:block' />
+            <ChevronDownIcon size={18} className='lg:hidden' />
+            <span className='hidden text-center text-[9px] leading-tight lg:block'>
+              stage /<br />commit
+            </span>
+          </div>
+        </div>
 
-        {/* 2 · Staging (index) → blobs written by `git add` (narrow) */}
-        <Lane
-          title='Staging area (index)'
-          hint='blobs written by git add'
-          basis='lg:basis-[15%]'
+        {/* ── The Object store: where blobs, trees & commits actually live ── */}
+        <Zone
+          title={
+            <span className='flex items-center gap-1.5'>
+              Object store
+              <code className='rounded bg-default-200 px-1 py-0.5 text-[10px] font-normal text-default-600'>
+                .git/objects
+              </code>
+            </span>
+          }
+          hint='content-addressed objects — no filenames here, only hashes'
+          className='lg:flex-1'
         >
-          {staged.length === 0 ? (
-            <EmptyLane label='nothing staged' />
-          ) : (
-            staged.map(name => (
-              <motion.div
-                key={name}
-                layout
-                {...nodeAppear}
-                className='flex flex-col items-center gap-1'
-              >
-                <GitObjectNode
-                  type='blob'
-                  hash={hashContent(repo.index[name] as string, 'blob')}
-                  label={name}
-                  state={isFresh(hashContent(repo.index[name] as string, 'blob')) ? 'new' : 'normal'}
-                  hideBadge
-                  compact
-                />
-              </motion.div>
-            ))
-          )}
-        </Lane>
+          <div className='flex flex-col gap-3'>
+            {/* Blobs: appear when you stage. Labelled with the file they came from. */}
+            <div>
+              <div className='mb-1 text-[10px] uppercase tracking-wide text-secondary'>
+                blobs (file contents)
+              </div>
+              <div className='flex min-h-[2.75rem] flex-wrap items-start gap-1.5'>
+                {blobsInStore.length === 0 ? (
+                  <span className='py-2 text-[10px] text-default-400'>
+                    none yet — staging a file writes its blob here
+                  </span>
+                ) : (
+                  blobsInStore.map(b => (
+                    <motion.div
+                      key={b.hash}
+                      layout
+                      {...nodeAppear}
+                      {...(isFresh(b.hash) ? hold : {})}
+                    >
+                      <GitObjectNode
+                        type='blob'
+                        hash={b.hash}
+                        label={b.label}
+                        state={isFresh(b.hash) ? 'new' : 'normal'}
+                        hideBadge
+                        compact
+                      />
+                    </motion.div>
+                  ))
+                )}
+              </div>
+            </div>
 
-        <LaneArrow />
+            {/* Tree + commit for the latest snapshot. */}
+            <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3'>
+              <div>
+                <div className='mb-1 text-[10px] uppercase tracking-wide text-primary'>
+                  latest tree + commit
+                </div>
+                {headTree && headTree.kind === 'tree' ? (
+                  <div className='flex items-start gap-1.5'>
+                    <motion.div layout {...(isFresh(headTree.hash) ? hold : {})}>
+                      <GitObjectNode
+                        type='tree'
+                        hash={headTree.hash}
+                        state={isFresh(headTree.hash) ? 'new' : 'normal'}
+                        compact
+                      />
+                    </motion.div>
+                    <ArrowRightIcon size={13} className='mt-3 shrink-0 text-default-400' />
+                    <motion.div layout {...(isFresh(repo.main) ? hold : {})}>
+                      <GitObjectNode
+                        type='commit'
+                        hash={repo.main}
+                        state={isFresh(repo.main) ? 'new' : 'head'}
+                        compact
+                      />
+                    </motion.div>
+                  </div>
+                ) : (
+                  <span className='py-2 text-[10px] text-default-400'>—</span>
+                )}
+              </div>
 
-        {/* 3 · Commit → tree stacked over commit (vertical, so it never overflows) */}
-        <Lane title='Commit' hint='a tree + a commit' basis='lg:basis-[26%]'>
-          {headTree && headTree.kind === 'tree' ? (
-            <motion.div
-              layout
-              {...(isFresh(repo.main) ? nodeAppear : {})}
-              className='flex flex-col items-start gap-1'
-            >
-              <motion.div {...(isFresh(headTree.hash) ? hold : {})}>
-                <GitObjectNode
-                  type='tree'
-                  hash={headTree.hash}
-                  state={isFresh(headTree.hash) ? 'new' : 'normal'}
-                  compact
-                />
-              </motion.div>
-              <ChevronDownIcon size={14} className='ml-3 shrink-0 text-default-400' />
-              <motion.div {...(isFresh(repo.main) ? hold : {})}>
-                <GitObjectNode
-                  type='commit'
-                  hash={repo.main}
-                  state={isFresh(repo.main) ? 'new' : 'head'}
-                  compact
-                />
-              </motion.div>
-            </motion.div>
-          ) : (
-            <EmptyLane label='—' />
-          )}
-        </Lane>
-
-        <LaneArrow />
-
-        {/* 4 · History → the commit timeline with pointers attached (widest) */}
-        <Lane title='History' hint='commits, newest first' basis='lg:basis-[30%]'>
-          <HistoryTimeline repo={repo} />
-        </Lane>
+              {/* History timeline with the pointers attached. */}
+              <div className='min-w-0 flex-1 border-t border-default-200 pt-2 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0'>
+                <div className='mb-1 text-[10px] uppercase tracking-wide text-default-500'>
+                  commit history
+                </div>
+                <HistoryTimeline repo={repo} />
+              </div>
+            </div>
+          </div>
+        </Zone>
       </div>
 
       {/* Narration caption. */}
