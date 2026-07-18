@@ -12,6 +12,13 @@
  *   commit → default     (gray), with a primary ring when it is HEAD
  *   ref    → success     (branch / HEAD tags)
  *   added / staged → success   |   removed → danger
+ *
+ * Borders live at TWO scales, and they are treated differently:
+ *   - object *nodes* (blob/tree/commit boxes, ref pills) keep a thin colored
+ *     border — that outline IS their identity, so it stays.
+ *   - *container surfaces* (panels, zones, shells, cards) carry NO border. They
+ *     separate by a one-step background-contrast + a single soft shadow instead.
+ * So the tokens below are only ever applied to nodes; surfaces are styled inline.
  */
 
 export type GitObjectType = 'blob' | 'tree' | 'commit'
@@ -49,15 +56,19 @@ export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
   }
 }
 
-/** State overlays layered on top of the resting object style — base tokens only. */
+/**
+ * State overlays layered on top of the resting object style — base tokens only.
+ * Rings are `ring-1` so they sit gently next to the thin node borders rather
+ * than shouting.
+ */
 export const STATE_STYLES: Record<GitNodeState, string> = {
   normal: '',
   /** Freshly created object — a primary ring to draw the eye on first appearance. */
-  new: 'ring-2 ring-primary',
+  new: 'ring-1 ring-primary',
   /** Unreferenced / orphaned — dashed gray border + muted gray text. */
   orphaned: 'border-dashed border-default-300 text-default-400',
   /** The commit HEAD currently points at — a primary ring, the focal point. */
-  head: 'ring-2 ring-primary'
+  head: 'ring-1 ring-primary'
 }
 
 /** Branch / HEAD sticky-note pills — success for branches, primary outline for HEAD. */

@@ -36,7 +36,7 @@ export default function GitDemoContainer({
       aria-describedby={description ? descriptionId : undefined}
       transition={{ layout: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
       style={{ overflow: 'hidden' }}
-      className='not-prose my-8 rounded-2xl border border-default-200 bg-default-50 p-4 shadow-sm sm:p-5'
+      className='not-prose my-8 rounded-2xl bg-default-50 p-4 shadow-md sm:p-5'
     >
       {title && (
         <motion.h3

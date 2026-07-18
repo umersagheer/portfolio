@@ -286,7 +286,7 @@ function Zone({
   return (
     <div
       className={cn(
-        'flex min-w-0 flex-col rounded-lg border border-default-200 bg-default-50 p-3',
+        'flex min-w-0 flex-col rounded-lg bg-default-50 p-3',
         className
       )}
     >
@@ -306,7 +306,7 @@ function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
     'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
   }[status]
   return (
-    <div className='flex items-center gap-2 rounded-md border border-default-200 bg-background px-2 py-1'>
+    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm'>
       <FileIcon size={13} className='shrink-0 text-default-400' />
       <span className='flex-1 truncate font-sourceCodePro text-xs text-foreground'>
         {name}
@@ -403,7 +403,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
     })
 
   return (
-    <div className='rounded-xl border border-default-200 bg-default-100 p-2.5 sm:p-3'>
+    <div className='rounded-xl bg-default-100 p-2.5 shadow-sm sm:p-3'>
       <div className='mb-2 flex items-center gap-2'>
         <span className='rounded-md bg-default-200 px-2 py-0.5 font-sourceCodePro text-[11px] font-semibold text-foreground'>
           .git
@@ -436,7 +436,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
                 staging area (index)
               </div>
               {staged.length === 0 ? (
-                <span className='block rounded-md border border-dashed border-default-200 px-2 py-2 text-center text-[10px] text-default-400'>
+                <span className='block rounded-md bg-background px-2 py-2 text-center text-[10px] text-default-400'>
                   nothing staged — check a file in the panel below
                 </span>
               ) : (
@@ -539,7 +539,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
               </div>
 
               {/* History timeline with the pointers attached. */}
-              <div className='min-w-0 flex-1 border-t border-default-200 pt-2 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0'>
+              <div className='min-w-0 flex-1 border-t border-default-100 pt-2 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0'>
                 <div className='mb-1 text-[10px] uppercase tracking-wide text-default-500'>
                   commit history
                 </div>
@@ -599,8 +599,8 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
   const { added, removed } = diffStat(rows)
   if (added === 0 && removed === 0) return null
   return (
-    <div className='overflow-hidden rounded-md border border-default-200 bg-default-50 font-sourceCodePro text-[11px] leading-5'>
-      <div className='flex items-center gap-2 border-b border-default-200 px-2 py-1 text-[10px] text-default-500'>
+    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-sm'>
+      <div className='flex items-center gap-2 bg-default-200 px-2 py-1 text-[10px] text-default-500'>
         <span className='text-success'>+{added}</span>
         <span className='text-danger'>−{removed}</span>
         <span>vs last commit</span>
@@ -669,7 +669,7 @@ function ActivityBar({
     )
   }
   return (
-    <div className='flex flex-row gap-1 border-b border-default-200 bg-default-100 sm:flex-col sm:gap-0 sm:border-b-0 sm:border-r'>
+    <div className='flex flex-row gap-1 bg-default-100 sm:flex-col sm:gap-0'>
       {item('explorer', 'Explorer', <FilesIcon size={20} />)}
       {item('scm', 'Source Control', <GitBranchIcon size={20} />, changeCount)}
     </div>
@@ -707,9 +707,9 @@ function VscodeShell({
   )
 
   return (
-    <div className='overflow-hidden rounded-2xl border border-default-200 bg-default-50'>
+    <div className='overflow-hidden rounded-2xl bg-default-50 shadow-sm'>
       {/* Title bar */}
-      <div className='flex items-center gap-2 border-b border-default-200 bg-default-100 px-3 py-1.5'>
+      <div className='flex items-center gap-2 bg-default-100 px-3 py-1.5'>
         <span className='flex gap-1.5'>
           <span className='h-2.5 w-2.5 rounded-full bg-default-300' />
           <span className='h-2.5 w-2.5 rounded-full bg-default-300' />
@@ -722,7 +722,7 @@ function VscodeShell({
         <ActivityBar tab={tab} onTab={setTab} changeCount={changes.length} />
 
         {/* Side panel */}
-        <div className='w-full border-b border-default-200 sm:w-56 sm:border-b-0 sm:border-r'>
+        <div className='w-full border-b border-default-100 sm:w-56 sm:border-b-0 sm:border-r sm:border-default-100'>
           {tab === 'explorer' ? (
             <ExplorerPanel repo={repo} selected={selected} onSelect={onSelect} />
           ) : (
@@ -739,7 +739,7 @@ function VscodeShell({
 
         {/* Editor */}
         <div className='flex min-w-0 flex-1 flex-col'>
-          <div className='flex items-center justify-between border-b border-default-200 bg-default-100 px-3 py-1.5'>
+          <div className='flex items-center justify-between bg-default-100 px-3 py-1.5'>
             <span className='flex items-center gap-1.5 font-sourceCodePro text-xs text-foreground'>
               <FileIcon size={13} className='text-default-400' />
               {selected}
@@ -757,7 +757,7 @@ function VscodeShell({
             className='h-40 w-full resize-none border-0 bg-default-50 p-3 font-sourceCodePro text-xs text-foreground outline-none'
           />
 
-          <div className='border-t border-default-200 p-2'>
+          <div className='border-t border-default-100 p-2'>
             <DiffView rows={diffRows} />
             {diffStat(diffRows).added === 0 && diffStat(diffRows).removed === 0 && (
               <p className='px-1 py-2 text-center text-[11px] text-default-400'>

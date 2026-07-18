@@ -44,8 +44,8 @@ function Panel({
   return (
     <div
       className={cn(
-        'flex flex-1 flex-col gap-3 rounded-xl border p-3 transition-colors',
-        focused ? 'border-primary bg-default-100' : 'border-default-200 bg-background'
+        'flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-sm transition-all',
+        focused ? 'bg-default-100 ring-1 ring-primary' : 'bg-background'
       )}
     >
       <div className='flex items-center justify-between'>
@@ -154,7 +154,7 @@ export default function HashPlayground() {
       </div>
 
       {/* The payoff: what Git actually stores. Same content ⇒ one shared blob. */}
-      <div className='mt-5 rounded-xl border border-default-100 bg-default-50 p-4'>
+      <div className='mt-5 rounded-xl bg-default-100 p-4 shadow-sm'>
         <div className='mb-3 flex items-center justify-between'>
           <span className='text-xs font-medium text-default-500'>
             What Git stores in <code className='text-default-600'>.git/objects</code>

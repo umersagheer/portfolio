@@ -89,7 +89,7 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           styles.container,
           STATE_STYLES[state],
           interactive &&
-            'cursor-pointer hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+            'cursor-pointer hover:shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
           className
         )}
       >
