@@ -36,6 +36,8 @@ import LibraryComparisonTable from '@/components/blog/timezone/library-compariso
 import ExpoProtectedRoutesDemo from '@/components/blog/expo-router/protected-routes-demo'
 import HashPlayground from '@/components/blog/git-internals/hash-playground'
 import ObjectInspector from '@/components/blog/git-internals/object-inspector'
+import SnapshotVsDiff from '@/components/blog/git-internals/snapshot-vs-diff'
+import DagExplorer from '@/components/blog/git-internals/dag-explorer'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
@@ -138,6 +140,8 @@ const components = {
   ExpoProtectedRoutesDemo,
   HashPlayground,
   ObjectInspector,
+  SnapshotVsDiff,
+  DagExplorer,
   CheckItem
 }
 

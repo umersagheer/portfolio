@@ -124,23 +124,59 @@ the right. Try this:
 
 ### Snapshots, not diffs
 
-{/* Intent: every commit is a FULL snapshot, not a diff. Unchanged files reuse the exact
-    same blob hash, so snapshots are cheap. Diffs are computed on demand, never stored. */}
+Most people picture a commit as a _diff_ — a little bundle of "what changed since last time."
+That's how the tools _show_ history, so it's a reasonable guess. But it's not what Git stores.
 
-{/* <SnapshotVsDiff /> — Phase 3 */}
+**Every commit is a complete snapshot of your whole project.** Its tree names every file, and
+every file points at a blob — not just the ones you touched. That sounds hopelessly wasteful, but
+remember the very first idea in this post: Git names blobs by their content. So a file you _didn't_
+change hashes to the _same blob_ it did last commit, and Git already has that object. The new
+snapshot just points at it again. **Unchanged content is shared, never copied** — which is why a
+repo with a thousand commits isn't a thousand copies of your project.
+
+So where do diffs come from? Git computes them **on the fly**, by comparing two snapshots, right
+when you run `git diff` or `git log -p`. The diff is a _view_, generated on demand and thrown away
+— never written to disk. Step through this little history and flip between the two: what Git
+**stores** (snapshots, with unchanged files reusing the same blob) versus what Git **shows** you
+(a freshly computed diff).
+
+<SnapshotVsDiff />
+
+Notice that on each step, at least one file carries its blob hash over unchanged — that's the
+dedup doing its job. And the diff panel is honest about it: for an unchanged file there's simply
+nothing to compute, because both snapshots already point at the same object.
 
 ## Part 2 — Pointers &amp; Commands
 
-{/* Intent: frame Part 2. Now that objects are clear, everything Git "does" is just
-    creating objects and moving pointers. Merge, rebase, reset, reflog — all pointers. */}
+The object store from Part 1 is the hard part, and you've got it: blobs, trees, commits, all named
+by their content and sharing whatever they can. Here's the good news — **everything else Git does
+is just two moves**: _write a new object_ and _move a pointer_. Merge, rebase, reset, reflog — none
+of them are new magic. They're combinations of those two moves over the graph of commits. So let's
+look at that graph first.
 
 ### The commit graph (DAG)
 
-{/* Intent: commits chained by parent pointers form a directed acyclic graph. Family-tree
-    analogy (commit = person, parent edge = ancestry). Merge commits have two parents.
-    Arrows always point child → parent (backwards in time). */}
+Every commit stores the hash of the commit that came before it — its **parent**. That single
+backward pointer is the thread that turns a pile of commits into a history. Follow the parents from
+any commit and you walk backwards through time, one commit at a time, until you reach the very first
+commit (which has no parent).
 
-{/* <DagExplorer /> — Phase 3 */}
+Because commits only ever point _backwards_, the shape you get can branch and rejoin but can never
+loop — you can't be your own ancestor. Mathematicians call that a **directed acyclic graph**, or
+DAG; think of it as a family tree where each commit knows its parent. Two rules are worth holding
+onto: **arrows point child → parent** (backwards in time, because a commit knows what came before
+it, not after), and a **merge** commit is the only kind with **two** parents — it's where two lines
+of history tie back together.
+
+Build one yourself. **Commit** extends the current line, **branch** forks a new line off the current
+commit, and **merge** joins another branch back in. Watch the arrows: they always reach back toward
+older commits, and the merge commit is the one with two of them.
+
+<DagExplorer />
+
+Every button here only ever _adds_ objects — a commit, or a new branch name. Nothing already in the
+graph is edited; that immutability is the whole reason Git can hand you the same commit hash forever
+and the reflog can dig up "lost" work later on.
 
 ### Branches are just pointers
 
