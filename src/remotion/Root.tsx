@@ -9,6 +9,7 @@ import {
 import { ExpoRouterProtectedRoutesCover } from './blogs/expo-router-protected-routes'
 import { TimezonesCover } from './blogs/timezones'
 import { WebSocketsCover } from './blogs/websockets'
+import { GitInternalsCover } from './blogs/git-internals'
 import { BlogCoverStill, blogCoverSchema } from './shared/stills/BlogCoverStill'
 
 import './shared/fonts'
@@ -55,6 +56,14 @@ export const Root: React.FC = () => {
           <Still
             id='ExpoRouterProtectedRoutesCover'
             component={ExpoRouterProtectedRoutesCover}
+            width={1280}
+            height={720}
+          />
+        </Folder>
+        <Folder name='git-internals'>
+          <Still
+            id='GitInternalsCover'
+            component={GitInternalsCover}
             width={1280}
             height={720}
           />

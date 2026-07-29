@@ -40,17 +40,19 @@ type ObjectStyle = {
  */
 export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
   blob: {
-    container: 'border-secondary bg-default-50',
+    // translucent surface + a faint color tint so backdrop-blur reads as frosted
+    // glass over the dotted stage.
+    container: 'border-secondary bg-secondary/10',
     badge: 'bg-secondary text-secondary-foreground',
     accent: 'text-secondary'
   },
   tree: {
-    container: 'border-primary bg-default-50',
+    container: 'border-primary bg-primary/10',
     badge: 'bg-primary text-primary-foreground',
     accent: 'text-primary'
   },
   commit: {
-    container: 'border-default-300 bg-default-100',
+    container: 'border-default-300 bg-default-100/60',
     badge: 'bg-default-200 text-foreground',
     accent: 'text-foreground'
   }

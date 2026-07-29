@@ -13,41 +13,14 @@ export const BrandBackdrop: React.FC<{
       })
     : 0
 
-  const glowScale = interpolate(frame, [0, 120], [0.96, 1.04], {
-    extrapolateRight: 'clamp',
-  })
-
-  const topGlowOpacity = interpolate(frame, [0, 40], [0.22, 0.3], {
-    extrapolateRight: 'clamp',
-  })
-
+  // Radial glow layers removed for a flat, consistent identity across every
+  // cover and promo. Just a clean vertical dark gradient + the grid.
   return (
     <AbsoluteFill
       style={{
-        background: `linear-gradient(180deg, ${colors.surfaceStrong} 0%, ${colors.background} 38%, #020304 100%)`,
+        background: `linear-gradient(180deg, ${colors.surfaceStrong} 0%, ${colors.background} 45%, #020304 100%)`,
       }}
     >
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 24% 20%, rgba(147, 83, 211, 0.18) 0%, transparent 42%)',
-          opacity: topGlowOpacity,
-          transform: `scale(${glowScale})`,
-        }}
-      />
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 78% 16%, rgba(255, 255, 255, 0.08) 0%, transparent 28%)',
-        }}
-      />
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 50% 85%, rgba(51, 142, 247, 0.12) 0%, transparent 42%)',
-          opacity: 0.55,
-        }}
-      />
       {showGrid && (
         <AbsoluteFill
           style={{
@@ -60,12 +33,6 @@ export const BrandBackdrop: React.FC<{
           }}
         />
       )}
-      <AbsoluteFill
-        style={{
-          background:
-            'radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.42) 100%)',
-        }}
-      />
       {children}
     </AbsoluteFill>
   )

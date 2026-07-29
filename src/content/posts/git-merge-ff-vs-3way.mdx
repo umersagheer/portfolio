@@ -1,0 +1,57 @@
+---
+  title: 'Fast-Forward vs Merge Commit: What git merge Actually Does'
+  summary: 'Sometimes a merge creates a new commit with two parents; sometimes it creates nothing at all and just slides a pointer. The difference is one question — did the branches diverge? — and once you see it, merge conflicts and that "why is there a merge commit?" mystery both make sense.'
+  image: /images/posts/git-merge-ff-vs-3way-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — merge: fast-forward vs 3-way. Part of the Git series.
+  ASSUMES flagship: branch = pointer, commit has parent(s), DAG. The flagship
+  already MENTIONS the merge commit's two parents when defining the DAG — this
+  post is the deep dive that was promised there.
+  Phase 0 = outline. draft:true.
+  ============================================================================
+*/}
+
+{/* Intent: hook. "Why did my merge make a weird extra commit sometimes but not
+    others?" People think merge is one behavior; it's two, chosen automatically. */}
+
+## The one idea
+
+{/* THE sentence: if the branch you're merging in is simply AHEAD of you (no new
+    commits on your side), Git doesn't merge anything — it fast-forwards, sliding
+    your branch pointer up the existing line. It only builds a real merge commit
+    when both sides have moved and history has actually diverged. */}
+
+## Fast-forward: no new object at all
+
+{/* Intent: main hasn't moved, feature is ahead. There's a straight line for the
+    pointer to slide along, so Git just overwrites main's hash with feature's hash.
+    Zero new objects. The "merge" is a pointer update. Callback: branch = pointer. */}
+
+## 3-way merge: the two-parent commit
+
+{/* Intent: both main and feature moved → no straight line. Git finds the common
+    ancestor (the "base", the 3rd point in "3-way"), combines the two snapshots, and
+    writes ONE new commit whose special property is TWO parent lines. Only then does
+    main's pointer move to it. This is the only object type in Git with two parents. */}
+
+{/* <MergeSimulator /> — interactive: toggle "did main move?". Off → watch the pointer
+    fast-forward, object store unchanged. On → watch a two-parent merge commit get
+    written and the pointer land on it. Build when writing. */}
+
+## Where conflicts come from
+
+{/* Intent: short, optional. A conflict is just the 3-way merge finding that BOTH sides
+    changed the same region relative to the common ancestor, so Git can't pick — it
+    asks you. Ties conflicts back to the 3-way mechanic instead of treating them as
+    a separate scary thing. */}
+
+### Further reading
+
+{/* Seed: flagship (DAG section), git-rebase-replay (the "other" way to integrate). */}

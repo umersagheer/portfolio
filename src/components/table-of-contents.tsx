@@ -83,6 +83,8 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                 onClick={() => handleClick(item.id)}
                 className={cn(
                   'block py-1.5 pl-4 transition-colors',
+                  // h2 (Part 1/2) read as section headers; h3 lighter/smaller children
+                  item.level === 2 ? 'font-semibold' : 'text-[13px]',
                   activeId === item.id
                     ? 'font-medium text-foreground'
                     : 'text-default-400 hover:text-foreground'

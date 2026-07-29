@@ -3,10 +3,11 @@
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Chip, Textarea, cn } from '@heroui/react'
-import { CheckIcon, ArrowRightIcon } from 'lucide-react'
+import { CheckIcon, ArrowRightIcon, ChevronRightIcon } from 'lucide-react'
 
 import GitDemoContainer from './shared/git-demo-container'
 import GitObjectNode from './shared/git-object-node'
+import StageDots from './shared/stage-dots'
 import { hashContent, gitBlobHeader } from './shared/hashes'
 import { useGitMotion } from './shared/use-git-motion'
 
@@ -40,6 +41,7 @@ function Panel({
 }) {
   const hash = hashContent(value)
   const { swap } = useGitMotion()
+  const [peek, setPeek] = useState(false)
 
   return (
     <div
@@ -84,6 +86,53 @@ function Panel({
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Peek inside the blob: the exact bytes Git hashes, not the raw content. */}
+      <div>
+        <button
+          type='button'
+          onClick={() => setPeek(p => !p)}
+          className='flex items-center gap-1 text-[11px] text-default-400 transition-colors hover:text-default-600'
+          aria-expanded={peek}
+        >
+          <ChevronRightIcon
+            size={12}
+            className={cn('transition-transform', peek && 'rotate-90')}
+          />
+          peek inside the blob
+        </button>
+
+        <AnimatePresence initial={false}>
+          {peek && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className='overflow-hidden'
+            >
+              <div className='mt-2 rounded-lg bg-default-100 p-2.5 font-sourceCodePro text-xs'>
+                <p className='mb-1.5 text-[10px] uppercase tracking-wide text-default-400'>
+                  what Git actually hashes
+                </p>
+                <code className='block leading-relaxed text-default-600'>
+                  <span className='text-warning'>{gitBlobHeader(value)}</span>
+                  <span className='text-foreground'>{value || '·'}</span>
+                </code>
+                <div className='my-1 flex items-center gap-1 text-[10px] text-default-400'>
+                  <ArrowRightIcon size={11} className='rotate-90' /> SHA-1
+                </div>
+                <code className='block font-semibold text-secondary'>{hash}</code>
+                <p className='mt-1.5 text-[10px] leading-snug text-default-400'>
+                  A blob is a tiny header (<code className='text-warning'>blob</code>,
+                  the byte count, a hidden NUL) glued to your content — that whole
+                  thing is what gets hashed.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }
@@ -110,11 +159,11 @@ export default function HashPlayground() {
       description='Git names things by their content. Hand it some bytes, it hands back a hash — and that hash is the address it files the content under. Edit either file and watch its hash recompute live.'
       caption={
         <>
-          Real Git prepends a header — <code>{gitBlobHeader('hello')}</code>then the content
-          — and runs SHA-1 (or SHA-256) over the whole thing, giving a 40-character hash it
-          shows abbreviated to 7. We use a stand-in hash here; what matters is the behavior,
-          which is identical: same bytes in ⇒ same hash out, and a one-character change ⇒ a
-          completely different hash.
+          Real Git runs SHA-1 (or SHA-256) and gives a 40-character hash, shown here
+          abbreviated to 7. We use a stand-in hash — what matters is the behavior, which
+          is identical: same bytes in ⇒ same hash out, one character changed ⇒ a
+          completely different hash. Hit “peek inside the blob” to see the exact bytes it
+          hashes.
         </>
       }
     >
@@ -154,8 +203,9 @@ export default function HashPlayground() {
       </div>
 
       {/* The payoff: what Git actually stores. Same content ⇒ one shared blob. */}
-      <div className='mt-5 rounded-xl bg-default-100 p-4 shadow-sm'>
-        <div className='mb-3 flex items-center justify-between'>
+      <div className='relative mt-5 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-sm'>
+        <StageDots />
+        <div className='relative mb-3 flex items-center justify-between'>
           <span className='text-xs font-medium text-default-500'>
             What Git stores in <code className='text-default-600'>.git/objects</code>
           </span>
@@ -184,7 +234,7 @@ export default function HashPlayground() {
           </AnimatePresence>
         </div>
 
-        <div className='flex items-center justify-center gap-6 py-2'>
+        <div className='relative flex items-center justify-center gap-6 py-2'>
           <AnimatePresence mode='popLayout' initial={false}>
             {identical ? (
               // Byte-equal content collapses to a single shared blob.

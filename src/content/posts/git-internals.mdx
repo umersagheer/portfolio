@@ -1,44 +1,68 @@
 ---
   title: 'Git, Under the Hood: An Interactive Tour of How Git Really Works'
-  summary: 'Stop memorizing Git commands and start understanding them. A hands-on walk through the object store and the pointers on top of it — blobs, trees, commits, branches, merge, rebase, reset, and reflog — with interactive demos you can poke at.'
+  summary: 'Stop memorizing Git commands and start understanding them. A hands-on walk through the object store and the pointers on top of it — blobs, trees, commits, branches, and HEAD — with interactive demos you can poke at.'
   image: /images/posts/git-internals-cover.png
   author: 'Umer Sagheer'
-  publishedAt: '2026-07-17'
+  publishedAt: '2026-07-29'
   category: 'post'
 ---
 
-{/*
-  ============================================================================
-  BUILD SCAFFOLD — Git Internals blog.
-  Phase 0 = this outline: every heading + a 1–2 sentence intent note + commented
-  component placeholders. Real prose and the interactive components land phase by
-  phase (see repo-root plan.md). Only Phase 1's component (HashPlayground) is
-  wired now; the rest stay commented until their phase.
-  ============================================================================
-*/}
-
 You use Git every day, and most days it just works — until the day it doesn't.
-A rebase goes sideways at 11pm, a branch seems to vanish, and suddenly you're
-copy-pasting commands from Stack Overflow and hoping.
+A rebase goes sideways, a branch seems to vanish, and you paste the error into
+your AI of choice. It hands you a command, the command works, and you still have
+no idea what actually happened.
 
-The fix isn't memorizing more commands. It's a mental model. Underneath every
-command, Git is doing something surprisingly simple and consistent. Once you can
-picture the little **objects** it stores and the **pointers** it moves around,
-the scary commands stop being magic — they become obvious.
+That's the quiet trap: AI is great at handing you the _command_, but it lets you
+skip the _mental model_. And the fix was never more commands anyway — it's the
+model underneath them. Once you can picture the little **objects** Git stores and
+the **pointers** it moves around, the scary commands stop being magic — they
+become obvious.
 
 This post builds that picture from the ground up, and it's meant to be *played
 with*. Every big idea comes with something you can poke at and watch respond.
 
 ## Part 1 — The Object Store
 
-{/* Intent: frame Part 1. Git is, at heart, a tiny key-value store of content.
-    Everything else is built on top. This is a short bridge into the storage model. */}
+Before we touch a single command, we're going to open Git up and look at what it
+actually keeps on disk. It's less than you'd think, and every command in the second
+half of this post is just moving these few pieces around.
 
 ### What lives inside .git
 
-{/* Intent: the four things that make a repo — objects/, refs/, HEAD, index.
-    Delete this one folder and the history is gone; it IS the database. Plain-language
-    tour, no component (yet — a small annotated file listing in prose). */}
+Run `git init` in an empty folder and Git does something quietly dramatic: it creates
+one hidden directory, `.git/`, and that directory _is_ your repository. Not a copy of
+it, not a log of it — the whole thing. Delete `.git/` and your files stay, but every
+commit, branch, and scrap of history is gone in an instant. So let's open it up and
+see what's in there.
+
+At first glance it looks like a lot. It isn't. Run the command yourself below, and
+watch what shows up — almost everything inside splits into just **two halves**:
+
+<GitInitTerminal />
+
+Hold onto that split, because it's the shape of this entire post:
+
+- **`objects/` is the stuff.** Every version of every file, and every commit, lives
+  here as an _object_. This is the whole of Part 1 — where your content actually goes,
+  and how Git names it.
+- **`refs/` and `HEAD` are the pointers.** They don't hold any content of their own;
+  each is a tiny file that just names an object in `objects/`. A branch is a pointer.
+  `HEAD` is the pointer that says which branch you're on. That's all of Part 2.
+
+The other two are supporting cast. **`index`** is a scratchpad — the staging area
+where a commit is assembled before it's made; we'll come back to it once the objects
+make sense. And **`config`, `hooks/`, `description`** and friends are plumbing you can
+happily ignore for this whole post.
+
+So Git is really just a bag of objects, plus some pointers into the bag. For the rest
+of Part 1 we'll stay on the **objects** side — the "stuff" half — and come back to the
+pointers in Part 2.
+
+And the objects side isn't a flat bag either; it's a little ladder. Everything starts
+as a **blob** (raw content, named by a hash), blobs get their filenames from **trees**,
+and trees get their history from **commits**. Three object types, stacked. We'll climb
+that ladder one rung at a time — and it starts at the bottom, with a single question:
+when you hand Git a file, how does it decide what to _name_ it?
 
 ### Content-addressable storage
 
@@ -47,17 +71,16 @@ their content.**
 
 Normally you name a file first (`report.txt`) and then decide what goes in it. Git
 does the opposite. You hand it some content, and it hands you back a **hash** — a
-short-looking fingerprint of exactly those bytes. That hash becomes the _address_
-Git files the content under. Same bytes, same address. This is called
-**content-addressable storage**, and it's why the same word keeps showing up
-throughout this post.
+fingerprint of exactly those bytes. That hash becomes the _address_ Git files the
+content under. Same bytes, same address. This is called **content-addressable
+storage**, and it's why the same word keeps showing up throughout this post.
 
 Play with it below. Type into either file and watch its hash recompute the instant
 the content changes:
 
 <HashPlayground />
 
-Two things fall out of this, and you can see both in the demo:
+Two things fall out of this, and the demo above lets you trigger both:
 
 - **Identical content is stored only once.** If two files (or two hundred, across a
   hundred commits) contain the same bytes, they hash to the same address, so Git
@@ -97,30 +120,45 @@ you actually think of as "a commit": the author, the message, and — crucially 
 of the **parent** commit that came before it. That parent pointer is what strings commits
 into a history.
 
-Here's the thing to internalize: `git add` and `git commit` do different jobs.
-**`git add` writes a blob** (right then, the moment you stage). **`git commit` is what
-builds the tree and the commit object** and moves your branch forward. The workbench below
-lets you watch exactly that happen. Edit a file, stage it, give it a message, and commit —
-and keep your eye on the object store on the right:
+So your files turn into a small stack of objects: a **blob** per file (the content), one
+**tree** naming them all (the directory), and a **commit** on top (the history). Step
+through it below — on the left, watch `.git/objects` fill up (the same folder that was
+empty back when you ran `git init`); on the right, watch the objects point at one another:
 
-<ObjectInspector />
+<ObjectLadder />
 
-Drive the editor at the bottom and keep your eye on the `.git` panel up top — it has two
-sides: your **files** on the left, and the **object store** (what Git actually keeps) on
-the right. Try this:
+The important part is what points at what. The commit doesn't _contain_ your file — it
+points at a tree, and the tree points at the blob. That indirection is the whole trick.
 
-- **Edit `app.py`** in the editor. It shows up as a _modified file_ on the left — still just
-  a file. The hash Git _would_ give its contents shows next to the filename in the editor.
-- **Open the Source Control tab** (the branch icon) and **check the file to stage it.** Watch
-  a blue **blob** appear in the object store on the right — that's all `git add` really is:
-  it turns your file into a stored object.
-- **Write a message and hit Commit.** _Now_ a purple **tree** and a new **commit** appear,
-  the commit links back to its parent, and `main`/`HEAD` slide forward together.
-- **Change the message** and commit again: the commit hash comes out different, because the
-  message is part of what gets hashed.
-- **`git reset --hard`** moves the branch pointer back one commit — and notice the commit you
-  just made doesn't vanish. It becomes _unreferenced_ (we'll rescue exactly this kind of
-  "lost" commit with the reflog near the end of the post).
+### The staging area — where objects get written
+
+We now know _what_ Git stores. But when, exactly, does it get written? Most of us run
+`git add` and `git commit` back-to-back, like one motion — the save ritual. They're not one
+motion. They do genuinely different jobs, and the difference lives in that last file from
+`git init`: the **index**, the scratchpad.
+
+Here's the split that surprises people: **`git add` writes a blob immediately.** The moment you
+stage a file, Git hashes its contents, writes the blob into `objects/` right then, and records
+one line in the index — `this path → this blob hash`. The object already exists. You haven't
+committed anything, but the content is already safely in the store.
+
+So what _is_ the index? Just a list: **"what my next commit will contain."** And it's a _choice_ —
+you might change five files but stage only two. Whatever you `add` goes on the list; whatever you
+don't is simply left out of the next commit. The index is where you assemble exactly the snapshot
+you want, one file at a time.
+
+Then **`git commit` does the second half.** It reads the index, folds those staged entries into a
+**tree** (and writes it), then wraps that tree in a **commit** — the commit points at the _tree_
+(not the blobs directly), and adds the author, message, and parent. Nothing new is invented; it
+just packages up the blobs `add` already wrote.
+
+<StagingArea />
+
+Try staging only some of the files, then commit: the ones you left unchecked never make it into
+the object store's tree — they're still sitting in your working directory, waiting. That's the
+whole point of the index. And notice the chain that gets built: **commit → tree → blobs.** Because
+the commit's tree names _every_ staged file, each commit ends up being a complete snapshot — which
+is exactly where we're headed next.
 
 ### Snapshots, not diffs
 
@@ -142,19 +180,92 @@ when you run `git diff` or `git log -p`. The diff is a _view_, generated on dema
 
 <SnapshotVsDiff />
 
-Notice that on each step, at least one file carries its blob hash over unchanged — that's the
-dedup doing its job. And the diff panel is honest about it: for an unchanged file there's simply
+Watch the tree at the top of the snapshot view. Each commit gets a _new_ tree — the listing
+changed, so its hash changed — but look at what it points at: on every step, at least one blob
+below it carries its hash over unchanged. **The new tree simply reuses the old blob.** That's the
+dedup doing its job. And the diff panel is honest about it too: for an unchanged file there's
 nothing to compute, because both snapshots already point at the same object.
 
-## Part 2 — Pointers &amp; Commands
+## Part 2 — The Pointers
 
 The object store from Part 1 is the hard part, and you've got it: blobs, trees, commits, all named
-by their content and sharing whatever they can. Here's the good news — **everything else Git does
-is just two moves**: _write a new object_ and _move a pointer_. Merge, rebase, reset, reflog — none
-of them are new magic. They're combinations of those two moves over the graph of commits. So let's
-look at that graph first.
+by their content and sharing whatever they can. But a pile of objects isn't yet a history — something
+has to say _which_ commit is the latest, and _where you are_ right now. That second half lives in the
+other folder you met back at `git init`: **`refs/`**. Everything in here is astonishingly light — a
+handful of tiny files that just hold a hash and **point**. Once you see the objects from Part 1 and
+the pointers here, you've seen all of Git — every command is some combination of _write an object_
+and _move a pointer_.
 
-### The commit graph (DAG)
+### Branches are just pointers
+
+Open GitHub and a branch looks _heavy_. It sits in its own lane, a whole parallel line of work,
+a place your code lives. Creating one feels like it should copy something. Switching to one feels
+like loading a different version of the project. It's easy to picture a branch as a big, separate
+container.
+
+Now open the branch itself. It lives in that `refs/` folder from earlier, at
+`.git/refs/heads/main`, and here is the _entire_ file:
+
+```
+8c3ec0c9a1f4b2e7d5a0c3e6f9b2d4a1c7e0f3b6
+```
+
+That's it. One line — a single 40-character hash, plus a newline. **A branch isn't a container that
+holds commits; it's a 41-byte text file that holds one commit's hash.** What GitHub draws as a fat
+parallel timeline is, under the hood, this: a sticky note with one address written on it.
+
+Once you see that, every "branchy" operation stops being scary and becomes a tiny file edit:
+
+- **Creating a branch** writes a new little file with one hash in it. That's why it's instant — Git
+  isn't copying your project, it's writing 41 bytes.
+- **Committing** overwrites the hash inside the current branch's file with the new commit's hash. The
+  branch "moves forward" — but nothing moved except one line of text.
+- **Deleting a branch** deletes the file. The commits it pointed at aren't touched; you only threw
+  away the sticky note.
+
+<BranchHeadSimulator />
+
+So a branch is just a name pointing at a commit. But if branches are only files sitting in a folder,
+how does Git know _which_ one you're currently on — which file a new commit should update? That's the
+job of one more pointer.
+
+### HEAD — where you are
+
+We just left off with a question: you've got two branch files now, `main` and `feature`,
+each holding a hash. When you type `git commit`, _which one_ gets rewritten? Git has to
+remember which branch you're standing on. That memory is a file too — and it's the last
+pointer you need.
+
+If you've written C, you already know this shape. A branch is a **pointer**: it holds an
+address (a hash) that leads to the commit. **HEAD is a pointer _to_ a pointer** — it doesn't
+hold a commit at all; it holds the name of a branch. Open it and you can read it straight off:
+
+```
+ref: refs/heads/main
+```
+
+That's the whole of `.git/HEAD`. Not a hash — a _reference_ to a branch. So the chain is:
+**HEAD → a branch → a commit.** HEAD says "you're on `main`," `main` says "the latest commit
+is this hash," and the commit is the actual snapshot. Two hops, both just text.
+
+Watch it move. Switching branches only rewrites that one line inside `.git/HEAD`; committing
+leaves HEAD alone and slides the _branch_ forward underneath it:
+
+<HeadPointer />
+
+This is why HEAD is clever, not complicated. Because it points at a **branch** and not a
+commit, you commit ten times and never touch `HEAD` once — it's aimed at `main`, and `main`
+does the moving. One tiny file quietly answers "where am I?" for every command you run.
+
+There's one exception worth naming: sometimes `.git/HEAD` holds a commit hash _directly_,
+skipping the branch — the pointer-to-a-pointer collapses into a plain pointer. That's the
+famous **detached HEAD** state, and it has a way of eating people's commits if they don't
+understand it. It's a whole story of its own, so it gets [its own post](/posts/git-detached-head).
+
+### The commit graph — the whole machine
+
+This is where everything you've learned comes together, so let's build a real history and
+watch all of it move at once.
 
 Every commit stores the hash of the commit that came before it — its **parent**. That single
 backward pointer is the thread that turns a pile of commits into a history. Follow the parents from
@@ -168,71 +279,51 @@ onto: **arrows point child → parent** (backwards in time, because a commit kno
 it, not after), and a **merge** commit is the only kind with **two** parents — it's where two lines
 of history tie back together.
 
-Build one yourself. **Commit** extends the current line, **branch** forks a new line off the current
-commit, and **merge** joins another branch back in. Watch the arrows: they always reach back toward
-older commits, and the merge commit is the one with two of them.
+Now drive it yourself — and this time watch **both** panels. On the left is the graph a Git GUI
+would draw you. On the right is everything Git _actually_ keeps in `.git`: the **object store**
+filling with commits (Part 1) and the **pointers** — `refs/heads/*` and `HEAD` — sliding around
+(Part 2). **Commit** extends the current line, **branch** forks a new one, and **merge** ties two
+lines back together.
 
 <DagExplorer />
 
-Every button here only ever _adds_ objects — a commit, or a new branch name. Nothing already in the
-graph is edited; that immutability is the whole reason Git can hand you the same commit hash forever
-and the reflog can dig up "lost" work later on.
-
-### Branches are just pointers
-
-{/* Intent: a branch is a 41-byte file holding one commit hash. HEAD is a pointer to a
-    branch (or, detached, straight to a commit). Committing = write object, move branch,
-    HEAD follows. Show the literal .git/HEAD and refs/heads/main file contents. */}
-
-{/* <BranchHeadSimulator /> — Phase 4 */}
-
-### The staging area (index)
-
-{/* Intent: the waiting room between working directory and history. working dir → git add
-    (blob written) → index → git commit (trees + commit written). Likely folded into the
-    flagship ObjectInspector; called out here so the narrative order is intact. */}
-
-### Merge
-
-{/* Intent: fast-forward (no divergence → just slide the pointer, zero new objects) vs
-    3-way merge (both sides moved → one brand-new merge commit with two parents). */}
-
-{/* <MergeSimulator /> — Phase 4 */}
-
-### Rebase
-
-{/* Intent: "moving commits" is a lie — objects are immutable. Rebase REPLAYS commits as
-    brand-new objects with new hashes and new parents; the originals are orphaned. This is
-    why you never rebase shared history. */}
-
-{/* <RebaseReplay /> — Phase 5 */}
-
-### Reset and revert
-
-{/* Intent: reset moves a branch pointer; soft/mixed/hard differ only in what they do to the
-    index and working directory. Revert moves nothing — it adds a new inverse commit on top. */}
-
-{/* <ResetModes /> — Phase 5 */}
-
-### Reflog — the safety net
-
-{/* Intent: Git journals every move HEAD makes (~90 days). "Lost" commits are only
-    unreferenced, still sitting in the object store. Recover one by finding its hash and
-    pointing a branch at it. Nothing is ever truly deleted. */}
-
-{/* <ReflogRescue /> — Phase 5 */}
+Look at what each button really does on the right. **Commit** writes one new object and moves a
+pointer. **Branch** writes a 41-byte file and moves `HEAD`. **Merge** writes one two-parent object
+and moves a pointer. **Checkout** moves nothing but `HEAD`. That's the entire vocabulary — every
+button is some mix of _write an object_ and _move a pointer_, and nothing already in the store is
+ever edited. That immutability is why Git can hand you the same commit hash forever, and why the
+reflog can dig up "lost" work long after you thought it was gone.
 
 ## Wrapping up
 
-{/* Intent: one-paragraph recap — it's all an object store (blobs/trees/commits) plus
-    pointers (branches/HEAD) moving across a DAG. Every command is some combination of
-    "write an object" and "move a pointer." */}
+That's the entire machine. Strip away the commands and Git is just two things: an **object
+store** — blobs, trees, and commits, each named by a hash of its own content — and a set of
+**pointers** — branches and `HEAD`, tiny files that hold a hash and point into that store. You
+initialize a repo and get both halves in one hidden folder; everything after that is objects
+being written and pointers being moved across a graph.
+
+Hold onto the one sentence the whole post keeps returning to: **every Git command is some
+combination of _write an object_ and _move a pointer_.** A commit writes objects and moves a
+branch. A branch is a pointer. `HEAD` is a pointer to a pointer. And because objects are named
+by their content, they're immutable — so "destructive" commands almost never destroy anything;
+they just move a pointer away and leave the object sitting there, recoverable.
+
+That last idea is the door into the rest of this series. Now that the model is in your head, the
+scary commands stop being magic — each one is just this model in motion:
+
+- **`git reset` — soft, mixed, hard.** One command, three effects, all explained by which pointer moves and what happens to the index.
+- **reset vs revert.** One rewrites history (moves a pointer back); the other adds a new inverse commit. Same goal, opposite mechanics.
+- **merge: fast-forward vs three-way.** When Git slides a pointer versus when it writes a real two-parent commit.
+- **rebase.** Why "moving commits" is a lie — it replays them as brand-new objects with new hashes.
+- **detached HEAD.** What happens when `HEAD` points straight at a commit, and how work gets orphaned.
+- **the reflog.** The safety net — how Git journals every pointer move, so "lost" commits are almost always one lookup away.
+
+Each is a short, focused follow-up that assumes exactly the model you just built. Pick whichever
+command has burned you before — you'll find there was never any magic in it, just objects and
+pointers.
 
 ### Further Reading
 
-{/* Intent: curate in a later phase. Seed list below. */}
-
-- [How Git Works Under the Hood](https://www.youtube.com/watch?v=Ala6PHlYjmw) — video walkthrough of the object model
-- [Git Internals — Commits, Branches, Merge, Rebase, Reflog](https://www.youtube.com/watch?v=Csd4lMKPC5g) — video on the pointer mechanics
-- [Pro Git — Git Internals: Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects) — the canonical reference
-- [A Visual Guide to Git Internals](https://www.freecodecamp.org/news/git-internals-objects-branches-create-repo/) — objects, branches, and building a repo by hand
+- [Pro Git — Git Internals: Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects) — the canonical reference for the object model
+- [Git Internals — Plumbing and Porcelain](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain) — the low-level commands (`hash-object`, `cat-file`) used to poke at `.git` by hand
+- [A Visual Guide to Git Internals](https://www.freecodecamp.org/news/git-internals-objects-branches-create-repo/) — objects, branches, and building a repo from scratch

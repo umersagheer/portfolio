@@ -1,0 +1,56 @@
+---
+  title: 'reset vs revert: One Rewrites History, One Adds to It'
+  summary: 'They both "undo" a commit, but they are opposites under the hood. reset moves a branch pointer backward (rewriting history); revert writes a brand-new inverse commit on top (preserving it). Here is exactly why that difference decides which one is safe to push.'
+  image: /images/posts/git-reset-vs-revert-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — reset vs revert. Part of the Git series.
+  ASSUMES flagship knowledge: branch = pointer, commits immutable, DAG of parents.
+  Pairs closely with [[git-reset-modes]] — this one is about DIRECTION (rewrite vs
+  append), that one is about reset's three modes. Cross-link, don't overlap.
+  Phase 0 = outline. draft:true.
+  ============================================================================
+*/}
+
+{/* Intent: hook. Both commands are reached for to "undo", so people treat them as
+    interchangeable and then get burned pushing a reset to a shared branch. */}
+
+## The one idea
+
+{/* THE sentence: reset moves a pointer BACKWARD (the commits ahead become
+    unreferenced — history is rewritten); revert leaves everything where it is and
+    ADDS a new commit that undoes the changes (history grows forward). One erases
+    from view, one records a correction. */}
+
+## reset: move the pointer back
+
+{/* Intent: brief — reset detail lives in [[git-reset-modes]]. Here only the shape:
+    branch pointer slides to an older commit, the commits after it are orphaned but
+    still in the object store. History LOOKS shorter. Safe locally, dangerous once
+    shared (others still have the old commits → divergence). */}
+
+## revert: add an inverse commit
+
+{/* Intent: commit C added 50 lines → `git revert C` creates commit D that removes
+    those same 50 lines. C still exists. The parent chain is untouched and only grows.
+    This is the "undo you can push" — you never rewrite shared history, you append to it. */}
+
+{/* <ResetVsRevert /> — interactive: same starting graph, two buttons. "reset" slides
+    the pointer back (ghosts the orphaned commits). "revert" appends a striped inverse
+    commit. Side-by-side so the rewrite-vs-append contrast is visual. Build when writing. */}
+
+## The rule that falls out of this
+
+{/* Intent: the practical payoff. Never rewrite history others have pulled → on shared
+    branches, revert. On your own un-pushed local work, reset is fine (and cleaner).
+    Callback to immutability; forward-link [[git-reflog-rescue]] for recovering a bad reset. */}
+
+### Further reading
+
+{/* Seed: flagship, git-reset-modes, git-reflog-rescue. */}

@@ -1,0 +1,60 @@
+---
+  title: 'git rebase Does Not Move Commits (Because It Cannot)'
+  summary: 'Rebase is described as "moving your commits onto a new base," but commits are immutable — nothing is ever moved. Rebase secretly replays your changes as brand-new commits with new hashes and new parents, and orphans the originals. That single fact explains every rebase warning you have ever ignored.'
+  image: /images/posts/git-rebase-replay-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — rebase = replay. Part of the Git series.
+  ASSUMES flagship: a commit's identity IS its hash; hash = f(content, metadata,
+  parent); commits immutable. This post leans HARD on that — the whole payoff is
+  "change the parent → different hash → it's a different commit, not a moved one."
+  Phase 0 = outline. draft:true.
+  ============================================================================
+*/}
+
+{/* Intent: hook. The name and the docs say "move". The reader has an immutability
+    model from the flagship. Those two things can't both be true — that tension is
+    the hook. Resolve it: the docs are lying (helpfully). */}
+
+## The one idea
+
+{/* THE sentence: a commit's identity is its hash, and the hash is computed from its
+    content AND its parent. Change the parent and you don't move the commit — you
+    compute a WHOLE DIFFERENT commit. So rebase can't move anything; it re-creates. */}
+
+## What rebase actually does, step by step
+
+{/* Intent: feature has B, C off an old base; main moved to Y. Rebase: read the CHANGES
+    B introduced → write a new commit B' with those changes but parent = Y → read C's
+    changes → write C' on top of B' → point feature at C'. Old B, C untouched, now
+    orphaned in the object store. Linear, clean history is the OUTPUT; new objects are
+    the mechanism. */}
+
+{/* <RebaseReplay /> — interactive: show B,C on old base + moved main. Hit "rebase" and
+    watch B',C' get WRITTEN as new nodes (new hashes) on top of main, the branch pointer
+    hop over, and the original B,C fade to orphaned. The new-hash reveal is the payoff.
+    Build when writing. */}
+
+## Why "never rebase shared history"
+
+{/* Intent: the practical rule, now obvious rather than memorized. If a colleague has the
+    OLD B,C and you replace them with new-hash B',C', Git sees two unrelated sets of commits
+    with the same changes → duplicate commits, conflict soup on the next merge. Safe on
+    local un-pushed branches; dangerous on anything others have pulled. Contrast with
+    [[git-merge-ff-vs-3way]]: merge preserves the true (messy) history, rebase rewrites a
+    clean (fictional) one — a trade, not a right answer. */}
+
+## Lost a commit mid-rebase?
+
+{/* Intent: reassurance + series glue. The originals are orphaned, not deleted — reflog
+    finds them. Forward-link [[git-reflog-rescue]]. */}
+
+### Further reading
+
+{/* Seed: flagship (hash/immutability), git-merge-ff-vs-3way, git-reflog-rescue. */}

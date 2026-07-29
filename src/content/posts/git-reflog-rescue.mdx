@@ -1,0 +1,63 @@
+---
+  title: 'The Reflog: Git Almost Never Actually Deletes Your Work'
+  summary: 'A bad reset, a wrong rebase, an orphaned commit — the work feels gone, and it usually is not. Git journals every move HEAD makes, and the "lost" commits are still sitting in the object store, one lookup away. This is the safety net that makes every other Git mistake recoverable.'
+  image: /images/posts/git-reflog-rescue-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — reflog rescue. THE PAYOFF post of the Git series.
+  Every other bite-sized post forward-links here ("...and reflog can save you").
+  ASSUMES flagship: commits are immutable and live in the object store; "deleting"
+  usually means "moving a pointer away", leaving the commit unreferenced but present.
+  Phase 0 = outline. draft:true.
+  ============================================================================
+*/}
+
+{/* Intent: hook. The 11pm-panic scenario the whole series opened with. You reset --hard,
+    you rebased wrong, the commit is "gone". Payoff moment: it almost certainly isn't. */}
+
+## The one idea
+
+{/* THE sentence: Git records every move HEAD makes — every commit, checkout, reset,
+    rebase — in a log (the reflog). Because commits are immutable and never really
+    deleted, that log is a map back to any state HEAD was ever in. */}
+
+## Why the commit is still there
+
+{/* Intent: callback to the whole flagship. reset/rebase/detached-HEAD "lose" commits by
+    making them UNREFERENCED, not by deleting them — the objects still sit in objects/.
+    They stay until garbage collection, which has a grace window (~90 days reachable, ~30
+    unreachable). So "5 minutes ago" is always recoverable. */}
+
+## The rescue, in two commands
+
+{/* Intent: `git reflog` → find the line/hash for the state you want back → `git branch
+    <name> <hash>` (or reset --hard to it) → a pointer now references that commit again,
+    it's reachable, it's yours. That's the entire recovery. Demystify it to two steps. */}
+
+{/* <ReflogRescue /> — interactive: replay a "disaster" (reset --hard past a commit → it
+    orphans), then show the reflog list, click the lost commit, watch a new branch pointer
+    snap onto it and pull it back into the reachable graph. The recovery-from-nothing moment.
+    Build when writing. */}
+
+## The one thing reflog can't save
+
+{/* Intent: honesty beat. Reflog recovers COMMITTED work. Uncommitted changes destroyed by
+    reset --hard were never objects in the first place → nothing to recover. The lesson:
+    commit early; a commit is a save point the reflog can always find. Callback [[git-reset-modes]]. */}
+
+## Recap of the series
+
+{/* Intent: this post closes the loop. One line each: reset moves a pointer, revert appends,
+    merge joins (ff or two-parent), rebase replays as new objects, detached HEAD floats —
+    and NONE of them can truly destroy a commit, because of everything the flagship showed.
+    Link back to all of them. */}
+
+### Further reading
+
+{/* Seed: flagship + every other bite-sized post. This is the hub. */}

@@ -67,8 +67,18 @@ export default function Edge({
 
       const startX = a.left - c.left + a.width / 2
       const startY = a.top - c.top + a.height / 2
-      const endX = b.left - c.left + b.width / 2
-      const endY = b.top - c.top + b.height / 2
+      const rawEndX = b.left - c.left + b.width / 2
+      const rawEndY = b.top - c.top + b.height / 2
+
+      // Stop the line short of the PARENT node so the arrowhead lands in the gap
+      // just before the box instead of being hidden underneath it. Pull the end
+      // back along the line direction by a fixed gap.
+      const dx = rawEndX - startX
+      const dy = rawEndY - startY
+      const len = Math.hypot(dx, dy) || 1
+      const GAP = 30
+      const endX = rawEndX - (dx / len) * GAP
+      const endY = rawEndY - (dy / len) * GAP
 
       const controlY = (startY + endY) / 2 - curvature
       setPath(
@@ -100,14 +110,14 @@ export default function Edge({
       <defs>
         <marker
           id={markerId}
-          markerWidth='7'
-          markerHeight='7'
-          refX='5.5'
-          refY='3'
+          markerWidth='9'
+          markerHeight='9'
+          refX='7'
+          refY='4'
           orient='auto'
           markerUnits='userSpaceOnUse'
         >
-          <path d='M0,0 L6,3 L0,6 Z' fill={stroke} />
+          <path d='M0,0 L8,4 L0,8 Z' fill={stroke} />
         </marker>
       </defs>
       <motion.path

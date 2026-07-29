@@ -1,0 +1,57 @@
+---
+  title: 'Detached HEAD Is Not an Error (And Why Commits Can Vanish There)'
+  summary: 'Git says "you are in detached HEAD state" and everyone panics. It just means HEAD points straight at a commit instead of at a branch. Nothing is broken — but commits you make here have no branch holding them, so here is exactly how work gets orphaned and how to keep it.'
+  image: /images/posts/git-detached-head-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — detached HEAD & orphaned commits. Part of the Git series.
+  ASSUMES flagship: HEAD normally points to a branch, which points to a commit;
+  a commit needs something pointing at it to stay reachable. This post is the
+  "what if HEAD skips the branch and points straight at a commit" case.
+  Phase 0 = outline. draft:true.
+  ============================================================================
+*/}
+
+{/* Intent: hook. The word "detached" + a scary-sounding warning makes people think
+    they broke something. They didn't. Defuse it in the first breath. */}
+
+## The one idea
+
+{/* THE sentence: normally HEAD → branch → commit. In detached HEAD, HEAD → commit
+    directly, with no branch in the middle. You can still look around and still
+    commit — but there's no branch pointer following you, so new commits have nothing
+    holding them once you leave. */}
+
+## How you get here
+
+{/* Intent: `git checkout <hash>` / checking out a tag / a remote commit. Show the literal
+    difference: .git/HEAD holds "ref: refs/heads/main" normally vs a raw 40-char hash when
+    detached. Concrete, file-level — callback to the flagship's HEAD-is-a-file idea. */}
+
+{/* <DetachedHeadDemo /> — interactive: toggle attached/detached. Attached → commit, branch
+    pointer follows. Detached → commit, HEAD moves but NO branch follows; switch away and
+    watch the new commit float free (orphaned). "Save" it by creating a branch on it. Build
+    when writing. */}
+
+## The trap: orphaned commits
+
+{/* Intent: the real-world horror story (from the source videos) — dev checks out an old
+    commit, fixes a bug, commits, runs `git switch main`, the fix is gone. Because no branch
+    ever pointed at it → unreachable → eventually garbage-collected. This is WHY Git warns
+    you: not because you broke it, but because it can't hold that commit for you. */}
+
+## Keeping the work
+
+{/* Intent: the fix is one command — `git switch -c <name>` (or branch) while still detached
+    makes a branch point at the commit → reachable → safe. And if you already left: reflog.
+    Forward-link [[git-reflog-rescue]]. */}
+
+### Further reading
+
+{/* Seed: flagship (HEAD/branch pointers), git-reflog-rescue. */}

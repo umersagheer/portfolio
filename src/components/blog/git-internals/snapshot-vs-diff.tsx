@@ -2,17 +2,19 @@
 
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, cn } from '@heroui/react'
+import { Button, Tab, Tabs, cn } from '@heroui/react'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CameraIcon,
+  FileIcon,
+  FolderIcon,
   GitCompareIcon,
   LinkIcon
 } from 'lucide-react'
 
 import GitDemoContainer from './shared/git-demo-container'
-import GitObjectNode from './shared/git-object-node'
+import StageDots from './shared/stage-dots'
 import { hashContent } from './shared/hashes'
 import { diffLines, diffStat, type DiffRow } from './shared/diff'
 import { useGitMotion } from './shared/use-git-motion'
@@ -83,43 +85,127 @@ function blobOf(step: number, name: FileName): string {
 
 // ── Snapshot view: every file, as a blob, unchanged ones flagged as shared ────
 
-function SnapshotView({ step }: { step: number }) {
-  const { nodeAppear } = useGitMotion()
+/** Tree hash for a snapshot — a function of its (filename → blob-hash) listing. */
+function treeOf(step: number): string {
+  const listing = FILE_ORDER.map(n => `${n}:${blobOf(step, n)}`).join(',')
+  return hashContent(listing, 'tree')
+}
 
+function SnapshotView({ step }: { step: number }) {
   return (
-    <div className='flex flex-col gap-2'>
-      <div className='text-[10px] uppercase tracking-wide text-secondary'>
-        blobs in this snapshot
+    <div className='flex flex-col gap-3'>
+      {/* The tree that names this snapshot. Its hash changes each commit (the
+          listing changed), but most of what it POINTS AT is reused unchanged. */}
+      <div className='flex flex-col items-center gap-1'>
+        <div className='text-[10px] uppercase tracking-wide text-primary'>
+          the tree for this commit
+        </div>
+        <TreeBox hash={treeOf(step)} />
       </div>
+
+      {/* connector: the tree points down at its three files */}
+      <div className='mx-auto h-4 w-px bg-default-300' aria-hidden />
+      <div className='text-center text-[10px] uppercase tracking-wide text-default-400'>
+        points at
+      </div>
+
+      {/* Keyed by FILENAME, not step — an unchanged blob is the *same* element
+          across commits and never re-animates. Stillness = "same object, reused". */}
       <div className='grid gap-2 sm:grid-cols-3'>
         {FILE_ORDER.map(name => {
           const hash = blobOf(step, name)
           // "Shared" when this same file had this exact blob in the previous
-          // commit — its content didn't change, so Git reuses the same object.
+          // commit — its content didn't change, so the tree reuses the same object.
           const shared = step > 0 && blobOf(step - 1, name) === hash
 
           return (
-            <motion.div
-              key={name}
-              layout
-              {...nodeAppear}
-              className='flex flex-col items-start gap-1'
-            >
-              <GitObjectNode type='blob' hash={hash} label={name} hideBadge compact />
+            <div key={name} className='flex flex-col items-start gap-1'>
+              <BlobBox hash={hash} label={name} />
               {shared ? (
                 <span className='inline-flex items-center gap-1 text-[10px] font-medium text-success'>
                   <LinkIcon size={10} />
-                  same blob as before — reused, not re-stored
+                  tree reuses the same blob — not re-stored
                 </span>
               ) : (
                 <span className='text-[10px] text-default-400'>
                   {step === 0 ? 'first version' : 'new content, new blob'}
                 </span>
               )}
-            </motion.div>
+            </div>
           )
         })}
       </div>
+    </div>
+  )
+}
+
+/**
+ * The tree node. Like BlobBox, the shell stays mounted and only the hash fades
+ * out→in when the listing changes — so the reader sees "new tree, but it still
+ * points at the unchanged blobs below."
+ */
+function TreeBox({ hash }: { hash: string }) {
+  return (
+    <div className='inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border border-primary bg-default-50 p-1.5'>
+      <div className='flex items-center gap-1'>
+        <FolderIcon size={12} className='text-primary' aria-hidden />
+        <span className='rounded bg-primary px-1 text-[9px] font-semibold uppercase tracking-wide text-primary-foreground'>
+          tree
+        </span>
+      </div>
+      <div className='relative h-4 w-full text-center'>
+        <AnimatePresence mode='wait'>
+          <motion.code
+            key={hash}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className='absolute inset-0 font-sourceCodePro text-xs font-semibold text-primary'
+          >
+            {hash}
+          </motion.code>
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * One blob box that stays mounted across steps, so an *unchanged* blob never
+ * moves. Only the hash text lives inside an AnimatePresence keyed by the hash:
+ * when the file changes, the old hash fades fully OUT and the new one fades IN
+ * (a real out→in swap, not a bounce). Unchanged hash ⇒ same key ⇒ no animation.
+ */
+function BlobBox({ hash, label }: { hash: string; label: string }) {
+  return (
+    <div className='inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border border-secondary bg-default-50 p-1.5'>
+      <div className='flex items-center gap-1'>
+        <FileIcon size={12} className='text-secondary' aria-hidden />
+      </div>
+
+      {/* only this fades — box shell holds still */}
+      <div className='relative h-4'>
+        <AnimatePresence mode='wait'>
+          <motion.code
+            key={hash}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className='absolute inset-0 font-sourceCodePro text-xs font-semibold text-secondary'
+          >
+            {hash}
+          </motion.code>
+        </AnimatePresence>
+      </div>
+
+      <span
+        className='max-w-[7rem] truncate text-[10px] text-default-500'
+        title={label}
+      >
+        {label}
+      </span>
     </div>
   )
 }
@@ -215,23 +301,6 @@ export default function SnapshotVsDiff() {
   const atStart = step === 0
   const atEnd = step === HISTORY.length - 1
 
-  const modeButton = (id: ViewMode, label: string, icon: React.ReactNode) => (
-    <button
-      type='button'
-      onClick={() => setView(id)}
-      aria-pressed={view === id}
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-colors',
-        view === id
-          ? 'bg-primary text-primary-foreground shadow-sm'
-          : 'text-default-500 hover:text-foreground'
-      )}
-    >
-      {icon}
-      {label}
-    </button>
-  )
-
   return (
     <GitDemoContainer
       title='Snapshots, not diffs'
@@ -279,17 +348,50 @@ export default function SnapshotVsDiff() {
             </Button>
           </div>
 
-          {/* Mode toggle */}
-          <div className='inline-flex items-center gap-1 rounded-lg bg-default-100 p-1 shadow-sm'>
-            {modeButton('snapshot', 'What Git stores', <CameraIcon size={13} />)}
-            {modeButton('diff', 'What Git shows', <GitCompareIcon size={13} />)}
-          </div>
+          {/* Mode toggle — the shared HeroUI Tabs (same as the navbar) */}
+          <Tabs
+            aria-label='What Git stores vs what Git shows'
+            selectedKey={view}
+            onSelectionChange={key => setView(key as ViewMode)}
+            variant='bordered'
+            radius='sm'
+            size='sm'
+          >
+            <Tab
+              key='snapshot'
+              title={
+                <span className='flex items-center gap-1.5'>
+                  <CameraIcon size={13} />
+                  What Git stores
+                </span>
+              }
+            />
+            <Tab
+              key='diff'
+              title={
+                <span className='flex items-center gap-1.5'>
+                  <GitCompareIcon size={13} />
+                  What Git shows
+                </span>
+              }
+            />
+          </Tabs>
         </div>
 
-        {/* The panel */}
-        <div className='rounded-xl bg-default-100 p-3 shadow-sm sm:p-4'>
+        {/* The panel — keyed by VIEW only, so flipping snapshot↔diff cross-fades,
+            but stepping between commits keeps the panel mounted. That lets an
+            unchanged blob (keyed by filename inside) sit perfectly still. */}
+        <div
+          className={cn(
+            'relative overflow-hidden rounded-xl p-3 shadow-sm sm:p-4',
+            view === 'snapshot'
+              ? 'border border-default-100 bg-background'
+              : 'bg-default-100'
+          )}
+        >
+          {view === 'snapshot' && <StageDots />}
           <AnimatePresence mode='wait'>
-            <motion.div key={`${view}-${step}`} {...fade}>
+            <motion.div key={view} {...fade} className='relative'>
               {view === 'snapshot' ? <SnapshotView step={step} /> : <DiffView step={step} />}
             </motion.div>
           </AnimatePresence>

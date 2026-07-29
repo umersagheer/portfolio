@@ -13,6 +13,7 @@ export type PostMetadata = {
   publishedAt?: string
   readingTime?: number
   category: PostCategory
+  draft?: boolean
   postId: string
 }
 

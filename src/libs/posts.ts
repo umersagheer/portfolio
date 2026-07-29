@@ -77,6 +77,7 @@ function getPostMetadata(filepath: string): PostMetadata {
 function getAllPostMetadata() {
   return getPostFiles()
     .map(file => getPostMetadata(file))
+    .filter(post => !post.draft)
     .sort((a, b) => {
       if (new Date(a.publishedAt ?? '') < new Date(b.publishedAt ?? '')) {
         return 1

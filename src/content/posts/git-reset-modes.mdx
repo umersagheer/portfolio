@@ -1,0 +1,68 @@
+---
+  title: 'git reset, Demystified: --soft vs --mixed vs --hard'
+  summary: 'Three flags, one branch pointer, three very different outcomes. See exactly what --soft, --mixed, and --hard do to your branch, your staging area, and your working directory — and why only one of them can lose work.'
+  image: /images/posts/git-reset-modes-cover.png
+  author: 'Umer Sagheer'
+  publishedAt: '2026-07-19'
+  category: 'bite-sized'
+  draft: true
+---
+
+{/*
+  ============================================================================
+  BITE-SIZED — git reset modes. Part of the Git series.
+  ASSUMES the reader did the flagship "Git, Under the Hood": they already know
+  a branch is a pointer, commits are immutable, HEAD tracks the current branch,
+  and the index is the staging area. Do NOT re-teach those — spend them.
+  Phase 0 = this outline. draft:true keeps it off /posts until launch.
+  ============================================================================
+*/}
+
+{/* Intent: hook. reset feels scary because people conflate three modes into one
+    "undo". The one idea: reset just moves the branch pointer — the flags only
+    decide whether the index and working directory come along for the ride. */}
+
+## The one idea
+
+{/* THE load-bearing sentence: `git reset` moves the current branch pointer to
+    another commit. That's the whole verb. Soft/mixed/hard differ ONLY in what
+    they do to the two things in front of the commit: the index and the working
+    directory. Callback to flagship: "a branch is just a pointer" — this is that
+    fact, weaponized. */}
+
+## Three places your code lives
+
+{/* Intent: quick refresher of the three areas (working dir / index / HEAD-commit)
+    since all three modes are defined by which of these they touch. Keep tight —
+    reader knows the index from the flagship; this is just naming the columns of
+    the table the demo will animate. */}
+
+{/* <ResetModes /> — interactive: pick a mode, watch which of the three columns
+    (branch pointer, index, working dir) changes color. Phase: build when writing. */}
+
+### --soft — move the pointer, keep everything staged
+
+{/* Intent: pointer moves back; index + working dir untouched → the undone changes
+    sit staged, ready to recommit. Use case: squashing several commits into one. */}
+
+### --mixed (the default) — move the pointer, unstage
+
+{/* Intent: pointer moves, index reset to match target, working dir untouched →
+    changes still in your files but unstaged. Use case: restage differently. */}
+
+### --hard — move the pointer, wipe everything
+
+{/* Intent: pointer moves, index reset, working dir reset → uncommitted changes in
+    TRACKED files are gone. The one destructive mode. Untracked files survive even
+    --hard (worth stating explicitly — common misconception). */}
+
+## "But I lost a commit"
+
+{/* Intent: the reassurance beat. The commits you reset PAST aren't deleted — they're
+    unreferenced, still in the object store (callback: immutability from flagship).
+    reflog can point a branch back at them. Forward-link to [[git-reflog-rescue]].
+    The ONLY unrecoverable thing is uncommitted work destroyed by --hard. */}
+
+### Further reading
+
+{/* Seed: link flagship + git-reflog-rescue. Curate at write time. */}

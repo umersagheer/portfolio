@@ -12,7 +12,8 @@ export function slugify(text: string): string {
 }
 
 export function extractToc(content: string): TocItem[] {
-  const headingRegex = /^(#{2})\s+(.+)$/gm
+  // Capture h2 AND h3 so the ToC can nest (## Part 1/2 top-level, ### as children).
+  const headingRegex = /^(#{2,3})\s+(.+)$/gm
   const toc: TocItem[] = []
   let match
 
