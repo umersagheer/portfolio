@@ -5,6 +5,15 @@ import { Project, ProjectMetadata } from '@/types'
 
 const rootDirectory = path.join(process.cwd(), 'src', 'content', 'projects')
 
+// The directory also holds index.tsx (the structured project data), which is not
+// a project page — only .mdx files are.
+function getProjectFiles() {
+  return fs
+    .readdirSync(rootDirectory, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith('.mdx'))
+    .map(entry => entry.name)
+}
+
 export async function getProjectById(
   projectId: string
 ): Promise<Project | null> {
@@ -21,9 +30,7 @@ export async function getProjectById(
 }
 
 export async function getProjects(limit?: number) {
-  const files = fs.readdirSync(rootDirectory)
-
-  const projects = files
+  const projects = getProjectFiles()
     .map(file => getProjectMetadata(file))
     .sort((a, b) => {
       if (new Date(a.publishedAt ?? '') < new Date(b.publishedAt ?? '')) {
