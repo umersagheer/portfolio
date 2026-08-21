@@ -5,6 +5,10 @@ export type Post = {
 
 export type PostCategory = 'post' | 'bite-sized'
 
+// Deliberately coarse and mutually exclusive — one bucket per post, so the
+// filter row never offers two chips that return overlapping sets.
+export type PostTopic = 'Git' | 'Frontend' | 'Backend'
+
 export type PostMetadata = {
   title?: string
   summary?: string
@@ -13,6 +17,7 @@ export type PostMetadata = {
   publishedAt?: string
   readingTime?: number
   category: PostCategory
+  topic?: PostTopic
   draft?: boolean
   postId: string
 }
