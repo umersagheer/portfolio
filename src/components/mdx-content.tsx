@@ -40,6 +40,7 @@ import ObjectLadder from '@/components/blog/git-internals/object-ladder'
 import BranchHeadSimulator from '@/components/blog/git-internals/branch-head-simulator'
 import HeadPointer from '@/components/blog/git-internals/head-pointer'
 import StagingArea from '@/components/blog/git-internals/staging-area'
+import ResetModes from '@/components/blog/git-internals/reset-modes'
 import SnapshotVsDiff from '@/components/blog/git-internals/snapshot-vs-diff'
 import DagExplorer from '@/components/blog/git-internals/dag-explorer'
 
@@ -148,6 +149,7 @@ const components = {
   BranchHeadSimulator,
   HeadPointer,
   StagingArea,
+  ResetModes,
   SnapshotVsDiff,
   DagExplorer,
   CheckItem
