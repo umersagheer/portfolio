@@ -31,10 +31,13 @@ export const Navbar = () => {
           onSelectionChange={key => setTheme(key as string)}
           variant='primary'
         >
-          <Tabs.ListContainer>
+          {/* Container styled to match the nav pill in ui/tabs.tsx: v3's default
+              Tabs container is a solid bg-default block, the v2 `bordered`
+              variant was a transparent bordered pill. */}
+          <Tabs.ListContainer className='border-border rounded-[12px] border-2 bg-transparent shadow-xs backdrop-blur-lg'>
             <Tabs.List
               aria-label='Theme mode'
-              className='gap-1 backdrop-blur-lg'
+              className='gap-1 bg-transparent p-1'
             >
               <Tabs.Tab id='light' className='px-0.5'>
                 <Tooltip>
