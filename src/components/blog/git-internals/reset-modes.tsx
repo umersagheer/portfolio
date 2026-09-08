@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Checkbox, Tab, Tabs, cn } from '@heroui/react'
+import { Checkbox, Tabs, cn } from '@heroui/react'
 import {
   FileIcon,
   GitCommitHorizontalIcon,
@@ -149,20 +149,23 @@ export default function ResetModes() {
       {/* ── controls: HeroUI tabs + stage toggles + run/commit ── */}
       <div className='mb-4 flex flex-wrap items-center gap-3'>
         <Tabs
-          aria-label='reset mode'
           selectedKey={mode}
           onSelectionChange={k => {
             setMode(k as Mode)
             setPhase('idle')
           }}
-          variant='bordered'
-          radius='sm'
-          size='sm'
-          classNames={{ tabList: 'font-sourceCodePro' }}
+          variant='primary'
         >
-          {MODES.map(m => (
-            <Tab key={m.id} title={m.label} />
-          ))}
+          <Tabs.ListContainer>
+            <Tabs.List aria-label='reset mode' className='font-sourceCodePro'>
+              {MODES.map(m => (
+                <Tabs.Tab key={m.id} id={m.id}>
+                  {m.label}
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
 
         {phase === 'idle' && !anyModified && (

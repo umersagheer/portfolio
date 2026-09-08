@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Tab, Button } from '@heroui/react'
+import { Tabs, Button } from '@heroui/react'
 import { IconBroadcast, IconMessage } from '@tabler/icons-react'
 import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
@@ -57,39 +57,36 @@ export default function RoutingPatternsDemo() {
       description='Toggle between patterns to see which clients receive the message'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={pattern}
         onSelectionChange={key => setPattern(key as Pattern)}
         className='mb-4'
       >
-        <Tab
-          key='broadcast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconBroadcast size={14} />
-              <span>Broadcast</span>
-            </div>
-          }
-        />
-        <Tab
-          key='unicast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconMessage size={14} />
-              <span>Unicast</span>
-            </div>
-          }
-        />
-        <Tab
-          key='multicast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconBroadcast size={14} />
-              <span>Multicast</span>
-            </div>
-          }
-        />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='broadcast'>
+              <div className='flex items-center gap-1.5'>
+                <IconBroadcast size={14} />
+                <span>Broadcast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='unicast'>
+              <div className='flex items-center gap-1.5'>
+                <IconMessage size={14} />
+                <span>Unicast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='multicast'>
+              <div className='flex items-center gap-1.5'>
+                <IconBroadcast size={14} />
+                <span>Multicast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       {/* Controls for unicast/multicast */}

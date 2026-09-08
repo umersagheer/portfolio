@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import formatDate from '@/libs/utils'
 import { PostCategory, PostMetadata } from '@/types'
 import NextImage from 'next/image'
-import { Link } from '@heroui/react'
 import {
   IconClock,
   IconFileInvoice,

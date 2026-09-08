@@ -1,4 +1,4 @@
-import { cn } from '@heroui/react'
+import { cn } from 'tailwind-variants'
 import { useId } from 'react'
 
 interface GridPatternProps extends React.SVGProps<SVGSVGElement> {

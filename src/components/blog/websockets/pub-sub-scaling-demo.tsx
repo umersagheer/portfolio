@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tabs, Tab } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import { IconCheck, IconX } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
@@ -122,15 +122,27 @@ export default function PubSubScalingDemo() {
       description='See why a single server works but horizontal scaling needs a message broker'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={mode}
         onSelectionChange={key => setMode(key as Mode)}
         className='mb-4'
       >
-        <Tab key='single' title='Single Server' />
-        <Tab key='no-broker' title='Multi (No Broker)' />
-        <Tab key='redis' title='Multi + Redis' />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='single'>
+              Single Server
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='no-broker'>
+              Multi (No Broker)
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='redis'>
+              Multi + Redis
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <AnimatePresence mode='wait'>

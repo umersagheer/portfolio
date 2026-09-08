@@ -2,7 +2,7 @@ import { JSX } from 'react'
 import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
-import { Checkbox } from '@heroui/react'
+import CheckItem from '@/components/check-item'
 import Counter from '@/components/counter'
 import { slugify } from '@/libs/toc'
 import LayoutAnimationDemo from '@/components/blog/layout-animations/layout-animation-demo'
@@ -95,16 +95,6 @@ function Anchor({
     >
       {children}
     </a>
-  )
-}
-
-function CheckItem({ label }: { label: string }) {
-  return (
-    <div className='my-1'>
-      <Checkbox defaultSelected={false} className='rounded-sm'>
-        <span className='text-foreground text-sm'>{label}</span>
-      </Checkbox>
-    </div>
   )
 }
 

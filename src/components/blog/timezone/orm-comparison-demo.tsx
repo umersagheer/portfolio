@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Tab, Alert, Button } from '@heroui/react'
+import { Tabs, Alert, Button } from '@heroui/react'
 import { IconArrowRight } from '@tabler/icons-react'
 import BrandIcon from '@/components/blog/shared/brand-icon'
 import DemoContainer from './demo-container'
@@ -126,8 +126,7 @@ export default function ORMComparisonDemo() {
       description='See what each ORM maps DateTime to — and how to opt into timezone awareness'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={orm}
         onSelectionChange={key => {
           setOrm(key as ORM)
@@ -135,18 +134,22 @@ export default function ORMComparisonDemo() {
         }}
         className='mb-4'
       >
-        <Tab
-          key='prisma'
-          title={<ORMTabTitle slug='prisma' label='Prisma' />}
-        />
-        <Tab
-          key='typeorm'
-          title={<ORMTabTitle slug='typeorm' label='TypeORM' />}
-        />
-        <Tab
-          key='drizzle'
-          title={<ORMTabTitle slug='drizzle' label='Drizzle' />}
-        />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='prisma'>
+              <ORMTabTitle slug='prisma' label='Prisma' />
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='typeorm'>
+              <ORMTabTitle slug='typeorm' label='TypeORM' />
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='drizzle'>
+              <ORMTabTitle slug='drizzle' label='Drizzle' />
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <div className='bg-default-100 text-default-500 mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs'>

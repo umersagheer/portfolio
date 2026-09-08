@@ -1,5 +1,5 @@
+import Link from 'next/link'
 import React from 'react'
-import { Link } from '@heroui/react'
 import { ArrowRightIcon } from 'lucide-react'
 import Heading from './heading'
 import Projects from './projects'

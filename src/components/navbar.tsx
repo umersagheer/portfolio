@@ -1,6 +1,6 @@
 'use client'
 
-import { Tab, Tabs, Tooltip } from '@heroui/react'
+import { Tabs, Tooltip } from '@heroui/react'
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import {
@@ -27,48 +27,41 @@ export const Navbar = () => {
         {/* Gradient blob */}
 
         <Tabs
-          aria-label='Theme mode'
           selectedKey={theme}
           onSelectionChange={key => setTheme(key as string)}
-          radius='sm'
-          variant='bordered'
-          // size='sm'
-          classNames={{
-            tabList: 'gap-1 backdrop-blur-lg',
-            tab: ' px-0.5'
-          }}
+          variant='primary'
         >
-          <Tab
-            key={'light'}
-            title={
-              <Tooltip>
-                <IconSunHighFilled className='size-4 md:size-5' />
+          <Tabs.ListContainer>
+            <Tabs.List
+              aria-label='Theme mode'
+              className='gap-1 backdrop-blur-lg'
+            >
+              <Tabs.Tab id='light' className='px-0.5'>
+                <Tooltip>
+                  <IconSunHighFilled className='size-4 md:size-5' />
 
-                <Tooltip.Content>Light Mode</Tooltip.Content>
-              </Tooltip>
-            }
-          />
+                  <Tooltip.Content>Light Mode</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='dark' className='px-0.5'>
+                <Tooltip>
+                  <IconMoonFilled className='size-4 md:size-5' />
 
-          <Tab
-            key={'dark'}
-            title={
-              <Tooltip>
-                <IconMoonFilled className='size-4 md:size-5' />
+                  <Tooltip.Content>Dark Mode</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='system' className='px-0.5'>
+                <Tooltip>
+                  <IconDeviceDesktopFilled className='size-4 md:size-5' />
 
-                <Tooltip.Content>Dark Mode</Tooltip.Content>
-              </Tooltip>
-            }
-          />
-          <Tab
-            key={'system'}
-            title={
-              <Tooltip>
-                <IconDeviceDesktopFilled className='size-4 md:size-5' />
-
-                <Tooltip.Content>System Preferences</Tooltip.Content>
-              </Tooltip>
-            }
-          />
+                  <Tooltip.Content>System Preferences</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
         <ExpandableTabs tabs={navLinks} />
       </div>

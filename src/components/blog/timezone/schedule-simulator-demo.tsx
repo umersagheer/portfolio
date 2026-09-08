@@ -314,10 +314,11 @@ export default function ScheduleSimulatorDemo() {
           isDisabled={simState === 'advancing'}
           onPress={simState === 'idle' ? simulate : reset}
         >
-          {' '}
-          simState === 'idle' ? ( <IconPlayerPlay size={14} />
+          {simState === 'idle' ? (
+            <IconPlayerPlay size={14} />
           ) : (
-          <IconRefresh size={14} />)
+            <IconRefresh size={14} />
+          )}
           {simState === 'idle'
             ? 'Fast Forward'
             : simState === 'advancing'

@@ -1,3 +1,5 @@
+'use client'
+
 import { Card } from '@heroui/react'
 import React from 'react'
 import Heading from './heading'

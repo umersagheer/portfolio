@@ -1,5 +1,5 @@
 'use client'
-import { SearchField, Tab, Tabs, cn } from '@heroui/react'
+import { SearchField, Tabs, cn } from '@heroui/react'
 import { useMemo, useState } from 'react'
 import Posts from './posts'
 import { SearchIcon } from 'lucide-react'
@@ -52,31 +52,32 @@ export default function PostsWithSearch({ posts }: props) {
     <div className='space-y-5'>
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <Tabs
-          size='sm'
-          radius='sm'
-          variant='bordered'
+          variant='primary'
           selectedKey={category}
           onSelectionChange={key => setCategory(key as PostFilter)}
         >
-          <Tab key='all' title='All' />
-          <Tab
-            key='post'
-            title={
-              <div className='flex items-center space-x-2'>
-                <IconFileInvoiceFilled size={18} />
-                <span>Posts</span>
-              </div>
-            }
-          />
-          <Tab
-            key='bite-sized'
-            title={
-              <div className='flex items-center space-x-2'>
-                <IconFilePowerFilled size={18} />
-                <span>Bite-sized</span>
-              </div>
-            }
-          />
+          <Tabs.ListContainer>
+            <Tabs.List>
+              <Tabs.Tab id='all'>
+                All
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='post'>
+                <div className='flex items-center space-x-2'>
+                  <IconFileInvoiceFilled size={18} />
+                  <span>Posts</span>
+                </div>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='bite-sized'>
+                <div className='flex items-center space-x-2'>
+                  <IconFilePowerFilled size={18} />
+                  <span>Bite-sized</span>
+                </div>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
 
         <SearchField

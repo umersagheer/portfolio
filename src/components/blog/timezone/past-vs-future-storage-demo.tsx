@@ -125,10 +125,7 @@ export default function PastVsFutureStorageDemo() {
               className='h-6 min-w-0 px-2 text-[10px]'
               onPress={() => setDstToggle(t => !t)}
             >
-              dstToggle ? (
-              <IconSun size={12} />
-              ) : (
-              <IconSnowflake size={12} />)
+              {dstToggle ? <IconSun size={12} /> : <IconSnowflake size={12} />}
               {dstToggle ? 'Summer (EDT)' : 'Winter (EST)'}
             </Button>
           </div>

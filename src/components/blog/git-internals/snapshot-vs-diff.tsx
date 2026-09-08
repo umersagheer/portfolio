@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tab, Tabs, cn } from '@heroui/react'
+import { Button, Tabs, cn } from '@heroui/react'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -360,31 +360,28 @@ export default function SnapshotVsDiff() {
 
           {/* Mode toggle — the shared HeroUI Tabs (same as the navbar) */}
           <Tabs
-            aria-label='What Git stores vs what Git shows'
             selectedKey={view}
             onSelectionChange={key => setView(key as ViewMode)}
-            variant='bordered'
-            radius='sm'
-            size='sm'
+            variant='primary'
           >
-            <Tab
-              key='snapshot'
-              title={
-                <span className='flex items-center gap-1.5'>
-                  <CameraIcon size={13} />
-                  What Git stores
-                </span>
-              }
-            />
-            <Tab
-              key='diff'
-              title={
-                <span className='flex items-center gap-1.5'>
-                  <GitCompareIcon size={13} />
-                  What Git shows
-                </span>
-              }
-            />
+            <Tabs.ListContainer>
+              <Tabs.List aria-label='What Git stores vs what Git shows'>
+                <Tabs.Tab id='snapshot'>
+                  <span className='flex items-center gap-1.5'>
+                    <CameraIcon size={13} />
+                    What Git stores
+                  </span>
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id='diff'>
+                  <span className='flex items-center gap-1.5'>
+                    <GitCompareIcon size={13} />
+                    What Git shows
+                  </span>
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
         </div>
 

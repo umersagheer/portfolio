@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Chip, Switch, Tab, Tabs, cn } from '@heroui/react'
+import { Chip, Switch, Tabs, cn } from '@heroui/react'
 import {
   AlertTriangleIcon,
   ArrowRightIcon,
@@ -513,14 +513,22 @@ export default function ExpoProtectedRoutesDemo() {
         </div>
 
         <Tabs
-          size='sm'
-          radius='sm'
-          variant='bordered'
+          variant='primary'
           selectedKey={mode}
           onSelectionChange={key => setMode(key as DemoMode)}
         >
-          <Tab key='before' title='useEffect redirects' />
-          <Tab key='after' title='Stack.Protected' />
+          <Tabs.ListContainer>
+            <Tabs.List>
+              <Tabs.Tab id='before'>
+                useEffect redirects
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='after'>
+                Stack.Protected
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
       </div>
 

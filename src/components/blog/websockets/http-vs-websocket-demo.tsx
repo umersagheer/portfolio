@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tabs, Tab } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
@@ -21,14 +21,23 @@ export default function HttpVsWebSocketDemo() {
   return (
     <DemoContainer title='HTTP vs WebSocket'>
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={protocol}
         onSelectionChange={key => setProtocol(key as Protocol)}
         className='mb-4'
       >
-        <Tab key='http' title='HTTP' />
-        <Tab key='websocket' title='WebSocket' />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='http'>
+              HTTP
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='websocket'>
+              WebSocket
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <AnimatePresence mode='wait'>

@@ -110,6 +110,9 @@ importers:
       sugar-high:
         specifier: ^0.7.0
         version: 0.7.5
+      tailwind-variants:
+        specifier: ^3.3.1
+        version: 3.3.1(tailwind-merge@3.4.0)(tailwindcss@4.3.3)
       zod:
         specifier: ^3.23.8
         version: 3.25.76

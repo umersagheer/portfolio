@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tabs, Tab } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import {
   IconApi,
   IconDatabase,
@@ -176,17 +176,23 @@ export default function DatePipelineDemo() {
       description='Follow a timestamp from user input to database and back — toggle timezones to see how the same moment transforms'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={timezone}
         onSelectionChange={key => {
           setTimezone(key as Timezone)
         }}
         className='mb-4'
       >
-        {TIMEZONE_OPTIONS.map(tz => (
-          <Tab key={tz.key} title={tz.label} />
-        ))}
+        <Tabs.ListContainer>
+          <Tabs.List>
+            {TIMEZONE_OPTIONS.map(tz => (
+              <Tabs.Tab key={tz.key} id={tz.key}>
+                {tz.label}
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <div

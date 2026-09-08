@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
 import NextImage from 'next/image'
-import { Link } from '@heroui/react'
 
 import { getProjectById, getProjects } from '@/libs/projects'
 import formatDate from '@/libs/utils'

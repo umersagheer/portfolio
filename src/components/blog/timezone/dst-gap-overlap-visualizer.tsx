@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tabs, Tab } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import { IconPlayerPlay } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 import AnimatedTime from './animated-time'
@@ -199,14 +199,23 @@ export default function DSTGapOverlapVisualizer() {
       description='Watch the wall clock jump (spring) or rewind (fall) while UTC ticks steadily'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={transition}
         onSelectionChange={key => setTransition(key as Transition)}
         className='mb-4'
       >
-        <Tab key='spring' title='Spring Forward (Gap)' />
-        <Tab key='fall' title='Fall Back (Overlap)' />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='spring'>
+              Spring Forward (Gap)
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='fall'>
+              Fall Back (Overlap)
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <div className='mb-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-8'>

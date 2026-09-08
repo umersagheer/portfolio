@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tab, Tabs } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import { IconInfoCircle, IconPlus, IconX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
@@ -60,15 +60,22 @@ export default function AnimatePresenceDemo() {
   return (
     <DemoContainer title='Add and remove items — watch the enter/exit animations'>
       <Tabs
-        size='sm'
-        variant='bordered'
-        radius='sm'
+        variant='primary'
         selectedKey={withPresence ? 'with' : 'without'}
         onSelectionChange={key => toggle(key === 'with')}
-        classNames={{ tabList: 'mb-4' }}
       >
-        <Tab key='without' title='Without AnimatePresence' />
-        <Tab key='with' title='With AnimatePresence' />
+        <Tabs.ListContainer>
+          <Tabs.List className='mb-4'>
+            <Tabs.Tab id='without'>
+              Without AnimatePresence
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='with'>
+              With AnimatePresence
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <div className='space-y-2'>
