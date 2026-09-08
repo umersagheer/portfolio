@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Chip, Textarea, cn } from '@heroui/react'
+import { Chip, TextArea, cn } from '@heroui/react'
 import { CheckIcon, ArrowRightIcon, ChevronRightIcon } from 'lucide-react'
 
 import GitDemoContainer from './shared/git-demo-container'
@@ -59,16 +59,13 @@ function Panel({
         </span>
       </div>
 
-      <Textarea
+      <TextArea
         aria-label={`Content of file ${side}`}
-        size='sm'
-        variant='bordered'
-        minRows={3}
-        maxRows={6}
+        rows={3}
         value={value}
-        onValueChange={onChange}
+        onChange={e => onChange(e.target.value)}
         onFocus={onFocus}
-        classNames={{ input: 'font-sourceCodePro text-sm' }}
+        className='font-sourceCodePro max-h-36 min-h-[4.5rem] text-sm'
       />
 
       <div className='flex items-center gap-2'>
@@ -224,7 +221,7 @@ export default function HashPlayground() {
           <AnimatePresence mode='wait'>
             {identical ? (
               <motion.span key='dedup' {...fade} aria-live='polite'>
-                <Chip size='sm' variant='soft' color='secondary'>
+                <Chip size='sm' variant='soft' color='accent'>
                   <CheckIcon size={13} />
                   stored once — deduplicated
                 </Chip>

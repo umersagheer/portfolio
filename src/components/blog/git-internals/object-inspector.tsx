@@ -915,16 +915,11 @@ function SourceControlPanel({
 
       <div className='px-2'>
         <Input
-          size='sm'
-          variant='bordered'
-          radius='sm'
+          aria-label='Commit message'
           placeholder='Message (commit)'
           value={message}
-          onValueChange={onMessage}
-          classNames={{
-            input: 'font-sourceCodePro text-xs',
-            inputWrapper: 'border-default-200'
-          }}
+          onChange={e => onMessage(e.target.value)}
+          className='font-sourceCodePro border-default-200 rounded-sm text-xs'
         />
         <Button
           size='sm'

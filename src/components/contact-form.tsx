@@ -7,9 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ContactFormSchema } from '@/libs/schemas'
 import {
   Card,
+  TextField,
+  Label,
   Input,
+  TextArea,
+  FieldError,
   Button,
-  Textarea,
   Link,
   Separator,
   toast
@@ -60,14 +63,18 @@ export default function ContactForm() {
             name='name'
             control={control}
             render={({ field }) => (
-              <Input
-                label='Name'
+              <TextField
                 type='text'
-                size='sm'
-                {...field}
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.name)}
-                errorMessage={errors.name?.message}
-              />
+              >
+                <Label>Name</Label>
+                <Input ref={field.ref} />
+                <FieldError>{errors.name?.message}</FieldError>
+              </TextField>
             )}
           />
 
@@ -75,14 +82,18 @@ export default function ContactForm() {
             name='email'
             control={control}
             render={({ field }) => (
-              <Input
-                label='Email'
+              <TextField
                 type='text'
-                size='sm'
-                {...field}
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.email)}
-                errorMessage={errors.email?.message}
-              />
+              >
+                <Label>Email</Label>
+                <Input ref={field.ref} />
+                <FieldError>{errors.email?.message}</FieldError>
+              </TextField>
             )}
           />
 
@@ -90,17 +101,18 @@ export default function ContactForm() {
             name='message'
             control={control}
             render={({ field }) => (
-              <Textarea
-                minRows={1}
-                maxRows={4}
-                label='Message'
-                type='text'
-                size='sm'
-                {...field}
+              <TextField
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.message)}
-                errorMessage={errors.message?.message}
                 className='md:col-span-2'
-              />
+              >
+                <Label>Message</Label>
+                <TextArea ref={field.ref} rows={4} />
+                <FieldError>{errors.message?.message}</FieldError>
+              </TextField>
             )}
           />
         </Card.Content>

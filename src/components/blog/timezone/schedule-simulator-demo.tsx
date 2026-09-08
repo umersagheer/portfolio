@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
-import { Button, Select, SelectItem, TimeField, Label } from '@heroui/react'
+import { Button, Select, TimeField, Label, ListBox } from '@heroui/react'
 import {
   IconCircleCheck,
   IconCircleX,
@@ -122,19 +122,27 @@ export default function ScheduleSimulatorDemo() {
           </TimeField>
         )}
         <Select
-          size='sm'
-          label='Timezone'
-          selectedKeys={new Set([zone])}
-          onSelectionChange={keys => {
-            const val = Array.from(keys)[0]
-            if (val !== undefined) setZone(String(val))
+          value={zone}
+          onChange={val => {
+            if (val !== undefined && val !== null) setZone(String(val))
             reset()
           }}
           className='sm:w-48'
         >
-          {ZONES.map(z => (
-            <SelectItem key={z.key}>{z.label}</SelectItem>
-          ))}
+          <Label>Timezone</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {ZONES.map(z => (
+                <ListBox.Item key={z.key} id={z.key}>
+                  {z.label}
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
       </div>
 

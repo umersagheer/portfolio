@@ -2,14 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  Button,
-  Select,
-  SelectItem,
-  Alert,
-  TimeField,
-  Label
-} from '@heroui/react'
+import { Button, Select, Alert, TimeField, Label, ListBox } from '@heroui/react'
 import {
   IconArrowBackUp,
   IconSettings,
@@ -103,23 +96,29 @@ export default function OffByOneBugDemo() {
     >
       <div className='mb-4 flex flex-col gap-3 sm:flex-row sm:items-end'>
         <Select
-          size='sm'
-          label='Your timezone'
-          selectedKeys={new Set([zone])}
-          onSelectionChange={keys => {
-            const val = Array.from(keys)[0]
-            if (val !== undefined) {
+          value={zone}
+          onChange={val => {
+            if (val !== undefined && val !== null) {
               setZone(String(val))
               setWithFix(false)
             }
           }}
           className='sm:w-56'
         >
-          {ZONES.map(z => (
-            <SelectItem key={z.key} textValue={z.label}>
-              {z.label}
-            </SelectItem>
-          ))}
+          <Label>Your timezone</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {ZONES.map(z => (
+                <ListBox.Item key={z.key} id={z.key} textValue={z.label}>
+                  {z.label}
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
 
         {mounted && (

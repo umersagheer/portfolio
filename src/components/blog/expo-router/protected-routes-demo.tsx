@@ -722,20 +722,18 @@ export default function ExpoProtectedRoutesDemo() {
                           statusLabel === 'Active'
                             ? 'success'
                             : statusLabel === 'Open'
-                              ? 'primary'
+                              ? 'accent'
                               : statusLabel === 'Flash'
                                 ? 'warning'
                                 : statusLabel === 'Visible'
                                   ? 'warning'
                                   : statusLabel === 'Target'
-                                    ? 'primary'
+                                    ? 'accent'
                                     : 'default'
                         }
-                        classNames={{
-                          base: cn('ml-2')
-                        }}
+                        className={cn('ml-2 inline-flex items-center gap-1')}
                       >
-                        CalloutIcon && <CalloutIcon size={12} />
+                        {CalloutIcon && <CalloutIcon size={12} />}
                         {statusLabel}
                       </Chip>
                     )}

@@ -96,7 +96,7 @@ export default async function Post({ params }: PostProps) {
         {image && (
           <NextImage
             src={image}
-            alt={title}
+            alt={title ?? ''}
             width={2560}
             height={1440}
             priority

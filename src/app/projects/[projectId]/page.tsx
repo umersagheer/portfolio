@@ -44,7 +44,7 @@ export default async function Project({ params }: ProjectProps) {
         {image && (
           <NextImage
             src={image}
-            alt={title}
+            alt={title ?? ''}
             width={0}
             height={0}
             sizes='100vw'
