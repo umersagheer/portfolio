@@ -331,7 +331,7 @@ export default function ChevronLikeButton({
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='font-sourceCodePro text-tiny text-muted pointer-events-none absolute -top-8 w-full min-w-32 px-1.5 py-1 text-center'
+              className='font-sourceCodePro text-muted pointer-events-none absolute -top-8 w-full min-w-32 px-1.5 py-1 text-center text-xs'
               initial={{ y: 6, opacity: 0, scale: 0.92 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}

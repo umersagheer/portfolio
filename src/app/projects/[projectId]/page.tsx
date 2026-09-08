@@ -53,7 +53,7 @@ export default async function Project({ params }: ProjectProps) {
         )}
         <header>
           <h1 className='title'>{title}</h1>
-          <p className='text-small pt-2'>
+          <p className='pt-2 text-sm'>
             {author} / {formatDate(publishedAt ?? '')}
           </p>
         </header>

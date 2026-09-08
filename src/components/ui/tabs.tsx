@@ -80,7 +80,7 @@ export function ExpandableTabs({
   return (
     <div
       className={cn(
-        'rounded-medium border-medium border-border relative flex flex-wrap items-center gap-1 bg-transparent p-1 shadow-xs backdrop-blur-lg',
+        'border-border relative flex flex-wrap items-center gap-1 rounded-[12px] border-2 bg-transparent p-1 shadow-xs backdrop-blur-lg',
         className
       )}
     >
@@ -103,7 +103,7 @@ export function ExpandableTabs({
                 onClick={() => handleSelect(index)}
                 transition={transition}
                 className={cn(
-                  'rounded-small text-tiny relative flex h-7 items-center px-3 py-1 font-medium transition-colors duration-300',
+                  'relative flex h-7 items-center rounded-[8px] px-3 py-1 text-xs font-medium transition-colors duration-300',
                   isSelected ? activeColor : 'text-muted hover:text-foreground'
                 )}
               >
@@ -111,7 +111,7 @@ export function ExpandableTabs({
                 {isSelected && (
                   <motion.div
                     layoutId='active-tab-cursor'
-                    className='rounded-small bg-surface-secondary absolute inset-0'
+                    className='bg-surface-secondary absolute inset-0 rounded-[8px]'
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}

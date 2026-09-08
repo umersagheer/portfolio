@@ -169,7 +169,7 @@ export default function Projects({ projects }: ProjectProps) {
                   <p className='text-sm'>{project.description}</p>
                   {project.features && (
                     <>
-                      <h3 className='text-medium mt-4 font-semibold'>
+                      <h3 className='mt-4 text-base font-semibold'>
                         Key Features
                       </h3>
                       <ul className='mt-1 list-disc space-y-1 text-base'>

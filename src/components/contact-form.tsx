@@ -117,12 +117,7 @@ export default function ContactForm() {
           />
         </Card.Content>
         <Card.Footer className='flex flex-col gap-3'>
-          <Button
-            variant='secondary'
-            type='submit'
-            fullWidth
-            isPending={loading}
-          >
+          <Button variant='primary' type='submit' fullWidth isPending={loading}>
             Send
           </Button>
 
@@ -141,7 +136,7 @@ export default function ContactForm() {
             Whatsapp
             <MessageCircleHeartIcon size={16} />
           </Button>
-          <p className='text-small justify-start'>
+          <p className='justify-start text-sm'>
             By submitting this form, I agree to the{' '}
             <Link href='' className='text-sm font-medium hover:underline'>
               privacy policy

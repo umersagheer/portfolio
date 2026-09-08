@@ -401,7 +401,7 @@ export default function SleekLikeButton({
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='font-sourceCodePro text-tiny text-warning pointer-events-none absolute -top-9 w-full min-w-32 px-1.5 py-1 text-center backdrop-blur'
+              className='font-sourceCodePro text-warning pointer-events-none absolute -top-9 w-full min-w-32 px-1.5 py-1 text-center text-xs backdrop-blur'
               initial={{ y: 6, opacity: 0, scale: 0.92 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}

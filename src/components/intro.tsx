@@ -26,7 +26,7 @@ export default function Intro() {
       </div>
       <div className='mt-5 max-w-2xl space-y-1'>
         <h3 className='font-sourceCodePro text-xl font-semibold'>About</h3>
-        <p className='text-small tracking-wide'>
+        <p className='text-sm tracking-wide'>
           Hi, I&apos;m a software engineer from Pakistan 🇵🇰, turning ideas into
           sleek web & mobile apps.
         </p>

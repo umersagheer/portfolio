@@ -533,7 +533,7 @@ export default function ExpoProtectedRoutesDemo() {
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-3'>
-        <div className='rounded-large bg-background flex items-center gap-3 px-3 py-2'>
+        <div className='bg-background flex items-center gap-3 rounded-[14px] px-3 py-2'>
           <div className='space-y-0.5'>
             <p className='text-foreground text-xs font-medium'>Signed in</p>
             <p className='text-muted text-[11px]'>Clerk/session exists</p>
@@ -552,7 +552,7 @@ export default function ExpoProtectedRoutesDemo() {
 
         <div
           className={cn(
-            'rounded-large flex items-center gap-3 px-3 py-2 transition-opacity',
+            'flex items-center gap-3 rounded-[14px] px-3 py-2 transition-opacity',
             signedIn ? 'bg-background' : 'bg-surface-secondary/70 opacity-60'
           )}
         >
@@ -569,7 +569,7 @@ export default function ExpoProtectedRoutesDemo() {
         </div>
       </div>
 
-      <div className='rounded-large border-border relative mt-2 overflow-hidden border bg-[#070708] p-4'>
+      <div className='border-border relative mt-2 overflow-hidden rounded-[14px] border bg-[#070708] p-4'>
         <DotPattern
           glow
           width={18}
