@@ -231,12 +231,8 @@ export default function DatePipelineDemo() {
             mode='pulse'
             duration={1.2}
             triggerKey={activeStage === i ? `${i}-active` : `${i}-idle`}
-            gradientStartColor={
-              i === activeStage ? '#a855f7' : 'var(--color-default-300)'
-            }
-            gradientStopColor={
-              i === activeStage ? '#c084fc' : 'var(--color-default-300)'
-            }
+            gradientStartColor={i === activeStage ? '#a855f7' : 'var(--border)'}
+            gradientStopColor={i === activeStage ? '#c084fc' : 'var(--border)'}
             pathOpacity={i === activeStage ? 0.28 : 0.12}
             pathWidth={i === activeStage ? 1.5 : 1}
           />

@@ -13,7 +13,7 @@ interface SVGGlowWrapperProps {
 export function SVGGlowWrapper({
   children,
   className = '',
-  glowColor = 'hsl(var(--heroui-primary))',
+  glowColor = 'var(--accent)',
   size = 96
 }: SVGGlowWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null)

@@ -82,13 +82,13 @@ export const REF_STYLES = {
 
 /**
  * Edges connecting nodes (always drawn child → parent by the caller). The
- * `--heroui-*` vars hold HSL channels, so they must be wrapped in hsl(). Base
+ * v3 theme vars hold complete oklch() colours, so they are used directly. Base
  * tokens only: neutral gray by default, primary when newly drawn.
  */
 export const EDGE = {
-  stroke: 'hsl(var(--heroui-default-300))',
-  strokeNew: 'hsl(var(--heroui-primary))',
-  strokeOrphaned: 'hsl(var(--heroui-default-300))'
+  stroke: 'var(--border)',
+  strokeNew: 'var(--accent)',
+  strokeOrphaned: 'var(--border)'
 }
 
 /** Human-readable labels for the type badge. */

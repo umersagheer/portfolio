@@ -179,8 +179,8 @@ export default function ChevronLikeButton({
   const fillRatio = clampedClicks / MAX_CLICKS
   const glowColor =
     userClicks === 0
-      ? 'hsl(var(--heroui-default-500))'
-      : `color-mix(in oklch, hsl(var(--heroui-primary)) ${fillRatio * 100}%, hsl(var(--heroui-default-500)))`
+      ? 'var(--muted)'
+      : `color-mix(in oklch, var(--accent) ${fillRatio * 100}%, var(--muted))`
 
   const scheduleTimeout = useCallback((callback: () => void, delay: number) => {
     const timeout = window.setTimeout(() => {
@@ -308,7 +308,7 @@ export default function ChevronLikeButton({
           {
             width: s.button,
             height: s.button,
-            background: 'hsl(var(--heroui-content1))',
+            background: 'var(--surface)',
             '--glow-color': glowColor,
             '--glow-intensity': glowStep.intensity
           } as React.CSSProperties

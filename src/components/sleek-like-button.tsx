@@ -22,10 +22,10 @@ const MAX_CLICKS = 5
 const VID_KEY = 'sparkle_vid'
 
 // HeroUI-consistent colors
-const BG = 'hsl(var(--heroui-content1))'
-const BORDER = 'hsl(var(--heroui-default-200))'
-const ICON_COLOR = 'hsl(var(--heroui-default-500))'
-const ICON_MUTED = 'hsl(var(--heroui-default-300))'
+const BG = 'var(--surface)'
+const BORDER = 'var(--border)'
+const ICON_COLOR = 'var(--muted)'
+const ICON_MUTED = 'var(--border)'
 
 const MAX_LABELS = [
   'STACK OVERFLOW',

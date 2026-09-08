@@ -382,16 +382,13 @@ function ResetGraph({
                     refY='3'
                     orient='auto'
                   >
-                    <path
-                      d='M0,0 L6,3 L0,6 Z'
-                      fill='hsl(var(--heroui-default-300))'
-                    />
+                    <path d='M0,0 L6,3 L0,6 Z' fill='var(--border)' />
                   </marker>
                 </defs>
                 {/* drawn C3-end → C2-end so the arrowhead lands at the parent (C2) */}
                 <path
                   d='M 52 34 Q 4 30 4 2'
-                  stroke='hsl(var(--heroui-default-300))'
+                  stroke='var(--border)'
                   strokeWidth='1.5'
                   strokeDasharray='4 4'
                   strokeLinecap='round'

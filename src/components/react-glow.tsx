@@ -27,7 +27,7 @@ const ReactGlow = ({ cursor, cardRef, mouseOnCard }: Props) => {
       width={192}
       height={192}
       viewBox='0 0 24 24'
-      className='duration-200 transition-all'
+      className='transition-all duration-200'
     >
       <defs>
         <radialGradient
@@ -39,19 +39,24 @@ const ReactGlow = ({ cursor, cardRef, mouseOnCard }: Props) => {
         >
           {mouseOnCard ? (
             <>
-              <stop stopColor='hsl(var(--heroui-primary))' />
-              <stop offset={1} stopColor='hsl(var(--heroui-default-400))' />
+              <stop stopColor='var(--accent)' />
+              <stop offset={1} stopColor='var(--muted)' />
             </>
           ) : (
-            <stop stopColor='hsl(var(--heroui-default-200))' />
+            <stop stopColor='var(--border)' />
           )}
         </radialGradient>
       </defs>
 
       {/* React atom icon */}
-      <g fill='none' stroke='url(#reactGradient)' strokeLinecap='round' strokeLinejoin='round'>
+      <g
+        fill='none'
+        stroke='url(#reactGradient)'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      >
         {/* Center nucleus */}
-        <circle cx='12' cy='12' r='1.5' fill='hsl(var(--heroui-default-200))' />
+        <circle cx='12' cy='12' r='1.5' fill='var(--border)' />
 
         {/* Horizontal orbital */}
         <path d='M 2 12 C 2 9.5 6.5 8.5 12 8.5 C 17.5 8.5 22 9.5 22 12 C 22 14.5 17.5 15.5 12 15.5 C 6.5 15.5 2 14.5 2 12' />
