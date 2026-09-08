@@ -128,8 +128,8 @@ function HttpMode() {
                 phase === 'idle'
                   ? 'bg-surface-secondary text-muted'
                   : phase === 'request'
-                    ? 'bg-accent-soft text-accent dark:bg-accent dark:text-accent'
-                    : 'bg-success-soft text-success dark:bg-success dark:text-success'
+                    ? 'bg-accent-soft text-accent'
+                    : 'bg-success-soft text-success'
               }`}
             >
               {phase === 'idle'
@@ -254,9 +254,9 @@ function WebSocketMode() {
           <span
             className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
               connected
-                ? 'bg-success-soft text-success dark:bg-success dark:text-success'
+                ? 'bg-success-soft text-success'
                 : handshaking
-                  ? 'bg-warning-soft text-warning dark:bg-warning dark:text-warning'
+                  ? 'bg-warning-soft text-warning'
                   : 'bg-surface-secondary text-muted'
             }`}
           >

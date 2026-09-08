@@ -189,7 +189,7 @@ export default function FlipExplainer() {
                 i === step
                   ? 'bg-accent text-white'
                   : i < step
-                    ? 'bg-accent-soft text-accent dark:bg-accent dark:text-accent'
+                    ? 'bg-accent-soft text-accent'
                     : 'bg-surface-secondary text-muted'
               }`}
             >

@@ -58,18 +58,18 @@ export default function PostsWithSearch({ posts }: props) {
         >
           <Tabs.ListContainer>
             <Tabs.List>
-              <Tabs.Tab id='all' className='whitespace-nowrap'>
+              <Tabs.Tab id='all'>
                 All
                 <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab id='post' className='whitespace-nowrap'>
+              <Tabs.Tab id='post'>
                 <div className='flex items-center space-x-2'>
                   <IconFileInvoiceFilled size={18} />
                   <span>Posts</span>
                 </div>
                 <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab id='bite-sized' className='whitespace-nowrap'>
+              <Tabs.Tab id='bite-sized'>
                 <div className='flex items-center space-x-2'>
                   <IconFilePowerFilled size={18} />
                   <span>Bite-sized</span>

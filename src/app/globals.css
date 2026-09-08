@@ -38,6 +38,14 @@
   --animate-marquee-scroll-vertical: marquee-scroll-vertical 25s linear infinite;
 }
 
+/* v3 tabs are `width: 100%` with a min-width, so they stretch to fill their
+   container and wrap long labels onto two lines ("Bite-sized", "--mixed").
+   v2 tabs were content-sized; restore that for every Tabs instance. */
+.tabs__tab {
+  width: auto;
+  white-space: nowrap;
+}
+
 @keyframes marquee-scroll-vertical {
   0% {
     transform: translateY(0);
@@ -55,6 +63,15 @@
 }
 .dark {
   --accent: #9353d3;
+}
+
+/* v3 fields default to `--field-border: transparent` and rely on
+   --field-background, which resolves to the same value as --surface. Inside a
+   surface-coloured demo container that makes Select/TimeField/Input invisible
+   (no border, no contrast). v2's inputs were bordered, so restore that. */
+:root,
+.dark {
+  --field-border: var(--border);
 }
 
 /* Tailwind v4 changed the default border/divide colour from gray-200 to

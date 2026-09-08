@@ -176,7 +176,7 @@ export default function HandshakeExplainer() {
                 i === step
                   ? 'bg-accent text-white'
                   : i < step
-                    ? 'bg-accent-soft text-accent dark:bg-accent dark:text-accent'
+                    ? 'bg-accent-soft text-accent'
                     : 'bg-surface-secondary text-muted'
               }`}
             >
@@ -222,7 +222,7 @@ export default function HandshakeExplainer() {
         <div className='flex flex-col items-center'>
           <RotatingValue
             value={
-              <span className='bg-accent-soft text-accent dark:bg-accent dark:text-accent rounded-full px-3 py-1 text-xs font-medium'>
+              <span className='bg-accent-soft text-accent rounded-full px-3 py-1 text-xs font-medium'>
                 {current.label}
               </span>
             }
