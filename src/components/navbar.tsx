@@ -41,8 +41,10 @@ export const Navbar = () => {
           <Tab
             key={'light'}
             title={
-              <Tooltip content='Light Mode' size='sm'>
+              <Tooltip>
                 <IconSunHighFilled className='size-4 md:size-5' />
+
+                <Tooltip.Content>Light Mode</Tooltip.Content>
               </Tooltip>
             }
           />
@@ -50,16 +52,20 @@ export const Navbar = () => {
           <Tab
             key={'dark'}
             title={
-              <Tooltip content='Dark Mode' size='sm'>
+              <Tooltip>
                 <IconMoonFilled className='size-4 md:size-5' />
+
+                <Tooltip.Content>Dark Mode</Tooltip.Content>
               </Tooltip>
             }
           />
           <Tab
             key={'system'}
             title={
-              <Tooltip content='System Preferences' size='sm'>
+              <Tooltip>
                 <IconDeviceDesktopFilled className='size-4 md:size-5' />
+
+                <Tooltip.Content>System Preferences</Tooltip.Content>
               </Tooltip>
             }
           />

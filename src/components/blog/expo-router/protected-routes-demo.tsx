@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import {  motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Chip, Switch, Tab, Tabs, cn } from '@heroui/react'
 import {
   AlertTriangleIcon,
@@ -500,13 +500,13 @@ export default function ExpoProtectedRoutesDemo() {
   }
 
   return (
-    <section className='not-prose my-8 overflow-hidden rounded-2xl border border-default-200 bg-default-50 p-5 sm:p-6'>
+    <section className='not-prose border-default-200 bg-default-50 my-8 overflow-hidden rounded-2xl border p-5 sm:p-6'>
       <div className='flex flex-col gap-4'>
         <div className='space-y-1'>
-          <p className='font-sourceCodePro text-sm font-semibold text-foreground'>
+          <p className='font-sourceCodePro text-foreground text-sm font-semibold'>
             Auth Routing Visualizer
           </p>
-          <p className='max-w-2xl text-sm text-default-500'>
+          <p className='text-default-500 max-w-2xl text-sm'>
             Compare redirect-driven auth routing with guarded route groups,
             using the file-based mental model Expo Router actually gives you.
           </p>
@@ -525,14 +525,14 @@ export default function ExpoProtectedRoutesDemo() {
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-3'>
-        <div className='flex items-center gap-3 rounded-large bg-background px-3 py-2'>
+        <div className='rounded-large bg-background flex items-center gap-3 px-3 py-2'>
           <div className='space-y-0.5'>
-            <p className='text-xs font-medium text-foreground'>Signed in</p>
-            <p className='text-[11px] text-default-500'>Clerk/session exists</p>
+            <p className='text-foreground text-xs font-medium'>Signed in</p>
+            <p className='text-default-500 text-[11px]'>Clerk/session exists</p>
           </div>
           <Switch
             isSelected={signedIn}
-            onValueChange={nextValue => {
+            onChange={nextValue => {
               setSignedIn(nextValue)
               if (!nextValue) {
                 setOnboarded(false)
@@ -544,24 +544,24 @@ export default function ExpoProtectedRoutesDemo() {
 
         <div
           className={cn(
-            'flex items-center gap-3 rounded-large px-3 py-2 transition-opacity',
+            'rounded-large flex items-center gap-3 px-3 py-2 transition-opacity',
             signedIn ? 'bg-background' : 'bg-default-100/70 opacity-60'
           )}
         >
           <div className='space-y-0.5'>
-            <p className='text-xs font-medium text-foreground'>Onboarded</p>
-            <p className='text-[11px] text-default-500'>Profile completed</p>
+            <p className='text-foreground text-xs font-medium'>Onboarded</p>
+            <p className='text-default-500 text-[11px]'>Profile completed</p>
           </div>
           <Switch
             isSelected={onboarded}
             isDisabled={!signedIn}
-            onValueChange={setOnboarded}
+            onChange={setOnboarded}
             size='sm'
           />
         </div>
       </div>
 
-      <div className='relative mt-2 overflow-hidden rounded-large border border-default-200 bg-[#070708] p-4'>
+      <div className='rounded-large border-default-200 relative mt-2 overflow-hidden border bg-[#070708] p-4'>
         <DotPattern
           glow
           width={18}
@@ -665,7 +665,7 @@ export default function ExpoProtectedRoutesDemo() {
                       <span
                         key={`${row.id}-guide-${index}`}
                         aria-hidden='true'
-                        className='absolute bottom-1 top-1 w-px rounded-full bg-white/[0.08]'
+                        className='absolute top-1 bottom-1 w-px rounded-full bg-white/[0.08]'
                         style={{ left: `${24 + index * 28}px` }}
                       />
                     ))}
@@ -699,7 +699,7 @@ export default function ExpoProtectedRoutesDemo() {
 
                     <span
                       className={cn(
-                        'text-white font-sourceCodePro text-sm',
+                        'font-sourceCodePro text-sm text-white',
                         row.group &&
                           previewMatch &&
                           previewGroup !== activeGroup
@@ -716,9 +716,8 @@ export default function ExpoProtectedRoutesDemo() {
 
                     {statusLabel && (
                       <Chip
-                      startContent={CalloutIcon && <CalloutIcon size={12} />}
                         size='sm'
-                        variant='shadow'
+                        variant='primary'
                         color={
                           statusLabel === 'Active'
                             ? 'success'
@@ -733,9 +732,10 @@ export default function ExpoProtectedRoutesDemo() {
                                     : 'default'
                         }
                         classNames={{
-                          base: cn('ml-2'),
+                          base: cn('ml-2')
                         }}
                       >
+                        CalloutIcon && <CalloutIcon size={12} />
                         {statusLabel}
                       </Chip>
                     )}
@@ -747,7 +747,7 @@ export default function ExpoProtectedRoutesDemo() {
                         <div className={cn('h-px flex-1', toneClasses.line)} />
                         <div
                           className={cn(
-                            'flex items-center gap-2 whitespace-nowrap text-sm',
+                            'flex items-center gap-2 text-sm whitespace-nowrap',
                             toneClasses.text
                           )}
                         >

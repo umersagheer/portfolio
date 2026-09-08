@@ -133,17 +133,18 @@ export default function ResetModes() {
       description='Git keeps your work in three places: your working directory, the staging area, and the commit. reset always moves the branch — the flag decides which of those come along. Stage a file or two, then run a reset.'
       caption={
         <>
-          Only <code>--hard</code> touches your working directory, so it’s the only mode that
-          destroys uncommitted work — and it takes <em>both</em> staged and unstaged changes.{' '}
-          <code>--mixed</code> keeps your changes (just unstages them); <code>--soft</code> keeps
-          them staged. Commits you reset past aren’t deleted — <code>git reflog</code> can recover them.
+          Only <code>--hard</code> touches your working directory, so it’s the
+          only mode that destroys uncommitted work — and it takes <em>both</em>{' '}
+          staged and unstaged changes. <code>--mixed</code> keeps your changes
+          (just unstages them); <code>--soft</code> keeps them staged. Commits
+          you reset past aren’t deleted — <code>git reflog</code> can recover
+          them.
         </>
       }
     >
       {/* ── Beat 1: the graph — pointer moves; once reset, C3 breaks OFF the
              line onto a second lane, dead-ended, orphaned. ── */}
       <ResetGraph phase={phase} branchIndex={branchIndex} fade={fade} />
-
 
       {/* ── controls: HeroUI tabs + stage toggles + run/commit ── */}
       <div className='mb-4 flex flex-wrap items-center gap-3'>
@@ -168,7 +169,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={modifyAll}
-            className='inline-flex items-center gap-1.5 rounded-lg border border-warning px-3 py-1.5 text-xs font-medium text-warning transition-colors hover:bg-warning/10'
+            className='border-warning text-warning hover:bg-warning/10 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors'
           >
             Modify files
           </button>
@@ -178,7 +179,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={runReset}
-            className='inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 font-sourceCodePro text-xs font-medium text-primary-foreground transition-transform hover:scale-[1.02] active:scale-95'
+            className='bg-primary font-sourceCodePro text-primary-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-transform hover:scale-[1.02] active:scale-95'
           >
             git reset {mode === 'mixed' ? '' : `--${mode} `}C2
           </button>
@@ -186,7 +187,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={commit}
-            className='inline-flex items-center gap-1.5 rounded-lg border border-primary px-3 py-1.5 font-sourceCodePro text-xs font-medium text-primary transition-colors hover:bg-primary/10'
+            className='border-primary font-sourceCodePro text-primary hover:bg-primary/10 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors'
           >
             <GitCommitHorizontalIcon size={13} /> commit again
           </button>
@@ -196,7 +197,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={replay}
-            className='inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs text-default-500 transition-colors hover:text-foreground'
+            className='text-default-500 hover:text-foreground inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors'
           >
             <RotateCcwIcon size={13} /> replay
           </button>
@@ -207,7 +208,9 @@ export default function ResetModes() {
       <div className='grid gap-3 sm:grid-cols-3'>
         <Column
           title='working directory'
-          subtitle={anyModified ? 'files on disk — tick to stage' : 'files on disk'}
+          subtitle={
+            anyModified ? 'files on disk — tick to stage' : 'files on disk'
+          }
           touched={done && mode !== 'soft'}
         >
           {goneFiles.length > 0 && (
@@ -217,7 +220,7 @@ export default function ResetModes() {
           {cleanFiles.map(f => (
             <div
               key={f}
-              className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'
+              className='bg-background font-sourceCodePro flex items-center gap-2 rounded-md px-2 py-1.5 text-xs shadow-xs'
             >
               <FileIcon size={13} className='text-default-400' />
               <span className='text-foreground'>{f}</span>
@@ -243,7 +246,7 @@ export default function ResetModes() {
           touched={done && mode !== 'soft'}
         >
           {stagedFiles.length === 0 ? (
-            <span className='text-[11px] text-default-400'>(empty)</span>
+            <span className='text-default-400 text-[11px]'>(empty)</span>
           ) : (
             stagedFiles.map(f => (
               <FileRow
@@ -260,9 +263,9 @@ export default function ResetModes() {
         </Column>
 
         <Column title='the commit' subtitle='HEAD → branch' dots>
-          <div className='flex items-center gap-2 rounded-md border border-default-300 bg-default-100/60 px-2 py-1.5 font-sourceCodePro text-xs backdrop-blur-md'>
+          <div className='border-default-300 bg-default-100/60 font-sourceCodePro flex items-center gap-2 rounded-md border px-2 py-1.5 text-xs backdrop-blur-md'>
             <GitCommitHorizontalIcon size={13} className='text-foreground' />
-            <span className='font-semibold text-foreground'>
+            <span className='text-foreground font-semibold'>
               {phase === 'recommitted' ? 'C4' : phase === 'reset' ? 'C2' : 'C3'}
             </span>
           </div>
@@ -277,7 +280,7 @@ export default function ResetModes() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
+          className='bg-default-100 text-default-600 mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>
@@ -317,7 +320,7 @@ function ResetGraph({
   const branchHash = COMMITS[branchIndex]?.hash ?? C4.hash
 
   return (
-    <div className='mb-6 overflow-x-auto pb-2 pt-1'>
+    <div className='mb-6 overflow-x-auto pt-1 pb-2'>
       <div className='relative w-max'>
         {/* top lane — arrows point CHILD → PARENT (backwards in time), the way
             Git really stores it: a commit knows its parent, never its children. */}
@@ -329,7 +332,7 @@ function ResetGraph({
               <div key={c.hash} className='flex items-end gap-3'>
                 {i > 0 && (
                   <span
-                    className='mb-9 text-default-300'
+                    className='text-default-300 mb-9'
                     title='child → parent'
                   >
                     ←
@@ -379,7 +382,10 @@ function ResetGraph({
                     refY='3'
                     orient='auto'
                   >
-                    <path d='M0,0 L6,3 L0,6 Z' fill='hsl(var(--heroui-default-300))' />
+                    <path
+                      d='M0,0 L6,3 L0,6 Z'
+                      fill='hsl(var(--heroui-default-300))'
+                    />
                   </marker>
                 </defs>
                 {/* drawn C3-end → C2-end so the arrowhead lands at the parent (C2) */}
@@ -427,7 +433,13 @@ function NodeWithPill({
         type='commit'
         hash={node.hash}
         label={node.msg}
-        state={node.orphaned ? 'orphaned' : fresh || node.isBranch ? 'head' : 'normal'}
+        state={
+          node.orphaned
+            ? 'orphaned'
+            : fresh || node.isBranch
+              ? 'head'
+              : 'normal'
+        }
         hideBadge
         compact
       />
@@ -437,7 +449,7 @@ function NodeWithPill({
             <motion.div
               layoutId='reset-branch-pill'
               {...fade}
-              className='inline-flex items-center gap-1 rounded-md border border-success bg-default-50 px-1.5 py-0.5 font-sourceCodePro text-[10px] font-semibold text-success'
+              className='border-success bg-default-50 font-sourceCodePro text-success inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold'
             >
               main
             </motion.div>
@@ -449,7 +461,7 @@ function NodeWithPill({
           {orphanTag && (
             <motion.span
               {...fade}
-              className='whitespace-nowrap text-[9px] font-medium text-default-400'
+              className='text-default-400 text-[9px] font-medium whitespace-nowrap'
             >
               orphaned · reflog can recover
             </motion.span>
@@ -477,20 +489,22 @@ function Column({
     <div
       className={cn(
         'relative overflow-hidden rounded-xl p-3 shadow-xs transition-all',
-        dots ? 'border border-default-100 bg-background' : 'bg-default-100',
-        touched && 'ring-1 ring-primary'
+        dots ? 'border-default-100 bg-background border' : 'bg-default-100',
+        touched && 'ring-primary ring-1'
       )}
     >
       {dots && <StageDots />}
       <div className='relative mb-0.5 flex items-center justify-between'>
-        <span className='text-xs font-medium text-default-500'>{title}</span>
+        <span className='text-default-500 text-xs font-medium'>{title}</span>
         {touched && (
-          <span className='rounded-sm bg-primary/15 px-1 text-[9px] font-semibold uppercase tracking-wide text-primary'>
+          <span className='bg-primary/15 text-primary rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
             reset
           </span>
         )}
       </div>
-      <div className='relative mb-3 text-[10px] text-default-400'>{subtitle}</div>
+      <div className='text-default-400 relative mb-3 text-[10px]'>
+        {subtitle}
+      </div>
       <div className='relative min-h-[3.5rem] space-y-1.5'>{children}</div>
     </div>
   )
@@ -512,21 +526,22 @@ function FileRow({
   tone: 'warning' | 'success'
 }) {
   return (
-    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'>
+    <div className='bg-background font-sourceCodePro flex items-center gap-2 rounded-md px-2 py-1.5 text-xs shadow-xs'>
       <Checkbox
-        size='sm'
-        radius='sm'
         isSelected={checked}
         isDisabled={disabled}
-        onValueChange={onToggle}
+        onChange={onToggle}
         aria-label={`Stage ${name}`}
+        className='rounded-sm'
       />
       <FileIcon size={13} className='text-default-400' />
       <span className='text-foreground'>{name}</span>
       <span
         className={cn(
           'ml-auto rounded-sm px-1.5 py-0.5 text-[9px] font-medium',
-          tone === 'warning' ? 'bg-warning/15 text-warning' : 'bg-success/15 text-success'
+          tone === 'warning'
+            ? 'bg-warning/15 text-warning'
+            : 'bg-success/15 text-success'
         )}
       >
         {tag}
@@ -537,7 +552,7 @@ function FileRow({
 
 function Lost({ children }: { children: React.ReactNode }) {
   return (
-    <div className='inline-flex items-center gap-1 rounded-md bg-danger/15 px-2 py-1 text-[10px] font-medium text-danger'>
+    <div className='bg-danger/15 text-danger inline-flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium'>
       <AlertTriangleIcon size={11} />
       {children}
     </div>

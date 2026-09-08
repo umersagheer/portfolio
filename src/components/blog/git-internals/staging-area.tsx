@@ -111,10 +111,12 @@ export default function StagingArea() {
       description='The index is a choice: you pick which files go into the next commit. git add writes a blob for each picked file and lists it in the index; git commit folds that list into a tree and a commit. Unstaged files are simply left out.'
       caption={
         <>
-          The <code>index</code> is a single file listing “what my next commit will contain”.
-          <code>git add</code> writes a blob per staged file and records it; <code>git commit</code>{' '}
-          folds the index into one tree, then a commit that points at that tree plus the author,
-          message, and parent. Nothing is invented at commit time.
+          The <code>index</code> is a single file listing “what my next commit
+          will contain”.
+          <code>git add</code> writes a blob per staged file and records it;{' '}
+          <code>git commit</code> folds the index into one tree, then a commit
+          that points at that tree plus the author, message, and parent. Nothing
+          is invented at commit time.
         </>
       }
     >
@@ -124,7 +126,7 @@ export default function StagingArea() {
           type='button'
           onClick={add}
           disabled={!hasPick}
-          className='inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-40'
+          className='bg-primary text-primary-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-40'
         >
           git add {hasPick ? `(${pickCount})` : ''}
         </button>
@@ -132,14 +134,14 @@ export default function StagingArea() {
           type='button'
           onClick={commit}
           disabled={!staged.length}
-          className='inline-flex items-center gap-1.5 rounded-lg border border-default-200 px-3 py-1.5 text-sm text-default-600 transition-colors hover:border-primary hover:text-primary disabled:opacity-40 disabled:hover:border-default-200 disabled:hover:text-default-600'
+          className='border-default-200 text-default-600 hover:border-primary hover:text-primary disabled:hover:border-default-200 disabled:hover:text-default-600 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:opacity-40'
         >
           <GitCommitHorizontalIcon size={15} /> git commit
         </button>
         <button
           type='button'
           onClick={reset}
-          className='ml-auto inline-flex items-center gap-1 text-[11px] text-default-400 transition-colors hover:text-default-600'
+          className='text-default-400 hover:text-default-600 ml-auto inline-flex items-center gap-1 text-[11px] transition-colors'
         >
           <RotateCcwIcon size={12} /> reset
         </button>
@@ -157,20 +159,19 @@ export default function StagingArea() {
                 <div
                   key={f.name}
                   className={cn(
-                    'flex items-center gap-2 rounded-md bg-background px-2 py-1.5 shadow-xs transition-opacity',
+                    'bg-background flex items-center gap-2 rounded-md px-2 py-1.5 shadow-xs transition-opacity',
                     (isStaged || done) && 'opacity-50'
                   )}
                 >
                   <Checkbox
-                    size='sm'
-                    radius='sm'
                     isSelected={picked.has(f.name) || isStaged || done}
                     isDisabled={isStaged || done}
-                    onValueChange={() => toggle(f.name)}
+                    onChange={() => toggle(f.name)}
                     aria-label={`Stage ${f.name}`}
+                    className='rounded-sm'
                   />
                   <FileIcon size={14} className='text-default-400' />
-                  <span className='font-sourceCodePro text-xs text-foreground'>
+                  <span className='font-sourceCodePro text-foreground text-xs'>
                     {f.name}
                   </span>
                   <span
@@ -195,8 +196,14 @@ export default function StagingArea() {
         <Lane title='index (staging area)' subtitle='next commit’s file list'>
           <AnimatePresence mode='popLayout'>
             {staged.length === 0 ? (
-              <motion.p key='empty' {...fade} className='px-1 text-[11px] text-default-400'>
-                {justCommitted ? '(emptied — folded into the commit)' : '(empty)'}
+              <motion.p
+                key='empty'
+                {...fade}
+                className='text-default-400 px-1 text-[11px]'
+              >
+                {justCommitted
+                  ? '(emptied — folded into the commit)'
+                  : '(empty)'}
               </motion.p>
             ) : (
               staged.map(name => (
@@ -204,11 +211,13 @@ export default function StagingArea() {
                   key={name}
                   layout
                   {...fade}
-                  className='rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'
+                  className='bg-background font-sourceCodePro rounded-md px-2 py-1.5 text-xs shadow-xs'
                 >
                   <span className='text-foreground'>{name}</span>
                   <span className='text-default-400'> → </span>
-                  <span className='font-semibold text-secondary'>{blobOf(name)}</span>
+                  <span className='text-secondary font-semibold'>
+                    {blobOf(name)}
+                  </span>
                 </motion.div>
               ))
             )}
@@ -220,7 +229,11 @@ export default function StagingArea() {
           <div className='flex flex-wrap gap-2'>
             <AnimatePresence mode='popLayout'>
               {blobs.length === 0 && (
-                <motion.p key='empty-obj' {...fade} className='px-1 text-[11px] text-default-400'>
+                <motion.p
+                  key='empty-obj'
+                  {...fade}
+                  className='text-default-400 px-1 text-[11px]'
+                >
                   (empty)
                 </motion.p>
               )}
@@ -238,7 +251,12 @@ export default function StagingArea() {
               ))}
               {commitCount > 0 && (
                 <motion.div key='tree' layout {...nodeAppear}>
-                  <GitObjectNode type='tree' hash={treeHash} label='/' compact />
+                  <GitObjectNode
+                    type='tree'
+                    hash={treeHash}
+                    label='/'
+                    compact
+                  />
                 </motion.div>
               )}
               {commitCount > 0 && (
@@ -265,7 +283,7 @@ export default function StagingArea() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
+          className='bg-default-100 text-default-600 mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>
@@ -289,12 +307,16 @@ function Lane({
     <div
       className={cn(
         'relative overflow-hidden rounded-xl p-3 shadow-xs',
-        dots ? 'border border-default-100 bg-background' : 'bg-default-100'
+        dots ? 'border-default-100 bg-background border' : 'bg-default-100'
       )}
     >
       {dots && <StageDots />}
-      <div className='relative mb-0.5 text-xs font-medium text-default-500'>{title}</div>
-      <div className='relative mb-3 text-[10px] text-default-400'>{subtitle}</div>
+      <div className='text-default-500 relative mb-0.5 text-xs font-medium'>
+        {title}
+      </div>
+      <div className='text-default-400 relative mb-3 text-[10px]'>
+        {subtitle}
+      </div>
       <div className='relative min-h-[6rem] space-y-2'>{children}</div>
     </div>
   )

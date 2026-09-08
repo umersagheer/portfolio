@@ -91,7 +91,7 @@ function HttpMode() {
     <>
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-8 sm:px-12'
+        className='border-default-100 bg-background relative flex items-center justify-between rounded-lg border px-8 py-8 sm:px-12'
       >
         <DotPattern
           glow
@@ -115,12 +115,13 @@ function HttpMode() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`rounded-full px-3 py-1 text-[10px] font-semibold ${phase === 'idle'
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
+                phase === 'idle'
                   ? 'bg-default-100 text-default-500'
                   : phase === 'request'
                     ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
                     : 'bg-success-100 text-success-600 dark:bg-success-900 dark:text-success-300'
-                }`}
+              }`}
             >
               {phase === 'idle'
                 ? 'Connection Closed'
@@ -164,14 +165,13 @@ function HttpMode() {
       </div>
 
       <div className='mt-4 flex items-center justify-between'>
-        <span className='font-mono text-xs text-default-400'>
+        <span className='text-default-400 font-mono text-xs'>
           {requestCount} request{requestCount !== 1 ? 's' : ''} = {requestCount}{' '}
           connection{requestCount !== 1 ? 's' : ''} opened & closed
         </span>
         <Button
+          variant='secondary'
           size='sm'
-          variant='flat'
-          color='primary'
           isDisabled={sending}
           onPress={sendRequest}
         >
@@ -224,7 +224,7 @@ function WebSocketMode() {
     <>
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-200 bg-background px-8 py-8 sm:px-12'
+        className='border-default-200 bg-background relative flex items-center justify-between rounded-lg border px-8 py-8 sm:px-12'
       >
         <DotPattern
           glow
@@ -243,12 +243,13 @@ function WebSocketMode() {
 
         <div className='flex flex-col items-center gap-1'>
           <span
-            className={`rounded-full px-3 py-1 text-[10px] font-semibold ${connected
+            className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
+              connected
                 ? 'bg-success-100 text-success-600 dark:bg-success-900 dark:text-success-300'
                 : handshaking
                   ? 'bg-warning-100 text-warning-600 dark:bg-warning-900 dark:text-warning-300'
                   : 'bg-default-100 text-default-500'
-              }`}
+            }`}
           >
             {connected
               ? 'Tunnel Active'
@@ -313,31 +314,26 @@ function WebSocketMode() {
       </div>
 
       <div className='mt-4 flex items-center justify-between'>
-        <span className='font-mono text-xs text-default-400'>
+        <span className='text-default-400 font-mono text-xs'>
           {messageCount} message{messageCount !== 1 ? 's' : ''}, 1 connection
         </span>
         <div className='flex gap-2'>
           {!connected && !handshaking && (
-            <Button size='sm' variant='flat' color='success' onPress={connect}>
+            <Button
+              className='bg-success text-success-foreground'
+              variant='secondary'
+              size='sm'
+              onPress={connect}
+            >
               Connect
             </Button>
           )}
           {connected && (
             <>
-              <Button
-                size='sm'
-                variant='flat'
-                color='primary'
-                onPress={sendMessage}
-              >
+              <Button variant='secondary' size='sm' onPress={sendMessage}>
                 Send Message
               </Button>
-              <Button
-                size='sm'
-                variant='flat'
-                color='danger'
-                onPress={disconnect}
-              >
+              <Button variant='danger' size='sm' onPress={disconnect}>
                 Disconnect
               </Button>
             </>

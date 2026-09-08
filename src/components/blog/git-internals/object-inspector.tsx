@@ -286,12 +286,12 @@ function Zone({
   return (
     <div
       className={cn(
-        'flex min-w-0 flex-col rounded-lg bg-default-50 p-3',
+        'bg-default-50 flex min-w-0 flex-col rounded-lg p-3',
         className
       )}
     >
-      <div className='text-xs font-semibold text-foreground'>{title}</div>
-      <div className='mb-2 text-[10px] leading-4 text-default-500'>{hint}</div>
+      <div className='text-foreground text-xs font-semibold'>{title}</div>
+      <div className='text-default-500 mb-2 text-[10px] leading-4'>{hint}</div>
       {children}
     </div>
   )
@@ -306,15 +306,17 @@ function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
     'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
   }[status]
   return (
-    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-xs'>
-      <FileIcon size={13} className='shrink-0 text-default-400' />
-      <span className='flex-1 truncate font-sourceCodePro text-xs text-foreground'>
+    <div className='bg-background flex items-center gap-2 rounded-md px-2 py-1 shadow-xs'>
+      <FileIcon size={13} className='text-default-400 shrink-0' />
+      <span className='font-sourceCodePro text-foreground flex-1 truncate text-xs'>
         {name}
       </span>
       {meta.label && (
         <>
           <span className={cn('size-1.5 shrink-0 rounded-full', meta.dot)} />
-          <span className='shrink-0 text-[10px] text-default-500'>{meta.label}</span>
+          <span className='text-default-500 shrink-0 text-[10px]'>
+            {meta.label}
+          </span>
         </>
       )}
     </div>
@@ -344,25 +346,39 @@ function HistoryTimeline({ repo }: { repo: Repo }) {
               <span
                 className={cn(
                   'mt-1 size-2.5 shrink-0 rounded-full border-2',
-                  isHead ? 'border-primary bg-primary' : 'border-default-400 bg-default-50'
+                  isHead
+                    ? 'border-primary bg-primary'
+                    : 'border-default-400 bg-default-50'
                 )}
               />
-              {!isLast && <span className='w-px flex-1 bg-default-300' />}
+              {!isLast && <span className='bg-default-300 w-px flex-1' />}
             </div>
             {/* row content */}
-            <div className={cn('flex min-w-0 flex-1 flex-col pb-2', isLast && 'pb-0')}>
+            <div
+              className={cn(
+                'flex min-w-0 flex-1 flex-col pb-2',
+                isLast && 'pb-0'
+              )}
+            >
               <div className='flex flex-wrap items-center gap-1.5'>
-                <code className='font-sourceCodePro text-xs font-semibold text-foreground'>
+                <code className='font-sourceCodePro text-foreground text-xs font-semibold'>
                   {shortHash(hash)}
                 </code>
                 {isHead && (
-                  <motion.span layout transition={spring} className='flex flex-wrap gap-1'>
+                  <motion.span
+                    layout
+                    transition={spring}
+                    className='flex flex-wrap gap-1'
+                  >
                     <RefTag name='main' variant='branch' />
                     <RefTag name='HEAD' variant='head' />
                   </motion.span>
                 )}
               </div>
-              <span className='truncate text-[10px] text-default-500' title={commit.message}>
+              <span
+                className='text-default-500 truncate text-[10px]'
+                title={commit.message}
+              >
                 {commit.message}
               </span>
             </div>
@@ -388,7 +404,9 @@ function GitPipeline({ repo }: { repo: Repo }) {
   // Every blob currently in the object store, labelled with the file(s) whose
   // content it holds (working copy, staged copy, or the committed snapshot).
   const blobsInStore = Object.values(repo.store)
-    .filter((o): o is Extract<StoreObject, { kind: 'blob' }> => o.kind === 'blob')
+    .filter(
+      (o): o is Extract<StoreObject, { kind: 'blob' }> => o.kind === 'blob'
+    )
     .map(blob => {
       const names = FILE_ORDER.filter(name => {
         const f = repo.files[name]
@@ -403,12 +421,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
     })
 
   return (
-    <div className='rounded-xl bg-default-100 p-2.5 shadow-xs sm:p-3'>
+    <div className='bg-default-100 rounded-xl p-2.5 shadow-xs sm:p-3'>
       <div className='mb-2 flex items-center gap-2'>
-        <span className='rounded-md bg-default-200 px-2 py-0.5 font-sourceCodePro text-[11px] font-semibold text-foreground'>
+        <span className='bg-default-200 font-sourceCodePro text-foreground rounded-md px-2 py-0.5 text-[11px] font-semibold'>
           .git
         </span>
-        <span className='text-xs text-default-500'>
+        <span className='text-default-500 text-xs'>
           what actually happens inside the repo
         </span>
       </div>
@@ -422,27 +440,35 @@ function GitPipeline({ repo }: { repo: Repo }) {
         >
           <div className='flex flex-col gap-2'>
             <div>
-              <div className='mb-1 text-[10px] uppercase tracking-wide text-default-400'>
+              <div className='text-default-400 mb-1 text-[10px] tracking-wide uppercase'>
                 working directory
               </div>
               <div className='flex flex-col gap-1'>
                 {FILE_ORDER.map(name => (
-                  <FileRow key={name} name={name} status={fileStatus(repo, name)} />
+                  <FileRow
+                    key={name}
+                    name={name}
+                    status={fileStatus(repo, name)}
+                  />
                 ))}
               </div>
             </div>
             <div>
-              <div className='mb-1 text-[10px] uppercase tracking-wide text-default-400'>
+              <div className='text-default-400 mb-1 text-[10px] tracking-wide uppercase'>
                 staging area (index)
               </div>
               {staged.length === 0 ? (
-                <span className='block rounded-md bg-background px-2 py-2 text-center text-[10px] text-default-400'>
+                <span className='bg-background text-default-400 block rounded-md px-2 py-2 text-center text-[10px]'>
                   nothing staged — check a file in the panel below
                 </span>
               ) : (
                 <div className='flex flex-col gap-1'>
                   {staged.map(name => (
-                    <FileRow key={name} name={name} status={fileStatus(repo, name)} />
+                    <FileRow
+                      key={name}
+                      name={name}
+                      status={fileStatus(repo, name)}
+                    />
                   ))}
                 </div>
               )}
@@ -452,11 +478,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
 
         {/* The bridge: staging/committing turns files into objects. */}
         <div className='flex shrink-0 items-center justify-center'>
-          <div className='flex flex-col items-center gap-0.5 text-default-400'>
+          <div className='text-default-400 flex flex-col items-center gap-0.5'>
             <ArrowRightIcon size={18} className='hidden lg:block' />
             <ChevronDownIcon size={18} className='lg:hidden' />
             <span className='hidden text-center text-[9px] leading-tight lg:block'>
-              stage /<br />commit
+              stage /<br />
+              commit
             </span>
           </div>
         </div>
@@ -466,7 +493,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           title={
             <span className='flex items-center gap-1.5'>
               Object store
-              <code className='rounded-sm bg-default-200 px-1 py-0.5 text-[10px] font-normal text-default-600'>
+              <code className='bg-default-200 text-default-600 rounded-sm px-1 py-0.5 text-[10px] font-normal'>
                 .git/objects
               </code>
             </span>
@@ -477,12 +504,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
           <div className='flex flex-col gap-3'>
             {/* Blobs: appear when you stage. Labelled with the file they came from. */}
             <div>
-              <div className='mb-1 text-[10px] uppercase tracking-wide text-secondary'>
+              <div className='text-secondary mb-1 text-[10px] tracking-wide uppercase'>
                 blobs (file contents)
               </div>
               <div className='flex min-h-[2.75rem] flex-wrap items-start gap-1.5'>
                 {blobsInStore.length === 0 ? (
-                  <span className='py-2 text-[10px] text-default-400'>
+                  <span className='text-default-400 py-2 text-[10px]'>
                     none yet — staging a file writes its blob here
                   </span>
                 ) : (
@@ -510,12 +537,15 @@ function GitPipeline({ repo }: { repo: Repo }) {
             {/* Tree + commit for the latest snapshot. */}
             <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3'>
               <div>
-                <div className='mb-1 text-[10px] uppercase tracking-wide text-primary'>
+                <div className='text-primary mb-1 text-[10px] tracking-wide uppercase'>
                   latest tree + commit
                 </div>
                 {headTree && headTree.kind === 'tree' ? (
                   <div className='flex items-start gap-1.5'>
-                    <motion.div layout {...(isFresh(headTree.hash) ? hold : {})}>
+                    <motion.div
+                      layout
+                      {...(isFresh(headTree.hash) ? hold : {})}
+                    >
                       <GitObjectNode
                         type='tree'
                         hash={headTree.hash}
@@ -523,7 +553,10 @@ function GitPipeline({ repo }: { repo: Repo }) {
                         compact
                       />
                     </motion.div>
-                    <ArrowRightIcon size={13} className='mt-3 shrink-0 text-default-400' />
+                    <ArrowRightIcon
+                      size={13}
+                      className='text-default-400 mt-3 shrink-0'
+                    />
                     <motion.div layout {...(isFresh(repo.main) ? hold : {})}>
                       <GitObjectNode
                         type='commit'
@@ -534,13 +567,13 @@ function GitPipeline({ repo }: { repo: Repo }) {
                     </motion.div>
                   </div>
                 ) : (
-                  <span className='py-2 text-[10px] text-default-400'>—</span>
+                  <span className='text-default-400 py-2 text-[10px]'>—</span>
                 )}
               </div>
 
               {/* History timeline with the pointers attached. */}
-              <div className='min-w-0 flex-1 border-t border-default-100 pt-2 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0'>
-                <div className='mb-1 text-[10px] uppercase tracking-wide text-default-500'>
+              <div className='border-default-100 min-w-0 flex-1 border-t pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3'>
+                <div className='text-default-500 mb-1 text-[10px] tracking-wide uppercase'>
                   commit history
                 </div>
                 <HistoryTimeline repo={repo} />
@@ -556,7 +589,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           key={repo.lastAction}
           {...fade}
           aria-live='polite'
-          className='mt-3 rounded-lg bg-default-50 px-3 py-2 text-xs leading-5 text-default-600'
+          className='bg-default-50 text-default-600 mt-3 rounded-lg px-3 py-2 text-xs leading-5'
         >
           {repo.lastAction}
         </motion.p>
@@ -565,8 +598,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
       {/* Orphaned commits, if any. */}
       <AnimatePresence>
         {repo.orphaned.length > 0 && (
-          <motion.div key='orphans' {...fade} className='mt-3 flex flex-wrap items-center gap-2'>
-            <span className='text-[10px] uppercase tracking-wide text-default-400'>
+          <motion.div
+            key='orphans'
+            {...fade}
+            className='mt-3 flex flex-wrap items-center gap-2'
+          >
+            <span className='text-default-400 text-[10px] tracking-wide uppercase'>
               unreferenced:
             </span>
             {repo.orphaned.map(hash => {
@@ -576,7 +613,11 @@ function GitPipeline({ repo }: { repo: Repo }) {
                   key={hash}
                   type='commit'
                   hash={hash}
-                  label={commit && commit.kind === 'commit' ? commit.message : undefined}
+                  label={
+                    commit && commit.kind === 'commit'
+                      ? commit.message
+                      : undefined
+                  }
                   state='orphaned'
                   hideBadge
                 />
@@ -599,8 +640,8 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
   const { added, removed } = diffStat(rows)
   if (added === 0 && removed === 0) return null
   return (
-    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-xs'>
-      <div className='flex items-center gap-2 bg-default-200 px-2 py-1 text-[10px] text-default-500'>
+    <div className='bg-default-100 font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
+      <div className='bg-default-200 text-default-500 flex items-center gap-2 px-2 py-1 text-[10px]'>
         <span className='text-success'>+{added}</span>
         <span className='text-danger'>−{removed}</span>
         <span>vs last commit</span>
@@ -613,13 +654,15 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
               'flex gap-2 border-l-2 px-2',
               row.type === 'add' && 'border-success text-success',
               row.type === 'remove' && 'border-danger text-danger',
-              row.type === 'context' && 'border-transparent text-default-500'
+              row.type === 'context' && 'text-default-500 border-transparent'
             )}
           >
-            <span className='select-none text-default-400'>
+            <span className='text-default-400 select-none'>
               {row.type === 'add' ? '+' : row.type === 'remove' ? '−' : ' '}
             </span>
-            <span className='whitespace-pre-wrap break-all'>{row.text || ' '}</span>
+            <span className='break-all whitespace-pre-wrap'>
+              {row.text || ' '}
+            </span>
           </div>
         ))}
       </div>
@@ -627,7 +670,10 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
   )
 }
 
-const STATUS_BADGE: Record<FileStatus, { letter: string; className: string } | null> = {
+const STATUS_BADGE: Record<
+  FileStatus,
+  { letter: string; className: string } | null
+> = {
   committed: null,
   modified: { letter: 'M', className: 'text-warning' },
   staged: { letter: 'M', className: 'text-success' },
@@ -643,7 +689,12 @@ function ActivityBar({
   onTab: (t: VscTab) => void
   changeCount: number
 }) {
-  const item = (id: VscTab, label: string, icon: React.ReactNode, badge?: number) => {
+  const item = (
+    id: VscTab,
+    label: string,
+    icon: React.ReactNode,
+    badge?: number
+  ) => {
     const active = tab === id
     return (
       <button
@@ -656,12 +707,12 @@ function ActivityBar({
           'relative flex h-11 w-11 items-center justify-center border-l-2 transition-colors',
           active
             ? 'border-primary text-foreground'
-            : 'border-transparent text-default-400 hover:text-default-600'
+            : 'text-default-400 hover:text-default-600 border-transparent'
         )}
       >
         {icon}
         {badge ? (
-          <span className='absolute bottom-1.5 right-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-semibold text-primary-foreground'>
+          <span className='bg-primary text-primary-foreground absolute right-1.5 bottom-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-1 text-[9px] font-semibold'>
             {badge}
           </span>
         ) : null}
@@ -669,7 +720,7 @@ function ActivityBar({
     )
   }
   return (
-    <div className='flex flex-row gap-1 bg-default-100 sm:flex-col sm:gap-0'>
+    <div className='bg-default-100 flex flex-row gap-1 sm:flex-col sm:gap-0'>
       {item('explorer', 'Explorer', <FilesIcon size={20} />)}
       {item('scm', 'Source Control', <GitBranchIcon size={20} />, changeCount)}
     </div>
@@ -707,24 +758,30 @@ function VscodeShell({
   )
 
   return (
-    <div className='overflow-hidden rounded-2xl bg-default-50 shadow-xs'>
+    <div className='bg-default-50 overflow-hidden rounded-2xl shadow-xs'>
       {/* Title bar */}
-      <div className='flex items-center gap-2 bg-default-100 px-3 py-1.5'>
+      <div className='bg-default-100 flex items-center gap-2 px-3 py-1.5'>
         <span className='flex gap-1.5'>
-          <span className='h-2.5 w-2.5 rounded-full bg-default-300' />
-          <span className='h-2.5 w-2.5 rounded-full bg-default-300' />
-          <span className='h-2.5 w-2.5 rounded-full bg-default-300' />
+          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
+          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
+          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
         </span>
-        <span className='ml-1 text-xs text-default-500'>demo-repo — VS Code</span>
+        <span className='text-default-500 ml-1 text-xs'>
+          demo-repo — VS Code
+        </span>
       </div>
 
       <div className='flex flex-col sm:flex-row'>
         <ActivityBar tab={tab} onTab={setTab} changeCount={changes.length} />
 
         {/* Side panel */}
-        <div className='w-full border-b border-default-100 sm:w-56 sm:border-b-0 sm:border-r sm:border-default-100'>
+        <div className='border-default-100 sm:border-default-100 w-full border-b sm:w-56 sm:border-r sm:border-b-0'>
           {tab === 'explorer' ? (
-            <ExplorerPanel repo={repo} selected={selected} onSelect={onSelect} />
+            <ExplorerPanel
+              repo={repo}
+              selected={selected}
+              onSelect={onSelect}
+            />
           ) : (
             <SourceControlPanel
               repo={repo}
@@ -739,12 +796,12 @@ function VscodeShell({
 
         {/* Editor */}
         <div className='flex min-w-0 flex-1 flex-col'>
-          <div className='flex items-center justify-between bg-default-100 px-3 py-1.5'>
-            <span className='flex items-center gap-1.5 font-sourceCodePro text-xs text-foreground'>
+          <div className='bg-default-100 flex items-center justify-between px-3 py-1.5'>
+            <span className='font-sourceCodePro text-foreground flex items-center gap-1.5 text-xs'>
               <FileIcon size={13} className='text-default-400' />
               {selected}
             </span>
-            <span className='font-sourceCodePro text-[10px] text-secondary'>
+            <span className='font-sourceCodePro text-secondary text-[10px]'>
               blob {workingHash}
             </span>
           </div>
@@ -753,18 +810,26 @@ function VscodeShell({
             aria-label={`Edit ${selected}`}
             spellCheck={false}
             value={file.working}
-            onChange={e => dispatch({ type: 'edit', name: selected, content: e.target.value })}
-            className='h-40 w-full resize-none border-0 bg-default-50 p-3 font-sourceCodePro text-xs text-foreground outline-hidden'
+            onChange={e =>
+              dispatch({
+                type: 'edit',
+                name: selected,
+                content: e.target.value
+              })
+            }
+            className='bg-default-50 font-sourceCodePro text-foreground h-40 w-full resize-none border-0 p-3 text-xs outline-hidden'
           />
 
-          <div className='border-t border-default-100 p-2'>
+          <div className='border-default-100 border-t p-2'>
             <DiffView rows={diffRows} />
-            {diffStat(diffRows).added === 0 && diffStat(diffRows).removed === 0 && (
-              <p className='px-1 py-2 text-center text-[11px] text-default-400'>
-                No changes yet — edit the file above, then switch to{' '}
-                <span className='text-foreground'>Source Control</span> to stage &amp; commit.
-              </p>
-            )}
+            {diffStat(diffRows).added === 0 &&
+              diffStat(diffRows).removed === 0 && (
+                <p className='text-default-400 px-1 py-2 text-center text-[11px]'>
+                  No changes yet — edit the file above, then switch to{' '}
+                  <span className='text-foreground'>Source Control</span> to
+                  stage &amp; commit.
+                </p>
+              )}
           </div>
         </div>
       </div>
@@ -783,10 +848,10 @@ function ExplorerPanel({
 }) {
   return (
     <div className='py-2'>
-      <div className='px-3 pb-1 text-[10px] font-semibold uppercase tracking-wide text-default-400'>
+      <div className='text-default-400 px-3 pb-1 text-[10px] font-semibold tracking-wide uppercase'>
         Explorer
       </div>
-      <div className='flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-default-500'>
+      <div className='text-default-500 flex items-center gap-1 px-2 py-1 text-[11px] font-semibold'>
         <FilesIcon size={13} /> demo-repo
       </div>
       {FILE_ORDER.map(name => {
@@ -800,14 +865,21 @@ function ExplorerPanel({
             onClick={() => onSelect(name)}
             aria-pressed={active}
             className={cn(
-              'flex w-full items-center gap-2 py-1 pl-6 pr-3 text-left text-xs transition-colors',
-              active ? 'bg-default-200 text-foreground' : 'text-default-600 hover:bg-default-100'
+              'flex w-full items-center gap-2 py-1 pr-3 pl-6 text-left text-xs transition-colors',
+              active
+                ? 'bg-default-200 text-foreground'
+                : 'text-default-600 hover:bg-default-100'
             )}
           >
             <FileIcon size={13} className='text-default-400' />
-            <span className='flex-1 font-sourceCodePro'>{name}</span>
+            <span className='font-sourceCodePro flex-1'>{name}</span>
             {badge && (
-              <span className={cn('font-sourceCodePro text-[11px] font-bold', badge.className)}>
+              <span
+                className={cn(
+                  'font-sourceCodePro text-[11px] font-bold',
+                  badge.className
+                )}
+              >
                 {badge.letter}
               </span>
             )}
@@ -837,7 +909,7 @@ function SourceControlPanel({
 
   return (
     <div className='py-2'>
-      <div className='px-3 pb-2 text-[10px] font-semibold uppercase tracking-wide text-default-400'>
+      <div className='text-default-400 px-3 pb-2 text-[10px] font-semibold tracking-wide uppercase'>
         Source Control
       </div>
 
@@ -856,31 +928,30 @@ function SourceControlPanel({
         />
         <Button
           size='sm'
-          color='primary'
-          radius='sm'
-          className='mt-2 w-full'
-          startContent={<CheckIcon size={14} />}
+          variant='primary'
+          className='mt-2 w-full rounded-sm'
           isDisabled={!canCommit}
           onPress={() => dispatch({ type: 'commit', message })}
         >
+          <CheckIcon size={14} />
           Commit
         </Button>
-        <p className='mt-1 px-0.5 text-[10px] leading-4 text-default-400'>
-          Check a file to stage it (that writes its blob). The message becomes part of the
-          commit&apos;s hash.
+        <p className='text-default-400 mt-1 px-0.5 text-[10px] leading-4'>
+          Check a file to stage it (that writes its blob). The message becomes
+          part of the commit&apos;s hash.
         </p>
       </div>
 
       <div className='mt-2 px-2'>
         <div className='mb-1 flex items-center justify-between px-1'>
-          <span className='text-[10px] font-semibold uppercase tracking-wide text-default-400'>
+          <span className='text-default-400 text-[10px] font-semibold tracking-wide uppercase'>
             Changes
           </span>
-          <span className='text-[10px] text-default-400'>{changes.length}</span>
+          <span className='text-default-400 text-[10px]'>{changes.length}</span>
         </div>
 
         {changes.length === 0 ? (
-          <p className='px-1 py-3 text-center text-[11px] text-default-400'>
+          <p className='text-default-400 px-1 py-3 text-center text-[11px]'>
             No changes.
           </p>
         ) : (
@@ -891,7 +962,7 @@ function SourceControlPanel({
             return (
               <div
                 key={name}
-                className='flex items-center gap-2 rounded-md px-1 py-1 hover:bg-default-100'
+                className='hover:bg-default-100 flex items-center gap-2 rounded-md px-1 py-1'
               >
                 <input
                   type='checkbox'
@@ -900,7 +971,7 @@ function SourceControlPanel({
                   onChange={() =>
                     dispatch({ type: isStaged ? 'unstage' : 'stage', name })
                   }
-                  className='h-3.5 w-3.5 shrink-0 accent-primary'
+                  className='accent-primary h-3.5 w-3.5 shrink-0'
                 />
                 <button
                   type='button'
@@ -908,11 +979,16 @@ function SourceControlPanel({
                   className='flex flex-1 items-center gap-1.5 text-left'
                 >
                   <FileIcon size={13} className='text-default-400' />
-                  <span className='flex-1 font-sourceCodePro text-xs text-default-600'>
+                  <span className='font-sourceCodePro text-default-600 flex-1 text-xs'>
                     {name}
                   </span>
                   {badge && (
-                    <span className={cn('font-sourceCodePro text-[11px] font-bold', badge.className)}>
+                    <span
+                      className={cn(
+                        'font-sourceCodePro text-[11px] font-bold',
+                        badge.className
+                      )}
+                    >
                       {badge.letter}
                     </span>
                   )}
@@ -941,11 +1017,12 @@ export default function ObjectInspector() {
       description='Below is a familiar editor. Edit a file, stage it, and commit — just like you would in VS Code. Up top, watch what Git is really doing underneath: writing blobs, building a tree and a commit, and moving the branch pointer.'
       caption={
         <>
-          Everything here is real Git behavior in miniature: staging a file writes a blob
-          immediately; committing is what builds the tree and the commit object; the commit
-          stores its <em>parent&apos;s</em> hash; and <code>reset --hard</code> just moves the
-          branch pointer — the old commit isn&apos;t deleted, only unreferenced. Hashes are a
-          stand-in, but the relationships are exact.
+          Everything here is real Git behavior in miniature: staging a file
+          writes a blob immediately; committing is what builds the tree and the
+          commit object; the commit stores its <em>parent&apos;s</em> hash; and{' '}
+          <code>reset --hard</code> just moves the branch pointer — the old
+          commit isn&apos;t deleted, only unreferenced. Hashes are a stand-in,
+          but the relationships are exact.
         </>
       }
     >
@@ -967,18 +1044,18 @@ export default function ObjectInspector() {
         <div className='flex items-center justify-between'>
           <Button
             size='sm'
-            variant='bordered'
-            radius='sm'
-            startContent={<RotateCcwIcon size={13} />}
+            variant='outline'
             isDisabled={!canReset}
             onPress={() => dispatch({ type: 'reset' })}
+            className='rounded-sm'
           >
+            <RotateCcwIcon size={13} />
             git reset --hard HEAD~1
           </Button>
           <button
             type='button'
             onClick={() => dispatch({ type: 'reset-all' })}
-            className='text-[11px] text-default-400 underline-offset-2 hover:text-default-600 hover:underline'
+            className='text-default-400 hover:text-default-600 text-[11px] underline-offset-2 hover:underline'
           >
             reset the demo
           </button>

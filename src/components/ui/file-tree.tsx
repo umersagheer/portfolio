@@ -9,7 +9,12 @@ import React, {
   useState
 } from 'react'
 import { Button, cn } from '@heroui/react'
-import { IconChevronRight, IconFile, IconFolder, IconFolderOpen } from '@tabler/icons-react'
+import {
+  IconChevronRight,
+  IconFile,
+  IconFolder,
+  IconFolderOpen
+} from '@tabler/icons-react'
 
 type TreeViewElement = {
   id: string
@@ -272,7 +277,7 @@ const TreeIndicator = forwardRef<
       dir={direction}
       ref={ref}
       className={cn(
-        'absolute bottom-2 top-2 w-px rounded-full bg-default-200',
+        'bg-default-200 absolute top-2 bottom-2 w-px rounded-full',
         direction === 'rtl' ? 'right-2' : 'left-2',
         className
       )}
@@ -337,11 +342,11 @@ const Folder = forwardRef<HTMLDivElement, FolderProps>(
           <IconChevronRight
             size={14}
             className={cn(
-              'shrink-0 text-default-400 transition-transform',
+              'text-default-400 shrink-0 transition-transform',
               isExpanded && (direction === 'rtl' ? '-rotate-90' : 'rotate-90')
             )}
           />
-          <span className='shrink-0 text-default-500'>
+          <span className='text-default-500 shrink-0'>
             {isExpanded
               ? (openIcon ?? <IconFolderOpen size={16} />)
               : (closeIcon ?? <IconFolder size={16} />)}
@@ -353,7 +358,7 @@ const Folder = forwardRef<HTMLDivElement, FolderProps>(
           <div
             className={cn(
               'relative mt-1 flex flex-col gap-1 pl-5',
-              direction === 'rtl' && 'pl-0 pr-5'
+              direction === 'rtl' && 'pr-5 pl-0'
             )}
             role='group'
           >
@@ -416,7 +421,7 @@ const File = forwardRef<
         }}
         {...props}
       >
-        <span className='shrink-0 text-default-500'>
+        <span className='text-default-500 shrink-0'>
           {fileIcon ?? <IconFile size={16} />}
         </span>
         {children}
@@ -469,7 +474,7 @@ const CollapseButton = forwardRef<
     <Button
       ref={ref}
       size='sm'
-      variant='flat'
+      variant='secondary'
       className={cn('h-8 w-fit', className)}
       onPress={() => {
         if (expandedItems.length > 0) {

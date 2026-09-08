@@ -12,10 +12,7 @@ export default async function RecentProjects() {
       <Projects projects={projects} />
       <Link
         href='/projects'
-        color='foreground'
-        isBlock
-        className='self-center'
-        size='sm'
+        className='text-foreground hover:bg-default-100 self-center rounded-md px-2 py-1 text-sm transition-colors'
       >
         <p className='font-medium'>All projects</p>
         <ArrowRightIcon className='ml-2 size-5' />

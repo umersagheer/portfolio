@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Image, Link } from "@heroui/react"
+import { Image, Link } from '@heroui/react'
 
 import { getProjectById, getProjects } from '@/libs/projects'
 import formatDate from '@/libs/utils'
@@ -33,19 +33,22 @@ export default async function Project({ params }: ProjectProps) {
   return (
     <section className='pb-20'>
       <div className='space-y-4'>
-        <Link href={'/projects'} color='foreground' isBlock size='sm'>
+        <Link
+          href={'/projects'}
+          className='text-foreground hover:bg-default-100 inline-flex items-center rounded-md px-2 py-1 text-sm transition-colors'
+        >
           <ArrowLeftIcon className='mr-2 size-5' />
           <p className='font-medium'>Back to projects</p>
         </Link>
         {image && <Image src={image} alt={title} />}
         <header>
           <h1 className='title'>{title}</h1>
-          <p className='pt-2 text-small'>
+          <p className='text-small pt-2'>
             {author} / {formatDate(publishedAt ?? '')}
           </p>
         </header>
 
-        <main className='prose-znc prose mt-10 max-w-6xl dark:prose-invert'>
+        <main className='prose-znc prose dark:prose-invert mt-10 max-w-6xl'>
           <MDXContent source={content} />
         </main>
       </div>

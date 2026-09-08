@@ -27,7 +27,7 @@ export default function AuthorSidebar({
   const { newerPost, olderPost } = adjacentPosts
 
   return (
-    <div className='fixed right-[calc(50%+384px+1.5rem)] top-24 hidden w-48 xl:block'>
+    <div className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden w-48 xl:block'>
       {/* Author info */}
       <div className='flex flex-col gap-2'>
         <Image
@@ -47,39 +47,43 @@ export default function AuthorSidebar({
           href={siteProfile.socials.x.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='-mt-1 text-xs text-primary'
+          className='text-primary -mt-1 text-xs'
         >
           {siteProfile.socials.x.label}
         </a>
 
         <div className='-ml-1.5 flex items-center gap-0.5'>
-          <Tooltip content='GitHub' size='sm'>
+          <Tooltip>
             <a
               href={siteProfile.socials.github.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='GitHub'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='github' size={16} className='grayscale' />
             </a>
+
+            <Tooltip.Content>GitHub</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='LinkedIn' size='sm'>
+          <Tooltip>
             <a
               href={siteProfile.socials.linkedin.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='linkedin' size={16} className='grayscale' />
             </a>
+
+            <Tooltip.Content>LinkedIn</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='Email' size='sm'>
+          <Tooltip>
             <a
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon
                 slug='gmail'
@@ -88,10 +92,12 @@ export default function AuthorSidebar({
                 fallback={<MailIcon size={16} className='text-default-500' />}
               />
             </a>
+
+            <Tooltip.Content>Email</Tooltip.Content>
           </Tooltip>
         </div>
 
-        <div className='flex flex-col gap-1 text-xs text-default-400'>
+        <div className='text-default-400 flex flex-col gap-1 text-xs'>
           <span className='flex items-center gap-1.5'>
             <ClockIcon size={12} />
             {readingTime} min read
@@ -104,20 +110,24 @@ export default function AuthorSidebar({
       </div>
 
       {/* Divider */}
-      <div className='my-3 h-px w-3/4 bg-default-200' />
+      <div className='bg-default-200 my-3 h-px w-3/4' />
 
       {/* Adjacent posts navigation */}
       <div className='flex flex-col gap-3'>
         {newerPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-[10px] uppercase tracking-wider text-default-400'>
+            <span className='text-default-400 text-[10px] tracking-wider uppercase'>
               Previous Article
             </span>
-            <Tooltip
-              size='sm'
-              delay={500}
-              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
-              content={
+            <Tooltip delay={500}>
+              <Link
+                href={`/posts/${newerPost.postId}`}
+                className='text-default-600 hover:text-primary line-clamp-2 text-xs transition-colors'
+              >
+                {newerPost.title}
+              </Link>
+
+              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {newerPost.image && (
                     <Image
@@ -130,31 +140,26 @@ export default function AuthorSidebar({
                       classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
-                  <span className='px-2 py-1.5 text-xs'>
-                    {newerPost.title}
-                  </span>
+                  <span className='px-2 py-1.5 text-xs'>{newerPost.title}</span>
                 </div>
-              }
-            >
-              <Link
-                href={`/posts/${newerPost.postId}`}
-                className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
-              >
-                {newerPost.title}
-              </Link>
+              </Tooltip.Content>
             </Tooltip>
           </div>
         )}
         {olderPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-[10px] uppercase tracking-wider text-default-400'>
+            <span className='text-default-400 text-[10px] tracking-wider uppercase'>
               Next Article
             </span>
-            <Tooltip
-              size='sm'
-              delay={500}
-              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
-              content={
+            <Tooltip delay={500}>
+              <Link
+                href={`/posts/${olderPost.postId}`}
+                className='text-default-600 hover:text-primary line-clamp-2 text-xs transition-colors'
+              >
+                {olderPost.title}
+              </Link>
+
+              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {olderPost.image && (
                     <Image
@@ -167,29 +172,20 @@ export default function AuthorSidebar({
                       classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
-                  <span className='px-2 py-1.5 text-xs'>
-                    {olderPost.title}
-                  </span>
+                  <span className='px-2 py-1.5 text-xs'>{olderPost.title}</span>
                 </div>
-              }
-            >
-              <Link
-                href={`/posts/${olderPost.postId}`}
-                className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
-              >
-                {olderPost.title}
-              </Link>
+              </Tooltip.Content>
             </Tooltip>
           </div>
         )}
       </div>
 
       {/* Divider + Back */}
-      <div className='my-3 h-px w-3/4 bg-default-200' />
+      <div className='bg-default-200 my-3 h-px w-3/4' />
 
       <Link
         href='/posts'
-        className='text-xs text-default-500 transition-colors hover:text-primary'
+        className='text-default-500 hover:text-primary text-xs transition-colors'
       >
         &larr; Back to posts
       </Link>

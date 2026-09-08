@@ -142,7 +142,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={singleContainerRef}
-            className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+            className='border-default-100 bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               glow
@@ -202,7 +202,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={multiContainerRef}
-            className='relative flex flex-col items-center gap-6 rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+            className='border-default-100 bg-background relative flex flex-col items-center gap-6 rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               width={16}
@@ -239,13 +239,13 @@ export default function PubSubScalingDemo() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className='dark:bg-danger-950 flex size-10 items-center justify-center rounded-full bg-danger-100 text-lg font-bold text-danger-500'
+                      className='dark:bg-danger-950 bg-danger-100 text-danger-500 flex size-10 items-center justify-center rounded-full text-lg font-bold'
                     >
                       <IconX size={18} />
                     </motion.div>
                   )}
                   {(!animating || animStep < 2) && (
-                    <div className='h-px w-8 bg-default-200' />
+                    <div className='bg-default-200 h-px w-8' />
                   )}
                 </div>
               )}
@@ -336,12 +336,13 @@ export default function PubSubScalingDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className={`flex items-center gap-1.5 text-xs font-medium ${mode === 'no-broker' && animStep >= 2
-              ? 'text-danger-500'
-              : mode === 'redis' && animStep >= 4
-                ? 'text-success-500'
-                : 'text-default-500'
-              }`}
+            className={`flex items-center gap-1.5 text-xs font-medium ${
+              mode === 'no-broker' && animStep >= 2
+                ? 'text-danger-500'
+                : mode === 'redis' && animStep >= 4
+                  ? 'text-success-500'
+                  : 'text-default-500'
+            }`}
           >
             {mode === 'redis' && animStep >= 4 && <IconCheck size={14} />}
             {mode === 'no-broker' && animStep >= 2 && <IconX size={14} />}
@@ -349,9 +350,8 @@ export default function PubSubScalingDemo() {
           </motion.span>
         </AnimatePresence>
         <Button
+          variant='secondary'
           size='sm'
-          variant='flat'
-          color='primary'
           isDisabled={animating}
           onPress={sendMessage}
         >

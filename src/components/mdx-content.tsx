@@ -101,8 +101,8 @@ function Anchor({
 function CheckItem({ label }: { label: string }) {
   return (
     <div className='my-1'>
-      <Checkbox defaultSelected={false} size='sm' radius='sm'>
-        <span className='text-sm text-foreground'>{label}</span>
+      <Checkbox defaultSelected={false} className='rounded-sm'>
+        <span className='text-foreground text-sm'>{label}</span>
       </Checkbox>
     </div>
   )

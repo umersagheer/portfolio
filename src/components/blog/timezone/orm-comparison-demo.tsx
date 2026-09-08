@@ -10,42 +10,42 @@ import DemoContainer from './demo-container'
 type ORM = 'prisma' | 'typeorm' | 'drizzle'
 
 const ORM_DATA: Record<
-    ORM,
-    {
-        name: string
-        schema: string
-        sqlType: string
-        tzAware: boolean
-        fix: string
-        fixSchema: string
-        gotcha: string
-    }
+  ORM,
+  {
+    name: string
+    schema: string
+    sqlType: string
+    tzAware: boolean
+    fix: string
+    fixSchema: string
+    gotcha: string
+  }
 > = {
-    prisma: {
-        name: 'Prisma',
-        schema: `model Order {
+  prisma: {
+    name: 'Prisma',
+    schema: `model Order {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   //        ^^^^^^^^
   //  Maps to: timestamp(3) WITHOUT time zone
   //  Prisma's default — no timezone awareness!
 }`,
-        sqlType: 'timestamp(3) without time zone',
-        tzAware: false,
-        fix: '@db.Timestamptz(3)',
-        fixSchema: `model Order {
+    sqlType: 'timestamp(3) without time zone',
+    tzAware: false,
+    fix: '@db.Timestamptz(3)',
+    fixSchema: `model Order {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   //                                 ^^^^^^^^^^^^^^^^^
   //  Now maps to: timestamptz(3)
   //  PostgreSQL handles UTC conversion natively
 }`,
-        gotcha:
-            'Raw SQL queries using AT TIME ZONE on the default timestamp type behave counterintuitively — the single AT TIME ZONE trap.'
-    },
-    typeorm: {
-        name: 'TypeORM',
-        schema: `@Entity()
+    gotcha:
+      'Raw SQL queries using AT TIME ZONE on the default timestamp type behave counterintuitively — the single AT TIME ZONE trap.'
+  },
+  typeorm: {
+    name: 'TypeORM',
+    schema: `@Entity()
 class Order {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
@@ -53,186 +53,184 @@ class Order {
   //  'timestamp' = without timezone
   //  'timestamptz' = with timezone
 }`,
-        sqlType: 'timestamp (you choose)',
-        tzAware: false,
-        fix: "{ type: 'timestamptz' }",
-        fixSchema: `@Entity()
+    sqlType: 'timestamp (you choose)',
+    tzAware: false,
+    fix: "{ type: 'timestamptz' }",
+    fixSchema: `@Entity()
 class Order {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date
   //                        ^^^^^^^^^^^^
   //  Explicitly opt into timezone-aware type
 }`,
-        gotcha:
-            "When reading bare timestamps, TypeORM may interpret them as the server's local time, not UTC. Set connection option: -c timezone=UTC"
-    },
-    drizzle: {
-        name: 'Drizzle',
-        schema: `const orders = pgTable('orders', {
+    gotcha:
+      "When reading bare timestamps, TypeORM may interpret them as the server's local time, not UTC. Set connection option: -c timezone=UTC"
+  },
+  drizzle: {
+    name: 'Drizzle',
+    schema: `const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   createdAt: timestamp('created_at').defaultNow()
   //  Default: withTimezone is false
   //  Maps to: timestamp WITHOUT time zone
 })`,
-        sqlType: 'timestamp without time zone',
-        tzAware: false,
-        fix: '{ withTimezone: true }',
-        fixSchema: `const orders = pgTable('orders', {
+    sqlType: 'timestamp without time zone',
+    tzAware: false,
+    fix: '{ withTimezone: true }',
+    fixSchema: `const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   createdAt: timestamp('created_at', {
     withTimezone: true  // ← explicit!
   }).defaultNow()
   //  Now maps to: timestamptz
 })`,
-        gotcha:
-            "Check the mode option: 'date' returns JS Date objects, 'string' returns ISO strings. String mode avoids auto-conversion surprises."
-    }
+    gotcha:
+      "Check the mode option: 'date' returns JS Date objects, 'string' returns ISO strings. String mode avoids auto-conversion surprises."
+  }
 }
 
 function CodeBlock({ code, highlight }: { code: string; highlight?: string }) {
-    return (
-        <div className='overflow-x-auto rounded-md bg-default-100 p-3 font-mono text-xs leading-relaxed'>
-            {code.split('\n').map((line, i) => {
-                const isComment = line.trimStart().startsWith('//')
-                const isHighlighted = highlight && line.includes(highlight)
-                return (
-                    <div
-                        key={i}
-                        className={
-                            isHighlighted
-                                ? 'text-primary-600'
-                                : isComment
-                                    ? 'text-default-400'
-                                    : 'text-default-600'
-                        }
-                    >
-                        {line || '\u00A0'}
-                    </div>
-                )
-            })}
-        </div>
-    )
+  return (
+    <div className='bg-default-100 overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
+      {code.split('\n').map((line, i) => {
+        const isComment = line.trimStart().startsWith('//')
+        const isHighlighted = highlight && line.includes(highlight)
+        return (
+          <div
+            key={i}
+            className={
+              isHighlighted
+                ? 'text-primary-600'
+                : isComment
+                  ? 'text-default-400'
+                  : 'text-default-600'
+            }
+          >
+            {line || '\u00A0'}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function ORMComparisonDemo() {
-    const [orm, setOrm] = useState<ORM>('prisma')
-    const [showFix, setShowFix] = useState(false)
+  const [orm, setOrm] = useState<ORM>('prisma')
+  const [showFix, setShowFix] = useState(false)
 
-    const data = ORM_DATA[orm]
+  const data = ORM_DATA[orm]
 
-    return (
-        <DemoContainer
-            title='ORM Timezone Defaults'
-            description='See what each ORM maps DateTime to — and how to opt into timezone awareness'
-        >
-            <Tabs
-                size='sm'
-                variant='bordered'
-                selectedKey={orm}
-                onSelectionChange={key => {
-                    setOrm(key as ORM)
-                    setShowFix(false)
-                }}
-                className='mb-4'
-            >
-                <Tab
-                    key='prisma'
-                    title={<ORMTabTitle slug='prisma' label='Prisma' />}
-                />
-                <Tab
-                    key='typeorm'
-                    title={<ORMTabTitle slug='typeorm' label='TypeORM' />}
-                />
-                <Tab
-                    key='drizzle'
-                    title={<ORMTabTitle slug='drizzle' label='Drizzle' />}
-                />
-            </Tabs>
+  return (
+    <DemoContainer
+      title='ORM Timezone Defaults'
+      description='See what each ORM maps DateTime to — and how to opt into timezone awareness'
+    >
+      <Tabs
+        size='sm'
+        variant='bordered'
+        selectedKey={orm}
+        onSelectionChange={key => {
+          setOrm(key as ORM)
+          setShowFix(false)
+        }}
+        className='mb-4'
+      >
+        <Tab
+          key='prisma'
+          title={<ORMTabTitle slug='prisma' label='Prisma' />}
+        />
+        <Tab
+          key='typeorm'
+          title={<ORMTabTitle slug='typeorm' label='TypeORM' />}
+        />
+        <Tab
+          key='drizzle'
+          title={<ORMTabTitle slug='drizzle' label='Drizzle' />}
+        />
+      </Tabs>
 
-            <div className='mb-4 flex items-center gap-2 rounded-lg bg-default-100 px-3 py-2 text-xs text-default-500'>
-                <BrandIcon slug={orm} size={18} />
-                <span className='font-medium text-foreground'>{data.name}</span>
-                <IconArrowRight size={14} className='text-default-400' />
-                <BrandIcon slug='postgresql' size={18} />
-                <span>PostgreSQL timestamp mapping</span>
-            </div>
+      <div className='bg-default-100 text-default-500 mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs'>
+        <BrandIcon slug={orm} size={18} />
+        <span className='text-foreground font-medium'>{data.name}</span>
+        <IconArrowRight size={14} className='text-default-400' />
+        <BrandIcon slug='postgresql' size={18} />
+        <span>PostgreSQL timestamp mapping</span>
+      </div>
 
-            <div className='mb-4'>
-                <div className='mb-2 flex items-center gap-2'>
-                    <Button
-                        size='sm'
-                        variant={showFix ? 'solid' : 'flat'}
-                        color={showFix ? 'success' : 'primary'}
-                        aria-pressed={showFix}
-                        onPress={() => setShowFix(f => !f)}
-                    >
-                        {showFix ? 'Show default (problem)' : 'Show fix'}
-                    </Button>
-                </div>
-                <AnimatePresence mode='wait'>
-                    <motion.div
-                        key={`${orm}-${showFix}`}
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <CodeBlock
-                            code={showFix ? data.fixSchema : data.schema}
-                            highlight={showFix ? data.fix : undefined}
-                        />
-                    </motion.div>
-                </AnimatePresence>
-            </div>
+      <div className='mb-4'>
+        <div className='mb-2 flex items-center gap-2'>
+          <Button
+            variant={showFix ? 'primary' : 'secondary'}
+            size='sm'
+            aria-pressed={showFix}
+            onPress={() => setShowFix(f => !f)}
+          >
+            {showFix ? 'Show default (problem)' : 'Show fix'}
+          </Button>
+        </div>
+        <AnimatePresence mode='wait'>
+          <motion.div
+            key={`${orm}-${showFix}`}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+          >
+            <CodeBlock
+              code={showFix ? data.fixSchema : data.schema}
+              highlight={showFix ? data.fix : undefined}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-            <div className='grid gap-2 rounded-lg bg-default-100 p-3'>
-                <div className='flex items-baseline justify-between text-xs'>
-                    <span className='text-default-400'>SQL Type</span>
-                    <span className='font-mono text-foreground'>
-                        {showFix ? 'timestamptz' : data.sqlType}
-                    </span>
-                </div>
-                <div className='flex items-baseline justify-between text-xs'>
-                    <span className='text-default-400'>Timezone Aware?</span>
-                    <span
-                        className={`font-medium ${showFix
-                            ? 'text-success-600'
-                            : 'text-danger-600'
-                            }`}
-                    >
-                        {showFix ? 'Yes' : 'No (by default)'}
-                    </span>
-                </div>
-                <div className='flex items-baseline justify-between text-xs'>
-                    <span className='text-default-400'>Fix</span>
-                    <code className='text-primary-600'>
-                        {data.fix}
-                    </code>
-                </div>
-            </div>
+      <div className='bg-default-100 grid gap-2 rounded-lg p-3'>
+        <div className='flex items-baseline justify-between text-xs'>
+          <span className='text-default-400'>SQL Type</span>
+          <span className='text-foreground font-mono'>
+            {showFix ? 'timestamptz' : data.sqlType}
+          </span>
+        </div>
+        <div className='flex items-baseline justify-between text-xs'>
+          <span className='text-default-400'>Timezone Aware?</span>
+          <span
+            className={`font-medium ${
+              showFix ? 'text-success-600' : 'text-danger-600'
+            }`}
+          >
+            {showFix ? 'Yes' : 'No (by default)'}
+          </span>
+        </div>
+        <div className='flex items-baseline justify-between text-xs'>
+          <span className='text-default-400'>Fix</span>
+          <code className='text-primary-600'>{data.fix}</code>
+        </div>
+      </div>
 
-            <div className='mt-4'>
-                <Alert
-                    color='warning'
-                    description={data.gotcha}
-                    title='Gotcha'
-                />
-            </div>
-        </DemoContainer>
-    )
+      <div className='mt-4'>
+        <Alert status='warning'>
+          <Alert.Indicator />
+          <Alert.Content>
+            <Alert.Title>Gotcha</Alert.Title>
+            <Alert.Description>{data.gotcha}</Alert.Description>
+          </Alert.Content>
+        </Alert>
+      </div>
+    </DemoContainer>
+  )
 }
 
 function ORMTabTitle({
-    label,
-    slug
+  label,
+  slug
 }: {
-    label: string
-    slug: 'drizzle' | 'prisma' | 'typeorm'
+  label: string
+  slug: 'drizzle' | 'prisma' | 'typeorm'
 }) {
-    return (
-        <div className='flex items-center gap-2'>
-            <BrandIcon slug={slug} size={16} />
-            <span>{label}</span>
-        </div>
-    )
+  return (
+    <div className='flex items-center gap-2'>
+      <BrandIcon slug={slug} size={16} />
+      <span>{label}</span>
+    </div>
+  )
 }

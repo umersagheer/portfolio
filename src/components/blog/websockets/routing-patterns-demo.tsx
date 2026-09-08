@@ -105,10 +105,9 @@ export default function RoutingPatternsDemo() {
             <div className='mb-4 flex flex-wrap gap-2'>
               {CLIENTS.map((c, i) => (
                 <Button
+                  variant={unicastTarget === i ? 'primary' : 'tertiary'}
                   key={c.name}
                   size='sm'
-                  variant={unicastTarget === i ? 'solid' : 'flat'}
-                  color={unicastTarget === i ? 'primary' : 'default'}
                   onPress={() => setUnicastTarget(i)}
                 >
                   {c.name}
@@ -127,17 +126,15 @@ export default function RoutingPatternsDemo() {
           >
             <div className='mb-4 flex gap-2'>
               <Button
+                variant={multicastRoom === 'A' ? 'primary' : 'tertiary'}
                 size='sm'
-                variant={multicastRoom === 'A' ? 'solid' : 'flat'}
-                color={multicastRoom === 'A' ? 'secondary' : 'default'}
                 onPress={() => setMulticastRoom('A')}
               >
                 Room A
               </Button>
               <Button
+                variant={multicastRoom === 'B' ? 'primary' : 'tertiary'}
                 size='sm'
-                variant={multicastRoom === 'B' ? 'solid' : 'flat'}
-                color={multicastRoom === 'B' ? 'secondary' : 'default'}
                 onPress={() => setMulticastRoom('B')}
               >
                 Room B
@@ -150,7 +147,7 @@ export default function RoutingPatternsDemo() {
       {/* Diagram */}
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+        className='border-default-100 bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
       >
         <DotPattern
           glow
@@ -185,15 +182,16 @@ export default function RoutingPatternsDemo() {
                     <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                   </IconCard>
                   <div className='flex flex-col'>
-                    <span className='text-xs font-medium text-default-600'>
+                    <span className='text-default-600 text-xs font-medium'>
                       {client.name}
                     </span>
                     {pattern === 'multicast' && (
                       <span
-                        className={`text-[10px] ${client.room === multicastRoom
-                            ? 'font-semibold text-secondary-500'
+                        className={`text-[10px] ${
+                          client.room === multicastRoom
+                            ? 'text-secondary-500 font-semibold'
                             : 'text-default-400'
-                          }`}
+                        }`}
                       >
                         Room {client.room}
                       </span>
@@ -202,7 +200,7 @@ export default function RoutingPatternsDemo() {
                       <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className='text-[10px] text-success-500'
+                        className='text-success-500 text-[10px]'
                       >
                         received
                       </motion.span>
@@ -253,7 +251,7 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className='rounded-full bg-primary-900/40 px-4 py-1.5 text-xs font-medium text-primary-900'
+            className='bg-primary-900/40 text-primary-900 rounded-full px-4 py-1.5 text-xs font-medium'
           >
             {label}
           </motion.span>

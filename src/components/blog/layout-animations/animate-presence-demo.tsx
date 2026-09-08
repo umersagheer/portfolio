@@ -46,11 +46,11 @@ export default function AnimatePresenceDemo() {
   }
 
   const itemRow = (item: { id: number; label: string }) => (
-    <div className='flex items-center justify-between rounded-lg border border-default-200 bg-background px-4 py-2'>
+    <div className='border-default-200 bg-background flex items-center justify-between rounded-lg border px-4 py-2'>
       <span className='text-sm'>{item.label}</span>
       <button
         onClick={() => removeItem(item.id)}
-        className='rounded-full p-1 text-default-400 transition-colors hover:bg-danger-100 hover:text-danger-500'
+        className='text-default-400 hover:bg-danger-100 hover:text-danger-500 rounded-full p-1 transition-colors'
       >
         <IconX size={14} />
       </button>
@@ -82,12 +82,12 @@ export default function AnimatePresenceDemo() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                className='flex items-center justify-between rounded-lg border border-default-200 bg-background px-4 py-2'
+                className='border-default-200 bg-background flex items-center justify-between rounded-lg border px-4 py-2'
               >
                 <span className='text-sm'>{item.label}</span>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className='rounded-full p-1 text-default-400 transition-colors hover:bg-danger-100 hover:text-danger-500'
+                  className='text-default-400 hover:bg-danger-100 hover:text-danger-500 rounded-full p-1 transition-colors'
                 >
                   <IconX size={14} />
                 </button>
@@ -99,7 +99,7 @@ export default function AnimatePresenceDemo() {
         )}
       </div>
 
-      <p className='mt-3 flex items-start gap-1.5 text-xs italic text-default-400'>
+      <p className='text-default-400 mt-3 flex items-start gap-1.5 text-xs italic'>
         <IconInfoCircle size={14} className='mt-0.5 shrink-0' />
         {withPresence
           ? 'AnimatePresence delays unmounting until the exit animation completes, letting elements animate out gracefully.'
@@ -107,12 +107,8 @@ export default function AnimatePresenceDemo() {
       </p>
 
       <div className='mt-4 flex justify-center'>
-        <Button
-          size='sm'
-          variant='flat'
-          startContent={<IconPlus size={14} />}
-          onPress={addItem}
-        >
+        <Button size='sm' variant='secondary' onPress={addItem}>
+          <IconPlus size={14} />
           Add item
         </Button>
       </div>

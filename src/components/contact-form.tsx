@@ -108,11 +108,10 @@ export default function ContactForm() {
         </CardBody>
         <CardFooter className='flex flex-col gap-3'>
           <Button
-            color='primary'
-            variant='flat'
+            variant='secondary'
             type='submit'
             fullWidth
-            isLoading={loading}
+            isPending={loading}
           >
             Send
           </Button>
@@ -124,17 +123,17 @@ export default function ContactForm() {
           </div>
 
           <Button
-            color='success'
-            variant='solid'
+            className='bg-success text-success-foreground'
+            variant='primary'
             fullWidth
-            endContent={<MessageCircleHeartIcon size={16} />}
             onPress={() => window.open('https://wa.me/+923018155698', '_blank')}
           >
             Whatsapp
+            <MessageCircleHeartIcon size={16} />
           </Button>
-          <p className='justify-start text-small'>
+          <p className='text-small justify-start'>
             By submitting this form, I agree to the{' '}
-            <Link underline='hover' href='' className='font-medium' size='sm'>
+            <Link href='' className='text-sm font-medium hover:underline'>
               privacy policy
             </Link>
           </p>

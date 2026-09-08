@@ -27,8 +27,8 @@ export default function AuthorCardInline({
         height={32}
         className='shrink-0 rounded-full grayscale'
       />
-      <div className='flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-default-500'>
-        <span className='font-sourceCodePro font-bold text-foreground'>
+      <div className='text-default-500 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs'>
+        <span className='font-sourceCodePro text-foreground font-bold'>
           {siteProfile.name}
         </span>
         <span className='text-default-300'>&middot;</span>
@@ -37,52 +37,72 @@ export default function AuthorCardInline({
         <span>{readingTime} min read</span>
         <span className='text-default-300'>&middot;</span>
         <div className='-ml-1 flex items-center gap-0'>
-          <Tooltip content='X (Twitter)' size='sm'>
+          <Tooltip>
             <a
               href={siteProfile.socials.x.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='X'
-              className='rounded-md p-1 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1 transition-colors'
             >
-              <TheSvgIcon slug='x' size={12} className='grayscale opacity-70 transition-opacity hover:opacity-100' />
+              <TheSvgIcon
+                slug='x'
+                size={12}
+                className='opacity-70 grayscale transition-opacity hover:opacity-100'
+              />
             </a>
+
+            <Tooltip.Content>X (Twitter)</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='GitHub' size='sm'>
+          <Tooltip>
             <a
               href={siteProfile.socials.github.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='GitHub'
-              className='rounded-md p-1 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1 transition-colors'
             >
-              <TheSvgIcon slug='github' size={12} className='grayscale opacity-70 transition-opacity hover:opacity-100' />
+              <TheSvgIcon
+                slug='github'
+                size={12}
+                className='opacity-70 grayscale transition-opacity hover:opacity-100'
+              />
             </a>
+
+            <Tooltip.Content>GitHub</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='LinkedIn' size='sm'>
+          <Tooltip>
             <a
               href={siteProfile.socials.linkedin.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn'
-              className='rounded-md p-1 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1 transition-colors'
             >
-              <TheSvgIcon slug='linkedin' size={12} className='grayscale opacity-70 transition-opacity hover:opacity-100' />
+              <TheSvgIcon
+                slug='linkedin'
+                size={12}
+                className='opacity-70 grayscale transition-opacity hover:opacity-100'
+              />
             </a>
+
+            <Tooltip.Content>LinkedIn</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='Email' size='sm'>
+          <Tooltip>
             <a
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
-              className='rounded-md p-1 transition-colors hover:bg-default-100'
+              className='hover:bg-default-100 rounded-md p-1 transition-colors'
             >
               <TheSvgIcon
                 slug='gmail'
                 size={12}
-                className='grayscale opacity-70 transition-opacity hover:opacity-100'
+                className='opacity-70 grayscale transition-opacity hover:opacity-100'
                 fallback={<MailIcon size={12} className='text-default-500' />}
               />
             </a>
+
+            <Tooltip.Content>Email</Tooltip.Content>
           </Tooltip>
         </div>
       </div>

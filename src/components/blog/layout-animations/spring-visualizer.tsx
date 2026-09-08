@@ -39,7 +39,7 @@ export default function SpringVisualizer() {
     setIsAnimating(false)
   }
 
-  function applyPreset(preset: typeof presets[number]) {
+  function applyPreset(preset: (typeof presets)[number]) {
     setStiffness(preset.stiffness)
     setDamping(preset.damping)
     setMass(preset.mass)
@@ -48,9 +48,9 @@ export default function SpringVisualizer() {
   return (
     <DemoContainer title='Adjust the spring parameters and hit Play'>
       {/* Track */}
-      <div className='relative mb-6 h-14 rounded-lg border border-default-200 bg-background'>
+      <div className='border-default-200 bg-background relative mb-6 h-14 rounded-lg border'>
         <motion.div
-          className='absolute top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-primary-400 shadow-lg'
+          className='bg-primary-400 absolute top-1/2 h-10 w-10 -translate-y-1/2 rounded-full shadow-lg'
           initial={{ x: 16 }}
           animate={controls}
         />
@@ -60,8 +60,8 @@ export default function SpringVisualizer() {
       <div className='space-y-4'>
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='font-medium text-default-600'>Stiffness</label>
-            <span className='font-mono text-default-400'>{stiffness}</span>
+            <label className='text-default-600 font-medium'>Stiffness</label>
+            <span className='text-default-400 font-mono'>{stiffness}</span>
           </div>
           <input
             type='range'
@@ -69,14 +69,14 @@ export default function SpringVisualizer() {
             max={1000}
             value={stiffness}
             onChange={e => setStiffness(Number(e.target.value))}
-            className='w-full accent-primary-400'
+            className='accent-primary-400 w-full'
           />
         </div>
 
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='font-medium text-default-600'>Damping</label>
-            <span className='font-mono text-default-400'>{damping}</span>
+            <label className='text-default-600 font-medium'>Damping</label>
+            <span className='text-default-400 font-mono'>{damping}</span>
           </div>
           <input
             type='range'
@@ -84,14 +84,16 @@ export default function SpringVisualizer() {
             max={100}
             value={damping}
             onChange={e => setDamping(Number(e.target.value))}
-            className='w-full accent-primary-400'
+            className='accent-primary-400 w-full'
           />
         </div>
 
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='font-medium text-default-600'>Mass</label>
-            <span className='font-mono text-default-400'>{mass.toFixed(1)}</span>
+            <label className='text-default-600 font-medium'>Mass</label>
+            <span className='text-default-400 font-mono'>
+              {mass.toFixed(1)}
+            </span>
           </div>
           <input
             type='range'
@@ -99,7 +101,7 @@ export default function SpringVisualizer() {
             max={100}
             value={mass * 10}
             onChange={e => setMass(Number(e.target.value) / 10)}
-            className='w-full accent-primary-400'
+            className='accent-primary-400 w-full'
           />
         </div>
       </div>
@@ -110,7 +112,7 @@ export default function SpringVisualizer() {
           <Button
             key={preset.name}
             size='sm'
-            variant='bordered'
+            variant='outline'
             onPress={() => applyPreset(preset)}
             className='text-xs'
           >
@@ -123,20 +125,20 @@ export default function SpringVisualizer() {
       <div className='mt-4 flex justify-center gap-2'>
         <Button
           size='sm'
-          variant='flat'
-          startContent={<IconPlayerPlay size={14} />}
+          variant='secondary'
           onPress={play}
           isDisabled={isAnimating}
         >
+          <IconPlayerPlay size={14} />
           Play
         </Button>
         <Button
           size='sm'
-          variant='flat'
-          startContent={<IconRefresh size={14} />}
+          variant='secondary'
           onPress={reset}
           isDisabled={isAnimating}
         >
+          <IconRefresh size={14} />
           Reset
         </Button>
       </div>
