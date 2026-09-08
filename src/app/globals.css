@@ -1,12 +1,13 @@
 @import 'tailwindcss';
 
+/* HeroUI v3 is CSS-first: no Tailwind plugin, no provider. Must come after
+   Tailwind. Replaces the v2 `@plugin ./hero.ts` + `@source` setup. */
+@import '@heroui/styles';
+
 /* Custom plugins (matchUtilities, addVariablesForColors, typography) still live
    in the JS config and are bridged in via @config. */
 @config '../../tailwind.config.ts';
 
-/* HeroUI v2.8+ on Tailwind v4 loads as a CSS plugin, not from the JS config. */
-@plugin '../../hero.ts';
-@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
 /* Tailwind v4 changed the default border/divide colour from gray-200 to

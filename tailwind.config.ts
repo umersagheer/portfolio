@@ -6,14 +6,13 @@ const {
 } = require('tailwindcss/lib/util/flattenColorPalette')
 
 // Tailwind v4 reads this via the `@config` directive in src/app/globals.css.
-// The heroui() plugin no longer lives here — on Tailwind v4 it is loaded as a
-// CSS `@plugin './hero.ts'` instead (see hero.ts).
+// HeroUI v3 is CSS-first — it is imported directly in globals.css and needs no
+// plugin or content entry here.
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}'
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
     container: {

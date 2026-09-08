@@ -1,4 +1,4 @@
-import { addToast } from '@heroui/react'
+import { toast } from '@heroui/react'
 import axios from 'axios'
 
 export const handleApiError = (error: unknown) => {
@@ -8,10 +8,7 @@ export const handleApiError = (error: unknown) => {
       // Extract validation errors and display them
       console.log(error.response.data.errors[0])
       error.response.data.errors.forEach((validationError: any) => {
-        addToast({
-          title: validationError,
-          color: 'danger'
-        })
+        toast(validationError, { variant: 'danger' })
       })
     } else {
       // For other error types, use the default message handling
@@ -19,15 +16,9 @@ export const handleApiError = (error: unknown) => {
         typeof error.response.data === 'string'
           ? error.response.data
           : error.response.data?.message || 'An unexpected error occurred'
-      addToast({
-        title: errorMessage,
-        color: 'warning'
-      })
+      toast(errorMessage, { variant: 'warning' })
     }
   } else {
-    addToast({
-      title: 'An unexpected error occurred',
-      color: 'warning'
-    })
+    toast('An unexpected error occurred', { variant: 'warning' })
   }
 }

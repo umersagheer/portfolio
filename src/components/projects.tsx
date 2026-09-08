@@ -1,6 +1,6 @@
 'use client'
 
-import { Accordion, AccordionItem, addToast,  Chip, Link, ScrollShadow } from '@heroui/react'
+import { Accordion, AccordionItem, toast,  Chip, Link, ScrollShadow } from '@heroui/react'
 import React from 'react'
 import { ProjectType } from '@/content/projects'
 import { IconBrandGithub,  IconEngineFilled, IconLink } from '@tabler/icons-react'
@@ -112,12 +112,10 @@ export default function Projects({ projects }: ProjectProps) {
                       as={Link}
                       isExternal
                       onPress={() =>
-                        addToast({
-                          title: 'Access Restricted',
+                        toast('Access Restricted', {
                           description:
                             'This code is private and cant be viewed.',
-                          variant: 'flat',
-                          color: 'warning'
+                          variant: 'warning'
                         })
                       }
                       startContent={

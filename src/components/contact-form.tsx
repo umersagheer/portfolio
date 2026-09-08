@@ -14,7 +14,7 @@ import {
   Textarea,
   Link,
   Divider,
-  addToast
+  toast
 } from '@heroui/react'
 import { z } from 'zod'
 import { sendEmail } from '@/libs/actions'
@@ -42,11 +42,9 @@ export default function ContactForm() {
     try {
       setLoading(true)
       await sendEmail(data)
-      addToast({
-        title: 'Thank you for your message!',
+      toast('Thank you for your message!', {
         description: 'I will be in touch with you soon.',
-        color: 'success',
-        timeout: 5000
+        variant: 'success'
       })
     } catch (error) {
       handleApiError(error)

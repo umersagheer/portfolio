@@ -60,6 +60,32 @@ Legend: ⬜ Not started · 🔄 In progress · ✅ Done · ⚠️ Blocked
  1  HeroUIProvider, ToastProvider, Accordion, Divider, Switch, CardFooter
 ```
 
+### v3 token map (from the official styling migration guide)
+
+v3's colour system is a **reduction**, not a rename. Numbered scales are gone entirely,
+`primary` becomes `accent`, and `secondary` is **removed**.
+
+| v2 (yours) | count | v3 | Note |
+|---|---|---|---|
+| `text-default-400` | 175 | `text-muted` | 400/500/600 all collapse to one token |
+| `text-default-500` | 160 | `text-muted` | ″ |
+| `text-default-600` | 57 | `text-muted` / `text-foreground` | judgement call |
+| `text-foreground` | 76 | `text-foreground` | ✅ unchanged |
+| `bg-default-100` | 69 | `bg-surface` | `content1-4` → `surface`/`overlay` |
+| `border-default-200` | 48 | `border-default` | |
+| `text-primary` / `bg-primary` | 66 | `text-accent` / `bg-accent` | primary → accent |
+| `text-primary-500/600/700` | ~36 | `text-accent` | numbered scales removed |
+| `text-secondary` | 13 | `text-default` | **secondary removed in v3** |
+| `text-success-500` etc. | ~60 | `text-success` | numbered scales removed |
+| `text-tiny/small/medium/large` | — | `text-xs/sm/base/lg` | |
+| `rounded-small/medium/large` | — | `rounded-sm/md/lg` | ⚠️ values shrink 8→4, 12→6, 14→8px |
+| `classNames` prop | — | `className` | prop renamed in v3 |
+
+> ⚠️ **Design consequence, not just a rename:** your three-level grey ramp
+> (`default-400/500/600`, 392 uses) collapses into a single `muted` token. Text hierarchy
+> that currently reads as three distinct greys will flatten unless we reintroduce it
+> deliberately. This is a decision to make with eyes open, not a mechanical substitution.
+
 ### Top color tokens at risk (Phase 2)
 
 | Class | Count | Note |
