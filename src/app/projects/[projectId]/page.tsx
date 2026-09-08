@@ -7,9 +7,9 @@ import formatDate from '@/libs/utils'
 import MDXContent from '@/components/mdx-content'
 
 type ProjectProps = {
-  params: {
+  params: Promise<{
     projectId: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Project({ params }: ProjectProps) {
-  const { projectId } = params
+  const { projectId } = await params
   const project = await getProjectById(projectId)
   if (!project) {
     notFound()

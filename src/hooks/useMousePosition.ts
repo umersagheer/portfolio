@@ -6,7 +6,9 @@ interface MousePosition {
   isInside: boolean
 }
 
-export function useMousePosition(ref: RefObject<HTMLElement>): MousePosition {
+export function useMousePosition(
+  ref: RefObject<HTMLElement | null>
+): MousePosition {
   const [mousePosition, setMousePosition] = useState<MousePosition>({
     x: 0,
     y: 0,

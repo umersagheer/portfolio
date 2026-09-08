@@ -2,7 +2,7 @@ import { useState, type RefObject, useEffect } from 'react'
 
 interface Props {
   cursor: { x: number; y: number }
-  cardRef: RefObject<HTMLElement>
+  cardRef: RefObject<HTMLElement | null>
   mouseOnCard: boolean
 }
 

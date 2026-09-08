@@ -32,7 +32,7 @@ HeroUI is the **last** domino, not the first.
 
 | Phase | Scope | Status | Branch | Commit |
 |---|---|---|---|---|
-| **0** | React 19 + Next 15 (HeroUI/Tailwind untouched) | 🔄 In progress | `migration/phase-0-react19-next15` | — |
+| **0** | React 19 + Next 15 (HeroUI/Tailwind untouched) | ✅ Done | `migration/phase-0-react19-next15` | see log |
 | **1** | Tailwind v3 → v4 (CSS-first config) | ⬜ Not started | — | — |
 | **2** | Color token map (v2 semantic → v3 oklch) | ⬜ Not started | — | — |
 | **3** | Component API migration (leaf-first) | ⬜ Not started | — | — |
@@ -90,9 +90,11 @@ Legend: ⬜ Not started · 🔄 In progress · ✅ Done · ⚠️ Blocked
 
 **Goal:** Land React 19 while HeroUI v2 and Tailwind v3 stay untouched, so React 19 fallout is isolated from HeroUI fallout.
 
-### Dependency audit — ALL GREEN ✅
+### Dependency audit
 
-Every React-touching dependency already accepts React 19 **at its currently installed version**. No blockers, no forced upgrades.
+All React-touching dependencies accept React 19 at their installed version — **except `next-themes`**, which had to be bumped.
+
+> ⚠️ **Audit lesson:** the first pass checked each package's *latest* peer range instead of its *installed* one, which wrongly cleared `next-themes@0.3.0`. `pnpm install` caught it. For later phases, always read peer ranges off the installed version.
 
 | Package | Installed | React peer range | Verdict |
 |---|---|---|---|
@@ -102,36 +104,49 @@ Every React-touching dependency already accepts React 19 **at its currently inst
 | `@tsparticles/react` | 3.0.0 | `>=16.8.0` | ✅ |
 | `@number-flow/react` | 0.6.0 | `^18 \|\| ^19` | ✅ |
 | `remotion` / `@remotion/cli` | 4.0.434 | `>=16.8.0` | ✅ |
-| `next-themes` | 0.3.0 | `^16.8 … \|\| ^19` | ✅ |
+| `next-themes` | 0.3.0 | `^16.8 \|\| ^17 \|\| ^18` | ❌ **bumped → 0.4.6** |
 | `react-hook-form` | 7.53.0 | `… \|\| ^19` | ✅ |
 | `lucide-react` | 0.436.0 | `… \|\| ^19.0.0` | ✅ |
 | `@tabler/icons-react` | 3.31.0 | `>= 16` | ✅ |
 
 > Note: `@heroui/react@2.7.4` also requires `framer-motion >=11.5.6` — satisfied (11.18.2).
 
-### Work items
+### Work items — all complete
 
-- [ ] Branch `migration/phase-0-react19-next15`
-- [ ] Bump `react`, `react-dom` → 19; `@types/react`, `@types/react-dom` → 19
-- [ ] Bump `next`, `eslint-config-next` → 15.5.25
-- [ ] `next.config.mjs`: `experimental.serverComponentsExternalPackages` → `serverExternalPackages` (moved out of experimental in 15)
-- [ ] Async request APIs — `params` is now a Promise in 3 files:
-  - [ ] `src/app/posts/[postId]/page.tsx`
-  - [ ] `src/app/projects/[projectId]/page.tsx`
-  - [ ] `src/app/api/posts/[postId]/likes/route.ts`
-- [ ] `pnpm build` clean
-- [ ] `pnpm lint` clean
-- [ ] Manual smoke test (see checklist)
+- [x] Branch `migration/phase-0-react19-next15`
+- [x] `react`, `react-dom` → **19.2.8**; `@types/react` → 19.2.18, `@types/react-dom` → 19.2.7
+- [x] `next`, `eslint-config-next` → **15.5.25**
+- [x] `next-themes` 0.3.0 → **0.4.6** (React 19 peer)
+- [x] `next.config.mjs`: `experimental.serverComponentsExternalPackages` → `serverExternalPackages`
+- [x] Async `params` (now a Promise) in 3 files:
+  - [x] `src/app/posts/[postId]/page.tsx`
+  - [x] `src/app/projects/[projectId]/page.tsx`
+  - [x] `src/app/api/posts/[postId]/likes/route.ts`
+- [x] `tsconfig.json`: `target: ES2017` (added by Next; reformat reverted to keep diff clean)
+- [x] `pnpm build` clean — 16/16 static pages
+- [x] `pnpm lint` clean — no warnings or errors
 
-### Verification checklist
+### React 19 breaking changes hit (2 categories, 4 files)
 
-- [ ] Home page renders (intro, tech stack grid, recent projects/posts)
-- [ ] `/posts` — list, search, topic filters
-- [ ] `/posts/[postId]` — MDX renders, interactive demos mount
-- [ ] `/projects` + `/projects/[projectId]`
-- [ ] `/contact` — form submits, toast fires
-- [ ] Theme switch (light/dark)
-- [ ] Like button (API route w/ async params)
+| Change | Files | Fix |
+|---|---|---|
+| `useRef<T>(null)` now returns `RefObject<T \| null>` | `react-glow.tsx`, `hooks/useMousePosition.ts` | widen prop/param type to `RefObject<T \| null>` |
+| Global `JSX` namespace removed from `@types/react` | `components/icons/index.tsx` | `import type { JSX } from 'react'` (matches existing `mdx-content.tsx` pattern) |
+
+### Runtime verification — all passed ✅
+
+Served the production build on **port 3100** (port 3000 held by an unrelated stale
+`next-server v15.5.12`, ~4 days old — left running, not ours to kill).
+
+- ✅ All **11 posts** → 200
+- ✅ Both **projects** → 200
+- ✅ `/`, `/posts`, `/projects`, `/contact` → 200
+- ✅ Likes API w/ async params → `200 {"globalCount":10,"userCount":0,...}` (DB round-trip works)
+- ✅ HeroUI **v2** `data-slot` attributes present in SSR output → v2 renders fine under React 19
+- ✅ Server log clean — no hydration errors, no React warnings
+
+> Not yet verified: client-side interactivity of the MDX demos and theme switching.
+> Deferred to the Phase 4 visual sweep — but worth a manual click-through before Phase 1.
 
 ### Rollback
 
@@ -151,6 +166,16 @@ git checkout master && git branch -D migration/phase-0-react19-next15
 - Confirmed `navbar.tsx` is custom, not HeroUI `Navbar` (which v3 removed) — dodged.
 - Confirmed **zero** usage of removed hooks (`useDisclosure`, `useSwitch`, `useInput`).
 - Decided Next 15 over Next 16 (D1).
+
+### 2026-09-08 — Phase 0 ✅ COMPLETE
+- React 18 → **19.2.8**, Next 14.2.7 → **15.5.25**. Build + lint clean, all routes 200.
+- Only 4 files needed source changes for React 19 (2 ref-type, 1 JSX namespace, 3 async-params).
+- **Correction to the audit:** `next-themes@0.3.0` does *not* support React 19 — bumped to 0.4.6.
+  Root cause: audit read `latest` peer ranges, not installed ones. Fixed method for future phases.
+- Discovered a stale unrelated `next-server v15.5.12` squatting port 3000 (~4 days). Used 3100 instead.
+- **Next up:** Phase 1 — Tailwind v3 → v4. Highest-risk item is porting the 3 custom plugins
+  (`matchUtilities` SVG patterns `bg-grid`/`bg-grid-small`/`bg-dot`, `addVariablesForColors`,
+  typography) to CSS-first config, while `heroui()` v2 plugin must keep working alongside Tailwind v4.
 
 ---
 

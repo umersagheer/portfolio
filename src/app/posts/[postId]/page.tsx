@@ -16,9 +16,9 @@ import AuthorCardInline from '@/components/blog/author-card-inline'
 import { extractToc } from '@/libs/toc'
 
 type PostProps = {
-  params: {
+  params: Promise<{
     postId: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -31,20 +31,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params
 }: PostProps): Promise<Metadata> {
-  const post = await getPostById(params.postId)
+  const { postId } = await params
+  const post = await getPostById(postId)
 
   if (!post) {
     return {}
   }
 
   const { title, summary, image, author, publishedAt } = post.metadata
-  const postUrl = getAbsoluteUrl(`/posts/${params.postId}`)
+  const postUrl = getAbsoluteUrl(`/posts/${postId}`)
   const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
   const coverImage =
     image && coverImageUrl
       ? {
           url: coverImageUrl,
-          alt: title ?? params.postId,
+          alt: title ?? postId,
           ...getOpenGraphImageMetadata(image)
         }
       : undefined
@@ -76,7 +77,7 @@ export async function generateMetadata({
 }
 
 export default async function Post({ params }: PostProps) {
-  const { postId } = params
+  const { postId } = await params
   const post = await getPostById(postId)
   if (!post) {
     notFound()

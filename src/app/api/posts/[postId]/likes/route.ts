@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getLikes, incrementLikes } from '@/libs/likes'
 
 type RouteContext = {
-  params: {
+  params: Promise<{
     postId: string
-  }
+  }>
 }
 
 export async function GET(request: NextRequest, { params }: RouteContext) {
-  const { postId } = params
+  const { postId } = await params
   const { searchParams } = request.nextUrl
   const visitorId = searchParams.get('vid') ?? ''
   const fingerprint = searchParams.get('fp') ?? ''
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
 }
 
 export async function POST(request: NextRequest, { params }: RouteContext) {
-  const { postId } = params
+  const { postId } = await params
   const body = await request.json().catch(() => ({}))
   const visitorId = body.visitorId ?? ''
   const fingerprint = body.fingerprint ?? ''
