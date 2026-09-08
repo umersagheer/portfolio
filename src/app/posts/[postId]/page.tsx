@@ -141,17 +141,17 @@ export default async function Post({ params }: PostProps) {
       </div>
 
       {/* Mobile prev/next nav */}
-      <nav className='border-default-200 mt-16 flex flex-col gap-4 border-t pt-6 xl:hidden'>
+      <nav className='border-border mt-16 flex flex-col gap-4 border-t pt-6 xl:hidden'>
         <div className='flex justify-between gap-4'>
           {newerPost ? (
             <Link
               href={`/posts/${newerPost.postId}`}
               className='flex flex-col gap-1'
             >
-              <span className='text-default-400 text-[10px] tracking-wider uppercase'>
+              <span className='text-muted text-[10px] tracking-wider uppercase'>
                 Previous
               </span>
-              <span className='text-default-600 hover:text-primary line-clamp-1 text-sm transition-colors'>
+              <span className='text-foreground hover:text-accent line-clamp-1 text-sm transition-colors'>
                 {newerPost.title}
               </span>
             </Link>
@@ -163,10 +163,10 @@ export default async function Post({ params }: PostProps) {
               href={`/posts/${olderPost.postId}`}
               className='flex flex-col items-end gap-1 text-right'
             >
-              <span className='text-default-400 text-[10px] tracking-wider uppercase'>
+              <span className='text-muted text-[10px] tracking-wider uppercase'>
                 Next
               </span>
-              <span className='text-default-600 hover:text-primary line-clamp-1 text-sm transition-colors'>
+              <span className='text-foreground hover:text-accent line-clamp-1 text-sm transition-colors'>
                 {olderPost.title}
               </span>
             </Link>
@@ -176,7 +176,7 @@ export default async function Post({ params }: PostProps) {
         </div>
         <Link
           href='/posts'
-          className='text-default-500 hover:text-primary flex items-center gap-1.5 text-xs transition-colors'
+          className='text-muted hover:text-accent flex items-center gap-1.5 text-xs transition-colors'
         >
           <ArrowLeftIcon size={12} />
           Back to posts

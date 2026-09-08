@@ -10,13 +10,9 @@ export default function DemoContainer({
   description
 }: DemoContainerProps) {
   return (
-    <div className='not-prose my-8 rounded-xl border border-default-200 bg-default-50 p-6'>
-      {title && (
-        <p className='mb-1 text-sm font-medium text-default-500'>{title}</p>
-      )}
-      {description && (
-        <p className='mb-4 text-xs text-default-400'>{description}</p>
-      )}
+    <div className='not-prose border-border bg-surface my-8 rounded-xl border p-6'>
+      {title && <p className='text-muted mb-1 text-sm font-medium'>{title}</p>}
+      {description && <p className='text-muted mb-4 text-xs'>{description}</p>}
       {!description && title && <div className='mb-3' />}
       {children}
     </div>

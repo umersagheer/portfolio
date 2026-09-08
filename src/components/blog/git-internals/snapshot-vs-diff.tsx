@@ -100,15 +100,15 @@ function SnapshotView({ step }: { step: number }) {
       {/* The tree that names this snapshot. Its hash changes each commit (the
           listing changed), but most of what it POINTS AT is reused unchanged. */}
       <div className='flex flex-col items-center gap-1'>
-        <div className='text-primary text-[10px] tracking-wide uppercase'>
+        <div className='text-accent text-[10px] tracking-wide uppercase'>
           the tree for this commit
         </div>
         <TreeBox hash={treeOf(step)} />
       </div>
 
       {/* connector: the tree points down at its three files */}
-      <div className='bg-default-300 mx-auto h-4 w-px' aria-hidden />
-      <div className='text-default-400 text-center text-[10px] tracking-wide uppercase'>
+      <div className='bg-surface-tertiary mx-auto h-4 w-px' aria-hidden />
+      <div className='text-muted text-center text-[10px] tracking-wide uppercase'>
         points at
       </div>
 
@@ -130,7 +130,7 @@ function SnapshotView({ step }: { step: number }) {
                   tree reuses the same blob — not re-stored
                 </span>
               ) : (
-                <span className='text-default-400 text-[10px]'>
+                <span className='text-muted text-[10px]'>
                   {step === 0 ? 'first version' : 'new content, new blob'}
                 </span>
               )}
@@ -149,10 +149,10 @@ function SnapshotView({ step }: { step: number }) {
  */
 function TreeBox({ hash }: { hash: string }) {
   return (
-    <div className='border-primary bg-default-50 inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border p-1.5'>
+    <div className='border-accent bg-surface inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border p-1.5'>
       <div className='flex items-center gap-1'>
-        <FolderIcon size={12} className='text-primary' aria-hidden />
-        <span className='bg-primary text-primary-foreground rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
+        <FolderIcon size={12} className='text-accent' aria-hidden />
+        <span className='bg-accent text-accent-foreground rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
           tree
         </span>
       </div>
@@ -164,7 +164,7 @@ function TreeBox({ hash }: { hash: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className='font-sourceCodePro text-primary absolute inset-0 text-xs font-semibold'
+            className='font-sourceCodePro text-accent absolute inset-0 text-xs font-semibold'
           >
             {hash}
           </motion.code>
@@ -182,9 +182,9 @@ function TreeBox({ hash }: { hash: string }) {
  */
 function BlobBox({ hash, label }: { hash: string; label: string }) {
   return (
-    <div className='border-secondary bg-default-50 inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border p-1.5'>
+    <div className='border-accent bg-surface inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border p-1.5'>
       <div className='flex items-center gap-1'>
-        <FileIcon size={12} className='text-secondary' aria-hidden />
+        <FileIcon size={12} className='text-accent' aria-hidden />
       </div>
 
       {/* only this fades — box shell holds still */}
@@ -196,7 +196,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className='font-sourceCodePro text-secondary absolute inset-0 text-xs font-semibold'
+            className='font-sourceCodePro text-accent absolute inset-0 text-xs font-semibold'
           >
             {hash}
           </motion.code>
@@ -204,7 +204,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
       </div>
 
       <span
-        className='text-default-500 max-w-[7rem] truncate text-[10px]'
+        className='text-muted max-w-[7rem] truncate text-[10px]'
         title={label}
       >
         {label}
@@ -217,7 +217,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
 
 function DiffRows({ rows }: { rows: DiffRow[] }) {
   return (
-    <div className='bg-default-100 font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
+    <div className='bg-surface-secondary font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
       <div className='max-h-40 overflow-auto'>
         {rows.map((row, i) => (
           <div
@@ -226,10 +226,10 @@ function DiffRows({ rows }: { rows: DiffRow[] }) {
               'flex gap-2 border-l-2 px-2',
               row.type === 'add' && 'border-success text-success',
               row.type === 'remove' && 'border-danger text-danger',
-              row.type === 'context' && 'text-default-500 border-transparent'
+              row.type === 'context' && 'text-muted border-transparent'
             )}
           >
-            <span className='text-default-400 select-none'>
+            <span className='text-muted select-none'>
               {row.type === 'add' ? '+' : row.type === 'remove' ? '−' : ' '}
             </span>
             <span className='break-all whitespace-pre-wrap'>
@@ -260,7 +260,7 @@ function DiffView({ step }: { step: number }) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='text-default-500 flex items-center gap-2 text-[10px] tracking-wide uppercase'>
+      <div className='text-muted flex items-center gap-2 text-[10px] tracking-wide uppercase'>
         <GitCompareIcon size={12} />
         {prev >= 0
           ? `computed just now: commit ${prev + 1} → commit ${step + 1} (never stored)`
@@ -286,7 +286,7 @@ function DiffView({ step }: { step: number }) {
         .map(f => (
           <div
             key={f.name}
-            className='bg-default-100 text-default-500 flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] shadow-xs'
+            className='bg-surface-secondary text-muted flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] shadow-xs'
           >
             <LinkIcon size={12} className='text-success' />
             <span className='font-sourceCodePro text-foreground'>{f.name}</span>
@@ -341,7 +341,7 @@ export default function SnapshotVsDiff() {
               <div className='font-sourceCodePro text-foreground text-xs font-semibold'>
                 commit {step + 1} of {HISTORY.length}
               </div>
-              <div className='text-default-500 truncate text-[11px]'>
+              <div className='text-muted truncate text-[11px]'>
                 {snap.message}
               </div>
             </div>
@@ -392,8 +392,8 @@ export default function SnapshotVsDiff() {
           className={cn(
             'relative overflow-hidden rounded-xl p-3 shadow-xs sm:p-4',
             view === 'snapshot'
-              ? 'border-default-100 bg-background border'
-              : 'bg-default-100'
+              ? 'border-separator bg-background border'
+              : 'bg-surface-secondary'
           )}
         >
           {view === 'snapshot' && <StageDots />}

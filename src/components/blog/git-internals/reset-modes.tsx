@@ -182,7 +182,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={runReset}
-            className='bg-primary font-sourceCodePro text-primary-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-transform hover:scale-[1.02] active:scale-95'
+            className='bg-accent font-sourceCodePro text-accent-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-transform hover:scale-[1.02] active:scale-95'
           >
             git reset {mode === 'mixed' ? '' : `--${mode} `}C2
           </button>
@@ -190,7 +190,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={commit}
-            className='border-primary font-sourceCodePro text-primary hover:bg-primary/10 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors'
+            className='border-accent font-sourceCodePro text-accent hover:bg-accent/10 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors'
           >
             <GitCommitHorizontalIcon size={13} /> commit again
           </button>
@@ -200,7 +200,7 @@ export default function ResetModes() {
           <button
             type='button'
             onClick={replay}
-            className='text-default-500 hover:text-foreground inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors'
+            className='text-muted hover:text-foreground inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors'
           >
             <RotateCcwIcon size={13} /> replay
           </button>
@@ -225,7 +225,7 @@ export default function ResetModes() {
               key={f}
               className='bg-background font-sourceCodePro flex items-center gap-2 rounded-md px-2 py-1.5 text-xs shadow-xs'
             >
-              <FileIcon size={13} className='text-default-400' />
+              <FileIcon size={13} className='text-muted' />
               <span className='text-foreground'>{f}</span>
             </div>
           ))}
@@ -249,7 +249,7 @@ export default function ResetModes() {
           touched={done && mode !== 'soft'}
         >
           {stagedFiles.length === 0 ? (
-            <span className='text-default-400 text-[11px]'>(empty)</span>
+            <span className='text-muted text-[11px]'>(empty)</span>
           ) : (
             stagedFiles.map(f => (
               <FileRow
@@ -266,7 +266,7 @@ export default function ResetModes() {
         </Column>
 
         <Column title='the commit' subtitle='HEAD → branch' dots>
-          <div className='border-default-300 bg-default-100/60 font-sourceCodePro flex items-center gap-2 rounded-md border px-2 py-1.5 text-xs backdrop-blur-md'>
+          <div className='border-border-secondary bg-surface-secondary/60 font-sourceCodePro flex items-center gap-2 rounded-md border px-2 py-1.5 text-xs backdrop-blur-md'>
             <GitCommitHorizontalIcon size={13} className='text-foreground' />
             <span className='text-foreground font-semibold'>
               {phase === 'recommitted' ? 'C4' : phase === 'reset' ? 'C2' : 'C3'}
@@ -283,7 +283,7 @@ export default function ResetModes() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='bg-default-100 text-default-600 mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
+          className='bg-surface-secondary text-foreground mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>
@@ -334,10 +334,7 @@ function ResetGraph({
             return (
               <div key={c.hash} className='flex items-end gap-3'>
                 {i > 0 && (
-                  <span
-                    className='text-default-300 mb-9'
-                    title='child → parent'
-                  >
+                  <span className='text-muted mb-9' title='child → parent'>
                     ←
                   </span>
                 )}
@@ -452,7 +449,7 @@ function NodeWithPill({
             <motion.div
               layoutId='reset-branch-pill'
               {...fade}
-              className='border-success bg-default-50 font-sourceCodePro text-success inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold'
+              className='border-success bg-surface font-sourceCodePro text-success inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold'
             >
               main
             </motion.div>
@@ -464,7 +461,7 @@ function NodeWithPill({
           {orphanTag && (
             <motion.span
               {...fade}
-              className='text-default-400 text-[9px] font-medium whitespace-nowrap'
+              className='text-muted text-[9px] font-medium whitespace-nowrap'
             >
               orphaned · reflog can recover
             </motion.span>
@@ -492,22 +489,20 @@ function Column({
     <div
       className={cn(
         'relative overflow-hidden rounded-xl p-3 shadow-xs transition-all',
-        dots ? 'border-default-100 bg-background border' : 'bg-default-100',
-        touched && 'ring-primary ring-1'
+        dots ? 'border-separator bg-background border' : 'bg-surface-secondary',
+        touched && 'ring-accent ring-1'
       )}
     >
       {dots && <StageDots />}
       <div className='relative mb-0.5 flex items-center justify-between'>
-        <span className='text-default-500 text-xs font-medium'>{title}</span>
+        <span className='text-muted text-xs font-medium'>{title}</span>
         {touched && (
-          <span className='bg-primary/15 text-primary rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
+          <span className='bg-accent/15 text-accent rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
             reset
           </span>
         )}
       </div>
-      <div className='text-default-400 relative mb-3 text-[10px]'>
-        {subtitle}
-      </div>
+      <div className='text-muted relative mb-3 text-[10px]'>{subtitle}</div>
       <div className='relative min-h-[3.5rem] space-y-1.5'>{children}</div>
     </div>
   )
@@ -537,7 +532,7 @@ function FileRow({
         aria-label={`Stage ${name}`}
         className='rounded-sm'
       />
-      <FileIcon size={13} className='text-default-400' />
+      <FileIcon size={13} className='text-muted' />
       <span className='text-foreground'>{name}</span>
       <span
         className={cn(

@@ -21,7 +21,7 @@ export default function Posts({ posts }: PostProps) {
         <Link
           key={post.postId}
           href={`/posts/${post.postId}`}
-          className='group border-default-200 bg-default-50 hover:border-primary dark:border-default-100 flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.02]'
+          className='group border-border bg-surface hover:border-accent dark:border-separator flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.02]'
         >
           {post.image && (
             <div className='relative aspect-video w-full overflow-hidden'>
@@ -39,11 +39,9 @@ export default function Posts({ posts }: PostProps) {
               <p className='font-sourceCodePro text-foreground text-base font-semibold'>
                 {post.title}
               </p>
-              <p className='text-default-500 line-clamp-2 text-sm'>
-                {post.summary}
-              </p>
+              <p className='text-muted line-clamp-2 text-sm'>{post.summary}</p>
             </div>
-            <div className='text-default-400 flex items-center gap-2 pt-2 text-xs'>
+            <div className='text-muted flex items-center gap-2 pt-2 text-xs'>
               {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
               {post.readingTime && (
                 <>

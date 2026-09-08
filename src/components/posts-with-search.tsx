@@ -87,7 +87,7 @@ export default function PostsWithSearch({ posts }: props) {
           className='sm:max-w-[16rem]'
         >
           <SearchField.Group>
-            <SearchIcon size={16} className='text-default-400 shrink-0' />
+            <SearchIcon size={16} className='text-muted shrink-0' />
             <SearchField.Input placeholder='Search posts...' />
             <SearchField.ClearButton />
           </SearchField.Group>
@@ -108,8 +108,8 @@ export default function PostsWithSearch({ posts }: props) {
                 className={cn(
                   'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
                   isActive
-                    ? 'bg-primary/15 text-primary ring-primary/40 ring-1 ring-inset'
-                    : 'bg-default-100 text-default-600 hover:bg-default-200 hover:text-foreground'
+                    ? 'bg-accent/15 text-accent ring-accent/40 ring-1 ring-inset'
+                    : 'bg-surface-secondary text-foreground hover:bg-surface-tertiary hover:text-foreground'
                 )}
               >
                 {topic}
@@ -124,7 +124,7 @@ export default function PostsWithSearch({ posts }: props) {
             <button
               type='button'
               onClick={() => setTopics([])}
-              className='text-default-400 hover:text-foreground px-1 text-xs underline-offset-4 transition-colors hover:underline'
+              className='text-muted hover:text-foreground px-1 text-xs underline-offset-4 transition-colors hover:underline'
             >
               Clear
             </button>
@@ -135,14 +135,12 @@ export default function PostsWithSearch({ posts }: props) {
       {filtered.length > 0 ? (
         <Posts posts={filtered} />
       ) : (
-        <div className='border-default-200 dark:border-default-100 flex flex-col items-center gap-3 rounded-xl border border-dashed py-14 text-center'>
-          <p className='text-default-500 text-sm'>
-            No posts match these filters.
-          </p>
+        <div className='border-border dark:border-separator flex flex-col items-center gap-3 rounded-xl border border-dashed py-14 text-center'>
+          <p className='text-muted text-sm'>No posts match these filters.</p>
           <button
             type='button'
             onClick={resetFilters}
-            className='text-primary text-xs font-medium underline-offset-4 hover:underline'
+            className='text-accent text-xs font-medium underline-offset-4 hover:underline'
           >
             Reset filters
           </button>

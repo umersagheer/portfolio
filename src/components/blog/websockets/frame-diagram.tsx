@@ -3,29 +3,64 @@
 import DemoContainer from './demo-container'
 
 const fields = [
-  { label: 'FIN', bits: 1, color: 'bg-primary-500/20 text-primary-600', note: 'Final fragment' },
-  { label: 'RSV1', bits: 1, color: 'bg-default-200 text-default-500', note: 'Reserved' },
-  { label: 'RSV2', bits: 1, color: 'bg-default-200 text-default-500', note: 'Reserved' },
-  { label: 'RSV3', bits: 1, color: 'bg-default-200 text-default-500', note: 'Reserved' },
-  { label: 'Opcode', bits: 4, color: 'bg-secondary-500/20 text-secondary-600', note: '4 bits' },
-  { label: 'MASK', bits: 1, color: 'bg-warning-500/20 text-warning-600', note: 'Masked?' },
-  { label: 'Payload len', bits: 7, color: 'bg-success-500/20 text-success-600', note: '7 bits' },
+  {
+    label: 'FIN',
+    bits: 1,
+    color: 'bg-accent/20 text-accent',
+    note: 'Final fragment'
+  },
+  {
+    label: 'RSV1',
+    bits: 1,
+    color: 'bg-surface-tertiary text-muted',
+    note: 'Reserved'
+  },
+  {
+    label: 'RSV2',
+    bits: 1,
+    color: 'bg-surface-tertiary text-muted',
+    note: 'Reserved'
+  },
+  {
+    label: 'RSV3',
+    bits: 1,
+    color: 'bg-surface-tertiary text-muted',
+    note: 'Reserved'
+  },
+  {
+    label: 'Opcode',
+    bits: 4,
+    color: 'bg-accent/20 text-accent',
+    note: '4 bits'
+  },
+  {
+    label: 'MASK',
+    bits: 1,
+    color: 'bg-warning/20 text-warning',
+    note: 'Masked?'
+  },
+  {
+    label: 'Payload len',
+    bits: 7,
+    color: 'bg-success/20 text-success',
+    note: '7 bits'
+  },
   {
     label: 'Extended payload length',
     bits: 16,
-    color: 'bg-success-500/10 text-success-600',
+    color: 'bg-success/10 text-success',
     note: 'if len = 126 → 16-bit, if 127 → 64-bit'
   },
   {
     label: 'Masking-key',
     bits: 32,
-    color: 'bg-warning-500/10 text-warning-600',
+    color: 'bg-warning/10 text-warning',
     note: '0 or 4 bytes (present if MASK = 1)'
   },
   {
     label: 'Payload Data',
     bits: 0,
-    color: 'bg-primary-500/10 text-primary-600',
+    color: 'bg-accent/10 text-accent',
     note: 'Variable length'
   }
 ]
@@ -38,7 +73,7 @@ export default function FrameDiagram() {
         {Array.from({ length: 32 }, (_, i) => (
           <div
             key={i}
-            className='flex flex-1 justify-center text-[8px] text-default-400'
+            className='text-muted flex flex-1 justify-center text-[8px]'
           >
             {i % 8 === 0 ? i : ''}
           </div>
@@ -95,7 +130,7 @@ export default function FrameDiagram() {
         {fields.map(f => (
           <div key={f.label} className='flex items-center gap-1.5'>
             <div className={`size-2.5 rounded-xs ${f.color.split(' ')[0]}`} />
-            <span className='text-[10px] text-default-500'>
+            <span className='text-muted text-[10px]'>
               <span className='font-medium'>{f.label}</span>
               {' — '}
               {f.note}

@@ -92,16 +92,20 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           styles.container,
           STATE_STYLES[state],
           interactive &&
-            'cursor-pointer hover:shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary',
+            'focus-visible:ring-accent cursor-pointer hover:shadow-xs focus-visible:ring-1 focus-visible:outline-hidden',
           className
         )}
       >
         <div className={cn('flex items-center', compact ? 'gap-1' : 'gap-1.5')}>
-          <Glyph size={compact ? 12 : 14} className={styles.accent} aria-hidden />
+          <Glyph
+            size={compact ? 12 : 14}
+            className={styles.accent}
+            aria-hidden
+          />
           {!hideBadge && (
             <span
               className={cn(
-                'rounded-sm font-semibold uppercase tracking-wide',
+                'rounded-sm font-semibold tracking-wide uppercase',
                 compact ? 'px-1 py-0 text-[9px]' : 'px-1.5 py-0.5 text-[10px]',
                 styles.badge
               )}
@@ -124,7 +128,7 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
         {label && (
           <span
             className={cn(
-              'truncate text-default-500',
+              'text-muted truncate',
               compact ? 'max-w-[7rem] text-[10px]' : 'max-w-[9rem] text-[11px]'
             )}
             title={label}

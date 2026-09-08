@@ -36,7 +36,7 @@ export default async function Project({ params }: ProjectProps) {
       <div className='space-y-4'>
         <Link
           href={'/projects'}
-          className='text-foreground hover:bg-default-100 inline-flex items-center rounded-md px-2 py-1 text-sm transition-colors'
+          className='text-foreground hover:bg-surface-secondary inline-flex items-center rounded-md px-2 py-1 text-sm transition-colors'
         >
           <ArrowLeftIcon className='mr-2 size-5' />
           <p className='font-medium'>Back to projects</p>

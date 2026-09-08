@@ -26,15 +26,15 @@ export default function AuthorCardInline({
         height={32}
         className='shrink-0 rounded-full grayscale'
       />
-      <div className='text-default-500 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs'>
+      <div className='text-muted flex flex-wrap items-center gap-x-2 gap-y-1 text-xs'>
         <span className='font-sourceCodePro text-foreground font-bold'>
           {siteProfile.name}
         </span>
-        <span className='text-default-300'>&middot;</span>
+        <span className='text-muted'>&middot;</span>
         <span>{formatDate(publishedAt)}</span>
-        <span className='text-default-300'>&middot;</span>
+        <span className='text-muted'>&middot;</span>
         <span>{readingTime} min read</span>
-        <span className='text-default-300'>&middot;</span>
+        <span className='text-muted'>&middot;</span>
         <div className='-ml-1 flex items-center gap-0'>
           <Tooltip>
             <a
@@ -42,7 +42,7 @@ export default function AuthorCardInline({
               target='_blank'
               rel='noopener noreferrer'
               aria-label='X'
-              className='hover:bg-default-100 rounded-md p-1 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1 transition-colors'
             >
               <TheSvgIcon
                 slug='x'
@@ -59,7 +59,7 @@ export default function AuthorCardInline({
               target='_blank'
               rel='noopener noreferrer'
               aria-label='GitHub'
-              className='hover:bg-default-100 rounded-md p-1 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1 transition-colors'
             >
               <TheSvgIcon
                 slug='github'
@@ -76,7 +76,7 @@ export default function AuthorCardInline({
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn'
-              className='hover:bg-default-100 rounded-md p-1 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1 transition-colors'
             >
               <TheSvgIcon
                 slug='linkedin'
@@ -91,13 +91,13 @@ export default function AuthorCardInline({
             <a
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
-              className='hover:bg-default-100 rounded-md p-1 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1 transition-colors'
             >
               <TheSvgIcon
                 slug='gmail'
                 size={12}
                 className='opacity-70 grayscale transition-opacity hover:opacity-100'
-                fallback={<MailIcon size={12} className='text-default-500' />}
+                fallback={<MailIcon size={12} className='text-muted' />}
               />
             </a>
 

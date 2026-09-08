@@ -65,7 +65,7 @@ export function SVGGlowWrapper({
   })
 
   return (
-    <div ref={containerRef} className={`text-default-500 ${className}`}>
+    <div ref={containerRef} className={`text-muted ${className}`}>
       {enhancedSVG}
     </div>
   )

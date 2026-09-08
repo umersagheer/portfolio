@@ -22,24 +22,24 @@ export default function ATTimeZoneTrapDemo() {
     >
       <div
         ref={containerRef}
-        className='border-default-100 bg-background relative mb-4 rounded-lg border p-6'
+        className='border-separator bg-background relative mb-4 rounded-lg border p-6'
       >
-        <p className='text-default-500 mb-4 text-center text-xs font-medium'>
+        <p className='text-muted mb-4 text-center text-xs font-medium'>
           Select a query path to compare the output.
         </p>
         <div className='flex flex-col items-center gap-8'>
           {/* Source */}
           <div
             ref={sourceRef}
-            className='border-default-200 bg-default-50 z-10 rounded-lg border px-4 py-3 text-center'
+            className='border-border bg-surface z-10 rounded-lg border px-4 py-3 text-center'
           >
-            <p className='text-default-400 text-[10px]'>
+            <p className='text-muted text-[10px]'>
               Stored in DB (timestamp without tz)
             </p>
             <p className='text-foreground font-mono text-lg font-bold'>
               12:00:00
             </p>
-            <p className='text-default-400 text-[10px]'>
+            <p className='text-muted text-[10px]'>
               (This is actually noon UTC — a 5 PM PKT order)
             </p>
           </div>
@@ -52,36 +52,34 @@ export default function ATTimeZoneTrapDemo() {
               aria-pressed={!showDouble}
               aria-label='Inspect the incorrect single AT TIME ZONE query'
               onClick={() => setShowDouble(false)}
-              className={`focus-visible:ring-danger-400 flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none sm:max-w-xs ${
+              className={`focus-visible:ring-danger flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none sm:max-w-xs ${
                 !showDouble
-                  ? 'border-danger-300 bg-danger-50'
-                  : 'border-default-200 bg-background opacity-60'
+                  ? 'border-danger bg-danger-soft'
+                  : 'border-border bg-background opacity-60'
               }`}
             >
               <div className='mb-2 flex items-center gap-2'>
-                <IconCircleX size={16} className='text-danger-500' />
-                <span className='text-danger-600 text-xs font-medium'>
+                <IconCircleX size={16} className='text-danger' />
+                <span className='text-danger text-xs font-medium'>
                   Single AT TIME ZONE
                 </span>
               </div>
-              <div className='bg-background/60 dark:bg-default-50 mb-2 overflow-x-auto rounded-md p-2 font-mono text-[10px] leading-relaxed'>
-                <span className='text-default-600'>EXTRACT(HOUR FROM</span>
+              <div className='bg-background/60 dark:bg-surface mb-2 overflow-x-auto rounded-md p-2 font-mono text-[10px] leading-relaxed'>
+                <span className='text-foreground'>EXTRACT(HOUR FROM</span>
                 <br />
-                <span className='text-default-600'>
+                <span className='text-foreground'>
                   {'  '}&quot;createdAt&quot;
                 </span>
                 <br />
-                <span className='text-danger-500'>
+                <span className='text-danger'>
                   {'  '}AT TIME ZONE &apos;Asia/Karachi&apos;
                 </span>
-                <span className='text-default-600'>)</span>
+                <span className='text-foreground'>)</span>
               </div>
               <div ref={wrongRef} className='text-center'>
-                <p className='text-default-400 text-[10px]'>Result:</p>
-                <p className='text-danger-600 font-mono text-xl font-bold'>
-                  07:00
-                </p>
-                <p className='text-danger-500 text-[10px]'>
+                <p className='text-muted text-[10px]'>Result:</p>
+                <p className='text-danger font-mono text-xl font-bold'>07:00</p>
+                <p className='text-danger text-[10px]'>
                   PostgreSQL assumed 12:00 IS Pakistan time,
                   <br />
                   converted to UTC: 12 − 5 = 7
@@ -95,40 +93,40 @@ export default function ATTimeZoneTrapDemo() {
               aria-pressed={showDouble}
               aria-label='Inspect the correct double AT TIME ZONE query'
               onClick={() => setShowDouble(true)}
-              className={`focus-visible:ring-success-400 flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none sm:max-w-xs ${
+              className={`focus-visible:ring-success flex-1 rounded-lg border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none sm:max-w-xs ${
                 showDouble
-                  ? 'border-success-300 bg-success-50'
-                  : 'border-default-200 bg-background opacity-60'
+                  ? 'border-success bg-success-soft'
+                  : 'border-border bg-background opacity-60'
               }`}
             >
               <div className='mb-2 flex items-center gap-2'>
-                <IconCircleCheck size={16} className='text-success-500' />
-                <span className='text-success-600 text-xs font-medium'>
+                <IconCircleCheck size={16} className='text-success' />
+                <span className='text-success text-xs font-medium'>
                   Double AT TIME ZONE
                 </span>
               </div>
               <div className='bg-background/60 mb-2 overflow-x-auto rounded-md p-2 font-mono text-[10px] leading-relaxed'>
-                <span className='text-default-600'>EXTRACT(HOUR FROM</span>
+                <span className='text-foreground'>EXTRACT(HOUR FROM</span>
                 <br />
-                <span className='text-default-600'>
+                <span className='text-foreground'>
                   {'  '}(&quot;createdAt&quot;
                 </span>
                 <br />
-                <span className='text-success-500'>
+                <span className='text-success'>
                   {'  '}AT TIME ZONE &apos;UTC&apos;)
                 </span>
                 <br />
-                <span className='text-success-500'>
+                <span className='text-success'>
                   {'  '}AT TIME ZONE &apos;Asia/Karachi&apos;
                 </span>
-                <span className='text-default-600'>)</span>
+                <span className='text-foreground'>)</span>
               </div>
               <div ref={rightRef} className='text-center'>
-                <p className='text-default-400 text-[10px]'>Result:</p>
-                <p className='text-success-600 font-mono text-xl font-bold'>
+                <p className='text-muted text-[10px]'>Result:</p>
+                <p className='text-success font-mono text-xl font-bold'>
                   17:00
                 </p>
-                <p className='text-success-500 text-[10px]'>
+                <p className='text-success text-[10px]'>
                   First labels as UTC → then converts to PKT:
                   <br />
                   12 + 5 = 17 (5 PM local)

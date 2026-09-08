@@ -59,15 +59,15 @@ const STATES = [
 ] as const
 
 const stateColors: Record<string, string> = {
-  warning: 'bg-warning-400',
-  success: 'bg-success-400',
-  default: 'bg-default-400'
+  warning: 'bg-warning',
+  success: 'bg-success',
+  default: 'bg-surface-tertiary'
 }
 
 const stateTextColors: Record<string, string> = {
-  warning: 'text-warning-600 dark:text-warning-400',
-  success: 'text-success-600 dark:text-success-400',
-  default: 'text-default-500'
+  warning: 'text-warning dark:text-warning',
+  success: 'text-success dark:text-success',
+  default: 'text-muted'
 }
 
 export default function LifecycleDemo() {
@@ -157,22 +157,22 @@ export default function LifecycleDemo() {
                   className={`flex size-10 items-center justify-center rounded-full transition-colors ${
                     isActive
                       ? stateColors[s.color]
-                      : 'bg-default-200 dark:bg-default-700'
+                      : 'bg-surface-tertiary dark:bg-surface-tertiary'
                   }`}
                 >
                   <Icon
                     size={20}
-                    className={isActive ? 'text-white' : 'text-default-500'}
+                    className={isActive ? 'text-white' : 'text-muted'}
                   />
                 </div>
                 <span
                   className={`text-[10px] font-bold ${
-                    isActive ? stateTextColors[s.color] : 'text-default-400'
+                    isActive ? stateTextColors[s.color] : 'text-muted'
                   }`}
                 >
                   {s.name}
                 </span>
-                <span className='text-default-400 font-mono text-[10px]'>
+                <span className='text-muted font-mono text-[10px]'>
                   ({s.code})
                 </span>
               </button>
@@ -180,8 +180,8 @@ export default function LifecycleDemo() {
                 <div
                   className={`mx-1 h-px w-4 sm:w-8 ${
                     i < activeState
-                      ? 'bg-primary-300'
-                      : 'bg-default-200 dark:bg-default-700'
+                      ? 'bg-accent'
+                      : 'bg-surface-tertiary dark:bg-surface-tertiary'
                   }`}
                 />
               )}
@@ -198,21 +198,21 @@ export default function LifecycleDemo() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.15 }}
-          className='bg-default-100 dark:bg-default-50 mb-4 rounded-md px-4 py-3'
+          className='bg-surface-secondary dark:bg-surface mb-4 rounded-md px-4 py-3'
         >
           <div className='flex flex-wrap gap-x-6 gap-y-1 text-xs'>
-            <span className='text-default-500'>
-              <span className='text-default-400'>Trigger:</span>{' '}
+            <span className='text-muted'>
+              <span className='text-muted'>Trigger:</span>{' '}
               {STATES[activeState].trigger}
             </span>
-            <span className='text-default-500'>
-              <span className='text-default-400'>Event:</span>{' '}
-              <span className='text-primary-500 font-mono'>
+            <span className='text-muted'>
+              <span className='text-muted'>Event:</span>{' '}
+              <span className='text-accent font-mono'>
                 {STATES[activeState].event}
               </span>
             </span>
           </div>
-          <p className='text-default-500 mt-1 text-xs'>
+          <p className='text-muted mt-1 text-xs'>
             {STATES[activeState].description}
           </p>
         </motion.div>
@@ -230,7 +230,7 @@ export default function LifecycleDemo() {
       >
         <div
           ref={containerRef}
-          className='border-default-100 bg-background relative mb-4 flex items-center justify-between rounded-lg border px-10 py-8'
+          className='border-separator bg-background relative mb-4 flex items-center justify-between rounded-lg border px-10 py-8'
         >
           <DotPattern
             glow
@@ -250,15 +250,13 @@ export default function LifecycleDemo() {
           <div className='flex flex-col items-center gap-1'>
             <span
               className={`text-xs font-medium ${
-                ghostMode
-                  ? 'text-danger-500'
-                  : 'text-success-600 dark:text-success-400'
+                ghostMode ? 'text-danger' : 'text-success dark:text-success'
               }`}
             >
               {status}
             </span>
             {!ghostMode && (
-              <span className='text-default-400 font-mono text-[10px]'>
+              <span className='text-muted font-mono text-[10px]'>
                 pong count: {pongCount}
               </span>
             )}

@@ -73,14 +73,14 @@ export default function StandupBugDemo() {
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
               dstActive
-                ? 'bg-warning-100 text-warning-700'
-                : 'bg-default-100 text-default-500'
+                ? 'bg-warning-soft text-warning'
+                : 'bg-surface-secondary text-muted'
             }`}
           >
             {dstActive ? <IconSun size={12} /> : <IconSnowflake size={12} />}
             {dstActive ? 'EDT (Summer)' : 'EST (Winter)'}
           </span>
-          <span className='text-default-400 text-xs'>
+          <span className='text-muted text-xs'>
             {dstActive ? 'UTC-4' : 'UTC-5'}
           </span>
         </div>
@@ -107,11 +107,11 @@ export default function StandupBugDemo() {
               key={day}
               className={`rounded-lg border p-2 text-center transition-colors ${
                 broken
-                  ? 'border-danger-300 bg-danger-50'
-                  : 'border-default-200 bg-background'
+                  ? 'border-danger bg-danger-soft'
+                  : 'border-border bg-background'
               }`}
             >
-              <span className='text-default-400 block text-[10px] font-medium'>
+              <span className='text-muted block text-[10px] font-medium'>
                 {day}
               </span>
               <AnimatedTime
@@ -120,7 +120,7 @@ export default function StandupBugDemo() {
                 ampm={ampm}
                 padHours={false}
                 className={`mt-1 block font-mono text-xs font-bold ${
-                  broken ? 'text-danger-600' : 'text-foreground'
+                  broken ? 'text-danger' : 'text-foreground'
                 }`}
               />
             </div>
@@ -128,12 +128,12 @@ export default function StandupBugDemo() {
         })}
       </div>
 
-      <div className='bg-default-100 grid gap-2 rounded-lg p-3'>
+      <div className='bg-surface-secondary grid gap-2 rounded-lg p-3'>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Strategy</span>
+          <span className='text-muted'>Strategy</span>
           <span
             className={`font-medium ${
-              strategy === 'utc' ? 'text-danger-500' : 'text-success-500'
+              strategy === 'utc' ? 'text-danger' : 'text-success'
             }`}
           >
             {strategy === 'utc'
@@ -142,18 +142,16 @@ export default function StandupBugDemo() {
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Current offset</span>
+          <span className='text-muted'>Current offset</span>
           <span className='text-foreground font-mono'>
             {dstActive ? 'UTC-4 (EDT)' : 'UTC-5 (EST)'}
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Conversion</span>
+          <span className='text-muted'>Conversion</span>
           <span
             className={`font-mono ${
-              strategy === 'utc' && dstActive
-                ? 'text-danger-600'
-                : 'text-default-500'
+              strategy === 'utc' && dstActive ? 'text-danger' : 'text-muted'
             }`}
           >
             {strategy === 'utc'
@@ -162,12 +160,10 @@ export default function StandupBugDemo() {
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Meeting fires at</span>
+          <span className='text-muted'>Meeting fires at</span>
           <span
             className={`font-mono font-bold ${
-              strategy === 'utc' && dstActive
-                ? 'text-danger-600'
-                : 'text-success-600'
+              strategy === 'utc' && dstActive ? 'text-danger' : 'text-success'
             }`}
           >
             {strategy === 'utc' && dstActive

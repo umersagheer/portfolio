@@ -138,14 +138,7 @@ function UpgradeArrow({ color }: { color: string }) {
         fill={color}
       />
       {/* Platform dash */}
-      <rect
-        x={7}
-        y={20}
-        width={10}
-        height={2}
-        rx={1}
-        fill={color}
-      />
+      <rect x={7} y={20} width={10} height={2} rx={1} fill={color} />
     </>
   )
 }
@@ -158,9 +151,9 @@ export default function SleekLikeButton({
   const [userClicks, setUserClicks] = useState(0)
   const [showMaxLabel, setShowMaxLabel] = useState(false)
   const [maxLabel, setMaxLabel] = useState('')
-  const [arrowPhase, setArrowPhase] = useState<
-    'idle' | 'exiting' | 'entered'
-  >('idle')
+  const [arrowPhase, setArrowPhase] = useState<'idle' | 'exiting' | 'entered'>(
+    'idle'
+  )
 
   const isMounted = useRef(false)
   const visitorId = useRef('')
@@ -181,17 +174,14 @@ export default function SleekLikeButton({
   const iconScale = (s.radius * 1.2) / 24
   const iconOffset = cx - 12 * iconScale
 
-  const scheduleTimeout = useCallback(
-    (callback: () => void, delay: number) => {
-      const timeout = window.setTimeout(() => {
-        timeouts.current = timeouts.current.filter(value => value !== timeout)
-        callback()
-      }, delay)
+  const scheduleTimeout = useCallback((callback: () => void, delay: number) => {
+    const timeout = window.setTimeout(() => {
+      timeouts.current = timeouts.current.filter(value => value !== timeout)
+      callback()
+    }, delay)
 
-      timeouts.current.push(timeout)
-    },
-    []
-  )
+    timeouts.current.push(timeout)
+  }, [])
 
   const applyLikesData = useCallback((data: LikesPayload) => {
     if (!isMounted.current) return
@@ -411,7 +401,7 @@ export default function SleekLikeButton({
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='pointer-events-none absolute -top-9 w-full min-w-32 px-1.5 py-1 text-center font-sourceCodePro text-tiny text-warning backdrop-blur'
+              className='font-sourceCodePro text-tiny text-warning pointer-events-none absolute -top-9 w-full min-w-32 px-1.5 py-1 text-center backdrop-blur'
               initial={{ y: 6, opacity: 0, scale: 0.92 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}
@@ -425,7 +415,7 @@ export default function SleekLikeButton({
 
       {/* Global count */}
       <motion.span
-        className='text-[11px] font-medium tracking-[0.24em] text-default-400'
+        className='text-muted text-[11px] font-medium tracking-[0.24em]'
         animate={countControls}
       >
         {globalCount.toLocaleString()}

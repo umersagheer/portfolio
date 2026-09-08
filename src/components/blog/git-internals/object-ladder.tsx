@@ -59,14 +59,24 @@ const STORE_ROWS = [
     hash: blobHashes[i],
     note: f.name
   })),
-  { at: 2 as Step, type: 'tree' as const, hash: treeHash, note: 'names both files' },
-  { at: 3 as Step, type: 'commit' as const, hash: commitHash, note: `"${COMMIT_MSG}"` }
+  {
+    at: 2 as Step,
+    type: 'tree' as const,
+    hash: treeHash,
+    note: 'names both files'
+  },
+  {
+    at: 3 as Step,
+    type: 'commit' as const,
+    hash: commitHash,
+    note: `"${COMMIT_MSG}"`
+  }
 ]
 
 const DOT: Record<'blob' | 'tree' | 'commit', string> = {
-  blob: 'bg-secondary',
-  tree: 'bg-primary',
-  commit: 'bg-default-400'
+  blob: 'bg-accent',
+  tree: 'bg-accent',
+  commit: 'bg-surface-tertiary'
 }
 
 /** A downward parent-pointer arrow with its "points at" label. */
@@ -75,9 +85,11 @@ function Pointer({ label }: { label: string }) {
   return (
     <motion.div
       {...fade}
-      className='flex flex-col items-center py-1 text-default-400'
+      className='text-muted flex flex-col items-center py-1'
     >
-      <span className='mb-0.5 text-[10px] uppercase tracking-wide'>{label}</span>
+      <span className='mb-0.5 text-[10px] tracking-wide uppercase'>
+        {label}
+      </span>
       <ArrowDownIcon size={16} />
     </motion.div>
   )
@@ -104,25 +116,23 @@ export default function ObjectLadder() {
       description='One file becomes three objects. On the left, watch .git/objects fill up as each is created; on the right, watch them point at each other.'
       caption={
         <>
-          A commit doesn’t contain your files; it <em>points</em> at a tree, which
-          points at blobs. Same content ⇒ same hash, so the next commit reuses every
-          blob that didn’t change.
+          A commit doesn’t contain your files; it <em>points</em> at a tree,
+          which points at blobs. Same content ⇒ same hash, so the next commit
+          reuses every blob that didn’t change.
         </>
       }
     >
       <div className='grid gap-3 lg:grid-cols-2'>
         {/* LEFT — .git/objects filling up (what Git STORES) */}
-        <div className='rounded-xl bg-default-100 p-4 font-mono text-sm shadow-xs'>
-          <p className='mb-3 text-xs font-medium text-default-500'>
-            .git/objects/
-          </p>
+        <div className='bg-surface-secondary rounded-xl p-4 font-mono text-sm shadow-xs'>
+          <p className='text-muted mb-3 text-xs font-medium'>.git/objects/</p>
           <div className='min-h-[200px] space-y-1'>
             <AnimatePresence mode='popLayout'>
               {visibleStore.length === 0 && (
                 <motion.p
                   key='empty-store'
                   {...nodeAppear}
-                  className='text-xs text-default-400'
+                  className='text-muted text-xs'
                 >
                   (empty)
                 </motion.p>
@@ -135,12 +145,15 @@ export default function ObjectLadder() {
                   className='flex items-center gap-2 rounded-md px-1 py-1'
                 >
                   {/* sharded dir: first 2 hash chars */}
-                  <span className='text-default-400'>{row.hash.slice(0, 2)}/</span>
+                  <span className='text-muted'>{row.hash.slice(0, 2)}/</span>
                   <span
-                    className={cn('h-1.5 w-1.5 shrink-0 rounded-full', DOT[row.type])}
+                    className={cn(
+                      'h-1.5 w-1.5 shrink-0 rounded-full',
+                      DOT[row.type]
+                    )}
                   />
                   <span className='text-foreground'>{row.hash.slice(2)}</span>
-                  <span className='text-[11px] text-default-400'>
+                  <span className='text-muted text-[11px]'>
                     {row.type} · {row.note}
                   </span>
                 </motion.div>
@@ -150,7 +163,7 @@ export default function ObjectLadder() {
         </div>
 
         {/* RIGHT — the pointer stack (how they POINT), commit on top */}
-        <div className='relative flex min-h-[200px] flex-col items-center justify-end gap-0 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-xs'>
+        <div className='border-separator bg-background relative flex min-h-[200px] flex-col items-center justify-end gap-0 overflow-hidden rounded-xl border p-4 shadow-xs'>
           <StageDots />
           <AnimatePresence mode='popLayout'>
             {step >= 3 && (
@@ -174,7 +187,12 @@ export default function ObjectLadder() {
             {step >= 2 && <Pointer key='t-arrow' label='names both files' />}
 
             {step >= 1 && (
-              <motion.div key='blobs' layout {...nodeAppear} className='flex gap-2'>
+              <motion.div
+                key='blobs'
+                layout
+                {...nodeAppear}
+                className='flex gap-2'
+              >
                 {FILES.map((f, i) => (
                   <GitObjectNode
                     key={f.name}
@@ -192,7 +210,7 @@ export default function ObjectLadder() {
               <motion.p
                 key='empty'
                 {...nodeAppear}
-                className='text-sm text-default-400'
+                className='text-muted text-sm'
               >
                 (nothing points anywhere yet)
               </motion.p>
@@ -210,7 +228,7 @@ export default function ObjectLadder() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className='text-sm text-default-600'
+            className='text-foreground text-sm'
           >
             {activeCaption}
           </motion.p>
@@ -224,14 +242,14 @@ export default function ObjectLadder() {
             type='button'
             onClick={next}
             className={cn(
-              'rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground',
+              'bg-accent text-accent-foreground rounded-lg px-4 py-2 text-sm font-medium',
               'transition-transform hover:scale-[1.02] active:scale-95'
             )}
           >
             {nextStep.label}
           </button>
         ) : (
-          <span className='rounded-lg bg-default-200 px-4 py-2 text-sm text-default-500'>
+          <span className='bg-surface-tertiary text-muted rounded-lg px-4 py-2 text-sm'>
             stack complete ✓
           </span>
         )}
@@ -240,7 +258,7 @@ export default function ObjectLadder() {
           <button
             type='button'
             onClick={reset}
-            className='flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-default-500 transition-colors hover:text-foreground'
+            className='text-muted hover:text-foreground flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors'
           >
             <RotateCcwIcon size={14} /> reset
           </button>
@@ -253,7 +271,7 @@ export default function ObjectLadder() {
               key={n}
               className={cn(
                 'h-1.5 w-1.5 rounded-full transition-colors',
-                step >= n ? 'bg-primary' : 'bg-default-300'
+                step >= n ? 'bg-accent' : 'bg-surface-tertiary'
               )}
             />
           ))}

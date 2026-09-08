@@ -160,8 +160,8 @@ function getToneClasses(tone: CalloutTone) {
   switch (tone) {
     case 'primary':
       return {
-        line: 'bg-primary',
-        text: 'text-primary-900'
+        line: 'bg-accent',
+        text: 'text-accent'
       }
     case 'success':
       return {
@@ -500,13 +500,13 @@ export default function ExpoProtectedRoutesDemo() {
   }
 
   return (
-    <section className='not-prose border-default-200 bg-default-50 my-8 overflow-hidden rounded-2xl border p-5 sm:p-6'>
+    <section className='not-prose border-border bg-surface my-8 overflow-hidden rounded-2xl border p-5 sm:p-6'>
       <div className='flex flex-col gap-4'>
         <div className='space-y-1'>
           <p className='font-sourceCodePro text-foreground text-sm font-semibold'>
             Auth Routing Visualizer
           </p>
-          <p className='text-default-500 max-w-2xl text-sm'>
+          <p className='text-muted max-w-2xl text-sm'>
             Compare redirect-driven auth routing with guarded route groups,
             using the file-based mental model Expo Router actually gives you.
           </p>
@@ -536,7 +536,7 @@ export default function ExpoProtectedRoutesDemo() {
         <div className='rounded-large bg-background flex items-center gap-3 px-3 py-2'>
           <div className='space-y-0.5'>
             <p className='text-foreground text-xs font-medium'>Signed in</p>
-            <p className='text-default-500 text-[11px]'>Clerk/session exists</p>
+            <p className='text-muted text-[11px]'>Clerk/session exists</p>
           </div>
           <Switch
             isSelected={signedIn}
@@ -553,12 +553,12 @@ export default function ExpoProtectedRoutesDemo() {
         <div
           className={cn(
             'rounded-large flex items-center gap-3 px-3 py-2 transition-opacity',
-            signedIn ? 'bg-background' : 'bg-default-100/70 opacity-60'
+            signedIn ? 'bg-background' : 'bg-surface-secondary/70 opacity-60'
           )}
         >
           <div className='space-y-0.5'>
             <p className='text-foreground text-xs font-medium'>Onboarded</p>
-            <p className='text-default-500 text-[11px]'>Profile completed</p>
+            <p className='text-muted text-[11px]'>Profile completed</p>
           </div>
           <Switch
             isSelected={onboarded}
@@ -569,7 +569,7 @@ export default function ExpoProtectedRoutesDemo() {
         </div>
       </div>
 
-      <div className='rounded-large border-default-200 relative mt-2 overflow-hidden border bg-[#070708] p-4'>
+      <div className='rounded-large border-border relative mt-2 overflow-hidden border bg-[#070708] p-4'>
         <DotPattern
           glow
           width={18}
@@ -711,11 +711,11 @@ export default function ExpoProtectedRoutesDemo() {
                         row.group &&
                           previewMatch &&
                           previewGroup !== activeGroup
-                          ? 'text-warning-100'
+                          ? 'text-warning'
                           : row.group && activeMatch
                             ? mode === 'after'
-                              ? 'text-success-900'
-                              : 'text-primary-500'
+                              ? 'text-success'
+                              : 'text-accent'
                             : undefined
                       )}
                     >

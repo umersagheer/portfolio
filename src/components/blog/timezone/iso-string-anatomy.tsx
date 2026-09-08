@@ -22,20 +22,20 @@ const FORMATS: {
     label: 'ISO 8601 (UTC)',
     raw: '2026-03-29T14:30:00.000Z',
     segments: [
-      { text: '2026', color: 'text-primary-500', label: 'Year' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '03', color: 'text-secondary-500', label: 'Month' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '29', color: 'text-warning-500', label: 'Day' },
-      { text: 'T', color: 'text-default-300', label: 'Separator' },
-      { text: '14', color: 'text-success-500', label: 'Hours (24h)' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '30', color: 'text-success-500', label: 'Minutes' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Seconds' },
-      { text: '.', color: 'text-default-400', label: '' },
-      { text: '000', color: 'text-default-400', label: 'Milliseconds' },
-      { text: 'Z', color: 'text-danger-500', label: 'UTC (Zulu)' }
+      { text: '2026', color: 'text-accent', label: 'Year' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '29', color: 'text-warning', label: 'Day' },
+      { text: 'T', color: 'text-muted', label: 'Separator' },
+      { text: '14', color: 'text-success', label: 'Hours (24h)' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '30', color: 'text-success', label: 'Minutes' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Seconds' },
+      { text: '.', color: 'text-muted', label: '' },
+      { text: '000', color: 'text-muted', label: 'Milliseconds' },
+      { text: 'Z', color: 'text-danger', label: 'UTC (Zulu)' }
     ],
     parsedAs: 'UTC',
     safe: true,
@@ -46,11 +46,11 @@ const FORMATS: {
     label: 'Date only',
     raw: '2026-03-29',
     segments: [
-      { text: '2026', color: 'text-primary-500', label: 'Year' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '03', color: 'text-secondary-500', label: 'Month' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '29', color: 'text-warning-500', label: 'Day' }
+      { text: '2026', color: 'text-accent', label: 'Year' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '29', color: 'text-warning', label: 'Day' }
     ],
     parsedAs: 'UTC (per spec)',
     safe: true,
@@ -61,19 +61,19 @@ const FORMATS: {
     label: 'No Z (trap!)',
     raw: '2026-03-29T00:00:00',
     segments: [
-      { text: '2026', color: 'text-primary-500', label: 'Year' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '03', color: 'text-secondary-500', label: 'Month' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '29', color: 'text-warning-500', label: 'Day' },
-      { text: 'T', color: 'text-default-300', label: 'Separator' },
-      { text: '00', color: 'text-success-500', label: 'Hours' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Minutes' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Seconds' },
+      { text: '2026', color: 'text-accent', label: 'Year' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '29', color: 'text-warning', label: 'Day' },
+      { text: 'T', color: 'text-muted', label: 'Separator' },
+      { text: '00', color: 'text-success', label: 'Hours' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Minutes' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Seconds' },
       { text: '  ', color: '', label: '' },
-      { text: '← no Z!', color: 'text-danger-500', label: 'Missing timezone' }
+      { text: '← no Z!', color: 'text-danger', label: 'Missing timezone' }
     ],
     parsedAs: 'LOCAL TIME',
     safe: false,
@@ -84,18 +84,18 @@ const FORMATS: {
     label: 'With offset',
     raw: '2026-03-29T00:00:00+05:00',
     segments: [
-      { text: '2026', color: 'text-primary-500', label: 'Year' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '03', color: 'text-secondary-500', label: 'Month' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '29', color: 'text-warning-500', label: 'Day' },
-      { text: 'T', color: 'text-default-300', label: 'Separator' },
-      { text: '00', color: 'text-success-500', label: 'Hours' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Minutes' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Seconds' },
-      { text: '+05:00', color: 'text-danger-500', label: 'UTC+5 offset' }
+      { text: '2026', color: 'text-accent', label: 'Year' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '29', color: 'text-warning', label: 'Day' },
+      { text: 'T', color: 'text-muted', label: 'Separator' },
+      { text: '00', color: 'text-success', label: 'Hours' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Minutes' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Seconds' },
+      { text: '+05:00', color: 'text-danger', label: 'UTC+5 offset' }
     ],
     parsedAs: 'UTC (via offset)',
     safe: true,
@@ -106,17 +106,17 @@ const FORMATS: {
     label: 'Space separator',
     raw: '2026-03-29 00:00:00',
     segments: [
-      { text: '2026', color: 'text-primary-500', label: 'Year' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '03', color: 'text-secondary-500', label: 'Month' },
-      { text: '-', color: 'text-default-400', label: '' },
-      { text: '29', color: 'text-warning-500', label: 'Day' },
-      { text: ' ', color: 'text-default-300', label: 'Space (not T)' },
-      { text: '00', color: 'text-success-500', label: 'Hours' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Minutes' },
-      { text: ':', color: 'text-default-400', label: '' },
-      { text: '00', color: 'text-success-500', label: 'Seconds' }
+      { text: '2026', color: 'text-accent', label: 'Year' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '-', color: 'text-muted', label: '' },
+      { text: '29', color: 'text-warning', label: 'Day' },
+      { text: ' ', color: 'text-muted', label: 'Space (not T)' },
+      { text: '00', color: 'text-success', label: 'Hours' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Minutes' },
+      { text: ':', color: 'text-muted', label: '' },
+      { text: '00', color: 'text-success', label: 'Seconds' }
     ],
     parsedAs: 'Varies by browser',
     safe: false,
@@ -162,7 +162,7 @@ export default function ISOStringAnatomy() {
       </div>
 
       {/* The string with hoverable segments */}
-      <div className='bg-default-100 mb-4 overflow-x-auto rounded-lg p-4'>
+      <div className='bg-surface-secondary mb-4 overflow-x-auto rounded-lg p-4'>
         <div className='flex flex-wrap items-baseline font-mono text-lg font-bold sm:text-xl'>
           {format.segments.map((seg, i) => {
             const hasLabel = seg.label !== ''
@@ -192,7 +192,7 @@ export default function ISOStringAnatomy() {
                   aria-pressed={selectedSegment === i}
                   className={`font-inherit relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
                     selectedSegment === i
-                      ? 'ring-primary-300 ring-offset-default-100 scale-110 ring-2 ring-offset-2'
+                      ? 'ring-accent ring-offset-default-100 scale-110 ring-2 ring-offset-2'
                       : ''
                   } transition-transform focus-visible:outline-none`}
                   onMouseEnter={() => setSelectedSegment(i)}
@@ -210,22 +210,22 @@ export default function ISOStringAnatomy() {
       </div>
 
       {/* Info bar */}
-      <div className='border-default-200 grid gap-2 rounded-lg border p-3'>
+      <div className='border-border grid gap-2 rounded-lg border p-3'>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-500'>Parsed as</span>
+          <span className='text-muted'>Parsed as</span>
           <span
             className={`font-mono font-bold ${
-              format.safe ? 'text-success-600' : 'text-danger-600'
+              format.safe ? 'text-success' : 'text-danger'
             }`}
           >
             {format.parsedAs}
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-500'>Safe to use?</span>
+          <span className='text-muted'>Safe to use?</span>
           <span
             className={`font-bold ${
-              format.safe ? 'text-success-600' : 'text-danger-600'
+              format.safe ? 'text-success' : 'text-danger'
             }`}
           >
             <span className='inline-flex items-center gap-1'>
@@ -238,7 +238,7 @@ export default function ISOStringAnatomy() {
             </span>
           </span>
         </div>
-        <p className='text-default-500 mt-1 text-xs'>
+        <p className='text-muted mt-1 text-xs'>
           {highlightedSegment?.label
             ? `${highlightedSegment.label}: ${format.note}`
             : format.note}

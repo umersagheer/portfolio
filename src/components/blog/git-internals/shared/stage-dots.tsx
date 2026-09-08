@@ -14,7 +14,7 @@ export default function StageDots({ className }: { className?: string }) {
       height={18}
       cr={1.15}
       className={cn(
-        'text-default-400 pointer-events-none absolute inset-0 h-full w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent),linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] [mask-composite:intersect] opacity-70',
+        'text-muted pointer-events-none absolute inset-0 h-full w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent),linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] [mask-composite:intersect] opacity-70',
         className
       )}
     />

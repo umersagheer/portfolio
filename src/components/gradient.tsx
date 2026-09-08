@@ -9,11 +9,11 @@ export default function Gradient() {
   const getGradientStyle = () => {
     switch (pathname) {
       case '/':
-        return 'from-primary w-60 h-40 rounded-xl right-3 top-10 bg-gradient-to-r'
+        return 'from-accent w-60 h-40 rounded-xl right-3 top-10 bg-gradient-to-r'
       case '/posts':
         return 'from-warning size-44 right-4 rounded-3xl top-8 bg-gradient-to-tr'
       case '/contact':
-        return 'from-success-500 size-56 right-2 rounded-2xl top-6 bg-gradient-to-r'
+        return 'from-success size-56 right-2 rounded-2xl top-6 bg-gradient-to-r'
       default:
         return 'from-blue-600 via-purple-600 to-pink-600'
     }

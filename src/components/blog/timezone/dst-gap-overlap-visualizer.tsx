@@ -114,19 +114,19 @@ function ClockDisplay({
   className?: string
 }) {
   const borderColor = isGap
-    ? 'border-danger-300'
+    ? 'border-danger'
     : isJumped
-      ? 'border-warning-300'
+      ? 'border-warning'
       : isSecond
-        ? 'border-secondary-300'
-        : 'border-default-200'
+        ? 'border-accent'
+        : 'border-border'
 
   const bgColor = isGap
-    ? 'bg-danger-50'
+    ? 'bg-danger-soft'
     : isJumped
-      ? 'bg-warning-50'
+      ? 'bg-warning-soft'
       : isSecond
-        ? 'bg-secondary-50'
+        ? 'bg-accent-soft'
         : 'bg-background'
 
   return (
@@ -137,10 +137,10 @@ function ClockDisplay({
       <span
         className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
           isGap
-            ? 'bg-danger-100 text-danger-600'
+            ? 'bg-danger-soft text-danger'
             : isSecond
-              ? 'bg-secondary-100 text-secondary-600'
-              : 'bg-default-100 text-default-500'
+              ? 'bg-accent-soft text-accent'
+              : 'bg-surface-secondary text-muted'
         }`}
       >
         {label}
@@ -220,7 +220,7 @@ export default function DSTGapOverlapVisualizer() {
 
       <div className='mb-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-8'>
         <div className='flex flex-col items-center'>
-          <span className='text-default-400 mb-2 text-xs font-medium'>
+          <span className='text-muted mb-2 text-xs font-medium'>
             Wall Clock (New York)
           </span>
           <ClockDisplay
@@ -233,9 +233,7 @@ export default function DSTGapOverlapVisualizer() {
         </div>
 
         <div className='flex flex-col items-center'>
-          <span className='text-default-400 mb-2 text-xs font-medium'>
-            UTC Clock
-          </span>
+          <span className='text-muted mb-2 text-xs font-medium'>UTC Clock</span>
           <ClockDisplay
             time={current.utc === '—' ? '—' : `${current.utc} UTC`}
             label='UTC'
@@ -254,8 +252,8 @@ export default function DSTGapOverlapVisualizer() {
               exit={{ opacity: 0, scale: 0.95 }}
               className={`rounded-lg p-3 text-center text-sm font-medium ${
                 transition === 'spring'
-                  ? 'bg-danger-50 text-danger-600'
-                  : 'bg-secondary-50 text-secondary-600'
+                  ? 'bg-danger-soft text-danger'
+                  : 'bg-accent-soft text-accent'
               }`}
             >
               {current.note}{' '}
@@ -286,17 +284,17 @@ export default function DSTGapOverlapVisualizer() {
               stop()
               setStep(i)
             }}
-            className='focus-visible:ring-primary-400 flex flex-1 items-center rounded-lg py-2 focus-visible:ring-2 focus-visible:outline-hidden'
+            className='focus-visible:ring-accent flex flex-1 items-center rounded-lg py-2 focus-visible:ring-2 focus-visible:outline-hidden'
           >
             <span
               className={`h-2 w-full rounded-full transition-colors ${
                 i === step
                   ? s.skip
-                    ? 'bg-danger-400'
-                    : 'bg-primary-400'
+                    ? 'bg-danger'
+                    : 'bg-accent'
                   : i < step
-                    ? 'bg-primary-200'
-                    : 'bg-default-200'
+                    ? 'bg-accent-soft'
+                    : 'bg-surface-tertiary'
               }`}
             />
           </button>
@@ -337,21 +335,21 @@ export default function DSTGapOverlapVisualizer() {
         </Button>
       </div>
 
-      <div className='border-default-200 mt-4 rounded-lg border p-3'>
-        <p className='text-default-400 text-xs'>
+      <div className='border-border mt-4 rounded-lg border p-3'>
+        <p className='text-muted text-xs'>
           {transition === 'spring' ? (
             <>
               On <strong>March 8, 2026</strong> at 2:00 AM, New York clocks jump
               to 3:00 AM. The hour 2:00–2:59 AM is a{' '}
-              <strong className='text-danger-500'>gap</strong> — it never
-              happens. UTC doesn&apos;t skip: 06:59 → 07:00 is just one minute.
+              <strong className='text-danger'>gap</strong> — it never happens.
+              UTC doesn&apos;t skip: 06:59 → 07:00 is just one minute.
             </>
           ) : (
             <>
               On <strong>November 1, 2026</strong> at 2:00 AM, New York clocks
               rewind to 1:00 AM. The hour 1:00–1:59 AM is an{' '}
-              <strong className='text-secondary-500'>overlap</strong> — it
-              happens twice. First in EDT (UTC-4), then in EST (UTC-5).
+              <strong className='text-accent'>overlap</strong> — it happens
+              twice. First in EDT (UTC-4), then in EST (UTC-5).
             </>
           )}
         </p>

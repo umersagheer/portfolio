@@ -33,9 +33,7 @@ const MorphingDialogContext =
 function useMorphingDialog() {
   const context = useContext(MorphingDialogContext)
   if (!context) {
-    throw new Error(
-      'useMorphingDialog must be used within a MorphingDialog'
-    )
+    throw new Error('useMorphingDialog must be used within a MorphingDialog')
   }
   return context
 }
@@ -126,9 +124,7 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        const ctx = document.querySelector(
-          `[data-dialog-id="${uniqueId}"]`
-        )
+        const ctx = document.querySelector(`[data-dialog-id="${uniqueId}"]`)
         if (ctx) {
           ctx.dispatchEvent(new CustomEvent('morphing-dialog-close'))
         }
@@ -342,7 +338,7 @@ function MorphingDialogClose({
       transition={{ delay: 0.15 }}
       className={
         className ||
-        'absolute right-3 top-3 z-10 rounded-full p-1.5 text-default-500 transition-colors hover:bg-content2 hover:text-default-700'
+        'text-muted hover:bg-surface-secondary hover:text-foreground absolute top-3 right-3 z-10 rounded-full p-1.5 transition-colors'
       }
     >
       {children || <IconX className='size-5' />}

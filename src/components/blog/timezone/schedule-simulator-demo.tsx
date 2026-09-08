@@ -147,19 +147,17 @@ export default function ScheduleSimulatorDemo() {
       </div>
 
       <div className='mb-4 grid gap-3 sm:grid-cols-2'>
-        <div className='border-danger-200 bg-danger-50 rounded-lg border p-4'>
+        <div className='border-danger bg-danger-soft rounded-lg border p-4'>
           <div className='mb-2 flex items-center gap-2'>
-            <IconCircleX size={16} className='text-danger-500' />
-            <span className='text-danger-600 text-xs font-medium'>
+            <IconCircleX size={16} className='text-danger' />
+            <span className='text-danger text-xs font-medium'>
               Stored as UTC at schedule time
             </span>
           </div>
           <div className='space-y-1 font-mono text-xs'>
-            <p className='text-default-500'>
-              stored: <span className='text-danger-600'>{winter.label}</span>
-              <span className='text-default-400 ml-1'>
-                (during {winter.abbr})
-              </span>
+            <p className='text-muted'>
+              stored: <span className='text-danger'>{winter.label}</span>
+              <span className='text-muted ml-1'>(during {winter.abbr})</span>
             </p>
             <AnimatePresence mode='wait'>
               <motion.div
@@ -169,7 +167,7 @@ export default function ScheduleSimulatorDemo() {
                 className='space-y-1'
               >
                 {isDSTActive && utcChanged && (
-                  <p className='text-danger-600'>
+                  <p className='text-danger'>
                     {winter.label} {summer.offset < 0 ? '+' : '−'}{' '}
                     {Math.abs(summer.offset)}h ({summer.abbr}) ={' '}
                     {((winter.utcHour + summer.offset + 24) % 24)
@@ -178,12 +176,12 @@ export default function ScheduleSimulatorDemo() {
                     :00 local
                   </p>
                 )}
-                <p className='text-default-500'>
+                <p className='text-muted'>
                   fires at:{' '}
                   <span
                     className={
                       isDSTActive && utcChanged
-                        ? 'text-danger-600 font-bold'
+                        ? 'text-danger font-bold'
                         : 'text-foreground'
                     }
                   >
@@ -197,21 +195,21 @@ export default function ScheduleSimulatorDemo() {
           </div>
         </div>
 
-        <div className='border-success-200 bg-success-50 rounded-lg border p-4'>
+        <div className='border-success bg-success-soft rounded-lg border p-4'>
           <div className='mb-2 flex items-center gap-2'>
-            <IconCircleCheck size={16} className='text-success-500' />
-            <span className='text-success-600 text-xs font-medium'>
+            <IconCircleCheck size={16} className='text-success' />
+            <span className='text-success text-xs font-medium'>
               Stored as wall time + timezone
             </span>
           </div>
           <div className='space-y-1 font-mono text-xs'>
-            <p className='text-default-500'>
+            <p className='text-muted'>
               stored:{' '}
-              <span className='text-success-600'>
+              <span className='text-success'>
                 {hour.toString().padStart(2, '0')}:00 + {zoneName}
               </span>
             </p>
-            <p className='text-default-500'>
+            <p className='text-muted'>
               fires at:{' '}
               <span className='text-foreground'>
                 {hour.toString().padStart(2, '0')}:00 local
@@ -222,7 +220,7 @@ export default function ScheduleSimulatorDemo() {
                 key={`wall-${isDSTActive}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className='text-default-400 space-y-1'
+                className='text-muted space-y-1'
               >
                 {(() => {
                   const active = isDSTActive ? summer : winter
@@ -231,9 +229,9 @@ export default function ScheduleSimulatorDemo() {
                     <p>
                       {hour.toString().padStart(2, '0')}:00 {sign}{' '}
                       {Math.abs(active.offset)}h ({active.abbr}) ={' '}
-                      <span className='text-success-600'>{active.label}</span>
+                      <span className='text-success'>{active.label}</span>
                       {isDSTActive && utcChanged && (
-                        <span className='text-success-500 ml-1'>
+                        <span className='text-success ml-1'>
                           (recalculated)
                         </span>
                       )}
@@ -248,14 +246,14 @@ export default function ScheduleSimulatorDemo() {
 
       <div className='mb-3'>
         <div className='mb-2 flex items-center justify-between'>
-          <span className='text-default-400 text-xs'>
+          <span className='text-muted text-xs'>
             {simState === 'idle'
               ? 'Press to simulate days passing through DST'
               : simState === 'advancing'
                 ? 'Advancing through days...'
                 : 'DST transition complete'}
           </span>
-          <span className='text-default-400 font-mono text-xs'>
+          <span className='text-muted font-mono text-xs'>
             Day{' '}
             <NumberFlow
               value={simDay + 1}
@@ -276,12 +274,12 @@ export default function ScheduleSimulatorDemo() {
                   key={i}
                   className={`relative flex h-10 flex-1 flex-col items-center justify-center rounded ${
                     isDSTDay && isPast
-                      ? 'bg-warning-200'
+                      ? 'bg-warning-soft'
                       : isPast
                         ? i < dstDay
-                          ? 'bg-primary-200'
-                          : 'bg-primary-300'
-                        : 'bg-default-100'
+                          ? 'bg-accent-soft'
+                          : 'bg-accent'
+                        : 'bg-surface-secondary'
                   }`}
                   animate={
                     i === simDay
@@ -292,10 +290,10 @@ export default function ScheduleSimulatorDemo() {
                   <span
                     className={`text-[9px] font-bold ${
                       isDSTDay
-                        ? 'text-warning-700'
+                        ? 'text-warning'
                         : isPast
-                          ? 'text-primary-700'
-                          : 'text-default-400'
+                          ? 'text-accent'
+                          : 'text-muted'
                     }`}
                   >
                     {dayLabel}

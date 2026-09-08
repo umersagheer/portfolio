@@ -46,7 +46,7 @@ export default function AuthorSidebar({
           href={siteProfile.socials.x.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='text-primary -mt-1 text-xs'
+          className='text-accent -mt-1 text-xs'
         >
           {siteProfile.socials.x.label}
         </a>
@@ -58,7 +58,7 @@ export default function AuthorSidebar({
               target='_blank'
               rel='noopener noreferrer'
               aria-label='GitHub'
-              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='github' size={16} className='grayscale' />
             </a>
@@ -71,7 +71,7 @@ export default function AuthorSidebar({
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn'
-              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='linkedin' size={16} className='grayscale' />
             </a>
@@ -82,13 +82,13 @@ export default function AuthorSidebar({
             <a
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
-              className='hover:bg-default-100 rounded-md p-1.5 transition-colors'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon
                 slug='gmail'
                 size={16}
                 className='grayscale'
-                fallback={<MailIcon size={16} className='text-default-500' />}
+                fallback={<MailIcon size={16} className='text-muted' />}
               />
             </a>
 
@@ -96,7 +96,7 @@ export default function AuthorSidebar({
           </Tooltip>
         </div>
 
-        <div className='text-default-400 flex flex-col gap-1 text-xs'>
+        <div className='text-muted flex flex-col gap-1 text-xs'>
           <span className='flex items-center gap-1.5'>
             <ClockIcon size={12} />
             {readingTime} min read
@@ -109,19 +109,19 @@ export default function AuthorSidebar({
       </div>
 
       {/* Divider */}
-      <div className='bg-default-200 my-3 h-px w-3/4' />
+      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
 
       {/* Adjacent posts navigation */}
       <div className='flex flex-col gap-3'>
         {newerPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-default-400 text-[10px] tracking-wider uppercase'>
+            <span className='text-muted text-[10px] tracking-wider uppercase'>
               Previous Article
             </span>
             <Tooltip delay={500}>
               <Link
                 href={`/posts/${newerPost.postId}`}
-                className='text-default-600 hover:text-primary line-clamp-2 text-xs transition-colors'
+                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
               >
                 {newerPost.title}
               </Link>
@@ -145,13 +145,13 @@ export default function AuthorSidebar({
         )}
         {olderPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-default-400 text-[10px] tracking-wider uppercase'>
+            <span className='text-muted text-[10px] tracking-wider uppercase'>
               Next Article
             </span>
             <Tooltip delay={500}>
               <Link
                 href={`/posts/${olderPost.postId}`}
-                className='text-default-600 hover:text-primary line-clamp-2 text-xs transition-colors'
+                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
               >
                 {olderPost.title}
               </Link>
@@ -176,11 +176,11 @@ export default function AuthorSidebar({
       </div>
 
       {/* Divider + Back */}
-      <div className='bg-default-200 my-3 h-px w-3/4' />
+      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
 
       <Link
         href='/posts'
-        className='text-default-500 hover:text-primary text-xs transition-colors'
+        className='text-muted hover:text-accent text-xs transition-colors'
       >
         &larr; Back to posts
       </Link>

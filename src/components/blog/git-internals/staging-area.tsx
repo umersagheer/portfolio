@@ -126,7 +126,7 @@ export default function StagingArea() {
           type='button'
           onClick={add}
           disabled={!hasPick}
-          className='bg-primary text-primary-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-40'
+          className='bg-accent text-accent-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-40'
         >
           git add {hasPick ? `(${pickCount})` : ''}
         </button>
@@ -134,14 +134,14 @@ export default function StagingArea() {
           type='button'
           onClick={commit}
           disabled={!staged.length}
-          className='border-default-200 text-default-600 hover:border-primary hover:text-primary disabled:hover:border-default-200 disabled:hover:text-default-600 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:opacity-40'
+          className='border-border text-foreground hover:border-accent hover:text-accent disabled:hover:border-border disabled:hover:text-foreground inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:opacity-40'
         >
           <GitCommitHorizontalIcon size={15} /> git commit
         </button>
         <button
           type='button'
           onClick={reset}
-          className='text-default-400 hover:text-default-600 ml-auto inline-flex items-center gap-1 text-[11px] transition-colors'
+          className='text-muted hover:text-foreground ml-auto inline-flex items-center gap-1 text-[11px] transition-colors'
         >
           <RotateCcwIcon size={12} /> reset
         </button>
@@ -170,7 +170,7 @@ export default function StagingArea() {
                     aria-label={`Stage ${f.name}`}
                     className='rounded-sm'
                   />
-                  <FileIcon size={14} className='text-default-400' />
+                  <FileIcon size={14} className='text-muted' />
                   <span className='font-sourceCodePro text-foreground text-xs'>
                     {f.name}
                   </span>
@@ -178,7 +178,7 @@ export default function StagingArea() {
                     className={cn(
                       'ml-auto text-[10px] font-medium',
                       done
-                        ? 'text-default-400'
+                        ? 'text-muted'
                         : isStaged
                           ? 'text-success'
                           : 'text-warning'
@@ -199,7 +199,7 @@ export default function StagingArea() {
               <motion.p
                 key='empty'
                 {...fade}
-                className='text-default-400 px-1 text-[11px]'
+                className='text-muted px-1 text-[11px]'
               >
                 {justCommitted
                   ? '(emptied — folded into the commit)'
@@ -214,8 +214,8 @@ export default function StagingArea() {
                   className='bg-background font-sourceCodePro rounded-md px-2 py-1.5 text-xs shadow-xs'
                 >
                   <span className='text-foreground'>{name}</span>
-                  <span className='text-default-400'> → </span>
-                  <span className='text-secondary font-semibold'>
+                  <span className='text-muted'> → </span>
+                  <span className='text-accent font-semibold'>
                     {blobOf(name)}
                   </span>
                 </motion.div>
@@ -232,7 +232,7 @@ export default function StagingArea() {
                 <motion.p
                   key='empty-obj'
                   {...fade}
-                  className='text-default-400 px-1 text-[11px]'
+                  className='text-muted px-1 text-[11px]'
                 >
                   (empty)
                 </motion.p>
@@ -283,7 +283,7 @@ export default function StagingArea() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='bg-default-100 text-default-600 mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
+          className='bg-surface-secondary text-foreground mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>
@@ -307,16 +307,14 @@ function Lane({
     <div
       className={cn(
         'relative overflow-hidden rounded-xl p-3 shadow-xs',
-        dots ? 'border-default-100 bg-background border' : 'bg-default-100'
+        dots ? 'border-separator bg-background border' : 'bg-surface-secondary'
       )}
     >
       {dots && <StageDots />}
-      <div className='text-default-500 relative mb-0.5 text-xs font-medium'>
+      <div className='text-muted relative mb-0.5 text-xs font-medium'>
         {title}
       </div>
-      <div className='text-default-400 relative mb-3 text-[10px]'>
-        {subtitle}
-      </div>
+      <div className='text-muted relative mb-3 text-[10px]'>{subtitle}</div>
       <div className='relative min-h-[6rem] space-y-2'>{children}</div>
     </div>
   )

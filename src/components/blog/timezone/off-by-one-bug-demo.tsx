@@ -165,8 +165,8 @@ export default function OffByOneBugDemo() {
             transition={{ duration: 0.2 }}
           >
             {/* Data breakdown */}
-            <div className='bg-default-100 mb-4 grid gap-3 rounded-lg p-4'>
-              <div className='border-default-200 bg-background text-default-500 rounded-lg border px-3 py-2 text-xs'>
+            <div className='bg-surface-secondary mb-4 grid gap-3 rounded-lg p-4'>
+              <div className='border-border bg-background text-muted rounded-lg border px-3 py-2 text-xs'>
                 Business date:{' '}
                 <span className='text-foreground font-medium'>March 29</span> in{' '}
                 <span className='text-foreground font-medium'>{zoneLabel}</span>{' '}
@@ -177,13 +177,13 @@ export default function OffByOneBugDemo() {
                 )
               </div>
               <div className='flex items-baseline justify-between text-xs'>
-                <span className='text-default-500'>Customer&apos;s clock</span>
+                <span className='text-muted'>Customer&apos;s clock</span>
                 <span className='text-foreground font-mono'>
                   {result.localDate}, {result.localTime}
                 </span>
               </div>
               <div className='flex items-baseline justify-between text-xs'>
-                <span className='text-default-500'>Stored in DB (UTC)</span>
+                <span className='text-muted'>Stored in DB (UTC)</span>
                 <span className='text-foreground font-mono'>
                   {result.utcDate}, {result.utcTime} UTC
                 </span>
@@ -196,10 +196,10 @@ export default function OffByOneBugDemo() {
                     exit={{ opacity: 0, height: 0 }}
                     className='flex items-baseline justify-between text-xs'
                   >
-                    <span className='text-success-600'>
+                    <span className='text-success'>
                       UTC range for {result.localDate}
                     </span>
-                    <span className='text-success-600 font-mono'>
+                    <span className='text-success font-mono'>
                       {result.utcStartDate} {result.utcRangeStart} →{' '}
                       {result.utcEndDate} {result.utcRangeEnd}
                     </span>
@@ -207,7 +207,7 @@ export default function OffByOneBugDemo() {
                 )}
               </AnimatePresence>
               <div className='flex items-baseline justify-between text-xs'>
-                <span className='text-default-500'>
+                <span className='text-muted'>
                   {withFix
                     ? 'Report groups by (fixed)'
                     : 'Report groups by (raw UTC)'}
@@ -218,8 +218,8 @@ export default function OffByOneBugDemo() {
                   animate={{ opacity: 1, x: 0 }}
                   className={`font-mono font-bold ${
                     result.crossesDayBoundary && !withFix
-                      ? 'text-danger-600'
-                      : 'text-success-600'
+                      ? 'text-danger'
+                      : 'text-success'
                   }`}
                 >
                   {withFix ? fixTargetDate : bugTargetDate}
@@ -230,12 +230,12 @@ export default function OffByOneBugDemo() {
             </div>
 
             {/* Calendar grid with animated order chip */}
-            <div className='border-default-200 mb-4 overflow-hidden rounded-lg border'>
-              <div className='bg-default-100 text-default-500 grid grid-cols-3 text-center text-[10px] font-medium'>
+            <div className='border-border mb-4 overflow-hidden rounded-lg border'>
+              <div className='bg-surface-secondary text-muted grid grid-cols-3 text-center text-[10px] font-medium'>
                 {dates.map(d => (
                   <div
                     key={d}
-                    className='border-default-200 border-r p-2 last:border-r-0'
+                    className='border-border border-r p-2 last:border-r-0'
                   >
                     {d}
                   </div>
@@ -249,11 +249,11 @@ export default function OffByOneBugDemo() {
                   return (
                     <div
                       key={date}
-                      className={`border-default-200 flex min-h-[48px] items-center justify-center border-r p-3 transition-colors duration-300 last:border-r-0 ${
+                      className={`border-border flex min-h-[48px] items-center justify-center border-r p-3 transition-colors duration-300 last:border-r-0 ${
                         isTarget
                           ? isWrong
-                            ? 'bg-danger-50'
-                            : 'bg-success-50'
+                            ? 'bg-danger-soft'
+                            : 'bg-success-soft'
                           : ''
                       }`}
                     >
@@ -267,8 +267,8 @@ export default function OffByOneBugDemo() {
                           }}
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-medium transition-colors duration-300 ${
                             isWrong
-                              ? 'bg-danger-100 text-danger-600'
-                              : 'bg-success-100 text-success-600'
+                              ? 'bg-danger-soft text-danger'
+                              : 'bg-success-soft text-success'
                           }`}
                         >
                           <IconShoppingCart size={12} />

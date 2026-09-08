@@ -32,7 +32,7 @@ export default function LayoutIdDemo() {
         </Tabs.ListContainer>
       </Tabs>
 
-      <div className='bg-default-100 flex w-fit gap-1 rounded-lg p-1'>
+      <div className='bg-surface-secondary flex w-fit gap-1 rounded-lg p-1'>
         {tabs.map(tab => (
           <button
             key={tab}
@@ -51,9 +51,7 @@ export default function LayoutIdDemo() {
               ))}
             <span
               className={`relative z-10 ${
-                active === tab
-                  ? 'text-foreground font-medium'
-                  : 'text-default-500'
+                active === tab ? 'text-foreground font-medium' : 'text-muted'
               }`}
             >
               {tab}
@@ -62,13 +60,13 @@ export default function LayoutIdDemo() {
         ))}
       </div>
 
-      <p className='text-default-500 mt-4 text-sm'>
+      <p className='text-muted mt-4 text-sm'>
         Active tab:{' '}
         <span className='text-foreground font-medium'>{active}</span>
         {useLayoutId ? (
           <>
             {' — '}the indicator smoothly transitions using{' '}
-            <code className='bg-default-200 rounded-sm px-1.5 py-0.5 text-xs'>
+            <code className='bg-surface-tertiary rounded-sm px-1.5 py-0.5 text-xs'>
               layoutId
             </code>
           </>

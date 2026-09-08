@@ -107,10 +107,10 @@ function StageNode({
       label={label}
       className={
         isActive
-          ? 'border-primary-700/35 from-primary-500/20 shadow-primary-500/20 bg-gradient-to-b to-transparent shadow-md'
+          ? 'border-accent/35 from-accent/20 shadow-accent/20 bg-gradient-to-b to-transparent shadow-md'
           : undefined
       }
-      iconClassName={isActive ? 'text-primary-800' : undefined}
+      iconClassName={isActive ? 'text-accent' : undefined}
     >
       <Icon stroke={1.8} />
     </IconCard>
@@ -197,7 +197,7 @@ export default function DatePipelineDemo() {
 
       <div
         ref={containerRef}
-        className='border-default-100 bg-background relative mb-4 overflow-x-auto rounded-lg border p-4 sm:p-6'
+        className='border-separator bg-background relative mb-4 overflow-x-auto rounded-lg border p-4 sm:p-6'
       >
         <DotPattern
           glow
@@ -251,18 +251,16 @@ export default function DatePipelineDemo() {
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.15 }}
           aria-live='polite'
-          className='bg-default-100 rounded-lg p-4'
+          className='bg-surface-secondary rounded-lg p-4'
         >
           <div className='mb-1 flex items-center gap-2'>
-            <ActiveStageIcon size={18} className='text-default-500' />
+            <ActiveStageIcon size={18} className='text-muted' />
             <span className='text-foreground text-sm font-medium'>
               {activeStageData.label}
             </span>
           </div>
-          <p className='text-default-400 mb-2 text-xs'>
-            {activeStageData.detail}
-          </p>
-          <code className='bg-background text-primary-600 block rounded-md px-3 py-2 font-mono text-xs'>
+          <p className='text-muted mb-2 text-xs'>{activeStageData.detail}</p>
+          <code className='bg-background text-accent block rounded-md px-3 py-2 font-mono text-xs'>
             {activeStageData.value}
           </code>
         </motion.div>
@@ -281,7 +279,7 @@ export default function DatePipelineDemo() {
                 stopAutoPlay()
                 setActiveStage(i)
               }}
-              className='focus-visible:ring-primary-400 flex size-10 items-center justify-center rounded-lg focus-visible:ring-2 focus-visible:outline-hidden'
+              className='focus-visible:ring-accent flex size-10 items-center justify-center rounded-lg focus-visible:ring-2 focus-visible:outline-hidden'
             >
               <motion.div
                 animate={{
@@ -290,8 +288,8 @@ export default function DatePipelineDemo() {
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 className={`flex items-center justify-center rounded-full text-[10px] font-semibold transition-colors ${
                   i === activeStage
-                    ? 'bg-primary-500 text-primary-foreground size-6'
-                    : 'bg-default-300 text-default-600 size-5'
+                    ? 'bg-accent text-accent-foreground size-6'
+                    : 'bg-surface-tertiary text-foreground size-5'
                 }`}
               >
                 {i + 1}

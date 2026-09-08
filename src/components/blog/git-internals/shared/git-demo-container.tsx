@@ -36,13 +36,13 @@ export default function GitDemoContainer({
       aria-describedby={description ? descriptionId : undefined}
       transition={{ layout: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
       style={{ overflow: 'hidden' }}
-      className='not-prose my-8 rounded-2xl bg-default-50 p-4 shadow-md sm:p-5'
+      className='not-prose bg-surface my-8 rounded-2xl p-4 shadow-md sm:p-5'
     >
       {title && (
         <motion.h3
           id={titleId}
           layout='position'
-          className='mb-2 text-base font-semibold tracking-tight text-foreground'
+          className='text-foreground mb-2 text-base font-semibold tracking-tight'
         >
           {title}
         </motion.h3>
@@ -51,7 +51,7 @@ export default function GitDemoContainer({
         <motion.p
           id={descriptionId}
           layout='position'
-          className='mb-4 max-w-3xl text-sm leading-6 text-default-500'
+          className='text-muted mb-4 max-w-3xl text-sm leading-6'
         >
           {description}
         </motion.p>
@@ -63,7 +63,7 @@ export default function GitDemoContainer({
       {caption && (
         <motion.p
           layout='position'
-          className='mt-4 border-t border-default-100 pt-3 text-xs leading-5 text-default-400'
+          className='border-separator text-muted mt-4 border-t pt-3 text-xs leading-5'
         >
           {caption}
         </motion.p>

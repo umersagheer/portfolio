@@ -154,7 +154,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={singleContainerRef}
-            className='border-default-100 bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
+            className='border-separator bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               glow
@@ -214,7 +214,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={multiContainerRef}
-            className='border-default-100 bg-background relative flex flex-col items-center gap-6 rounded-lg border px-6 py-8 sm:px-10'
+            className='border-separator bg-background relative flex flex-col items-center gap-6 rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               width={16}
@@ -241,7 +241,7 @@ export default function PubSubScalingDemo() {
                 <IconCard
                   ref={redisRef}
                   label='Redis'
-                  className='border-danger-300 dark:border-danger-800'
+                  className='border-danger dark:border-danger'
                 >
                   <WebSocketBrokerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                 </IconCard>
@@ -251,13 +251,13 @@ export default function PubSubScalingDemo() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className='dark:bg-danger-950 bg-danger-100 text-danger-500 flex size-10 items-center justify-center rounded-full text-lg font-bold'
+                      className='dark:bg-danger bg-danger-soft text-danger flex size-10 items-center justify-center rounded-full text-lg font-bold'
                     >
                       <IconX size={18} />
                     </motion.div>
                   )}
                   {(!animating || animStep < 2) && (
-                    <div className='bg-default-200 h-px w-8' />
+                    <div className='bg-surface-tertiary h-px w-8' />
                   )}
                 </div>
               )}
@@ -350,10 +350,10 @@ export default function PubSubScalingDemo() {
             exit={{ opacity: 0, y: -4 }}
             className={`flex items-center gap-1.5 text-xs font-medium ${
               mode === 'no-broker' && animStep >= 2
-                ? 'text-danger-500'
+                ? 'text-danger'
                 : mode === 'redis' && animStep >= 4
-                  ? 'text-success-500'
-                  : 'text-default-500'
+                  ? 'text-success'
+                  : 'text-muted'
             }`}
           >
             {mode === 'redis' && animStep >= 4 && <IconCheck size={14} />}

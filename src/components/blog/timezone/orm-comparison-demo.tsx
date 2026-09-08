@@ -91,7 +91,7 @@ class Order {
 
 function CodeBlock({ code, highlight }: { code: string; highlight?: string }) {
   return (
-    <div className='bg-default-100 overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
+    <div className='bg-surface-secondary overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
       {code.split('\n').map((line, i) => {
         const isComment = line.trimStart().startsWith('//')
         const isHighlighted = highlight && line.includes(highlight)
@@ -100,10 +100,10 @@ function CodeBlock({ code, highlight }: { code: string; highlight?: string }) {
             key={i}
             className={
               isHighlighted
-                ? 'text-primary-600'
+                ? 'text-accent'
                 : isComment
-                  ? 'text-default-400'
-                  : 'text-default-600'
+                  ? 'text-muted'
+                  : 'text-foreground'
             }
           >
             {line || '\u00A0'}
@@ -152,10 +152,10 @@ export default function ORMComparisonDemo() {
         </Tabs.ListContainer>
       </Tabs>
 
-      <div className='bg-default-100 text-default-500 mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs'>
+      <div className='bg-surface-secondary text-muted mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs'>
         <BrandIcon slug={orm} size={18} />
         <span className='text-foreground font-medium'>{data.name}</span>
-        <IconArrowRight size={14} className='text-default-400' />
+        <IconArrowRight size={14} className='text-muted' />
         <BrandIcon slug='postgresql' size={18} />
         <span>PostgreSQL timestamp mapping</span>
       </div>
@@ -187,26 +187,26 @@ export default function ORMComparisonDemo() {
         </AnimatePresence>
       </div>
 
-      <div className='bg-default-100 grid gap-2 rounded-lg p-3'>
+      <div className='bg-surface-secondary grid gap-2 rounded-lg p-3'>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>SQL Type</span>
+          <span className='text-muted'>SQL Type</span>
           <span className='text-foreground font-mono'>
             {showFix ? 'timestamptz' : data.sqlType}
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Timezone Aware?</span>
+          <span className='text-muted'>Timezone Aware?</span>
           <span
             className={`font-medium ${
-              showFix ? 'text-success-600' : 'text-danger-600'
+              showFix ? 'text-success' : 'text-danger'
             }`}
           >
             {showFix ? 'Yes' : 'No (by default)'}
           </span>
         </div>
         <div className='flex items-baseline justify-between text-xs'>
-          <span className='text-default-400'>Fix</span>
-          <code className='text-primary-600'>{data.fix}</code>
+          <span className='text-muted'>Fix</span>
+          <code className='text-accent'>{data.fix}</code>
         </div>
       </div>
 

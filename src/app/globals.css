@@ -10,6 +10,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* v3's stock --accent is blue; this portfolio's brand colour is purple.
+   These are the exact primary values from the old v2 heroui() theme, so
+   `accent` keeps rendering the brand rather than HeroUI's default. */
+:root {
+  --accent: #7828c8;
+}
+.dark {
+  --accent: #9353d3;
+}
+
 /* Tailwind v4 changed the default border/divide colour from gray-200 to
    currentColor. This restores v3 behaviour for the ~74 bare `border` usages
    so the upgrade is not a visual change. */

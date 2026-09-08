@@ -32,13 +32,13 @@ export default function LayoutAnimationDemo() {
       </div>
 
       <div className='grid grid-cols-2 gap-4'>
-        <div className='border-default-200 space-y-3 rounded-lg border p-4'>
-          <p className='text-default-600 text-sm font-semibold'>
+        <div className='border-border space-y-3 rounded-lg border p-4'>
+          <p className='text-foreground text-sm font-semibold'>
             Without animation
           </p>
           <div className='flex h-24 items-end'>
             <div
-              className='bg-danger-400 rounded-lg'
+              className='bg-danger rounded-lg'
               style={{
                 width: isExpanded ? '100%' : 60,
                 height: isExpanded ? '100%' : 60
@@ -47,10 +47,10 @@ export default function LayoutAnimationDemo() {
           </div>
         </div>
 
-        <div className='border-default-200 space-y-3 rounded-lg border p-4'>
-          <p className='text-default-600 text-sm font-semibold'>
+        <div className='border-border space-y-3 rounded-lg border p-4'>
+          <p className='text-foreground text-sm font-semibold'>
             With{' '}
-            <code className='bg-default-200 rounded-sm px-1.5 py-0.5 text-xs'>
+            <code className='bg-surface-tertiary rounded-sm px-1.5 py-0.5 text-xs'>
               layout
             </code>{' '}
             prop
@@ -58,7 +58,7 @@ export default function LayoutAnimationDemo() {
           <div className='flex h-24 items-end'>
             <motion.div
               layout
-              className='bg-primary-400 rounded-lg'
+              className='bg-accent rounded-lg'
               style={{
                 width: isExpanded ? '100%' : 60,
                 height: isExpanded ? '100%' : 60

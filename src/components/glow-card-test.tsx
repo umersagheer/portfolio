@@ -28,7 +28,7 @@ export function GlowCardTest() {
     >
       <Card.Content className='flex flex-col items-center gap-6 p-12'>
         <h3 className='text-2xl font-semibold'>React</h3>
-        <p className='text-default-500 text-center text-sm'>
+        <p className='text-muted text-center text-sm'>
           JavaScript library for building user interfaces
         </p>
 
@@ -39,7 +39,7 @@ export function GlowCardTest() {
           mouseOnCard={mouseOnCard}
         />
 
-        <p className='text-default-400 text-center text-xs'>
+        <p className='text-muted text-center text-xs'>
           Hover over the card to see the glow effect
         </p>
       </Card.Content>

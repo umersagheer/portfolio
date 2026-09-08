@@ -277,7 +277,7 @@ const TreeIndicator = forwardRef<
       dir={direction}
       ref={ref}
       className={cn(
-        'bg-default-200 absolute top-2 bottom-2 w-px rounded-full',
+        'bg-surface-tertiary absolute top-2 bottom-2 w-px rounded-full',
         direction === 'rtl' ? 'right-2' : 'left-2',
         className
       )}
@@ -331,8 +331,8 @@ const Folder = forwardRef<HTMLDivElement, FolderProps>(
             'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors',
             isSelectable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
             isSelected && isSelectable
-              ? 'bg-default-100 text-foreground'
-              : 'text-default-600 hover:bg-default-100'
+              ? 'bg-surface-secondary text-foreground'
+              : 'text-foreground hover:bg-surface-secondary'
           )}
           onClick={() => {
             selectItem(value)
@@ -342,11 +342,11 @@ const Folder = forwardRef<HTMLDivElement, FolderProps>(
           <IconChevronRight
             size={14}
             className={cn(
-              'text-default-400 shrink-0 transition-transform',
+              'text-muted shrink-0 transition-transform',
               isExpanded && (direction === 'rtl' ? '-rotate-90' : 'rotate-90')
             )}
           />
-          <span className='text-default-500 shrink-0'>
+          <span className='text-muted shrink-0'>
             {isExpanded
               ? (openIcon ?? <IconFolderOpen size={16} />)
               : (closeIcon ?? <IconFolder size={16} />)}
@@ -409,8 +409,8 @@ const File = forwardRef<
           'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors',
           isSelectable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
           isSelected && isSelectable
-            ? 'bg-default-100 text-foreground'
-            : 'text-default-600 hover:bg-default-100',
+            ? 'bg-surface-secondary text-foreground'
+            : 'text-foreground hover:bg-surface-secondary',
           direction === 'rtl' ? 'flex-row-reverse text-right' : 'text-left',
           className
         )}
@@ -421,7 +421,7 @@ const File = forwardRef<
         }}
         {...props}
       >
-        <span className='text-default-500 shrink-0'>
+        <span className='text-muted shrink-0'>
           {fileIcon ?? <IconFile size={16} />}
         </span>
         {children}

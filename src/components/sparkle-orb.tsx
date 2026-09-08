@@ -47,10 +47,7 @@ function getVisitorId(): string {
   return vid
 }
 
-export default function SparkleOrb({
-  postId,
-  size = 'md'
-}: SparkleOrbProps) {
+export default function SparkleOrb({ postId, size = 'md' }: SparkleOrbProps) {
   const [globalCount, setGlobalCount] = useState(0)
   const [userClicks, setUserClicks] = useState(0)
   const [particles, setParticles] = useState<Particle[]>([])
@@ -174,7 +171,7 @@ export default function SparkleOrb({
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         >
           <div
-            className='pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 rounded-full'
+            className='pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full'
             style={{
               width: orbSize * 0.3,
               height: orbSize * 0.2,
@@ -223,7 +220,7 @@ export default function SparkleOrb({
         <AnimatePresence>
           {showMaxLabel && (
             <motion.span
-              className='pointer-events-none absolute -top-8 whitespace-nowrap text-xs font-semibold text-purple-400'
+              className='pointer-events-none absolute -top-8 text-xs font-semibold whitespace-nowrap text-purple-400'
               initial={{ y: 4, opacity: 0, scale: 0.8 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -6, opacity: 0 }}
@@ -236,7 +233,7 @@ export default function SparkleOrb({
       </button>
 
       <motion.span
-        className='text-xs text-default-400'
+        className='text-muted text-xs'
         key={globalCount}
         initial={{ y: -4, opacity: 0.5 }}
         animate={{ y: 0, opacity: 1 }}

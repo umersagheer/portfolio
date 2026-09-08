@@ -42,18 +42,18 @@ export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
   blob: {
     // translucent surface + a faint color tint so backdrop-blur reads as frosted
     // glass over the dotted stage.
-    container: 'border-secondary bg-secondary/10',
-    badge: 'bg-secondary text-secondary-foreground',
-    accent: 'text-secondary'
+    container: 'border-accent bg-accent/10',
+    badge: 'bg-accent text-accent-foreground',
+    accent: 'text-accent'
   },
   tree: {
-    container: 'border-primary bg-primary/10',
-    badge: 'bg-primary text-primary-foreground',
-    accent: 'text-primary'
+    container: 'border-accent bg-accent/10',
+    badge: 'bg-accent text-accent-foreground',
+    accent: 'text-accent'
   },
   commit: {
-    container: 'border-default-300 bg-default-100/60',
-    badge: 'bg-default-200 text-foreground',
+    container: 'border-border-secondary bg-surface-secondary/60',
+    badge: 'bg-surface-tertiary text-foreground',
     accent: 'text-foreground'
   }
 }
@@ -66,18 +66,18 @@ export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
 export const STATE_STYLES: Record<GitNodeState, string> = {
   normal: '',
   /** Freshly created object — a primary ring to draw the eye on first appearance. */
-  new: 'ring-1 ring-primary',
+  new: 'ring-1 ring-accent',
   /** Unreferenced / orphaned — dashed gray border + muted gray text. */
-  orphaned: 'border-dashed border-default-300 text-default-400',
+  orphaned: 'border-dashed border-border-secondary text-muted',
   /** The commit HEAD currently points at — a primary ring, the focal point. */
-  head: 'ring-1 ring-primary'
+  head: 'ring-1 ring-accent'
 }
 
 /** Branch / HEAD sticky-note pills — success for branches, primary outline for HEAD. */
 export const REF_STYLES = {
-  branch: 'border-success bg-default-50 text-success',
-  head: 'border-primary bg-default-50 text-primary',
-  detached: 'border-danger bg-default-50 text-danger'
+  branch: 'border-success bg-surface text-success',
+  head: 'border-accent bg-surface text-accent',
+  detached: 'border-danger bg-surface text-danger'
 }
 
 /**

@@ -133,7 +133,7 @@ export default function ParseTrapDemo() {
       <div className='mb-4'>
         <label
           htmlFor={inputId}
-          className='text-default-500 mb-2 block text-xs font-medium'
+          className='text-muted mb-2 block text-xs font-medium'
         >
           Date string to parse
         </label>
@@ -145,7 +145,7 @@ export default function ParseTrapDemo() {
             setInput(e.target.value)
             setActivePreset(-1)
           }}
-          className='border-default-200 bg-background text-foreground focus:border-primary-400 w-full rounded-lg border px-3 py-2 font-mono text-sm outline-hidden'
+          className='border-border bg-background text-foreground focus:border-accent w-full rounded-lg border px-3 py-2 font-mono text-sm outline-hidden'
           placeholder="Try: '2026-03-29T00:00:00'"
         />
       </div>
@@ -160,7 +160,7 @@ export default function ParseTrapDemo() {
             transition={{ duration: 0.2 }}
             className='space-y-3'
           >
-            <div className='bg-default-100 grid gap-2 rounded-lg p-4'>
+            <div className='bg-surface-secondary grid gap-2 rounded-lg p-4'>
               <Row label='Input' value={`new Date(${input})`} mono />
               <Row label='Your machine' value={machineZone} />
               <Row
@@ -216,29 +216,29 @@ export default function ParseTrapDemo() {
             )}
 
             {simulatedExamples.length > 0 && (
-              <div className='border-default-200 rounded-lg border p-3'>
-                <p className='text-default-500 text-xs font-medium'>
+              <div className='border-border rounded-lg border p-3'>
+                <p className='text-muted text-xs font-medium'>
                   Same string, different machines
                 </p>
                 <div className='mt-3 space-y-2'>
                   {simulatedExamples.map(example => (
                     <div
                       key={example.zone}
-                      className='bg-default-100 flex flex-col gap-1 rounded-lg px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between'
+                      className='bg-surface-secondary flex flex-col gap-1 rounded-lg px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between'
                     >
                       <div>
                         <p className='text-foreground font-medium'>
                           {example.label}{' '}
-                          <span className='text-default-500 font-mono'>
+                          <span className='text-muted font-mono'>
                             ({example.offset})
                           </span>
                         </p>
-                        <p className='text-default-500'>
+                        <p className='text-muted'>
                           Parses to UTC day {example.utcDate}
                           {example.shifted ? ' ← day shifted' : ''}
                         </p>
                       </div>
-                      <code className='text-primary-600 font-mono text-[11px]'>
+                      <code className='text-accent font-mono text-[11px]'>
                         {example.isoString}
                       </code>
                     </div>
@@ -263,33 +263,27 @@ export default function ParseTrapDemo() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className='bg-default-100 text-default-400 rounded-lg p-4 text-center text-sm'
+            className='bg-surface-secondary text-muted rounded-lg p-4 text-center text-sm'
           >
             Invalid date string — try a different format
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className='border-default-200 mt-4 rounded-lg border p-3'>
-        <p className='text-default-500 text-xs font-medium'>
-          The ECMAScript Rule
-        </p>
-        <div className='text-default-400 mt-2 space-y-1 text-xs'>
+      <div className='border-border mt-4 rounded-lg border p-3'>
+        <p className='text-muted text-xs font-medium'>The ECMAScript Rule</p>
+        <div className='text-muted mt-2 space-y-1 text-xs'>
           <p>
-            <span className='text-success-500 font-mono'>YYYY-MM-DD</span>{' '}
+            <span className='text-success font-mono'>YYYY-MM-DD</span>{' '}
             (date-only) → parsed as <strong>UTC</strong>
           </p>
           <p>
-            <span className='text-danger-500 font-mono'>
-              YYYY-MM-DDTHH:mm:ss
-            </span>{' '}
+            <span className='text-danger font-mono'>YYYY-MM-DDTHH:mm:ss</span>{' '}
             (no Z/offset) → parsed as{' '}
             <strong>local time on the parsing machine</strong>
           </p>
           <p>
-            <span className='text-success-500 font-mono'>
-              YYYY-MM-DDTHH:mm:ssZ
-            </span>{' '}
+            <span className='text-success font-mono'>YYYY-MM-DDTHH:mm:ssZ</span>{' '}
             (with Z or offset) → parsed as <strong>UTC</strong>
           </p>
         </div>
@@ -310,14 +304,14 @@ function Row({
   highlight?: 'success' | 'danger' | 'warning'
 }) {
   const colorMap = {
-    success: 'text-success-600',
-    danger: 'text-danger-600',
-    warning: 'text-warning-600'
+    success: 'text-success',
+    danger: 'text-danger',
+    warning: 'text-warning'
   }
 
   return (
     <div className='flex items-baseline justify-between gap-4'>
-      <span className='text-default-400 shrink-0 text-xs'>{label}</span>
+      <span className='text-muted shrink-0 text-xs'>{label}</span>
       <span
         className={`text-right text-xs ${mono ? 'font-mono' : ''} ${highlight ? colorMap[highlight] : 'text-foreground'}`}
       >

@@ -54,9 +54,9 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
   if (items.length === 0) return null
 
   return (
-    <nav className='mb-14 flex min-h-0 max-h-[calc(100vh-35rem)] flex-col xl:mb-0 '>
+    <nav className='mb-14 flex max-h-[calc(100vh-35rem)] min-h-0 flex-col xl:mb-0'>
       <p className='mb-4 text-sm font-semibold'>On this page</p>
-      <ScrollShadow className='-mr-2 min-h-0 flex-1 overflow-y-auto pr-2 scrollbar-hide'>
+      <ScrollShadow className='scrollbar-hide -mr-2 min-h-0 flex-1 overflow-y-auto pr-2'>
         <ul className='relative text-sm'>
           {items.map(item => (
             <li
@@ -70,7 +70,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
               {activeId === item.id && (
                 <motion.div
                   layoutId='toc-active-indicator'
-                  className='absolute left-0 top-2.5 h-4 w-0.5 rounded-full bg-default-600'
+                  className='bg-surface-tertiary absolute top-2.5 left-0 h-4 w-0.5 rounded-full'
                   transition={{
                     type: 'spring',
                     stiffness: 350,
@@ -86,8 +86,8 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                   // h2 (Part 1/2) read as section headers; h3 lighter/smaller children
                   item.level === 2 ? 'font-semibold' : 'text-[13px]',
                   activeId === item.id
-                    ? 'font-medium text-foreground'
-                    : 'text-default-400 hover:text-foreground'
+                    ? 'text-foreground font-medium'
+                    : 'text-muted hover:text-foreground'
                 )}
               >
                 {item.text}

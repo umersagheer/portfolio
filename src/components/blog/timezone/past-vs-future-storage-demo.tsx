@@ -36,33 +36,31 @@ export default function PastVsFutureStorageDemo() {
     >
       <div className='grid gap-4 sm:grid-cols-2'>
         {/* Past Event Panel */}
-        <div className='border-primary-400 bg-primary-100 rounded-lg border p-4'>
+        <div className='border-accent bg-accent-soft rounded-lg border p-4'>
           <div className='mb-3 flex items-center gap-2'>
-            <span className='bg-primary-200 text-primary-800 rounded-full px-2 py-0.5 text-xs font-bold'>
+            <span className='bg-accent-soft text-accent rounded-full px-2 py-0.5 text-xs font-bold'>
               PAST
             </span>
-            <span className='text-default-500 text-xs'>
+            <span className='text-muted text-xs'>
               Recording &amp; Reporting
             </span>
           </div>
 
           <div className='mb-3'>
-            <p className='text-default-500 text-xs'>What happened:</p>
+            <p className='text-muted text-xs'>What happened:</p>
             <p className='text-foreground text-sm font-medium'>
               Order placed on {pastDate}
             </p>
           </div>
 
-          <div className='bg-primary-200 mb-3 rounded-md p-2'>
-            <p className='text-primary-700 text-[10px] font-medium'>
-              Stored in DB
-            </p>
-            <p className='text-primary-800 font-mono text-sm font-bold'>
+          <div className='bg-accent-soft mb-3 rounded-md p-2'>
+            <p className='text-accent text-[10px] font-medium'>Stored in DB</p>
+            <p className='text-accent font-mono text-sm font-bold'>
               2026-03-29T{pastUTC.replace(' UTC', ':00Z')}
             </p>
           </div>
 
-          <p className='text-default-500 mb-2 text-[10px] font-medium'>
+          <p className='text-muted mb-2 text-[10px] font-medium'>
             Same moment, different readings:
           </p>
           <div className='space-y-1'>
@@ -71,7 +69,7 @@ export default function PastVsFutureStorageDemo() {
                 key={tz.zone}
                 className='flex items-center justify-between text-xs'
               >
-                <span className='text-default-500'>{tz.label}</span>
+                <span className='text-muted'>{tz.label}</span>
                 <span className='text-foreground font-mono font-medium'>
                   {formatInZone(14, tz.offset)}
                 </span>
@@ -79,8 +77,8 @@ export default function PastVsFutureStorageDemo() {
             ))}
           </div>
 
-          <div className='border-primary-300 bg-primary-50 mt-3 rounded-md border p-2'>
-            <div className='text-primary-700 flex items-start gap-2 text-[10px]'>
+          <div className='border-accent bg-accent-soft mt-3 rounded-md border p-2'>
+            <div className='text-accent flex items-start gap-2 text-[10px]'>
               <IconCircleCheck size={14} className='mt-0.5 shrink-0' />
               <p>
                 UTC is perfect for past events. The moment is fixed and only the
@@ -91,32 +89,30 @@ export default function PastVsFutureStorageDemo() {
         </div>
 
         {/* Future Event Panel */}
-        <div className='border-success-400 bg-success-100 rounded-lg border p-4'>
+        <div className='border-success bg-success-soft rounded-lg border p-4'>
           <div className='mb-3 flex items-center gap-2'>
-            <span className='bg-success-200 text-success-800 rounded-full px-2 py-0.5 text-xs font-bold'>
+            <span className='bg-success-soft text-success rounded-full px-2 py-0.5 text-xs font-bold'>
               FUTURE
             </span>
-            <span className='text-default-500 text-xs'>Scheduling</span>
+            <span className='text-muted text-xs'>Scheduling</span>
           </div>
 
           <div className='mb-3'>
-            <p className='text-default-500 text-xs'>What the user wants:</p>
+            <p className='text-muted text-xs'>What the user wants:</p>
             <p className='text-foreground text-sm font-medium'>
               Daily standup at 9:00 AM in New York
             </p>
           </div>
 
-          <div className='bg-success-200 mb-3 rounded-md p-2'>
-            <p className='text-success-700 text-[10px] font-medium'>
-              Stored in DB
-            </p>
-            <p className='text-success-800 font-mono text-sm font-bold'>
+          <div className='bg-success-soft mb-3 rounded-md p-2'>
+            <p className='text-success text-[10px] font-medium'>Stored in DB</p>
+            <p className='text-success font-mono text-sm font-bold'>
               wall_time: {futureWallTime} + tz: {futureZone}
             </p>
           </div>
 
           <div className='mb-2 flex items-center gap-2'>
-            <p className='text-default-500 text-[10px] font-medium'>
+            <p className='text-muted text-[10px] font-medium'>
               UTC equivalent:
             </p>
             <Button
@@ -140,30 +136,30 @@ export default function PastVsFutureStorageDemo() {
               className='space-y-1'
             >
               <div className='flex items-center justify-between text-xs'>
-                <span className='text-default-500'>Wall time</span>
+                <span className='text-muted'>Wall time</span>
                 <span className='text-foreground font-mono font-medium'>
                   09:00 AM
                 </span>
               </div>
               <div className='flex items-center justify-between text-xs'>
-                <span className='text-default-500'>Offset</span>
+                <span className='text-muted'>Offset</span>
                 <span className='text-foreground font-mono font-medium'>
                   {dstToggle ? 'UTC-4 (EDT)' : 'UTC-5 (EST)'}
                 </span>
               </div>
               <div className='flex items-center justify-between text-xs'>
-                <span className='text-default-500'>Conversion</span>
-                <span className='text-default-500 font-mono'>
+                <span className='text-muted'>Conversion</span>
+                <span className='text-muted font-mono'>
                   {dstToggle
                     ? '09:00 + 4h (EDT) = 13:00 UTC'
                     : '09:00 + 5h (EST) = 14:00 UTC'}
                 </span>
               </div>
               <div className='flex items-center justify-between text-xs'>
-                <span className='text-default-500'>Computed UTC</span>
+                <span className='text-muted'>Computed UTC</span>
                 <span
                   className={`font-mono font-bold ${
-                    dstToggle ? 'text-warning-600' : 'text-foreground'
+                    dstToggle ? 'text-warning' : 'text-foreground'
                   }`}
                 >
                   <NumberFlow
@@ -178,8 +174,8 @@ export default function PastVsFutureStorageDemo() {
             </motion.div>
           </AnimatePresence>
 
-          <div className='border-success-300 bg-success-50 mt-3 rounded-md border p-2'>
-            <div className='text-success-700 flex items-start gap-2 text-[10px]'>
+          <div className='border-success bg-success-soft mt-3 rounded-md border p-2'>
+            <div className='text-success flex items-start gap-2 text-[10px]'>
               <IconCircleCheck size={14} className='mt-0.5 shrink-0' />
               <p>
                 Wall time stays 9:00 AM. The UTC equivalent shifts when DST

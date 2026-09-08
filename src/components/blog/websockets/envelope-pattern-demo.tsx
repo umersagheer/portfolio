@@ -67,11 +67,11 @@ export default function EnvelopePatternDemo() {
 
       <div className='grid gap-4 md:grid-cols-2'>
         {/* Raw String */}
-        <div className='border-default-200 bg-background rounded-lg border p-4'>
-          <p className='text-danger-400 mb-2 text-xs font-semibold tracking-wider uppercase'>
+        <div className='border-border bg-background rounded-lg border p-4'>
+          <p className='text-danger mb-2 text-xs font-semibold tracking-wider uppercase'>
             Raw String
           </p>
-          <div className='bg-default-100 text-default-600 dark:bg-default-50 rounded-md p-3 font-mono text-sm'>
+          <div className='bg-surface-secondary text-foreground dark:bg-surface rounded-md p-3 font-mono text-sm'>
             <AnimatePresence mode='wait'>
               <motion.span
                 key={message}
@@ -84,35 +84,35 @@ export default function EnvelopePatternDemo() {
               </motion.span>
             </AnimatePresence>
           </div>
-          <p className='text-default-400 mt-2 text-[11px]'>
+          <p className='text-muted mt-2 text-[11px]'>
             Just text. Server has no idea what to do with it.
           </p>
         </div>
 
         {/* Structured Envelope */}
-        <div className='border-primary-200 bg-background dark:border-primary-800 rounded-lg border p-4'>
-          <p className='text-primary-500 mb-2 text-xs font-semibold tracking-wider uppercase'>
+        <div className='border-accent bg-background dark:border-accent rounded-lg border p-4'>
+          <p className='text-accent mb-2 text-xs font-semibold tracking-wider uppercase'>
             Envelope
           </p>
-          <div className='bg-default-100 dark:bg-default-50 overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
-            <span className='text-default-500'>{'{'}</span>
+          <div className='bg-surface-secondary dark:bg-surface overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
+            <span className='text-muted'>{'{'}</span>
             <br />
             <EnvelopeLine label='type' annotation='routes to handler'>
-              &quot;<span className='text-primary-500'>{messageType}</span>
+              &quot;<span className='text-accent'>{messageType}</span>
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='id' annotation='enables acks'>
-              &quot;<span className='text-secondary-500'>{envelope.id}</span>
+              &quot;<span className='text-accent'>{envelope.id}</span>
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='timestamp' annotation='ordering'>
               &quot;
-              <span className='text-default-500'>{envelope.timestamp}</span>
+              <span className='text-muted'>{envelope.timestamp}</span>
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='payload' annotation='your data'>
               {'{ '}
-              <span className='text-success-600 dark:text-success-400'>
+              <span className='text-success dark:text-success'>
                 &quot;text&quot;
               </span>
               :{' '}
@@ -121,7 +121,7 @@ export default function EnvelopePatternDemo() {
                   key={message}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className='text-success-600 dark:text-success-400'
+                  className='text-success dark:text-success'
                 >
                   &quot;{message || '...'}&quot;
                 </motion.span>
@@ -131,26 +131,25 @@ export default function EnvelopePatternDemo() {
             <EnvelopeLine label='metadata' annotation='context' isLast>
               {'{ "userId": "usr_a1b2c3", "room": "general" }'}
             </EnvelopeLine>
-            <span className='text-default-500'>{'}'}</span>
+            <span className='text-muted'>{'}'}</span>
           </div>
-          <p className='text-default-400 mt-2 text-[11px]'>
+          <p className='text-muted mt-2 text-[11px]'>
             Self-describing. Server knows exactly how to route it.
           </p>
         </div>
       </div>
 
       {/* Size comparison */}
-      <div className='bg-default-100 dark:bg-default-50 mt-4 flex items-center justify-center gap-6 rounded-md px-4 py-2.5 text-[11px]'>
-        <span className='text-default-500'>
+      <div className='bg-surface-secondary dark:bg-surface mt-4 flex items-center justify-center gap-6 rounded-md px-4 py-2.5 text-[11px]'>
+        <span className='text-muted'>
           HTTP request:{' '}
-          <span className='text-danger-500 font-semibold'>~800 bytes</span>{' '}
-          headers per message
+          <span className='text-danger font-semibold'>~800 bytes</span> headers
+          per message
         </span>
-        <span className='text-default-300'>vs</span>
-        <span className='text-default-500'>
+        <span className='text-muted'>vs</span>
+        <span className='text-muted'>
           WS envelope:{' '}
-          <span className='text-primary-500 font-semibold'>~120 bytes</span>{' '}
-          total
+          <span className='text-accent font-semibold'>~120 bytes</span> total
         </span>
       </div>
     </DemoContainer>
@@ -170,14 +169,12 @@ function EnvelopeLine({
 }) {
   return (
     <div className='group flex items-start'>
-      <span className='text-default-500 ml-4 shrink-0'>
-        &quot;{label}&quot;:{' '}
-      </span>
-      <span className='text-default-700 dark:text-default-300'>
+      <span className='text-muted ml-4 shrink-0'>&quot;{label}&quot;: </span>
+      <span className='text-foreground dark:text-muted'>
         {children}
         {!isLast && ','}
       </span>
-      <span className='text-default-400 ml-2 hidden text-[10px] italic sm:inline'>
+      <span className='text-muted ml-2 hidden text-[10px] italic sm:inline'>
         {'// '}
         {annotation}
       </span>

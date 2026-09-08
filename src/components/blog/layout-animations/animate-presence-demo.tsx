@@ -46,11 +46,11 @@ export default function AnimatePresenceDemo() {
   }
 
   const itemRow = (item: { id: number; label: string }) => (
-    <div className='border-default-200 bg-background flex items-center justify-between rounded-lg border px-4 py-2'>
+    <div className='border-border bg-background flex items-center justify-between rounded-lg border px-4 py-2'>
       <span className='text-sm'>{item.label}</span>
       <button
         onClick={() => removeItem(item.id)}
-        className='text-default-400 hover:bg-danger-100 hover:text-danger-500 rounded-full p-1 transition-colors'
+        className='text-muted hover:bg-danger-soft hover:text-danger rounded-full p-1 transition-colors'
       >
         <IconX size={14} />
       </button>
@@ -89,12 +89,12 @@ export default function AnimatePresenceDemo() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                className='border-default-200 bg-background flex items-center justify-between rounded-lg border px-4 py-2'
+                className='border-border bg-background flex items-center justify-between rounded-lg border px-4 py-2'
               >
                 <span className='text-sm'>{item.label}</span>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className='text-default-400 hover:bg-danger-100 hover:text-danger-500 rounded-full p-1 transition-colors'
+                  className='text-muted hover:bg-danger-soft hover:text-danger rounded-full p-1 transition-colors'
                 >
                   <IconX size={14} />
                 </button>
@@ -106,7 +106,7 @@ export default function AnimatePresenceDemo() {
         )}
       </div>
 
-      <p className='text-default-400 mt-3 flex items-start gap-1.5 text-xs italic'>
+      <p className='text-muted mt-3 flex items-start gap-1.5 text-xs italic'>
         <IconInfoCircle size={14} className='mt-0.5 shrink-0' />
         {withPresence
           ? 'AnimatePresence delays unmounting until the exit animation completes, letting elements animate out gracefully.'

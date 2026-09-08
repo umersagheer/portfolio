@@ -174,10 +174,10 @@ export default function HandshakeExplainer() {
               onClick={() => handleStepClick(i)}
               className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
                 i === step
-                  ? 'bg-primary-400 text-white'
+                  ? 'bg-accent text-white'
                   : i < step
-                    ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
-                    : 'bg-default-100 text-default-400'
+                    ? 'bg-accent-soft text-accent dark:bg-accent dark:text-accent'
+                    : 'bg-surface-secondary text-muted'
               }`}
             >
               {i + 1}
@@ -202,7 +202,7 @@ export default function HandshakeExplainer() {
       {/* Client → Server diagram */}
       <div
         ref={containerRef}
-        className='border-default-100 bg-background relative mb-5 flex items-center justify-between rounded-lg border px-8 py-6'
+        className='border-separator bg-background relative mb-5 flex items-center justify-between rounded-lg border px-8 py-6'
       >
         <DotPattern
           glow
@@ -222,7 +222,7 @@ export default function HandshakeExplainer() {
         <div className='flex flex-col items-center'>
           <RotatingValue
             value={
-              <span className='bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300 rounded-full px-3 py-1 text-xs font-medium'>
+              <span className='bg-accent-soft text-accent dark:bg-accent dark:text-accent rounded-full px-3 py-1 text-xs font-medium'>
                 {current.label}
               </span>
             }
@@ -302,7 +302,7 @@ export default function HandshakeExplainer() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            <div className='bg-default-100 dark:bg-default-50 overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
+            <div className='bg-surface-secondary dark:bg-surface overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
               {current.code.split('\n').map((line, i) => {
                 const isHighlighted = current.annotations.some(
                   a =>
@@ -314,8 +314,8 @@ export default function HandshakeExplainer() {
                     key={i}
                     className={
                       isHighlighted
-                        ? 'text-primary-600 dark:text-primary-400'
-                        : 'text-default-600 dark:text-default-400'
+                        ? 'text-accent dark:text-accent'
+                        : 'text-foreground dark:text-muted'
                     }
                   >
                     {line}
@@ -328,12 +328,12 @@ export default function HandshakeExplainer() {
             <div className='mt-3 space-y-1.5'>
               {current.annotations.map(a => (
                 <div key={a.header} className='flex items-start gap-2 text-xs'>
-                  <span className='text-primary-500 shrink-0 font-mono'>
+                  <span className='text-accent shrink-0 font-mono'>
                     {a.header.length > 30
                       ? a.header.slice(0, 28) + '...'
                       : a.header}
                   </span>
-                  <span className='text-default-400'>→ {a.note}</span>
+                  <span className='text-muted'>→ {a.note}</span>
                 </div>
               ))}
             </div>
@@ -343,13 +343,13 @@ export default function HandshakeExplainer() {
             key='established'
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className='dark:bg-success-950/30 bg-success-50 flex flex-col items-center gap-2 rounded-md py-6'
+            className='dark:bg-success/30 bg-success-soft flex flex-col items-center gap-2 rounded-md py-6'
           >
-            <IconCircleCheck size={32} className='text-success-500' />
-            <span className='text-success-700 dark:text-success-400 text-sm font-medium'>
+            <IconCircleCheck size={32} className='text-success' />
+            <span className='text-success dark:text-success text-sm font-medium'>
               Tunnel Established — Full-Duplex Active
             </span>
-            <span className='text-success-600/70 dark:text-success-500/70 text-xs'>
+            <span className='text-success/70 dark:text-success/70 text-xs'>
               HTTP has been upgraded. Both sides can send data freely.
             </span>
           </motion.div>
@@ -366,14 +366,14 @@ export default function HandshakeExplainer() {
         >
           Back
         </Button>
-        <div className='bg-primary-50 bg-primary-900/40 flex items-center gap-2 rounded-full px-2 py-1'>
+        <div className='bg-accent-soft bg-accent/40 flex items-center gap-2 rounded-full px-2 py-1'>
           <RotatingValue
-            value={<StepIcon size={16} className='text-primary-900 shrink-0' />}
+            value={<StepIcon size={16} className='text-accent shrink-0' />}
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-primary-900 text-xs italic'>
+              <span className='text-accent text-xs italic'>
                 {step === 0
                   ? 'Client sends HTTP Upgrade request...'
                   : step === 1

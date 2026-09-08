@@ -19,7 +19,7 @@ export default function TechStackGrid() {
     <div className='flex flex-col gap-1'>
       <Heading>What I work with...</Heading>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        <Card className='border-default-100 border stroke-[0.1] hover:stroke-[0.2]'>
+        <Card className='border-separator border stroke-[0.1] hover:stroke-[0.2]'>
           <Card.Content className='flex-row items-center'>
             React <IconBrandReact /> / Nextjs <IconBrandNextjs />
           </Card.Content>

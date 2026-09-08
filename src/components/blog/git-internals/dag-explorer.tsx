@@ -286,7 +286,7 @@ export default function DagExplorer() {
           <button
             type='button'
             onClick={() => dispatch({ type: 'reset' })}
-            className='text-default-400 hover:text-default-600 ml-auto inline-flex items-center gap-1 text-[11px] underline-offset-2 hover:underline'
+            className='text-muted hover:text-foreground ml-auto inline-flex items-center gap-1 text-[11px] underline-offset-2 hover:underline'
           >
             <RotateCcwIcon size={12} />
             reset
@@ -295,7 +295,7 @@ export default function DagExplorer() {
 
         {/* Branch switcher (checkout) */}
         <div className='flex flex-wrap items-center gap-2'>
-          <span className='text-default-400 text-[11px] tracking-wide uppercase'>
+          <span className='text-muted text-[11px] tracking-wide uppercase'>
             checkout:
           </span>
           {Object.keys(dag.branches).map(name => {
@@ -309,8 +309,8 @@ export default function DagExplorer() {
                 className={cn(
                   'font-sourceCodePro inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold transition-colors',
                   active
-                    ? 'bg-primary text-primary-foreground shadow-xs'
-                    : 'bg-default-100 text-default-500 hover:text-foreground'
+                    ? 'bg-accent text-accent-foreground shadow-xs'
+                    : 'bg-surface-secondary text-muted hover:text-foreground'
                 )}
               >
                 <GitBranchIcon size={11} />
@@ -323,7 +323,7 @@ export default function DagExplorer() {
         {/* Graph (what a GUI shows) + refs readout (what Git keeps) side by side */}
         <div className='grid gap-3 lg:grid-cols-[1fr_16rem]'>
           {/* The graph */}
-          <div className='border-default-100 bg-background relative overflow-hidden rounded-xl border shadow-xs'>
+          <div className='border-separator bg-background relative overflow-hidden rounded-xl border shadow-xs'>
             <StageDots />
             <div className='relative overflow-auto p-4'>
               <div
@@ -421,15 +421,15 @@ export default function DagExplorer() {
               on the left is what a GUI shows; this is everything Git actually keeps
               under the hood: the OBJECTS (Part 1) and the POINTERS (Part 2). Both
               fill as you drive the graph — closing the loop from the git-init opener. */}
-          <div className='bg-default-100 font-sourceCodePro rounded-xl p-4 shadow-xs'>
-            <div className='text-default-500 mb-3 text-xs font-medium'>
-              everything in <span className='text-default-600'>.git/</span>
+          <div className='bg-surface-secondary font-sourceCodePro rounded-xl p-4 shadow-xs'>
+            <div className='text-muted mb-3 text-xs font-medium'>
+              everything in <span className='text-foreground'>.git/</span>
             </div>
 
             {/* Half 1 — the object store (Part 1). Each commit shown as a real
                 sharded entry, parallel to the refs files below. */}
-            <div className='text-default-400 mb-1 flex items-center gap-1.5 text-[11px]'>
-              <span className='bg-primary h-1.5 w-1.5 rounded-full' />
+            <div className='text-muted mb-1 flex items-center gap-1.5 text-[11px]'>
+              <span className='bg-accent h-1.5 w-1.5 rounded-full' />
               objects/ · the stuff
             </div>
             <div className='mb-1 max-h-52 space-y-1 overflow-auto pr-1'>
@@ -449,13 +449,11 @@ export default function DagExplorer() {
                       <button
                         type='button'
                         onClick={() => toggleOpen(hash)}
-                        className='bg-background hover:bg-default-200/40 flex w-full items-center gap-1 rounded-md px-2 py-1 text-left shadow-xs transition-colors'
+                        className='bg-background hover:bg-surface-tertiary/40 flex w-full items-center gap-1 rounded-md px-2 py-1 text-left shadow-xs transition-colors'
                       >
-                        <span className='text-default-400'>
-                          {open ? '▾' : '▸'}
-                        </span>
+                        <span className='text-muted'>{open ? '▾' : '▸'}</span>
                         <ShardHash hash={hash} />
-                        <span className='text-default-400 ml-auto text-[10px]'>
+                        <span className='text-muted ml-auto text-[10px]'>
                           commit{isMerge ? ' (merge)' : ''}
                         </span>
                       </button>
@@ -472,10 +470,10 @@ export default function DagExplorer() {
                             }}
                             className='overflow-hidden'
                           >
-                            <div className='border-default-200 dark:border-default-100 mt-1 ml-3 space-y-1 border-l pl-2'>
+                            <div className='border-border dark:border-separator mt-1 ml-3 space-y-1 border-l pl-2'>
                               <div className='bg-background flex items-center gap-1 rounded-md px-2 py-1'>
-                                <ShardHash hash={tree} color='text-primary' />
-                                <span className='text-default-400 ml-auto text-[10px]'>
+                                <ShardHash hash={tree} color='text-accent' />
+                                <span className='text-muted ml-auto text-[10px]'>
                                   tree
                                 </span>
                               </div>
@@ -486,9 +484,9 @@ export default function DagExplorer() {
                                 >
                                   <ShardHash
                                     hash={f.blob}
-                                    color='text-secondary'
+                                    color='text-accent'
                                   />
-                                  <span className='text-default-400 ml-auto text-[10px]'>
+                                  <span className='text-muted ml-auto text-[10px]'>
                                     blob · {f.name}
                                   </span>
                                 </div>
@@ -502,16 +500,16 @@ export default function DagExplorer() {
                 })}
               </AnimatePresence>
             </div>
-            <p className='text-default-400 mb-3 text-[10px] leading-snug'>
+            <p className='text-muted mb-3 text-[10px] leading-snug'>
               Click a commit to see the{' '}
-              <span className='text-primary'>tree</span> and{' '}
-              <span className='text-secondary'>blobs</span> it wrote — all sit
-              here in <code>objects/</code> too.
+              <span className='text-accent'>tree</span> and{' '}
+              <span className='text-accent'>blobs</span> it wrote — all sit here
+              in <code>objects/</code> too.
             </p>
 
             {/* Half 2 — the pointers (Part 2) */}
-            <div className='text-default-400 mb-1 flex items-center gap-1.5 text-[11px]'>
-              <span className='bg-secondary h-1.5 w-1.5 rounded-full' />
+            <div className='text-muted mb-1 flex items-center gap-1.5 text-[11px]'>
+              <span className='bg-accent h-1.5 w-1.5 rounded-full' />
               refs/ + HEAD · the pointers
             </div>
             <div className='space-y-1.5'>
@@ -522,13 +520,11 @@ export default function DagExplorer() {
                     key={name}
                     className='bg-background flex items-center gap-1.5 rounded-md px-2 py-1.5 shadow-xs'
                   >
-                    <span className='text-default-400 text-[10px]'>heads/</span>
+                    <span className='text-muted text-[10px]'>heads/</span>
                     <span
                       className={cn(
                         'text-[11px]',
-                        isHead
-                          ? 'text-success font-semibold'
-                          : 'text-default-500'
+                        isHead ? 'text-success font-semibold' : 'text-muted'
                       )}
                     >
                       {name}
@@ -549,7 +545,7 @@ export default function DagExplorer() {
                 )
               })}
               <div className='bg-background flex items-center gap-1.5 rounded-md px-2 py-1.5 shadow-xs'>
-                <span className='text-default-500 text-[11px]'>HEAD</span>
+                <span className='text-muted text-[11px]'>HEAD</span>
                 <AnimatePresence mode='wait'>
                   <motion.code
                     key={dag.head}
@@ -565,9 +561,9 @@ export default function DagExplorer() {
               </div>
             </div>
 
-            <p className='text-default-400 mt-3 text-[10px] leading-snug'>
+            <p className='text-muted mt-3 text-[10px] leading-snug'>
               That’s the whole machine: an{' '}
-              <span className='text-secondary'>object store</span> plus{' '}
+              <span className='text-accent'>object store</span> plus{' '}
               <span className='text-success'>pointers</span> into it. Every
               button only <em>writes an object</em> or <em>moves a pointer</em>.
             </p>
@@ -580,7 +576,7 @@ export default function DagExplorer() {
             key={dag.lastAction}
             {...fade}
             aria-live='polite'
-            className='bg-default-100 text-default-600 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
+            className='bg-surface-secondary text-foreground rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
           >
             {dag.lastAction}
           </motion.p>
@@ -603,7 +599,7 @@ function ShardHash({
 }) {
   return (
     <>
-      <span className='text-default-400 text-[10px]'>{hash.slice(0, 2)}/</span>
+      <span className='text-muted text-[10px]'>{hash.slice(0, 2)}/</span>
       <span className={cn('text-[11px] font-semibold', color)}>
         {hash.slice(2, 9)}
       </span>

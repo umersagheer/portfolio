@@ -55,7 +55,7 @@ const transition = { delay: 0.1, type: 'spring', bounce: 0, duration: 0.6 }
 export function ExpandableTabs({
   tabs,
   className,
-  activeColor = 'text-primary',
+  activeColor = 'text-accent',
   onChange
 }: ExpandableTabsProps) {
   const pathname = usePathname()
@@ -80,7 +80,7 @@ export function ExpandableTabs({
   return (
     <div
       className={cn(
-        'rounded-medium border-medium border-default-200 relative flex flex-wrap items-center gap-1 bg-transparent p-1 shadow-xs backdrop-blur-lg',
+        'rounded-medium border-medium border-border relative flex flex-wrap items-center gap-1 bg-transparent p-1 shadow-xs backdrop-blur-lg',
         className
       )}
     >
@@ -104,16 +104,14 @@ export function ExpandableTabs({
                 transition={transition}
                 className={cn(
                   'rounded-small text-tiny relative flex h-7 items-center px-3 py-1 font-medium transition-colors duration-300',
-                  isSelected
-                    ? activeColor
-                    : 'text-default-500 hover:text-default-600'
+                  isSelected ? activeColor : 'text-muted hover:text-foreground'
                 )}
               >
                 {/* Shared layout cursor - only rendered on selected tab */}
                 {isSelected && (
                   <motion.div
                     layoutId='active-tab-cursor'
-                    className='rounded-small bg-default-100 absolute inset-0'
+                    className='rounded-small bg-surface-secondary absolute inset-0'
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}

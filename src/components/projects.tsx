@@ -33,7 +33,7 @@ export default function Projects({ projects }: ProjectProps) {
         <MorphingDialog key={project.title}>
           {/* Card Trigger */}
           <MorphingDialogTrigger
-            className='bg-content1 hover:bg-content2 active:bg-content3 cursor-pointer overflow-hidden rounded-lg px-3 py-4 transition-colors duration-250'
+            className='bg-surface hover:bg-surface-secondary active:bg-surface-tertiary cursor-pointer overflow-hidden rounded-lg px-3 py-4 transition-colors duration-250'
             style={{ borderRadius: 8 }}
           >
             <div className='flex items-center gap-2'>
@@ -49,7 +49,7 @@ export default function Projects({ projects }: ProjectProps) {
                 <MorphingDialogTitle className='text-lg font-bold'>
                   {project.title}
                 </MorphingDialogTitle>
-                <MorphingDialogSubtitle className='text-default-500 line-clamp-1 text-sm'>
+                <MorphingDialogSubtitle className='text-muted line-clamp-1 text-sm'>
                   {project.subTitle}
                 </MorphingDialogSubtitle>
               </div>
@@ -59,7 +59,7 @@ export default function Projects({ projects }: ProjectProps) {
           {/* Expanded Dialog */}
           <MorphingDialogContainer>
             <MorphingDialogContent
-              className='bg-content1 relative w-full max-w-2xl overflow-hidden rounded-xl p-6 shadow-xl'
+              className='bg-surface relative w-full max-w-2xl overflow-hidden rounded-xl p-6 shadow-xl'
               style={{ borderRadius: 12 }}
             >
               <MorphingDialogClose />
@@ -78,7 +78,7 @@ export default function Projects({ projects }: ProjectProps) {
                   <MorphingDialogTitle className='text-xl font-bold'>
                     {project.title}
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className='text-default-500 text-base font-semibold'>
+                  <MorphingDialogSubtitle className='text-muted text-base font-semibold'>
                     {project.subTitle}
                   </MorphingDialogSubtitle>
                 </div>
@@ -175,7 +175,7 @@ export default function Projects({ projects }: ProjectProps) {
                       <ul className='mt-1 list-disc space-y-1 text-base'>
                         {project.features.map((feature, index) => (
                           <li key={index} className='flex items-start gap-2'>
-                            <span className='text-primary mt-1'>
+                            <span className='text-accent mt-1'>
                               {feature.icon}
                             </span>
                             <span>{feature.title}</span>

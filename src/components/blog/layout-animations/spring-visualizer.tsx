@@ -48,9 +48,9 @@ export default function SpringVisualizer() {
   return (
     <DemoContainer title='Adjust the spring parameters and hit Play'>
       {/* Track */}
-      <div className='border-default-200 bg-background relative mb-6 h-14 rounded-lg border'>
+      <div className='border-border bg-background relative mb-6 h-14 rounded-lg border'>
         <motion.div
-          className='bg-primary-400 absolute top-1/2 h-10 w-10 -translate-y-1/2 rounded-full shadow-lg'
+          className='bg-accent absolute top-1/2 h-10 w-10 -translate-y-1/2 rounded-full shadow-lg'
           initial={{ x: 16 }}
           animate={controls}
         />
@@ -60,8 +60,8 @@ export default function SpringVisualizer() {
       <div className='space-y-4'>
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='text-default-600 font-medium'>Stiffness</label>
-            <span className='text-default-400 font-mono'>{stiffness}</span>
+            <label className='text-foreground font-medium'>Stiffness</label>
+            <span className='text-muted font-mono'>{stiffness}</span>
           </div>
           <input
             type='range'
@@ -69,14 +69,14 @@ export default function SpringVisualizer() {
             max={1000}
             value={stiffness}
             onChange={e => setStiffness(Number(e.target.value))}
-            className='accent-primary-400 w-full'
+            className='accent-accent w-full'
           />
         </div>
 
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='text-default-600 font-medium'>Damping</label>
-            <span className='text-default-400 font-mono'>{damping}</span>
+            <label className='text-foreground font-medium'>Damping</label>
+            <span className='text-muted font-mono'>{damping}</span>
           </div>
           <input
             type='range'
@@ -84,16 +84,14 @@ export default function SpringVisualizer() {
             max={100}
             value={damping}
             onChange={e => setDamping(Number(e.target.value))}
-            className='accent-primary-400 w-full'
+            className='accent-accent w-full'
           />
         </div>
 
         <div className='space-y-1'>
           <div className='flex justify-between text-xs'>
-            <label className='text-default-600 font-medium'>Mass</label>
-            <span className='text-default-400 font-mono'>
-              {mass.toFixed(1)}
-            </span>
+            <label className='text-foreground font-medium'>Mass</label>
+            <span className='text-muted font-mono'>{mass.toFixed(1)}</span>
           </div>
           <input
             type='range'
@@ -101,7 +99,7 @@ export default function SpringVisualizer() {
             max={100}
             value={mass * 10}
             onChange={e => setMass(Number(e.target.value) / 10)}
-            className='accent-primary-400 w-full'
+            className='accent-accent w-full'
           />
         </div>
       </div>

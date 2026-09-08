@@ -286,12 +286,12 @@ function Zone({
   return (
     <div
       className={cn(
-        'bg-default-50 flex min-w-0 flex-col rounded-lg p-3',
+        'bg-surface flex min-w-0 flex-col rounded-lg p-3',
         className
       )}
     >
       <div className='text-foreground text-xs font-semibold'>{title}</div>
-      <div className='text-default-500 mb-2 text-[10px] leading-4'>{hint}</div>
+      <div className='text-muted mb-2 text-[10px] leading-4'>{hint}</div>
       {children}
     </div>
   )
@@ -300,23 +300,21 @@ function Zone({
 /** One file row in the Files world: a filename + a status dot. No objects here. */
 function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
   const meta = {
-    committed: { dot: 'bg-default-300', label: '' },
+    committed: { dot: 'bg-surface-tertiary', label: '' },
     modified: { dot: 'bg-warning', label: 'modified' },
     staged: { dot: 'bg-success', label: 'staged' },
     'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
   }[status]
   return (
     <div className='bg-background flex items-center gap-2 rounded-md px-2 py-1 shadow-xs'>
-      <FileIcon size={13} className='text-default-400 shrink-0' />
+      <FileIcon size={13} className='text-muted shrink-0' />
       <span className='font-sourceCodePro text-foreground flex-1 truncate text-xs'>
         {name}
       </span>
       {meta.label && (
         <>
           <span className={cn('size-1.5 shrink-0 rounded-full', meta.dot)} />
-          <span className='text-default-500 shrink-0 text-[10px]'>
-            {meta.label}
-          </span>
+          <span className='text-muted shrink-0 text-[10px]'>{meta.label}</span>
         </>
       )}
     </div>
@@ -347,11 +345,11 @@ function HistoryTimeline({ repo }: { repo: Repo }) {
                 className={cn(
                   'mt-1 size-2.5 shrink-0 rounded-full border-2',
                   isHead
-                    ? 'border-primary bg-primary'
-                    : 'border-default-400 bg-default-50'
+                    ? 'border-accent bg-accent'
+                    : 'border-border-secondary bg-surface'
                 )}
               />
-              {!isLast && <span className='bg-default-300 w-px flex-1' />}
+              {!isLast && <span className='bg-surface-tertiary w-px flex-1' />}
             </div>
             {/* row content */}
             <div
@@ -376,7 +374,7 @@ function HistoryTimeline({ repo }: { repo: Repo }) {
                 )}
               </div>
               <span
-                className='text-default-500 truncate text-[10px]'
+                className='text-muted truncate text-[10px]'
                 title={commit.message}
               >
                 {commit.message}
@@ -421,12 +419,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
     })
 
   return (
-    <div className='bg-default-100 rounded-xl p-2.5 shadow-xs sm:p-3'>
+    <div className='bg-surface-secondary rounded-xl p-2.5 shadow-xs sm:p-3'>
       <div className='mb-2 flex items-center gap-2'>
-        <span className='bg-default-200 font-sourceCodePro text-foreground rounded-md px-2 py-0.5 text-[11px] font-semibold'>
+        <span className='bg-surface-tertiary font-sourceCodePro text-foreground rounded-md px-2 py-0.5 text-[11px] font-semibold'>
           .git
         </span>
-        <span className='text-default-500 text-xs'>
+        <span className='text-muted text-xs'>
           what actually happens inside the repo
         </span>
       </div>
@@ -440,7 +438,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
         >
           <div className='flex flex-col gap-2'>
             <div>
-              <div className='text-default-400 mb-1 text-[10px] tracking-wide uppercase'>
+              <div className='text-muted mb-1 text-[10px] tracking-wide uppercase'>
                 working directory
               </div>
               <div className='flex flex-col gap-1'>
@@ -454,11 +452,11 @@ function GitPipeline({ repo }: { repo: Repo }) {
               </div>
             </div>
             <div>
-              <div className='text-default-400 mb-1 text-[10px] tracking-wide uppercase'>
+              <div className='text-muted mb-1 text-[10px] tracking-wide uppercase'>
                 staging area (index)
               </div>
               {staged.length === 0 ? (
-                <span className='bg-background text-default-400 block rounded-md px-2 py-2 text-center text-[10px]'>
+                <span className='bg-background text-muted block rounded-md px-2 py-2 text-center text-[10px]'>
                   nothing staged — check a file in the panel below
                 </span>
               ) : (
@@ -478,7 +476,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
 
         {/* The bridge: staging/committing turns files into objects. */}
         <div className='flex shrink-0 items-center justify-center'>
-          <div className='text-default-400 flex flex-col items-center gap-0.5'>
+          <div className='text-muted flex flex-col items-center gap-0.5'>
             <ArrowRightIcon size={18} className='hidden lg:block' />
             <ChevronDownIcon size={18} className='lg:hidden' />
             <span className='hidden text-center text-[9px] leading-tight lg:block'>
@@ -493,7 +491,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           title={
             <span className='flex items-center gap-1.5'>
               Object store
-              <code className='bg-default-200 text-default-600 rounded-sm px-1 py-0.5 text-[10px] font-normal'>
+              <code className='bg-surface-tertiary text-foreground rounded-sm px-1 py-0.5 text-[10px] font-normal'>
                 .git/objects
               </code>
             </span>
@@ -504,12 +502,12 @@ function GitPipeline({ repo }: { repo: Repo }) {
           <div className='flex flex-col gap-3'>
             {/* Blobs: appear when you stage. Labelled with the file they came from. */}
             <div>
-              <div className='text-secondary mb-1 text-[10px] tracking-wide uppercase'>
+              <div className='text-accent mb-1 text-[10px] tracking-wide uppercase'>
                 blobs (file contents)
               </div>
               <div className='flex min-h-[2.75rem] flex-wrap items-start gap-1.5'>
                 {blobsInStore.length === 0 ? (
-                  <span className='text-default-400 py-2 text-[10px]'>
+                  <span className='text-muted py-2 text-[10px]'>
                     none yet — staging a file writes its blob here
                   </span>
                 ) : (
@@ -537,7 +535,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
             {/* Tree + commit for the latest snapshot. */}
             <div className='flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3'>
               <div>
-                <div className='text-primary mb-1 text-[10px] tracking-wide uppercase'>
+                <div className='text-accent mb-1 text-[10px] tracking-wide uppercase'>
                   latest tree + commit
                 </div>
                 {headTree && headTree.kind === 'tree' ? (
@@ -555,7 +553,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
                     </motion.div>
                     <ArrowRightIcon
                       size={13}
-                      className='text-default-400 mt-3 shrink-0'
+                      className='text-muted mt-3 shrink-0'
                     />
                     <motion.div layout {...(isFresh(repo.main) ? hold : {})}>
                       <GitObjectNode
@@ -567,13 +565,13 @@ function GitPipeline({ repo }: { repo: Repo }) {
                     </motion.div>
                   </div>
                 ) : (
-                  <span className='text-default-400 py-2 text-[10px]'>—</span>
+                  <span className='text-muted py-2 text-[10px]'>—</span>
                 )}
               </div>
 
               {/* History timeline with the pointers attached. */}
-              <div className='border-default-100 min-w-0 flex-1 border-t pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3'>
-                <div className='text-default-500 mb-1 text-[10px] tracking-wide uppercase'>
+              <div className='border-separator min-w-0 flex-1 border-t pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3'>
+                <div className='text-muted mb-1 text-[10px] tracking-wide uppercase'>
                   commit history
                 </div>
                 <HistoryTimeline repo={repo} />
@@ -589,7 +587,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           key={repo.lastAction}
           {...fade}
           aria-live='polite'
-          className='bg-default-50 text-default-600 mt-3 rounded-lg px-3 py-2 text-xs leading-5'
+          className='bg-surface text-foreground mt-3 rounded-lg px-3 py-2 text-xs leading-5'
         >
           {repo.lastAction}
         </motion.p>
@@ -603,7 +601,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
             {...fade}
             className='mt-3 flex flex-wrap items-center gap-2'
           >
-            <span className='text-default-400 text-[10px] tracking-wide uppercase'>
+            <span className='text-muted text-[10px] tracking-wide uppercase'>
               unreferenced:
             </span>
             {repo.orphaned.map(hash => {
@@ -640,8 +638,8 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
   const { added, removed } = diffStat(rows)
   if (added === 0 && removed === 0) return null
   return (
-    <div className='bg-default-100 font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
-      <div className='bg-default-200 text-default-500 flex items-center gap-2 px-2 py-1 text-[10px]'>
+    <div className='bg-surface-secondary font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
+      <div className='bg-surface-tertiary text-muted flex items-center gap-2 px-2 py-1 text-[10px]'>
         <span className='text-success'>+{added}</span>
         <span className='text-danger'>−{removed}</span>
         <span>vs last commit</span>
@@ -654,10 +652,10 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
               'flex gap-2 border-l-2 px-2',
               row.type === 'add' && 'border-success text-success',
               row.type === 'remove' && 'border-danger text-danger',
-              row.type === 'context' && 'text-default-500 border-transparent'
+              row.type === 'context' && 'text-muted border-transparent'
             )}
           >
-            <span className='text-default-400 select-none'>
+            <span className='text-muted select-none'>
               {row.type === 'add' ? '+' : row.type === 'remove' ? '−' : ' '}
             </span>
             <span className='break-all whitespace-pre-wrap'>
@@ -706,13 +704,13 @@ function ActivityBar({
         className={cn(
           'relative flex h-11 w-11 items-center justify-center border-l-2 transition-colors',
           active
-            ? 'border-primary text-foreground'
-            : 'text-default-400 hover:text-default-600 border-transparent'
+            ? 'border-accent text-foreground'
+            : 'text-muted hover:text-foreground border-transparent'
         )}
       >
         {icon}
         {badge ? (
-          <span className='bg-primary text-primary-foreground absolute right-1.5 bottom-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-1 text-[9px] font-semibold'>
+          <span className='bg-accent text-accent-foreground absolute right-1.5 bottom-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-1 text-[9px] font-semibold'>
             {badge}
           </span>
         ) : null}
@@ -720,7 +718,7 @@ function ActivityBar({
     )
   }
   return (
-    <div className='bg-default-100 flex flex-row gap-1 sm:flex-col sm:gap-0'>
+    <div className='bg-surface-secondary flex flex-row gap-1 sm:flex-col sm:gap-0'>
       {item('explorer', 'Explorer', <FilesIcon size={20} />)}
       {item('scm', 'Source Control', <GitBranchIcon size={20} />, changeCount)}
     </div>
@@ -758,24 +756,22 @@ function VscodeShell({
   )
 
   return (
-    <div className='bg-default-50 overflow-hidden rounded-2xl shadow-xs'>
+    <div className='bg-surface overflow-hidden rounded-2xl shadow-xs'>
       {/* Title bar */}
-      <div className='bg-default-100 flex items-center gap-2 px-3 py-1.5'>
+      <div className='bg-surface-secondary flex items-center gap-2 px-3 py-1.5'>
         <span className='flex gap-1.5'>
-          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
-          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
-          <span className='bg-default-300 h-2.5 w-2.5 rounded-full' />
+          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
+          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
+          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
         </span>
-        <span className='text-default-500 ml-1 text-xs'>
-          demo-repo — VS Code
-        </span>
+        <span className='text-muted ml-1 text-xs'>demo-repo — VS Code</span>
       </div>
 
       <div className='flex flex-col sm:flex-row'>
         <ActivityBar tab={tab} onTab={setTab} changeCount={changes.length} />
 
         {/* Side panel */}
-        <div className='border-default-100 sm:border-default-100 w-full border-b sm:w-56 sm:border-r sm:border-b-0'>
+        <div className='border-separator sm:border-separator w-full border-b sm:w-56 sm:border-r sm:border-b-0'>
           {tab === 'explorer' ? (
             <ExplorerPanel
               repo={repo}
@@ -796,12 +792,12 @@ function VscodeShell({
 
         {/* Editor */}
         <div className='flex min-w-0 flex-1 flex-col'>
-          <div className='bg-default-100 flex items-center justify-between px-3 py-1.5'>
+          <div className='bg-surface-secondary flex items-center justify-between px-3 py-1.5'>
             <span className='font-sourceCodePro text-foreground flex items-center gap-1.5 text-xs'>
-              <FileIcon size={13} className='text-default-400' />
+              <FileIcon size={13} className='text-muted' />
               {selected}
             </span>
-            <span className='font-sourceCodePro text-secondary text-[10px]'>
+            <span className='font-sourceCodePro text-accent text-[10px]'>
               blob {workingHash}
             </span>
           </div>
@@ -817,14 +813,14 @@ function VscodeShell({
                 content: e.target.value
               })
             }
-            className='bg-default-50 font-sourceCodePro text-foreground h-40 w-full resize-none border-0 p-3 text-xs outline-hidden'
+            className='bg-surface font-sourceCodePro text-foreground h-40 w-full resize-none border-0 p-3 text-xs outline-hidden'
           />
 
-          <div className='border-default-100 border-t p-2'>
+          <div className='border-separator border-t p-2'>
             <DiffView rows={diffRows} />
             {diffStat(diffRows).added === 0 &&
               diffStat(diffRows).removed === 0 && (
-                <p className='text-default-400 px-1 py-2 text-center text-[11px]'>
+                <p className='text-muted px-1 py-2 text-center text-[11px]'>
                   No changes yet — edit the file above, then switch to{' '}
                   <span className='text-foreground'>Source Control</span> to
                   stage &amp; commit.
@@ -848,10 +844,10 @@ function ExplorerPanel({
 }) {
   return (
     <div className='py-2'>
-      <div className='text-default-400 px-3 pb-1 text-[10px] font-semibold tracking-wide uppercase'>
+      <div className='text-muted px-3 pb-1 text-[10px] font-semibold tracking-wide uppercase'>
         Explorer
       </div>
-      <div className='text-default-500 flex items-center gap-1 px-2 py-1 text-[11px] font-semibold'>
+      <div className='text-muted flex items-center gap-1 px-2 py-1 text-[11px] font-semibold'>
         <FilesIcon size={13} /> demo-repo
       </div>
       {FILE_ORDER.map(name => {
@@ -867,11 +863,11 @@ function ExplorerPanel({
             className={cn(
               'flex w-full items-center gap-2 py-1 pr-3 pl-6 text-left text-xs transition-colors',
               active
-                ? 'bg-default-200 text-foreground'
-                : 'text-default-600 hover:bg-default-100'
+                ? 'bg-surface-tertiary text-foreground'
+                : 'text-foreground hover:bg-surface-secondary'
             )}
           >
-            <FileIcon size={13} className='text-default-400' />
+            <FileIcon size={13} className='text-muted' />
             <span className='font-sourceCodePro flex-1'>{name}</span>
             {badge && (
               <span
@@ -909,7 +905,7 @@ function SourceControlPanel({
 
   return (
     <div className='py-2'>
-      <div className='text-default-400 px-3 pb-2 text-[10px] font-semibold tracking-wide uppercase'>
+      <div className='text-muted px-3 pb-2 text-[10px] font-semibold tracking-wide uppercase'>
         Source Control
       </div>
 
@@ -919,7 +915,7 @@ function SourceControlPanel({
           placeholder='Message (commit)'
           value={message}
           onChange={e => onMessage(e.target.value)}
-          className='font-sourceCodePro border-default-200 rounded-sm text-xs'
+          className='font-sourceCodePro border-border rounded-sm text-xs'
         />
         <Button
           size='sm'
@@ -931,7 +927,7 @@ function SourceControlPanel({
           <CheckIcon size={14} />
           Commit
         </Button>
-        <p className='text-default-400 mt-1 px-0.5 text-[10px] leading-4'>
+        <p className='text-muted mt-1 px-0.5 text-[10px] leading-4'>
           Check a file to stage it (that writes its blob). The message becomes
           part of the commit&apos;s hash.
         </p>
@@ -939,14 +935,14 @@ function SourceControlPanel({
 
       <div className='mt-2 px-2'>
         <div className='mb-1 flex items-center justify-between px-1'>
-          <span className='text-default-400 text-[10px] font-semibold tracking-wide uppercase'>
+          <span className='text-muted text-[10px] font-semibold tracking-wide uppercase'>
             Changes
           </span>
-          <span className='text-default-400 text-[10px]'>{changes.length}</span>
+          <span className='text-muted text-[10px]'>{changes.length}</span>
         </div>
 
         {changes.length === 0 ? (
-          <p className='text-default-400 px-1 py-3 text-center text-[11px]'>
+          <p className='text-muted px-1 py-3 text-center text-[11px]'>
             No changes.
           </p>
         ) : (
@@ -957,7 +953,7 @@ function SourceControlPanel({
             return (
               <div
                 key={name}
-                className='hover:bg-default-100 flex items-center gap-2 rounded-md px-1 py-1'
+                className='hover:bg-surface-secondary flex items-center gap-2 rounded-md px-1 py-1'
               >
                 <input
                   type='checkbox'
@@ -966,15 +962,15 @@ function SourceControlPanel({
                   onChange={() =>
                     dispatch({ type: isStaged ? 'unstage' : 'stage', name })
                   }
-                  className='accent-primary h-3.5 w-3.5 shrink-0'
+                  className='accent-accent h-3.5 w-3.5 shrink-0'
                 />
                 <button
                   type='button'
                   onClick={() => onSelect(name)}
                   className='flex flex-1 items-center gap-1.5 text-left'
                 >
-                  <FileIcon size={13} className='text-default-400' />
-                  <span className='font-sourceCodePro text-default-600 flex-1 text-xs'>
+                  <FileIcon size={13} className='text-muted' />
+                  <span className='font-sourceCodePro text-foreground flex-1 text-xs'>
                     {name}
                   </span>
                   {badge && (
@@ -1050,7 +1046,7 @@ export default function ObjectInspector() {
           <button
             type='button'
             onClick={() => dispatch({ type: 'reset-all' })}
-            className='text-default-400 hover:text-default-600 text-[11px] underline-offset-2 hover:underline'
+            className='text-muted hover:text-foreground text-[11px] underline-offset-2 hover:underline'
           >
             reset the demo
           </button>

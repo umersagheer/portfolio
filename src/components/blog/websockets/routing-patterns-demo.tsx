@@ -144,7 +144,7 @@ export default function RoutingPatternsDemo() {
       {/* Diagram */}
       <div
         ref={containerRef}
-        className='border-default-100 bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
+        className='border-separator bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
       >
         <DotPattern
           glow
@@ -179,15 +179,15 @@ export default function RoutingPatternsDemo() {
                     <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                   </IconCard>
                   <div className='flex flex-col'>
-                    <span className='text-default-600 text-xs font-medium'>
+                    <span className='text-foreground text-xs font-medium'>
                       {client.name}
                     </span>
                     {pattern === 'multicast' && (
                       <span
                         className={`text-[10px] ${
                           client.room === multicastRoom
-                            ? 'text-secondary-500 font-semibold'
-                            : 'text-default-400'
+                            ? 'text-accent font-semibold'
+                            : 'text-muted'
                         }`}
                       >
                         Room {client.room}
@@ -197,7 +197,7 @@ export default function RoutingPatternsDemo() {
                       <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className='text-success-500 text-[10px]'
+                        className='text-success text-[10px]'
                       >
                         received
                       </motion.span>
@@ -248,7 +248,7 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className='bg-primary-900/40 text-primary-900 rounded-full px-4 py-1.5 text-xs font-medium'
+            className='bg-accent/40 text-accent rounded-full px-4 py-1.5 text-xs font-medium'
           >
             {label}
           </motion.span>

@@ -12,7 +12,7 @@ export default async function RecentPosts() {
       <Posts posts={posts} />
       <Link
         href='/posts'
-        className='text-foreground hover:bg-default-100 self-center rounded-md px-2 py-1 text-sm transition-colors'
+        className='text-foreground hover:bg-surface-secondary self-center rounded-md px-2 py-1 text-sm transition-colors'
       >
         <p className='font-medium'>All posts</p>
         <ArrowRightIcon className='ml-2 size-5' />

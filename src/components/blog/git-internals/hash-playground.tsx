@@ -47,14 +47,12 @@ function Panel({
     <div
       className={cn(
         'flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-xs transition-all',
-        focused ? 'bg-default-100 ring-primary ring-1' : 'bg-background'
+        focused ? 'bg-surface-secondary ring-accent ring-1' : 'bg-background'
       )}
     >
       <div className='flex items-center justify-between'>
-        <span className='text-default-500 text-xs font-medium'>
-          File {side}
-        </span>
-        <span className='text-default-400 text-[11px]'>
+        <span className='text-muted text-xs font-medium'>File {side}</span>
+        <span className='text-muted text-[11px]'>
           {new TextEncoder().encode(value).length} bytes
         </span>
       </div>
@@ -69,7 +67,7 @@ function Panel({
       />
 
       <div className='flex items-center gap-2'>
-        <span className='text-default-400 text-[11px] tracking-wide uppercase'>
+        <span className='text-muted text-[11px] tracking-wide uppercase'>
           hash
         </span>
         <div className='relative overflow-hidden'>
@@ -80,7 +78,7 @@ function Panel({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -8, opacity: 0 }}
               transition={swap}
-              className='font-sourceCodePro text-secondary block text-sm font-semibold'
+              className='font-sourceCodePro text-accent block text-sm font-semibold'
             >
               {hash}
             </motion.code>
@@ -93,7 +91,7 @@ function Panel({
         <button
           type='button'
           onClick={() => setPeek(p => !p)}
-          className='text-default-400 hover:text-default-600 flex items-center gap-1 text-[11px] transition-colors'
+          className='text-muted hover:text-foreground flex items-center gap-1 text-[11px] transition-colors'
           aria-expanded={peek}
         >
           <ChevronRightIcon
@@ -112,21 +110,19 @@ function Panel({
               transition={{ duration: 0.2 }}
               className='overflow-hidden'
             >
-              <div className='bg-default-100 font-sourceCodePro mt-2 rounded-lg p-2.5 text-xs'>
-                <p className='text-default-400 mb-1.5 text-[10px] tracking-wide uppercase'>
+              <div className='bg-surface-secondary font-sourceCodePro mt-2 rounded-lg p-2.5 text-xs'>
+                <p className='text-muted mb-1.5 text-[10px] tracking-wide uppercase'>
                   what Git actually hashes
                 </p>
-                <code className='text-default-600 block leading-relaxed'>
+                <code className='text-foreground block leading-relaxed'>
                   <span className='text-warning'>{gitBlobHeader(value)}</span>
                   <span className='text-foreground'>{value || '·'}</span>
                 </code>
-                <div className='text-default-400 my-1 flex items-center gap-1 text-[10px]'>
+                <div className='text-muted my-1 flex items-center gap-1 text-[10px]'>
                   <ArrowRightIcon size={11} className='rotate-90' /> SHA-1
                 </div>
-                <code className='text-secondary block font-semibold'>
-                  {hash}
-                </code>
-                <p className='text-default-400 mt-1.5 text-[10px] leading-snug'>
+                <code className='text-accent block font-semibold'>{hash}</code>
+                <p className='text-muted mt-1.5 text-[10px] leading-snug'>
                   A blob is a tiny header (
                   <code className='text-warning'>blob</code>, the byte count, a
                   hidden NUL) glued to your content — that whole thing is what
@@ -190,9 +186,7 @@ export default function HashPlayground() {
 
       {/* Presets: one click shows how a tiny change scrambles the hash. */}
       <div className='mt-4 flex flex-wrap items-center gap-2'>
-        <span className='text-default-400 text-xs'>
-          Load into file {focused}:
-        </span>
+        <span className='text-muted text-xs'>Load into file {focused}:</span>
         {PRESETS.map(preset => (
           <button
             key={preset.label}
@@ -203,7 +197,7 @@ export default function HashPlayground() {
                 ? `"${preset.value}" — ${preset.note}`
                 : `"${preset.value}"`
             }
-            className='border-default-200 bg-background font-sourceCodePro text-default-600 hover:border-primary hover:text-primary focus-visible:ring-primary rounded-md border px-2 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-hidden'
+            className='border-border bg-background font-sourceCodePro text-foreground hover:border-accent hover:text-accent focus-visible:ring-accent rounded-md border px-2 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-hidden'
           >
             {preset.label}
           </button>
@@ -211,12 +205,12 @@ export default function HashPlayground() {
       </div>
 
       {/* The payoff: what Git actually stores. Same content ⇒ one shared blob. */}
-      <div className='border-default-100 bg-background relative mt-5 overflow-hidden rounded-xl border p-4 shadow-xs'>
+      <div className='border-separator bg-background relative mt-5 overflow-hidden rounded-xl border p-4 shadow-xs'>
         <StageDots />
         <div className='relative mb-3 flex items-center justify-between'>
-          <span className='text-default-500 text-xs font-medium'>
+          <span className='text-muted text-xs font-medium'>
             What Git stores in{' '}
-            <code className='text-default-600'>.git/objects</code>
+            <code className='text-foreground'>.git/objects</code>
           </span>
           <AnimatePresence mode='wait'>
             {identical ? (
@@ -231,7 +225,7 @@ export default function HashPlayground() {
                 key='distinct'
                 {...fade}
                 aria-live='polite'
-                className='text-default-400 text-[11px]'
+                className='text-muted text-[11px]'
               >
                 {diff}/7 hash characters differ
               </motion.span>
@@ -250,7 +244,7 @@ export default function HashPlayground() {
                 className='flex flex-col items-center gap-2'
               >
                 <GitObjectNode type='blob' hash={hashA} state='new' />
-                <span className='text-default-400 text-[11px]'>
+                <span className='text-muted text-[11px]'>
                   both files point here
                 </span>
               </motion.div>
@@ -268,7 +262,7 @@ export default function HashPlayground() {
                 <motion.div
                   layout
                   transition={spring}
-                  className='text-default-300 hidden sm:block'
+                  className='text-muted hidden sm:block'
                   aria-hidden
                 >
                   <ArrowRightIcon size={18} className='rotate-90 sm:rotate-0' />
@@ -281,7 +275,7 @@ export default function HashPlayground() {
           </AnimatePresence>
         </div>
 
-        <p className='text-default-400 mt-2 text-center text-xs'>
+        <p className='text-muted mt-2 text-center text-xs'>
           {identical
             ? 'Identical content produces an identical hash, so Git keeps just one copy — no matter how many files (or commits) share it.'
             : 'Different content, different hash, different object. Make the two files match to see Git store it only once.'}
