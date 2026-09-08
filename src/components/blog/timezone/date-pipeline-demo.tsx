@@ -270,7 +270,7 @@ export default function DatePipelineDemo() {
                                 stopAutoPlay()
                                 setActiveStage(i)
                             }}
-                            className='flex size-10 items-center justify-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
+                            className='flex size-10 items-center justify-center rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-400'
                         >
                             <motion.div
                                 animate={{

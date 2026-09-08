@@ -300,7 +300,7 @@ export default function DagExplorer() {
                 className={cn(
                   'inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-sourceCodePro text-xs font-semibold transition-colors',
                   active
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-primary text-primary-foreground shadow-xs'
                     : 'bg-default-100 text-default-500 hover:text-foreground'
                 )}
               >
@@ -314,7 +314,7 @@ export default function DagExplorer() {
         {/* Graph (what a GUI shows) + refs readout (what Git keeps) side by side */}
         <div className='grid gap-3 lg:grid-cols-[1fr_16rem]'>
           {/* The graph */}
-          <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background shadow-sm'>
+          <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background shadow-xs'>
           <StageDots />
           <div className='relative overflow-auto p-4'>
           <div
@@ -400,7 +400,7 @@ export default function DagExplorer() {
               on the left is what a GUI shows; this is everything Git actually keeps
               under the hood: the OBJECTS (Part 1) and the POINTERS (Part 2). Both
               fill as you drive the graph — closing the loop from the git-init opener. */}
-          <div className='rounded-xl bg-default-100 p-4 font-sourceCodePro shadow-sm'>
+          <div className='rounded-xl bg-default-100 p-4 font-sourceCodePro shadow-xs'>
             <div className='mb-3 text-xs font-medium text-default-500'>
               everything in <span className='text-default-600'>.git/</span>
             </div>
@@ -428,7 +428,7 @@ export default function DagExplorer() {
                       <button
                         type='button'
                         onClick={() => toggleOpen(hash)}
-                        className='flex w-full items-center gap-1 rounded-md bg-background px-2 py-1 text-left shadow-sm transition-colors hover:bg-default-200/40'
+                        className='flex w-full items-center gap-1 rounded-md bg-background px-2 py-1 text-left shadow-xs transition-colors hover:bg-default-200/40'
                       >
                         <span className='text-default-400'>{open ? '▾' : '▸'}</span>
                         <ShardHash hash={hash} />
@@ -488,7 +488,7 @@ export default function DagExplorer() {
                 return (
                   <div
                     key={name}
-                    className='flex items-center gap-1.5 rounded-md bg-background px-2 py-1.5 shadow-sm'
+                    className='flex items-center gap-1.5 rounded-md bg-background px-2 py-1.5 shadow-xs'
                   >
                     <span className='text-[10px] text-default-400'>heads/</span>
                     <span
@@ -514,7 +514,7 @@ export default function DagExplorer() {
                   </div>
                 )
               })}
-              <div className='flex items-center gap-1.5 rounded-md bg-background px-2 py-1.5 shadow-sm'>
+              <div className='flex items-center gap-1.5 rounded-md bg-background px-2 py-1.5 shadow-xs'>
                 <span className='text-[11px] text-default-500'>HEAD</span>
                 <AnimatePresence mode='wait'>
                   <motion.code
@@ -545,7 +545,7 @@ export default function DagExplorer() {
             key={dag.lastAction}
             {...fade}
             aria-live='polite'
-            className='rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+            className='rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
           >
             {dag.lastAction}
           </motion.p>

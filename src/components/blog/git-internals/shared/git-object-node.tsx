@@ -82,7 +82,7 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           // subtle glassmorphism: frost whatever sits behind the card (e.g. the
           // dotted stage) so it reads glossy, not flat. Translucent surface comes
           // from the palette container class.
-          'inline-flex flex-col rounded-lg border shadow-sm backdrop-blur-md transition-shadow',
+          'inline-flex flex-col rounded-lg border shadow-xs backdrop-blur-md transition-shadow',
           compact ? 'gap-0.5 p-1.5' : 'gap-1 rounded-xl p-2.5',
           compact
             ? 'min-w-[5.5rem]'
@@ -92,7 +92,7 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           styles.container,
           STATE_STYLES[state],
           interactive &&
-            'cursor-pointer hover:shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
+            'cursor-pointer hover:shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary',
           className
         )}
       >
@@ -101,7 +101,7 @@ const GitObjectNode = forwardRef<HTMLDivElement, GitObjectNodeProps>(
           {!hideBadge && (
             <span
               className={cn(
-                'rounded font-semibold uppercase tracking-wide',
+                'rounded-sm font-semibold uppercase tracking-wide',
                 compact ? 'px-1 py-0 text-[9px]' : 'px-1.5 py-0.5 text-[10px]',
                 styles.badge
               )}

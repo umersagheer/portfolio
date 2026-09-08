@@ -111,7 +111,7 @@ export default function BranchHeadSimulator() {
 
       <div className='grid gap-3 lg:grid-cols-2'>
         {/* LEFT — what a GUI shows: the fat parallel lane */}
-        <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-sm'>
+        <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-xs'>
           <StageDots />
           <div className='relative mb-3 flex items-center gap-1.5 text-xs font-medium text-default-500'>
             <TheSvgIcon
@@ -154,7 +154,7 @@ export default function BranchHeadSimulator() {
         </div>
 
         {/* RIGHT — what Git keeps: the literal files */}
-        <div className='rounded-xl bg-default-100 p-4 font-sourceCodePro shadow-sm'>
+        <div className='rounded-xl bg-default-100 p-4 font-sourceCodePro shadow-xs'>
           <div className='mb-3 text-xs font-medium text-default-500'>
             what Git keeps under the hood
           </div>
@@ -165,7 +165,7 @@ export default function BranchHeadSimulator() {
                 <div className='mb-1 text-[11px] text-default-400'>
                   .git/refs/heads/{b.name}
                 </div>
-                <div className='flex h-7 items-center rounded-md bg-background px-2 shadow-sm'>
+                <div className='flex h-7 items-center rounded-md bg-background px-2 shadow-xs'>
                   <AnimatePresence mode='wait'>
                     <motion.code
                       key={b.tip}
@@ -197,7 +197,7 @@ export default function BranchHeadSimulator() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
         >
           {note}
         </motion.p>

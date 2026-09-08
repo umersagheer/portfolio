@@ -46,7 +46,7 @@ function Panel({
   return (
     <div
       className={cn(
-        'flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-sm transition-all',
+        'flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-xs transition-all',
         focused ? 'bg-default-100 ring-1 ring-primary' : 'bg-background'
       )}
     >
@@ -195,7 +195,7 @@ export default function HashPlayground() {
             type='button'
             onClick={() => loadPreset(preset.value)}
             title={preset.note ? `"${preset.value}" — ${preset.note}` : `"${preset.value}"`}
-            className='rounded-md border border-default-200 bg-background px-2 py-1 font-sourceCodePro text-xs text-default-600 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+            className='rounded-md border border-default-200 bg-background px-2 py-1 font-sourceCodePro text-xs text-default-600 transition-colors hover:border-primary hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary'
           >
             {preset.label}
           </button>
@@ -203,7 +203,7 @@ export default function HashPlayground() {
       </div>
 
       {/* The payoff: what Git actually stores. Same content ⇒ one shared blob. */}
-      <div className='relative mt-5 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-sm'>
+      <div className='relative mt-5 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-xs'>
         <StageDots />
         <div className='relative mb-3 flex items-center justify-between'>
           <span className='text-xs font-medium text-default-500'>

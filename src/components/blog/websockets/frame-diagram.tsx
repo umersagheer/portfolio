@@ -94,7 +94,7 @@ export default function FrameDiagram() {
       <div className='mt-4 flex flex-wrap gap-x-4 gap-y-1.5'>
         {fields.map(f => (
           <div key={f.label} className='flex items-center gap-1.5'>
-            <div className={`size-2.5 rounded-sm ${f.color.split(' ')[0]}`} />
+            <div className={`size-2.5 rounded-xs ${f.color.split(' ')[0]}`} />
             <span className='text-[10px] text-default-500'>
               <span className='font-medium'>{f.label}</span>
               {' — '}

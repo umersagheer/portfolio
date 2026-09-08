@@ -61,7 +61,7 @@ export default function LayoutIdDemo() {
         {useLayoutId ? (
           <>
             {' — '}the indicator smoothly transitions using{' '}
-            <code className='rounded bg-default-200 px-1.5 py-0.5 text-xs'>
+            <code className='rounded-sm bg-default-200 px-1.5 py-0.5 text-xs'>
               layoutId
             </code>
           </>

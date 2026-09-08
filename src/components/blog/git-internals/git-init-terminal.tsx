@@ -189,7 +189,7 @@ export default function GitInitTerminal() {
           <span className='select-none text-success'>$</span>
           <span className='text-foreground'>git init</span>
           {!ran && (
-            <span className='ml-2 rounded bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary transition-colors group-hover:bg-primary/20'>
+            <span className='ml-2 rounded-sm bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary transition-colors group-hover:bg-primary/20'>
               click to run ▸
             </span>
           )}

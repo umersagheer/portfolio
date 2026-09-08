@@ -1,6 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* Custom plugins (matchUtilities, addVariablesForColors, typography) still live
+   in the JS config and are bridged in via @config. */
+@config '../../tailwind.config.ts';
+
+/* HeroUI v2.8+ on Tailwind v4 loads as a CSS plugin, not from the JS config. */
+@plugin '../../hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+/* Tailwind v4 changed the default border/divide colour from gray-200 to
+   currentColor. This restores v3 behaviour for the ~74 bare `border` usages
+   so the upgrade is not a visual change. */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 html {
   scroll-behavior: smooth;

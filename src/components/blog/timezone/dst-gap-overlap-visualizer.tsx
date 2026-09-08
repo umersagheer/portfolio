@@ -265,7 +265,7 @@ export default function DSTGapOverlapVisualizer() {
                             stop()
                             setStep(i)
                         }}
-                        className='flex flex-1 items-center rounded-lg py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400'
+                        className='flex flex-1 items-center rounded-lg py-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-400'
                     >
                         <span
                             className={`h-2 w-full rounded-full transition-colors ${i === step

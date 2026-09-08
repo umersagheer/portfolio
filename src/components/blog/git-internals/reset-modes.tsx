@@ -217,7 +217,7 @@ export default function ResetModes() {
           {cleanFiles.map(f => (
             <div
               key={f}
-              className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-sm'
+              className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'
             >
               <FileIcon size={13} className='text-default-400' />
               <span className='text-foreground'>{f}</span>
@@ -277,7 +277,7 @@ export default function ResetModes() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
         >
           {note}
         </motion.p>
@@ -476,7 +476,7 @@ function Column({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl p-3 shadow-sm transition-all',
+        'relative overflow-hidden rounded-xl p-3 shadow-xs transition-all',
         dots ? 'border border-default-100 bg-background' : 'bg-default-100',
         touched && 'ring-1 ring-primary'
       )}
@@ -485,7 +485,7 @@ function Column({
       <div className='relative mb-0.5 flex items-center justify-between'>
         <span className='text-xs font-medium text-default-500'>{title}</span>
         {touched && (
-          <span className='rounded bg-primary/15 px-1 text-[9px] font-semibold uppercase tracking-wide text-primary'>
+          <span className='rounded-sm bg-primary/15 px-1 text-[9px] font-semibold uppercase tracking-wide text-primary'>
             reset
           </span>
         )}
@@ -512,7 +512,7 @@ function FileRow({
   tone: 'warning' | 'success'
 }) {
   return (
-    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-sm'>
+    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'>
       <Checkbox
         size='sm'
         radius='sm'
@@ -525,7 +525,7 @@ function FileRow({
       <span className='text-foreground'>{name}</span>
       <span
         className={cn(
-          'ml-auto rounded px-1.5 py-0.5 text-[9px] font-medium',
+          'ml-auto rounded-sm px-1.5 py-0.5 text-[9px] font-medium',
           tone === 'warning' ? 'bg-warning/15 text-warning' : 'bg-success/15 text-success'
         )}
       >

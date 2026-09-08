@@ -24,7 +24,7 @@ export default function DemoContainer({
             aria-describedby={description ? descriptionId : undefined}
             transition={{ layout: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
             style={{ overflow: 'hidden' }}
-            className='not-prose my-8 rounded-2xl border border-default-200 bg-default-50 p-5 shadow-sm sm:p-6'
+            className='not-prose my-8 rounded-2xl border border-default-200 bg-default-50 p-5 shadow-xs sm:p-6'
         >
             {title && (
                 <motion.h3

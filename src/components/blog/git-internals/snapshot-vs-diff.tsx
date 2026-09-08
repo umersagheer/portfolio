@@ -149,7 +149,7 @@ function TreeBox({ hash }: { hash: string }) {
     <div className='inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border border-primary bg-default-50 p-1.5'>
       <div className='flex items-center gap-1'>
         <FolderIcon size={12} className='text-primary' aria-hidden />
-        <span className='rounded bg-primary px-1 text-[9px] font-semibold uppercase tracking-wide text-primary-foreground'>
+        <span className='rounded-sm bg-primary px-1 text-[9px] font-semibold uppercase tracking-wide text-primary-foreground'>
           tree
         </span>
       </div>
@@ -214,7 +214,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
 
 function DiffRows({ rows }: { rows: DiffRow[] }) {
   return (
-    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-sm'>
+    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-xs'>
       <div className='max-h-40 overflow-auto'>
         {rows.map((row, i) => (
           <div
@@ -279,7 +279,7 @@ function DiffView({ step }: { step: number }) {
         .map(f => (
           <div
             key={f.name}
-            className='flex items-center gap-2 rounded-md bg-default-100 px-2 py-1.5 text-[11px] text-default-500 shadow-sm'
+            className='flex items-center gap-2 rounded-md bg-default-100 px-2 py-1.5 text-[11px] text-default-500 shadow-xs'
           >
             <LinkIcon size={12} className='text-success' />
             <span className='font-sourceCodePro text-foreground'>{f.name}</span>
@@ -383,7 +383,7 @@ export default function SnapshotVsDiff() {
             unchanged blob (keyed by filename inside) sit perfectly still. */}
         <div
           className={cn(
-            'relative overflow-hidden rounded-xl p-3 shadow-sm sm:p-4',
+            'relative overflow-hidden rounded-xl p-3 shadow-xs sm:p-4',
             view === 'snapshot'
               ? 'border border-default-100 bg-background'
               : 'bg-default-100'

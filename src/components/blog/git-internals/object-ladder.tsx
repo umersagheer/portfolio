@@ -112,7 +112,7 @@ export default function ObjectLadder() {
     >
       <div className='grid gap-3 lg:grid-cols-2'>
         {/* LEFT — .git/objects filling up (what Git STORES) */}
-        <div className='rounded-xl bg-default-100 p-4 font-mono text-sm shadow-sm'>
+        <div className='rounded-xl bg-default-100 p-4 font-mono text-sm shadow-xs'>
           <p className='mb-3 text-xs font-medium text-default-500'>
             .git/objects/
           </p>
@@ -150,7 +150,7 @@ export default function ObjectLadder() {
         </div>
 
         {/* RIGHT — the pointer stack (how they POINT), commit on top */}
-        <div className='relative flex min-h-[200px] flex-col items-center justify-end gap-0 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-sm'>
+        <div className='relative flex min-h-[200px] flex-col items-center justify-end gap-0 overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-xs'>
           <StageDots />
           <AnimatePresence mode='popLayout'>
             {step >= 3 && (

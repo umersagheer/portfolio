@@ -157,7 +157,7 @@ export default function StagingArea() {
                 <div
                   key={f.name}
                   className={cn(
-                    'flex items-center gap-2 rounded-md bg-background px-2 py-1.5 shadow-sm transition-opacity',
+                    'flex items-center gap-2 rounded-md bg-background px-2 py-1.5 shadow-xs transition-opacity',
                     (isStaged || done) && 'opacity-50'
                   )}
                 >
@@ -204,7 +204,7 @@ export default function StagingArea() {
                   key={name}
                   layout
                   {...fade}
-                  className='rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-sm'
+                  className='rounded-md bg-background px-2 py-1.5 font-sourceCodePro text-xs shadow-xs'
                 >
                   <span className='text-foreground'>{name}</span>
                   <span className='text-default-400'> → </span>
@@ -265,7 +265,7 @@ export default function StagingArea() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
         >
           {note}
         </motion.p>
@@ -288,7 +288,7 @@ function Lane({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl p-3 shadow-sm',
+        'relative overflow-hidden rounded-xl p-3 shadow-xs',
         dots ? 'border border-default-100 bg-background' : 'bg-default-100'
       )}
     >

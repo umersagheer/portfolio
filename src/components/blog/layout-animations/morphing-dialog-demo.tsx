@@ -44,7 +44,7 @@ export default function MorphingDialogDemo() {
           <motion.div
             layoutId='morphing-demo-card'
             onClick={() => setIsOpen(true)}
-            className='w-64 cursor-pointer overflow-hidden border border-default-200 bg-background p-4 shadow-sm transition-shadow hover:shadow-md'
+            className='w-64 cursor-pointer overflow-hidden border border-default-200 bg-background p-4 shadow-xs transition-shadow hover:shadow-md'
             style={{ borderRadius: 12 }}
             transition={springTransition}
           >
@@ -131,7 +131,7 @@ export default function MorphingDialogDemo() {
                   <p className='text-sm text-default-600'>
                     This is the expanded dialog content. The card morphed into
                     this dialog using{' '}
-                    <code className='rounded bg-default-200 px-1.5 py-0.5 text-xs'>
+                    <code className='rounded-sm bg-default-200 px-1.5 py-0.5 text-xs'>
                       layoutId
                     </code>{' '}
                     — the same technique used in this portfolio&apos;s project

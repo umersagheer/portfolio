@@ -42,7 +42,7 @@ export default function LayoutAnimationDemo() {
         <div className='space-y-3 rounded-lg border border-default-200 p-4'>
           <p className='text-sm font-semibold text-default-600'>
             With{' '}
-            <code className='rounded bg-default-200 px-1.5 py-0.5 text-xs'>
+            <code className='rounded-sm bg-default-200 px-1.5 py-0.5 text-xs'>
               layout
             </code>{' '}
             prop

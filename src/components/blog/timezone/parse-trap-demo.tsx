@@ -142,7 +142,7 @@ export default function ParseTrapDemo() {
                         setInput(e.target.value)
                         setActivePreset(-1)
                     }}
-                    className='w-full rounded-lg border border-default-200 bg-background px-3 py-2 font-mono text-sm text-foreground outline-none focus:border-primary-400'
+                    className='w-full rounded-lg border border-default-200 bg-background px-3 py-2 font-mono text-sm text-foreground outline-hidden focus:border-primary-400'
                     placeholder="Try: '2026-03-29T00:00:00'"
                 />
             </div>

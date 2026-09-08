@@ -115,7 +115,7 @@ export default function HeadPointer() {
       </div>
 
       {/* The chain: HEAD → branch → commit, drawn as three columns */}
-      <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-5 shadow-sm'>
+      <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-5 shadow-xs'>
         <StageDots />
         <div className='relative grid grid-cols-[auto_1fr_auto_1fr_auto] items-center gap-x-2 gap-y-4'>
           {/* Column headers */}
@@ -128,7 +128,7 @@ export default function HeadPointer() {
           {/* HEAD box (spans both branch rows, arrow swings to the active one) */}
           <div className='row-span-2 self-center'>
             <div className='inline-flex flex-col items-center gap-1 rounded-lg border border-primary bg-default-50 px-3 py-2'>
-              <span className='rounded bg-primary px-1.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground'>
+              <span className='rounded-sm bg-primary px-1.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground'>
                 HEAD
               </span>
               <div className='relative h-4 w-[7.5rem] text-center'>
@@ -183,7 +183,7 @@ export default function HeadPointer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-xs'
         >
           {note}
         </motion.p>

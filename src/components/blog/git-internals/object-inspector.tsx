@@ -306,7 +306,7 @@ function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
     'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
   }[status]
   return (
-    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm'>
+    <div className='flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-xs'>
       <FileIcon size={13} className='shrink-0 text-default-400' />
       <span className='flex-1 truncate font-sourceCodePro text-xs text-foreground'>
         {name}
@@ -403,7 +403,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
     })
 
   return (
-    <div className='rounded-xl bg-default-100 p-2.5 shadow-sm sm:p-3'>
+    <div className='rounded-xl bg-default-100 p-2.5 shadow-xs sm:p-3'>
       <div className='mb-2 flex items-center gap-2'>
         <span className='rounded-md bg-default-200 px-2 py-0.5 font-sourceCodePro text-[11px] font-semibold text-foreground'>
           .git
@@ -466,7 +466,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           title={
             <span className='flex items-center gap-1.5'>
               Object store
-              <code className='rounded bg-default-200 px-1 py-0.5 text-[10px] font-normal text-default-600'>
+              <code className='rounded-sm bg-default-200 px-1 py-0.5 text-[10px] font-normal text-default-600'>
                 .git/objects
               </code>
             </span>
@@ -599,7 +599,7 @@ function DiffView({ rows }: { rows: DiffRow[] }) {
   const { added, removed } = diffStat(rows)
   if (added === 0 && removed === 0) return null
   return (
-    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-sm'>
+    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-xs'>
       <div className='flex items-center gap-2 bg-default-200 px-2 py-1 text-[10px] text-default-500'>
         <span className='text-success'>+{added}</span>
         <span className='text-danger'>−{removed}</span>
@@ -707,7 +707,7 @@ function VscodeShell({
   )
 
   return (
-    <div className='overflow-hidden rounded-2xl bg-default-50 shadow-sm'>
+    <div className='overflow-hidden rounded-2xl bg-default-50 shadow-xs'>
       {/* Title bar */}
       <div className='flex items-center gap-2 bg-default-100 px-3 py-1.5'>
         <span className='flex gap-1.5'>
@@ -754,7 +754,7 @@ function VscodeShell({
             spellCheck={false}
             value={file.working}
             onChange={e => dispatch({ type: 'edit', name: selected, content: e.target.value })}
-            className='h-40 w-full resize-none border-0 bg-default-50 p-3 font-sourceCodePro text-xs text-foreground outline-none'
+            className='h-40 w-full resize-none border-0 bg-default-50 p-3 font-sourceCodePro text-xs text-foreground outline-hidden'
           />
 
           <div className='border-t border-default-100 p-2'>
