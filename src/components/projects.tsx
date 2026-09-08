@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Accordion,
-  AccordionItem,
-  toast,
-  Chip,
-  Link,
-  ScrollShadow
-} from '@heroui/react'
+import { Accordion, toast, Chip, Link, ScrollShadow } from '@heroui/react'
 import React from 'react'
 import { ProjectType } from '@/content/projects'
 import {
@@ -142,30 +135,33 @@ export default function Projects({ projects }: ProjectProps) {
                 </div>
 
                 {/* Tech Stack */}
-                <Accordion isCompact>
-                  <AccordionItem
-                    key='tech'
-                    aria-label='Tech Stack'
-                    title={
-                      <div className='flex items-center gap-2'>
-                        <IconEngineFilled size={20} />
-                        <span>Tech Stack</span>
-                      </div>
-                    }
-                    classNames={{ title: 'text-sm font-semibold' }}
-                  >
-                    <div className='flex flex-wrap gap-2 pb-2'>
-                      {project.tech.map(({ name, icon }) => (
-                        <Chip
-                          key={name}
-                          className='inline-flex items-center gap-1'
-                        >
-                          {icon}
-                          {name}
-                        </Chip>
-                      ))}
-                    </div>
-                  </AccordionItem>
+                <Accordion>
+                  <Accordion.Item id='tech'>
+                    <Accordion.Heading>
+                      <Accordion.Trigger className='text-sm font-semibold'>
+                        <div className='flex items-center gap-2'>
+                          <IconEngineFilled size={20} />
+                          <span>Tech Stack</span>
+                        </div>
+                        <Accordion.Indicator />
+                      </Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Panel>
+                      <Accordion.Body>
+                        <div className='flex flex-wrap gap-2 pb-2'>
+                          {project.tech.map(({ name, icon }) => (
+                            <Chip
+                              key={name}
+                              className='inline-flex items-center gap-1'
+                            >
+                              {icon}
+                              {name}
+                            </Chip>
+                          ))}
+                        </div>
+                      </Accordion.Body>
+                    </Accordion.Panel>
+                  </Accordion.Item>
                 </Accordion>
 
                 {/* Description & Features */}

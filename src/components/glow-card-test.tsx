@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Card, CardBody } from '@heroui/react'
+import { Card } from '@heroui/react'
 import ReactGlow from './react-glow'
 
 export function GlowCardTest() {
@@ -21,24 +21,28 @@ export function GlowCardTest() {
   return (
     <Card
       ref={cardRef}
-      className='max-w-md stroke-[0.1] hover:stroke-[0.15] transition-all'
+      className='max-w-md stroke-[0.1] transition-all hover:stroke-[0.15]'
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setMouseOnCard(true)}
       onMouseLeave={() => setMouseOnCard(false)}
     >
-      <CardBody className='flex flex-col items-center gap-6 p-12'>
+      <Card.Content className='flex flex-col items-center gap-6 p-12'>
         <h3 className='text-2xl font-semibold'>React</h3>
-        <p className='text-sm text-default-500 text-center'>
+        <p className='text-default-500 text-center text-sm'>
           JavaScript library for building user interfaces
         </p>
 
         {/* ReactGlow component - just like Flame */}
-        <ReactGlow cursor={cursor} cardRef={cardRef} mouseOnCard={mouseOnCard} />
+        <ReactGlow
+          cursor={cursor}
+          cardRef={cardRef}
+          mouseOnCard={mouseOnCard}
+        />
 
-        <p className='text-xs text-default-400 text-center'>
+        <p className='text-default-400 text-center text-xs'>
           Hover over the card to see the glow effect
         </p>
-      </CardBody>
+      </Card.Content>
     </Card>
   )
 }

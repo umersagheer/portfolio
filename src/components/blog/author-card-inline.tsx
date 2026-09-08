@@ -1,7 +1,7 @@
 'use client'
 
 import NextImage from 'next/image'
-import { Image, Tooltip } from '@heroui/react'
+import { Tooltip } from '@heroui/react'
 import { MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
@@ -19,8 +19,7 @@ export default function AuthorCardInline({
 }: AuthorCardInlineProps) {
   return (
     <div className='flex items-center gap-3 pt-2'>
-      <Image
-        as={NextImage}
+      <NextImage
         src={siteProfile.avatar}
         alt={siteProfile.name}
         width={32}

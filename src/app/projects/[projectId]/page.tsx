@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Image, Link } from '@heroui/react'
+import NextImage from 'next/image'
+import { Link } from '@heroui/react'
 
 import { getProjectById, getProjects } from '@/libs/projects'
 import formatDate from '@/libs/utils'
@@ -40,7 +41,16 @@ export default async function Project({ params }: ProjectProps) {
           <ArrowLeftIcon className='mr-2 size-5' />
           <p className='font-medium'>Back to projects</p>
         </Link>
-        {image && <Image src={image} alt={title} />}
+        {image && (
+          <NextImage
+            src={image}
+            alt={title}
+            width={0}
+            height={0}
+            sizes='100vw'
+            className='h-auto w-full rounded-xl'
+          />
+        )}
         <header>
           <h1 className='title'>{title}</h1>
           <p className='text-small pt-2'>

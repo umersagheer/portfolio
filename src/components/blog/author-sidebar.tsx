@@ -2,7 +2,7 @@
 
 import NextImage from 'next/image'
 import Link from 'next/link'
-import { Image, Tooltip } from '@heroui/react'
+import { Tooltip } from '@heroui/react'
 import { CalendarIcon, ClockIcon, MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
@@ -30,8 +30,7 @@ export default function AuthorSidebar({
     <div className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden w-48 xl:block'>
       {/* Author info */}
       <div className='flex flex-col gap-2'>
-        <Image
-          as={NextImage}
+        <NextImage
           src={siteProfile.avatar}
           alt={siteProfile.name}
           width={44}
@@ -130,14 +129,12 @@ export default function AuthorSidebar({
               <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {newerPost.image && (
-                    <Image
-                      as={NextImage}
+                    <NextImage
                       src={newerPost.image}
                       alt={newerPost.title ?? ''}
                       width={208}
                       height={117}
                       className='aspect-video w-full rounded-none object-cover'
-                      classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
                   <span className='px-2 py-1.5 text-xs'>{newerPost.title}</span>
@@ -162,14 +159,12 @@ export default function AuthorSidebar({
               <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {olderPost.image && (
-                    <Image
-                      as={NextImage}
+                    <NextImage
                       src={olderPost.image}
                       alt={olderPost.title ?? ''}
                       width={208}
                       height={117}
                       className='aspect-video w-full rounded-none object-cover'
-                      classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
                   <span className='px-2 py-1.5 text-xs'>{olderPost.title}</span>

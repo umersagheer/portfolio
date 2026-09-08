@@ -2,16 +2,16 @@
 
 import { SVGGlowWrapper } from './svg-glow-wrapper'
 import { IconReact, IconNext } from './icons'
-import { Card, CardBody } from '@heroui/react'
+import { Card } from '@heroui/react'
 
 export function TestGlowCard() {
   return (
     <Card className='max-w-md'>
-      <CardBody className='flex flex-col gap-4 p-8'>
+      <Card.Content className='flex flex-col gap-4 p-8'>
         <h3 className='text-xl font-semibold'>React + Next.js</h3>
-        <p className='text-sm text-default-500'>Full-stack React Framework</p>
+        <p className='text-default-500 text-sm'>Full-stack React Framework</p>
 
-        <div className='flex gap-6 items-center justify-center mt-4 border'>
+        <div className='mt-4 flex items-center justify-center gap-6 border'>
           {/* React Icon with Glow */}
           <SVGGlowWrapper size={96}>
             <IconReact />
@@ -23,10 +23,10 @@ export function TestGlowCard() {
           </SVGGlowWrapper>
         </div>
 
-        <p className='text-xs text-center text-default-400 mt-2'>
+        <p className='text-default-400 mt-2 text-center text-xs'>
           Hover over the icons to see the glow effect
         </p>
-      </CardBody>
+      </Card.Content>
     </Card>
   )
 }

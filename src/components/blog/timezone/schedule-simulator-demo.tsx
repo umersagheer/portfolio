@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
-import { Button, Select, SelectItem, TimeInput } from '@heroui/react'
+import { Button, Select, SelectItem, TimeField, Label } from '@heroui/react'
 import {
   IconCircleCheck,
   IconCircleX,
@@ -103,9 +103,7 @@ export default function ScheduleSimulatorDemo() {
     >
       <div className='mb-4 flex flex-col gap-3 sm:flex-row'>
         {mounted && (
-          <TimeInput
-            size='sm'
-            label='Time'
+          <TimeField
             granularity='hour'
             hourCycle={12}
             value={createTimeValue(hour) as any}
@@ -114,7 +112,14 @@ export default function ScheduleSimulatorDemo() {
               reset()
             }}
             className='sm:w-40'
-          />
+          >
+            <Label>Time</Label>
+            <TimeField.Group>
+              <TimeField.Input>
+                {segment => <TimeField.Segment segment={segment} />}
+              </TimeField.Input>
+            </TimeField.Group>
+          </TimeField>
         )}
         <Select
           size='sm'

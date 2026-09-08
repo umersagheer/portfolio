@@ -7,13 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ContactFormSchema } from '@/libs/schemas'
 import {
   Card,
-  CardBody,
   Input,
   Button,
-  CardFooter,
   Textarea,
   Link,
-  Divider,
+  Separator,
   toast
 } from '@heroui/react'
 import { z } from 'zod'
@@ -57,7 +55,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex justify-center'>
       <Card className='max-w-2xl grow'>
-        <CardBody className='grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2'>
+        <Card.Content className='grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2'>
           <Controller
             name='name'
             control={control}
@@ -105,8 +103,8 @@ export default function ContactForm() {
               />
             )}
           />
-        </CardBody>
-        <CardFooter className='flex flex-col gap-3'>
+        </Card.Content>
+        <Card.Footer className='flex flex-col gap-3'>
           <Button
             variant='secondary'
             type='submit'
@@ -117,9 +115,9 @@ export default function ContactForm() {
           </Button>
 
           <div className='flex w-full items-center justify-center gap-3'>
-            <Divider className='w-1/3' />
+            <Separator className='w-1/3' />
             <p>OR</p>
-            <Divider className='w-1/3' />
+            <Separator className='w-1/3' />
           </div>
 
           <Button
@@ -137,7 +135,7 @@ export default function ContactForm() {
               privacy policy
             </Link>
           </p>
-        </CardFooter>
+        </Card.Footer>
       </Card>
     </form>
   )

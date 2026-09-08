@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Select, SelectItem, Alert, TimeInput } from '@heroui/react'
+import {
+  Button,
+  Select,
+  SelectItem,
+  Alert,
+  TimeField,
+  Label
+} from '@heroui/react'
 import {
   IconArrowBackUp,
   IconSettings,
@@ -116,9 +123,7 @@ export default function OffByOneBugDemo() {
         </Select>
 
         {mounted && (
-          <TimeInput
-            size='sm'
-            label='Order time'
+          <TimeField
             granularity='hour'
             hourCycle={12}
             value={createTimeValue(orderHour) as any}
@@ -129,7 +134,14 @@ export default function OffByOneBugDemo() {
               setWithFix(false)
             }}
             className='sm:w-36'
-          />
+          >
+            <Label>Order time</Label>
+            <TimeField.Group>
+              <TimeField.Input>
+                {segment => <TimeField.Segment segment={segment} />}
+              </TimeField.Input>
+            </TimeField.Group>
+          </TimeField>
         )}
 
         {!hasOrder && (
