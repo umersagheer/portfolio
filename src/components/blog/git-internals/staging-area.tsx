@@ -169,7 +169,11 @@ export default function StagingArea() {
                     onChange={() => toggle(f.name)}
                     aria-label={`Stage ${f.name}`}
                     className='rounded-sm'
-                  />
+                  >
+                    <Checkbox.Control>
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                  </Checkbox>
                   <FileIcon size={14} className='text-muted' />
                   <span className='font-sourceCodePro text-foreground text-xs'>
                     {f.name}

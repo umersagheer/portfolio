@@ -192,7 +192,7 @@ export default function ISOStringAnatomy() {
                   aria-pressed={selectedSegment === i}
                   className={`font-inherit relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
                     selectedSegment === i
-                      ? 'ring-accent ring-offset-default-100 scale-110 ring-2 ring-offset-2'
+                      ? 'ring-accent ring-offset-surface-secondary scale-110 ring-2 ring-offset-2'
                       : ''
                   } transition-transform focus-visible:outline-none`}
                   onMouseEnter={() => setSelectedSegment(i)}

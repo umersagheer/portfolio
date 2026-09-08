@@ -528,7 +528,11 @@ function FileRow({
         onChange={onToggle}
         aria-label={`Stage ${name}`}
         className='rounded-sm'
-      />
+      >
+        <Checkbox.Control>
+          <Checkbox.Indicator />
+        </Checkbox.Control>
+      </Checkbox>
       <FileIcon size={13} className='text-muted' />
       <span className='text-foreground'>{name}</span>
       <span

@@ -539,6 +539,7 @@ export default function ExpoProtectedRoutesDemo() {
             <p className='text-muted text-[11px]'>Clerk/session exists</p>
           </div>
           <Switch
+            aria-label='Signed in'
             isSelected={signedIn}
             onChange={nextValue => {
               setSignedIn(nextValue)
@@ -547,7 +548,11 @@ export default function ExpoProtectedRoutesDemo() {
               }
             }}
             size='sm'
-          />
+          >
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+          </Switch>
         </div>
 
         <div
@@ -561,11 +566,16 @@ export default function ExpoProtectedRoutesDemo() {
             <p className='text-muted text-[11px]'>Profile completed</p>
           </div>
           <Switch
+            aria-label='Onboarded'
             isSelected={onboarded}
             isDisabled={!signedIn}
             onChange={setOnboarded}
             size='sm'
-          />
+          >
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+          </Switch>
         </div>
       </div>
 

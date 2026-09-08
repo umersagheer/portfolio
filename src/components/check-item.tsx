@@ -9,7 +9,12 @@ export default function CheckItem({ label }: { label: string }) {
   return (
     <div className='my-1'>
       <Checkbox defaultSelected={false} className='rounded-sm'>
-        <span className='text-foreground text-sm'>{label}</span>
+        <Checkbox.Content>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          <span className='text-foreground text-sm'>{label}</span>
+        </Checkbox.Content>
       </Checkbox>
     </div>
   )
