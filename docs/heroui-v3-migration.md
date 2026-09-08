@@ -33,7 +33,7 @@ HeroUI is the **last** domino, not the first.
 | Phase | Scope | Status | Branch | Commit |
 |---|---|---|---|---|
 | **0** | React 19 + Next 15 (HeroUI/Tailwind untouched) | ✅ Done | `migration/phase-0-react19-next15` | see log |
-| **1** | Tailwind v3 → v4 (CSS-first config) | ⬜ Not started | — | — |
+| **1** | Tailwind v3 → v4 **+ HeroUI 2.8** | ✅ Done | `migration/phase-1-tailwind-v4` | `a5f593c` |
 | **2** | Color token map (v2 semantic → v3 oklch) | ⬜ Not started | — | — |
 | **3** | Component API migration (leaf-first) | ⬜ Not started | — | — |
 | **4** | Visual regression sweep | ⬜ Not started | — | — |
@@ -83,6 +83,8 @@ Legend: ⬜ Not started · 🔄 In progress · ✅ Done · ⚠️ Blocked
 | D3 | **Incremental, not Full Migration** | With 1,155 styling touchpoints we need a working reference to diff against at every step. |
 | D4 | **Phase 2 before Phase 3** | Token breakage is silent (no build error, just invisible text). Fix tokens while components still render, so regressions are attributable. |
 | D5 | **Tabs migrated last in Phase 3** | 15 files, highest-complexity compound rewrite. Validate the pattern on Buttons first. |
+| D6 | **HeroUI 2.7.4 → 2.8.10 inside Phase 1** | HeroUI 2.7.4 *cannot* run on Tailwind v4 (see Phase 1 log). 2.8.x can. Without this the staged plan collapses into a big-bang Tailwind+v3 migration. Component API stays v2, so this stays a styling-only phase. |
+| D7 | **Bulk edits are scripted, never hand-edited** | Renames run as one boundary-aware pass over the file tree. Safer than `sed`: it skips comments and non-class contexts, which is what caught `blur = '6px'` and HeroUI's `variant='shadow'` prop. Phase 2's 1,155 tokens use the same method. |
 
 ---
 
@@ -176,6 +178,53 @@ git checkout master && git branch -D migration/phase-0-react19-next15
 - **Next up:** Phase 1 — Tailwind v3 → v4. Highest-risk item is porting the 3 custom plugins
   (`matchUtilities` SVG patterns `bg-grid`/`bg-grid-small`/`bg-dot`, `addVariablesForColors`,
   typography) to CSS-first config, while `heroui()` v2 plugin must keep working alongside Tailwind v4.
+
+### 2026-09-08 — Phase 1 ✅ COMPLETE
+
+**The blocker.** HeroUI **2.7.4 cannot run on Tailwind v4.** Its plugin calls
+`addUtilities({':root': …})`, which v4 rejects: *"defines an invalid utility selector"*.
+This killed both `npx @tailwindcss/upgrade` and the manual `@config` bridge.
+
+Isolated it with two throwaway configs built via the Tailwind CLI (seconds, not full builds):
+
+| Config | Result |
+|---|---|
+| project's own plugins only (`addVariablesForColors` + `matchUtilities`) | ✅ builds |
+| `heroui()` v2.7.4 only | ❌ invalid utility selector |
+
+**The fix.** `@heroui/theme@2.4.26` (shipped with `@heroui/react@2.8.10`) peers
+`tailwindcss: ">=4.0.0"`. Upgrading HeroUI 2.7.4 → 2.8.10 keeps the **v2 component API**
+while unlocking Tailwind v4 — so the staged plan survives instead of collapsing into a
+big-bang Tailwind + HeroUI v3 migration (D6).
+
+**Config shape now:**
+- `hero.ts` (new, repo root) — HeroUI theme, loaded via `@plugin '../../hero.ts'`
+- `tailwind.config.ts` — custom plugins only, bridged via `@config '../../tailwind.config.ts'`
+- `globals.css` — `@import 'tailwindcss'` + `@plugin` + `@source` + `@custom-variant dark`
+
+**v4 default changes handled:**
+- border colour reverted to v3's `gray-200` in a base layer (74 bare `border` usages)
+- 56 utility renames across 22 files: `shadow-sm`→`shadow-xs`, `shadow`→`shadow-sm`,
+  `rounded`→`rounded-sm`, `rounded-sm`→`rounded-xs`, `outline-none`→`outline-hidden`
+- no bare `ring` classes existed (all 5 hits were comments) → no ring-width regression
+
+**Verified in the generated stylesheet, not just the build** (293 KB):
+all HeroUI token classes present · 105 `--heroui-*` vars · 206 `.dark` rules · `prose` intact.
+Build + lint clean; all 11 posts, both projects, all pages → 200; server log clean.
+
+**Two false positives caught by the scripted rename** (both would have shipped with `sed`):
+- `blur = '6px'` → `blur-sm = '6px'` — an identifier, not a class
+- `variant='shadow'` → `variant='shadow-sm'` — a HeroUI **prop value**, not a Tailwind class
+
+**Incidental finding:** `bg-grid` / `bg-grid-small` / `bg-dot` are **dead config** — defined in
+`tailwind.config.ts` and documented in CLAUDE.md, but used nowhere in `src/`. Left in place;
+worth deleting separately.
+
+**Also noted:** `next lint` is deprecated and removed in Next 16 — migrate to the ESLint CLI
+before any future Next 16 bump.
+
+**Next up:** Phase 2 — token mapping. Note this phase is only *needed* once HeroUI v3 lands,
+since 2.8 still generates the v2 `default-*` ramp. Consider folding Phase 2 into Phase 3.
 
 ---
 
