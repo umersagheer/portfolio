@@ -99,6 +99,7 @@ export default async function Post({ params }: PostProps) {
             alt={title ?? ''}
             width={2560}
             height={1440}
+            sizes='(max-width: 768px) 100vw, 768px'
             priority
             className='h-auto w-full rounded-xl'
           />

@@ -7,6 +7,7 @@ const nextConfig = {
     '/api/posts/[postId]/likes': ['./src/content/posts/*.mdx']
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -1,5 +1,3 @@
-'use client'
-
 import NextImage from 'next/image'
 import React from 'react'
 import { siteProfile } from '@/constants/site-profile'
@@ -9,11 +7,14 @@ export default function Intro() {
     <div className='flex flex-col items-start justify-center'>
       <div className='flex items-center justify-start gap-3'>
         <div className='size-20 shrink-0 overflow-hidden rounded-xl'>
+          {/* Above the fold and the page's LCP element: sized to its 80px box
+              and fetched eagerly. */}
           <NextImage
             src={siteProfile.avatar}
             alt={siteProfile.name}
-            width={832}
-            height={832}
+            width={80}
+            height={80}
+            priority
             className='size-20 grayscale transition-transform duration-300 hover:scale-110'
           />
         </div>
