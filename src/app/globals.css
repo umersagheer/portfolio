@@ -292,4 +292,10 @@ html {
   .prose pre {
     @apply font-sourceCodePro leading-snug dark:bg-zinc-900;
   }
+  /* Long unbroken inline code (e.g. Intl.DateTimeFormat().resolvedOptions()
+     .timeZone) pushed posts wider than a phone screen; let it wrap. Code
+     blocks keep their own horizontal scroll. */
+  .prose :not(pre) > code {
+    overflow-wrap: anywhere;
+  }
 }

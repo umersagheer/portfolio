@@ -4,6 +4,7 @@ import { useId, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Alert } from '@heroui/react'
 import DemoContainer from './demo-container'
+import { useIsClient } from '@/hooks/useIsClient'
 import {
   formatMonthDay,
   getTimeZoneOffsetLabel,
@@ -73,14 +74,20 @@ const EXAMPLE_ZONES = [
   { zone: 'America/New_York', label: 'UTC-4 machine' }
 ]
 
+// The whole point of this demo is that the result depends on the machine's
+// timezone, so it is only computed in the reader's browser: rendering it on
+// the server would bake in the server's zone and mismatch on hydration.
 export default function ParseTrapDemo() {
   const [input, setInput] = useState("'2026-03-29T00:00:00'")
   const [activePreset, setActivePreset] = useState(1)
   const inputId = useId()
 
+  const isClient = useIsClient()
   const cleanInput = input.replace(/^['"]|['"]$/g, '')
-  const result = parseAndAnalyze(cleanInput)
-  const machineZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const result = isClient ? parseAndAnalyze(cleanInput) : null
+  const machineZone = isClient
+    ? Intl.DateTimeFormat().resolvedOptions().timeZone
+    : ''
   const parsedParts = parseNaiveDateTimeParts(cleanInput)
 
   const handlePreset = (index: number) => {
@@ -151,7 +158,7 @@ export default function ParseTrapDemo() {
       </div>
 
       <AnimatePresence mode='wait'>
-        {result ? (
+        {!isClient ? null : result ? (
           <motion.div
             key={cleanInput}
             initial={{ opacity: 0, y: 6 }}

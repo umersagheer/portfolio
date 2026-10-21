@@ -375,6 +375,8 @@ export const projects = [
     title: 'AI Profitability Intelligence App',
     subTitle: 'Meridian Profits',
     image: '/images/projects/meridian.png',
+    // white mark on a transparent PNG: invert it on light backgrounds
+    logoClassName: 'invert dark:invert-0',
     codeLink: '', // add your repo link
     liveLink: 'https://meridianprofitsapp.com', // add App Store / Play Store / demo link
     description:

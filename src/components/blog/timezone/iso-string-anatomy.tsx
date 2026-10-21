@@ -197,7 +197,7 @@ export default function ISOStringAnatomy() {
                     transition={{ delay: i * 0.03 }}
                     aria-label={seg.label}
                     aria-pressed={selectedSegment === i}
-                    className={`font-inherit relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
+                    className={`relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
                       selectedSegment === i
                         ? 'ring-accent ring-offset-surface-secondary scale-110 ring-2 ring-offset-2'
                         : ''

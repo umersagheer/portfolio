@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { cn } from '@heroui/react'
 import { useTheme } from 'next-themes'
+import { useIsClient } from '@/hooks/useIsClient'
 
 type TheSvgIconProps = {
   alt?: string
@@ -32,9 +33,13 @@ export default function TheSvgIcon({
   variant
 }: TheSvgIconProps) {
   const { resolvedTheme } = useTheme()
+  const isClient = useIsClient()
   const [hasError, setHasError] = useState(false)
 
-  const themeVariant = resolvedTheme === 'dark' ? darkVariant : lightVariant
+  // The theme is unknown on the server, so hydrate with the light variant and
+  // switch once mounted; reading it during hydration mismatched the img src.
+  const themeVariant =
+    isClient && resolvedTheme === 'dark' ? darkVariant : lightVariant
   const iconVariant = variant ?? themeVariant
   const src = getTheSvgIconUrl(slug, iconVariant)
 

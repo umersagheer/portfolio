@@ -58,7 +58,7 @@ export default async function Project({ params }: ProjectProps) {
           </p>
         </header>
 
-        <main className='prose-znc prose dark:prose-invert mt-10 max-w-6xl'>
+        <main className='prose prose-zinc dark:prose-invert mt-10 max-w-6xl'>
           <MDXContent source={content} />
         </main>
       </div>

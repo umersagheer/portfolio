@@ -13,7 +13,6 @@ import {
   TextArea,
   FieldError,
   Button,
-  Link,
   Separator,
   Spinner,
   toast
@@ -143,15 +142,6 @@ export default function ContactForm() {
             Whatsapp
             <MessageCircleHeartIcon size={16} />
           </Button>
-          <p className='justify-start text-sm'>
-            By submitting this form, I agree to the{' '}
-            <Link
-              href=''
-              className='text-accent text-sm font-medium hover:underline'
-            >
-              privacy policy
-            </Link>
-          </p>
         </Card.Footer>
       </Card>
     </form>

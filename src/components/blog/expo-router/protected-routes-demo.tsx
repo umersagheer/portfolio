@@ -170,7 +170,7 @@ function getToneClasses(tone: CalloutTone) {
       }
     case 'warning':
       return {
-        line: 'bg-amber-warning',
+        line: 'bg-warning',
         text: 'text-amber-200'
       }
     default:

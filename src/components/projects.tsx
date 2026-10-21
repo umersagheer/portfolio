@@ -43,6 +43,7 @@ export default function Projects({ projects }: ProjectProps) {
                   alt={project.title}
                   width={40}
                   height={30}
+                  className={project.logoClassName}
                 />
               </MorphingDialogImage>
               <div>
@@ -72,6 +73,7 @@ export default function Projects({ projects }: ProjectProps) {
                     alt={project.title}
                     width={60}
                     height={50}
+                    className={project.logoClassName}
                   />
                 </MorphingDialogImage>
                 <div>
