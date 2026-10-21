@@ -19,7 +19,7 @@
 | Phase | Scope | Status | Commits |
 |---|---|---|---|
 | **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
-| **2** | Performance & hygiene | ⬜ | |
+| **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
 | **3** | Visual system ("technical drawing") | ⬜ | |
 | **4** | Projects as pages (+ Munshi) | ⬜ | |
 | **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
@@ -243,6 +243,7 @@ Applied to the existing pages without restructuring their content.
   - A shared `SectionHeader`: a mono `01 //` label above a serif title.
 - **3d. Nav:**
   - Text labels on the nav items (G4).
+  - **CSS-only, no framer-motion** (P5, moved here from Phase 2). The nav and `MotionConfig` are what keep framer-motion in the shared layout chunk; a CSS nav removes it from every page. That's a bigger win than retrofitting `LazyMotion` onto a nav about to be rebuilt.
   - A compact theme control. ❓ A single icon that cycles light/dark/system, or a compact three-way control? ⌘K also offers it in Phase 8.
 - **3e. Footer (G7):**
   - A CTA line, socials, and your local time (PKT).
@@ -387,7 +388,6 @@ A processing script (sharp) converts these to WebP, caps them at about 1600px, a
 | Phase | Question |
 |---|---|
 | 1 | Is a sending domain verified in Resend, and which address should contact mail go to? |
-| 2 | Where should `src/findings/` and the root planning notes live? |
 | 3 | Which serif display face (from a specimen)? Single-icon theme toggle or a compact three-way control? |
 | 4 | Case-study details per project; your role versus a designer's on the NourishWise/Meridian UI (for the role section); MinIO or local files for Engagemo's S3 previews; client sign-off. |
 | 5 | About content interview. |
@@ -441,8 +441,57 @@ A processing script (sharp) converts these to WebP, caps them at about 1600px, a
 Post pages are unchanged at 449 kB; that is Phase 2 (P1).
 
 **Not yet verified on production:**
-- The contact **success** path (needs the real Resend key).
+- ~~The contact **success** path~~: verified by the user on 2026-10-22.
 - The likes API against Neon after deploy.
+
+### 2026-10-22: Phase 2 ✅ COMPLETE: `d23c9ea`…`016035e`
+
+| Item | Commit | Result |
+|---|---|---|
+| 2a demos per post (P1) | `d23c9ea` | Demos live in `src/components/blog/mdx-demos.tsx`: a `'use client'` module of `next/dynamic` imports, one `webpackChunkName` per post. **`dynamic()` called from the server `mdx-content.tsx` did *not* split client components** (all posts still loaded 22 identical scripts); moving the calls into a client module did. |
+| 2b images (P2, P3, P10) | `09f8ad8` | Avatar 80px plus `priority`, about 30 KB to 1.4 KB (AVIF); `Intro` is a server component. Cover `sizes` gives about 8 KB AVIF at w=828 instead of about 57 KB at w=3840. AVIF enabled. |
+| 2b icons (P9, A5) | `389e584` | TheSvgIcon pinned to commit `8d07be9` (immutable for a year); light/dark variants swap via the `dark:` class, with no JS swap, refetch or flash; default `alt=''` |
+| 2e single like button (P7) | `ea03308` | One instance, with responsive CSS size and position (pixel-identical to before at 1440 and 390); one GET per view instead of two |
+| 2c axios (P4) | `ebdb15f` | `fetch` plus `requestLikes()`; `handle-api-error.ts` and `axios` removed |
+| 2c tsparticles (H1) | `24fa6e5` | Three unused packages removed |
+| 2d dead code (H3) | `48b0829` | 37 files, 975 lines. Cut the post route from 256 to 206 kB: `formatDate`'s module also imported the whole local icon set, pulling it into client bundles. |
+| 2c devDeps (H2, H4) | `89774c1` | Remotion, Prettier and dotenv moved to devDeps; `@types/node` ^24; better-sqlite3 config dropped; `brandDomain` imported from constants |
+| 1j / H5 | `b995b12` | **Removing `'use client'` from the Zustand SVG icon cut 51 kB from `/`, `/projects` and `/posts`** (bisected): the directive made the project-data module a client boundary. `FrameDiagram` is now server-only (no client JS). `@/` imports. |
+| 2g notes (H6) | `3a503e3` | `docs/notes/` now holds `timezone/*`, `websockets.md`, `plan.md` and `blog-enhancement-plan.md` |
+| 2f ESLint 9 (H4) | `016035e` | Flat `eslint.config.mjs` via `FlatCompat` (eslint-config-next 15 ships legacy configs); `pnpm lint` is `eslint .` and clean; it surfaced and fixed 3 alt-text warnings |
+
+**Lessons** (also in `CLAUDE.md`):
+- Never import a blog demo statically into `mdx-content.tsx`.
+- A `'use client'` on a leaf inside a shared data module can drag the whole module client-side. Check the route table after adding one.
+
+**First Load JS (Next route table):**
+
+| Route | Phase 1 | Phase 2 |
+|---|---|---|
+| `/` | 246 kB | 195 kB |
+| `/posts` | 228 kB | 179 kB |
+| `/contact` | 171 kB | 172 kB |
+| `/projects` | 240 kB | 189 kB |
+| `/posts/[postId]` | 449 kB | 205 kB |
+
+**Per-page JS** (gzip of every script in the HTML, measured on a local production build):
+
+| Page | Before | After | Change |
+|---|---|---|---|
+| `/` | 324 KB | 278 KB | −14% |
+| `/posts` | 333 KB | 289 KB | −13% |
+| `/contact` | 357 KB | 312 KB | −12% |
+| expo-router post | 491 KB | 292 KB | −40% |
+| layout-animations | 491 KB | 290 KB | −41% |
+| git-reset-modes | 491 KB | 296 KB | −40% |
+| git-internals | 491 KB | 314 KB | −36% |
+| websockets | 491 KB | 350 KB | −29% |
+| timezones (14 demos) | 491 KB | 388 KB | −21% |
+
+**Verified** with a local production build against a throwaway Postgres DB:
+- **Demos:** every demo control hydrated on all six posts (65/65 timezones, 31/31 git-internals, 40/40 layout, 30/30 websockets, 10/10 expo, 7/7 reset), with no console errors; the reset demo was exercised end to end.
+- **Icons:** they swap correctly in both themes, and the hidden variant isn't fetched.
+- **Like button:** it records and restores likes.
 
 ---
 
