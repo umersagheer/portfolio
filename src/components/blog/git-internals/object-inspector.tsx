@@ -502,7 +502,7 @@ function GitPipeline({ repo }: { repo: Repo }) {
           <div className='flex flex-col gap-3'>
             {/* Blobs: appear when you stage. Labelled with the file they came from. */}
             <div>
-              <div className='text-accent mb-1 text-[10px] tracking-wide uppercase'>
+              <div className='text-secondary mb-1 text-[10px] tracking-wide uppercase'>
                 blobs (file contents)
               </div>
               <div className='flex min-h-[2.75rem] flex-wrap items-start gap-1.5'>
@@ -797,7 +797,7 @@ function VscodeShell({
               <FileIcon size={13} className='text-muted' />
               {selected}
             </span>
-            <span className='font-sourceCodePro text-accent text-[10px]'>
+            <span className='font-sourceCodePro text-secondary text-[10px]'>
               blob {workingHash}
             </span>
           </div>

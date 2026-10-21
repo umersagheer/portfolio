@@ -78,7 +78,7 @@ function Panel({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -8, opacity: 0 }}
               transition={swap}
-              className='font-sourceCodePro text-accent block text-sm font-semibold'
+              className='font-sourceCodePro text-secondary block text-sm font-semibold'
             >
               {hash}
             </motion.code>
@@ -121,7 +121,9 @@ function Panel({
                 <div className='text-muted my-1 flex items-center gap-1 text-[10px]'>
                   <ArrowRightIcon size={11} className='rotate-90' /> SHA-1
                 </div>
-                <code className='text-accent block font-semibold'>{hash}</code>
+                <code className='text-secondary block font-semibold'>
+                  {hash}
+                </code>
                 <p className='text-muted mt-1.5 text-[10px] leading-snug'>
                   A blob is a tiny header (
                   <code className='text-warning'>blob</code>, the byte count, a
@@ -215,7 +217,11 @@ export default function HashPlayground() {
           <AnimatePresence mode='wait'>
             {identical ? (
               <motion.span key='dedup' {...fade} aria-live='polite'>
-                <Chip size='sm' variant='soft' color='accent'>
+                <Chip
+                  size='sm'
+                  variant='soft'
+                  className='bg-secondary-soft text-secondary-soft-foreground'
+                >
                   <CheckIcon size={13} />
                   stored once — deduplicated
                 </Chip>

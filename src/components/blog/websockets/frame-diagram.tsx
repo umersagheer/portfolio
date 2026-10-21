@@ -30,7 +30,7 @@ const fields = [
   {
     label: 'Opcode',
     bits: 4,
-    color: 'bg-accent/20 text-accent',
+    color: 'bg-secondary/20 text-secondary',
     note: '4 bits'
   },
   {

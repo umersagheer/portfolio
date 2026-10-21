@@ -484,7 +484,7 @@ export default function DagExplorer() {
                                 >
                                   <ShardHash
                                     hash={f.blob}
-                                    color='text-accent'
+                                    color='text-secondary'
                                   />
                                   <span className='text-muted ml-auto text-[10px]'>
                                     blob · {f.name}
@@ -503,13 +503,13 @@ export default function DagExplorer() {
             <p className='text-muted mb-3 text-[10px] leading-snug'>
               Click a commit to see the{' '}
               <span className='text-accent'>tree</span> and{' '}
-              <span className='text-accent'>blobs</span> it wrote — all sit here
-              in <code>objects/</code> too.
+              <span className='text-secondary'>blobs</span> it wrote — all sit
+              here in <code>objects/</code> too.
             </p>
 
             {/* Half 2 — the pointers (Part 2) */}
             <div className='text-muted mb-1 flex items-center gap-1.5 text-[11px]'>
-              <span className='bg-accent h-1.5 w-1.5 rounded-full' />
+              <span className='bg-secondary h-1.5 w-1.5 rounded-full' />
               refs/ + HEAD · the pointers
             </div>
             <div className='space-y-1.5'>
@@ -563,7 +563,7 @@ export default function DagExplorer() {
 
             <p className='text-muted mt-3 text-[10px] leading-snug'>
               That’s the whole machine: an{' '}
-              <span className='text-accent'>object store</span> plus{' '}
+              <span className='text-secondary'>object store</span> plus{' '}
               <span className='text-success'>pointers</span> into it. Every
               button only <em>writes an object</em> or <em>moves a pointer</em>.
             </p>

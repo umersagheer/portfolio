@@ -102,7 +102,7 @@ export default function EnvelopePatternDemo() {
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='id' annotation='enables acks'>
-              &quot;<span className='text-accent'>{envelope.id}</span>
+              &quot;<span className='text-secondary'>{envelope.id}</span>
               &quot;
             </EnvelopeLine>
             <EnvelopeLine label='timestamp' annotation='ordering'>

@@ -182,9 +182,9 @@ function TreeBox({ hash }: { hash: string }) {
  */
 function BlobBox({ hash, label }: { hash: string; label: string }) {
   return (
-    <div className='border-accent bg-surface inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border p-1.5'>
+    <div className='border-secondary bg-surface inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border p-1.5'>
       <div className='flex items-center gap-1'>
-        <FileIcon size={12} className='text-accent' aria-hidden />
+        <FileIcon size={12} className='text-secondary' aria-hidden />
       </div>
 
       {/* only this fades — box shell holds still */}
@@ -196,7 +196,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className='font-sourceCodePro text-accent absolute inset-0 text-xs font-semibold'
+            className='font-sourceCodePro text-secondary absolute inset-0 text-xs font-semibold'
           >
             {hash}
           </motion.code>

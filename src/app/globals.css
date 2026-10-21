@@ -74,6 +74,52 @@
   --accent: #9353d3;
 }
 
+/* v3 dropped `secondary`, but the demos use it as a *second* hue next to
+   accent (git blob vs tree, ISO month vs year, frame opcode vs FIN, the
+   morph gradient). Folding it into accent made those pairs identical, so it
+   is restored as a brand token with the v2 blues. (v2's light DEFAULT was
+   #7828c8 -- a copy of primary, so light mode was already merged on master;
+   #006fee is the light 500 the rest of that scale used.) The -soft pair
+   mirrors how v3 derives --accent-soft / --accent-soft-foreground. */
+:root {
+  --secondary: #006fee;
+  --secondary-foreground: #ffffff;
+  --secondary-soft: color-mix(in oklab, var(--secondary) 15%, transparent);
+  --secondary-soft-foreground: color-mix(
+    in oklab,
+    var(--secondary) 70%,
+    var(--foreground) 30%
+  );
+}
+.dark {
+  --secondary: #338ef7;
+}
+
+@theme inline {
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-secondary-soft-foreground: var(--secondary-soft-foreground);
+}
+
+/* v3 Button colours come from --button-bg/-hover/-pressed/-fg. A bg-* utility
+   would win over the .button hover rule and kill hover/pressed feedback, so
+   extra hues are added as modifiers that fill the same variables, mirroring
+   .button--primary. Same layer as HeroUI's buttons and declared after them,
+   so they override the variant they are paired with. */
+@layer components {
+  .button--brand-secondary {
+    --button-bg: var(--secondary);
+    --button-bg-hover: color-mix(
+      in oklab,
+      var(--secondary) 90%,
+      var(--secondary-foreground) 10%
+    );
+    --button-bg-pressed: var(--button-bg-hover);
+    --button-fg: var(--secondary-foreground);
+  }
+}
+
 /* v3 fields default to `--field-border: transparent` and rely on
    --field-background, which resolves to the same value as --surface. Inside a
    surface-coloured demo container that makes Select/TimeField/Input invisible

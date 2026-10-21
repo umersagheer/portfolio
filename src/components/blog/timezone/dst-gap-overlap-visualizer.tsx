@@ -118,7 +118,7 @@ function ClockDisplay({
     : isJumped
       ? 'border-warning'
       : isSecond
-        ? 'border-accent'
+        ? 'border-secondary'
         : 'border-border'
 
   const bgColor = isGap
@@ -126,7 +126,7 @@ function ClockDisplay({
     : isJumped
       ? 'bg-warning-soft'
       : isSecond
-        ? 'bg-accent-soft'
+        ? 'bg-secondary-soft'
         : 'bg-background'
 
   return (
@@ -139,7 +139,7 @@ function ClockDisplay({
           isGap
             ? 'bg-danger-soft text-danger'
             : isSecond
-              ? 'bg-accent-soft text-accent'
+              ? 'bg-secondary-soft text-secondary'
               : 'bg-surface-secondary text-muted'
         }`}
       >
@@ -253,7 +253,7 @@ export default function DSTGapOverlapVisualizer() {
               className={`rounded-lg p-3 text-center text-sm font-medium ${
                 transition === 'spring'
                   ? 'bg-danger-soft text-danger'
-                  : 'bg-accent-soft text-accent'
+                  : 'bg-secondary-soft text-secondary'
               }`}
             >
               {current.note}{' '}
@@ -348,7 +348,7 @@ export default function DSTGapOverlapVisualizer() {
             <>
               On <strong>November 1, 2026</strong> at 2:00 AM, New York clocks
               rewind to 1:00 AM. The hour 1:00–1:59 AM is an{' '}
-              <strong className='text-accent'>overlap</strong> — it happens
+              <strong className='text-secondary'>overlap</strong> — it happens
               twice. First in EDT (UTC-4), then in EST (UTC-5).
             </>
           )}

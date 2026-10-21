@@ -2,14 +2,15 @@
  * The shared visual language for every Git-internals component.
  *
  * Deliberately a *small, flat* system: only base semantic tokens — gray
- * (`default`), `primary`, `secondary`, plus `success` / `danger` for the two
- * states that need them. No tint/shade ladders (`-400`, `-500`, …), no opacity
- * fills, no hardcoded hex. Base tokens (`primary`, `secondary`, `success`, …)
- * already adapt to light/dark on their own, so we lean on them everywhere.
+ * (`surface` / `muted`), `accent`, `secondary`, plus `success` / `danger` for
+ * the two states that need them. No tint/shade ladders (`-400`, `-500`, …), no
+ * hardcoded hex. Base tokens (`accent`, `secondary`, `success`, …) already
+ * adapt to light/dark on their own, so we lean on them everywhere.
+ * (`secondary` is a brand token defined in globals.css — HeroUI v3 has none.)
  *
  *   blob   → secondary   (blue)
- *   tree   → primary     (purple)
- *   commit → default     (gray), with a primary ring when it is HEAD
+ *   tree   → accent      (purple)
+ *   commit → surface     (gray), with an accent ring when it is HEAD
  *   ref    → success     (branch / HEAD tags)
  *   added / staged → success   |   removed → danger
  *
@@ -35,16 +36,16 @@ type ObjectStyle = {
 
 /**
  * Resting styles per object type — base tokens only. Surfaces use the neutral
- * `default-100` gray (reads correctly in both themes); accents use the color's
+ * `surface-secondary` gray (reads correctly in both themes); accents use the color's
  * base token. State overlays (new / orphaned / head) apply on top.
  */
 export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
   blob: {
     // translucent surface + a faint color tint so backdrop-blur reads as frosted
     // glass over the dotted stage.
-    container: 'border-accent bg-accent/10',
-    badge: 'bg-accent text-accent-foreground',
-    accent: 'text-accent'
+    container: 'border-secondary bg-secondary/10',
+    badge: 'bg-secondary text-secondary-foreground',
+    accent: 'text-secondary'
   },
   tree: {
     container: 'border-accent bg-accent/10',

@@ -51,7 +51,7 @@ export default function MorphingDialogDemo() {
             <motion.div
               layout='preserve-aspect'
               layoutId='morphing-demo-image'
-              className='from-accent to-accent mb-3 h-32 bg-gradient-to-br'
+              className='from-accent to-secondary mb-3 h-32 bg-gradient-to-br'
               style={{ borderRadius: 8 }}
               transition={springTransition}
             />
@@ -101,7 +101,7 @@ export default function MorphingDialogDemo() {
                 <motion.div
                   layout='preserve-aspect'
                   layoutId='morphing-demo-image'
-                  className='from-accent to-accent mb-4 h-48 bg-gradient-to-br'
+                  className='from-accent to-secondary mb-4 h-48 bg-gradient-to-br'
                   style={{ borderRadius: 8 }}
                   transition={springTransition}
                 />

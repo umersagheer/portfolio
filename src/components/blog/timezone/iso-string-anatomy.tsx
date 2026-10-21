@@ -25,7 +25,7 @@ const FORMATS: {
     segments: [
       { text: '2026', color: 'text-accent', label: 'Year' },
       { text: '-', color: 'text-muted', label: '' },
-      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '03', color: 'text-secondary', label: 'Month' },
       { text: '-', color: 'text-muted', label: '' },
       { text: '29', color: 'text-warning', label: 'Day' },
       { text: 'T', color: 'text-muted', label: 'Separator' },
@@ -49,7 +49,7 @@ const FORMATS: {
     segments: [
       { text: '2026', color: 'text-accent', label: 'Year' },
       { text: '-', color: 'text-muted', label: '' },
-      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '03', color: 'text-secondary', label: 'Month' },
       { text: '-', color: 'text-muted', label: '' },
       { text: '29', color: 'text-warning', label: 'Day' }
     ],
@@ -64,7 +64,7 @@ const FORMATS: {
     segments: [
       { text: '2026', color: 'text-accent', label: 'Year' },
       { text: '-', color: 'text-muted', label: '' },
-      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '03', color: 'text-secondary', label: 'Month' },
       { text: '-', color: 'text-muted', label: '' },
       { text: '29', color: 'text-warning', label: 'Day' },
       { text: 'T', color: 'text-muted', label: 'Separator' },
@@ -87,7 +87,7 @@ const FORMATS: {
     segments: [
       { text: '2026', color: 'text-accent', label: 'Year' },
       { text: '-', color: 'text-muted', label: '' },
-      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '03', color: 'text-secondary', label: 'Month' },
       { text: '-', color: 'text-muted', label: '' },
       { text: '29', color: 'text-warning', label: 'Day' },
       { text: 'T', color: 'text-muted', label: 'Separator' },
@@ -109,7 +109,7 @@ const FORMATS: {
     segments: [
       { text: '2026', color: 'text-accent', label: 'Year' },
       { text: '-', color: 'text-muted', label: '' },
-      { text: '03', color: 'text-accent', label: 'Month' },
+      { text: '03', color: 'text-secondary', label: 'Month' },
       { text: '-', color: 'text-muted', label: '' },
       { text: '29', color: 'text-warning', label: 'Day' },
       { text: ' ', color: 'text-muted', label: 'Space (not T)' },

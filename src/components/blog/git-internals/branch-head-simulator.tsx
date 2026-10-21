@@ -178,7 +178,7 @@ export default function BranchHeadSimulator() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={swap}
-                      className='text-accent text-xs font-semibold'
+                      className='text-secondary text-xs font-semibold'
                     >
                       {b.tip}
                     </motion.code>

@@ -112,7 +112,7 @@ const TREE: Node[] = [
 
 const HALF_DOT: Record<Half, string> = {
   stuff: 'bg-accent',
-  pointer: 'bg-accent',
+  pointer: 'bg-secondary',
   scratch: 'bg-warning',
   plumbing: 'bg-surface-tertiary'
 }
@@ -344,7 +344,7 @@ export default function GitInitTerminal() {
                   stuff
                 </span>
                 <span className='mx-3 inline-flex items-center gap-1.5'>
-                  <span className='bg-accent h-1.5 w-1.5 rounded-full' /> the
+                  <span className='bg-secondary h-1.5 w-1.5 rounded-full' /> the
                   pointers
                 </span>
                 <span className='inline-flex items-center gap-1.5'>

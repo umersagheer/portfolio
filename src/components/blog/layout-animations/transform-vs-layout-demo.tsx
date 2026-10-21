@@ -39,7 +39,7 @@ export default function TransformVsLayoutDemo() {
           <div className='flex items-center justify-center gap-3'>
             <div className='bg-accent h-[50px] w-[50px] rounded-md transition-all duration-500' />
             <div
-              className='bg-accent h-[50px] w-[50px] rounded-md transition-all duration-500'
+              className='bg-secondary h-[50px] w-[50px] rounded-md transition-all duration-500'
               style={{
                 transform: expanded ? 'scaleX(2)' : 'scaleX(1)'
               }}
@@ -61,7 +61,7 @@ export default function TransformVsLayoutDemo() {
           <div className='flex items-center justify-center gap-3'>
             <div className='bg-accent h-[50px] w-[50px] rounded-md transition-all duration-500' />
             <div
-              className='bg-accent h-[50px] rounded-md transition-all duration-500'
+              className='bg-secondary h-[50px] rounded-md transition-all duration-500'
               style={{
                 width: expanded ? 100 : 50
               }}

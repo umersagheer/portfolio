@@ -221,7 +221,7 @@ export default function StagingArea() {
                 >
                   <span className='text-foreground'>{name}</span>
                   <span className='text-muted'> → </span>
-                  <span className='text-accent font-semibold'>
+                  <span className='text-secondary font-semibold'>
                     {blobOf(name)}
                   </span>
                 </motion.div>

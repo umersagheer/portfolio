@@ -74,7 +74,7 @@ const STORE_ROWS = [
 ]
 
 const DOT: Record<'blob' | 'tree' | 'commit', string> = {
-  blob: 'bg-accent',
+  blob: 'bg-secondary',
   tree: 'bg-accent',
   commit: 'bg-surface-tertiary'
 }

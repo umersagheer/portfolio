@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Button } from '@heroui/react'
+import { Tabs, Button, cn } from '@heroui/react'
 import { IconBroadcast, IconMessage } from '@tabler/icons-react'
 import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
@@ -124,6 +124,9 @@ export default function RoutingPatternsDemo() {
             <div className='mb-4 flex gap-2'>
               <Button
                 variant={multicastRoom === 'A' ? 'primary' : 'tertiary'}
+                className={cn(
+                  multicastRoom === 'A' && 'button--brand-secondary'
+                )}
                 size='sm'
                 onPress={() => setMulticastRoom('A')}
               >
@@ -131,6 +134,9 @@ export default function RoutingPatternsDemo() {
               </Button>
               <Button
                 variant={multicastRoom === 'B' ? 'primary' : 'tertiary'}
+                className={cn(
+                  multicastRoom === 'B' && 'button--brand-secondary'
+                )}
                 size='sm'
                 onPress={() => setMulticastRoom('B')}
               >
@@ -186,7 +192,7 @@ export default function RoutingPatternsDemo() {
                       <span
                         className={`text-[10px] ${
                           client.room === multicastRoom
-                            ? 'text-accent font-semibold'
+                            ? 'text-secondary font-semibold'
                             : 'text-muted'
                         }`}
                       >
