@@ -15,6 +15,7 @@ import {
   Button,
   Link,
   Separator,
+  Spinner,
   toast
 } from '@heroui/react'
 import { z } from 'zod'
@@ -118,7 +119,13 @@ export default function ContactForm() {
         </Card.Content>
         <Card.Footer className='flex flex-col gap-3'>
           <Button variant='primary' type='submit' fullWidth isPending={loading}>
-            Send
+            {/* v3 Button has no built-in loading spinner (v2's isLoading had one) */}
+            {({ isPending }) => (
+              <>
+                {isPending && <Spinner size='sm' color='current' />}
+                Send
+              </>
+            )}
           </Button>
 
           <div className='flex w-full items-center justify-center gap-3'>
@@ -138,7 +145,10 @@ export default function ContactForm() {
           </Button>
           <p className='justify-start text-sm'>
             By submitting this form, I agree to the{' '}
-            <Link href='' className='text-sm font-medium hover:underline'>
+            <Link
+              href=''
+              className='text-accent text-sm font-medium hover:underline'
+            >
               privacy policy
             </Link>
           </p>

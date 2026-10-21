@@ -262,7 +262,7 @@ export default function DatePipelineDemo() {
         </motion.div>
       </AnimatePresence>
 
-      <div className='mt-4 flex items-center justify-between'>
+      <div className='mt-4 flex flex-wrap items-center justify-between gap-2'>
         <div className='flex gap-1.5'>
           {stages.map((_, i) => (
             <button

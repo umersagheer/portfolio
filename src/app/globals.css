@@ -74,6 +74,24 @@
   --accent: #9353d3;
 }
 
+/* v2 painted <body> with its theme background (#fff / #000) and foreground.
+   v3 sets neither, so the browser's default dark canvas (a dark grey) showed
+   through the background art, and v3's own --background is off-white / grey
+   (0.97 / 0.12). Restore v2's values so the page and every bg-background
+   demo surface look as they did. */
+:root {
+  --background: #ffffff;
+}
+.dark {
+  --background: #000000;
+}
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
 /* v3 dropped `secondary`, but the demos use it as a *second* hue next to
    accent (git blob vs tree, ISO month vs year, frame opcode vs FIN, the
    morph gradient). Folding it into accent made those pairs identical, so it
