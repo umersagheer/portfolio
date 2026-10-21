@@ -232,26 +232,14 @@ export const projects = [
         )
       }
     ],
-    screenshots: [
-      { src: '/images/writing-coach/Login.png', wide: false },
-      { src: '/images/writing-coach/TeacherDashboard.png', wide: true },
-      { src: '/images/writing-coach/AssignmentDetail.png', wide: false },
-      { src: '/images/writing-coach/BulkFeedback.png', wide: true },
-      { src: '/images/writing-coach/StudentSubmission.png', wide: false },
-      { src: '/images/writing-coach/ReportGeneration.png', wide: true },
-      {
-        src: '/images/writing-coach/AdminInstitutionManagement.png',
-        wide: false
-      },
-      { src: '/images/writing-coach/Subscription.png', wide: true }
-    ]
+    screenshots: []
   },
   {
     id: 3,
     title: 'NourishWise Postpartum App',
     subTitle: 'Postpartum Nutrition, Recovery & Community Platform',
     image: '/images/projects/postpartum.png',
-    codeLink: 'https://github.com/your-username/postpartum',
+    codeLink: '',
     liveLink: '',
     description:
       'A mobile-first postpartum wellness app built with React Native and Expo. It delivers personalized calorie/macronutrient onboarding, daily meal planning, mood and nutrition tracking, recipe management, grocery workflows, community forums, and premium subscriptions, with Supabase auth and a typed API service layer.',
@@ -355,20 +343,7 @@ export const projects = [
         )
       }
     ],
-    screenshots: [
-      { src: '/images/postpartum/welcome.png', wide: false },
-      { src: '/images/postpartum/onboarding-calories.png', wide: true },
-      { src: '/images/postpartum/dashboard-home.png', wide: true },
-      { src: '/images/postpartum/meal-plans.png', wide: true },
-      { src: '/images/postpartum/recipe-detail.png', wide: false },
-      { src: '/images/postpartum/add-recipe.png', wide: true },
-      { src: '/images/postpartum/grocery-list.png', wide: false },
-      { src: '/images/postpartum/analytics.png', wide: true },
-      { src: '/images/postpartum/community.png', wide: true },
-      { src: '/images/postpartum/subscription.png', wide: false },
-      { src: '/images/postpartum/profile.png', wide: false },
-      { src: '/images/postpartum/notifications.png', wide: false }
-    ]
+    screenshots: []
   },
   {
     id: 4,
@@ -517,18 +492,7 @@ export const projects = [
         icon: <TheSvgIcon slug='tailwind-css' size={14} />
       }
     ],
-    screenshots: [
-      { src: '/images/meridian/Welcome.png', wide: false },
-      { src: '/images/meridian/OnboardingRoles.png', wide: true },
-      { src: '/images/meridian/OverheadSetup.png', wide: false },
-      { src: '/images/meridian/Dashboard.png', wide: true },
-      { src: '/images/meridian/ServicesList.png', wide: false },
-      { src: '/images/meridian/ServiceDetails.png', wide: true },
-      { src: '/images/meridian/AiInsights.png', wide: false },
-      { src: '/images/meridian/InsightDetail.png', wide: true },
-      { src: '/images/meridian/ManageRoles.png', wide: false },
-      { src: '/images/meridian/ManageOverhead.png', wide: true }
-    ]
+    screenshots: []
   }
 ]
 
