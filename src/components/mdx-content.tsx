@@ -3,7 +3,6 @@ import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
 import CheckItem from '@/components/check-item'
-import Counter from '@/components/counter'
 import { slugify } from '@/libs/toc'
 import LayoutAnimationDemo from '@/components/blog/layout-animations/layout-animation-demo'
 import LayoutIdDemo from '@/components/blog/layout-animations/layout-id-demo'
@@ -103,7 +102,6 @@ const components = {
   a: Anchor,
   h2: HeadingTwo,
   h3: HeadingThree,
-  Counter,
   LayoutAnimationDemo,
   LayoutIdDemo,
   AnimatePresenceDemo,
