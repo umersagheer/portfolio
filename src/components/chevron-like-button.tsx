@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useAnimation } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
-import axios from 'axios'
 
 // Real API integration enabled
 const MOCK_API = false
@@ -43,6 +42,15 @@ const GLOW_STEPS = [
   { intensity: 0.65 },
   { intensity: 0.85 }
 ]
+
+async function requestLikes(
+  postId: string,
+  init: RequestInit
+): Promise<LikesPayload> {
+  const res = await fetch(`/api/posts/${postId}/likes`, init)
+  if (!res.ok) throw new Error(`Likes request failed: ${res.status}`)
+  return res.json()
+}
 
 function generateFingerprint(): string {
   const raw = [
@@ -199,15 +207,12 @@ export default function ChevronLikeButton({ postId }: ChevronLikeButtonProps) {
     if (MOCK_API) return
 
     try {
-      const { data } = await axios.get<LikesPayload>(
-        `/api/posts/${postId}/likes`,
-        {
-          headers: {
-            'x-visitor-id': visitorId.current,
-            'x-fingerprint': fingerprint.current
-          }
+      const data = await requestLikes(postId, {
+        headers: {
+          'x-visitor-id': visitorId.current,
+          'x-fingerprint': fingerprint.current
         }
-      )
+      })
 
       applyLikesData(data)
     } catch (error) {
@@ -262,13 +267,14 @@ export default function ChevronLikeButton({ postId }: ChevronLikeButtonProps) {
 
     if (!MOCK_API) {
       try {
-        const { data } = await axios.post<LikesPayload>(
-          `/api/posts/${postId}/likes`,
-          {
+        const data = await requestLikes(postId, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
             visitorId: visitorId.current,
             fingerprint: fingerprint.current
-          }
-        )
+          })
+        })
 
         applyLikesData(data)
       } catch (error) {
