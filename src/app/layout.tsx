@@ -3,10 +3,7 @@ import { Poppins, Source_Code_Pro } from 'next/font/google'
 
 import './globals.css'
 import { Providers } from '@/app/providers'
-import { cn } from 'tailwind-variants'
-import { GridPattern } from '@/components/grid-patterns'
 import { Navbar } from '@/components/navbar'
-import Gradient from '@/components/gradient'
 import Image from 'next/image'
 import { getSiteUrl } from '@/libs/metadata'
 
@@ -49,7 +46,6 @@ export default function RootLayout({
             />
           </div>
           <main className='container min-h-screen max-w-3xl py-20'>
-            <div className='fixed inset-0 z-[-1] max-w-3xl translate-x-1/3 opacity-70 md:translate-x-1/2'></div>
             {children}
           </main>
         </Providers>

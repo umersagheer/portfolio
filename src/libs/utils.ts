@@ -1,5 +1,3 @@
-import { techIcons } from '@/components/icons'
-
 // Frontmatter dates are date-only strings ('2026-07-19'), which parse as UTC
 // midnight. Formatting in UTC keeps the same calendar day for every reader
 // (and identical server/client output, so no hydration mismatch).
@@ -10,10 +8,6 @@ export default function formatDate(date: string) {
     year: 'numeric',
     timeZone: 'UTC'
   })
-}
-
-export function getIcon(name: string) {
-  return techIcons[name] || null
 }
 
 export function calculateReadingTime(content: string): number {
