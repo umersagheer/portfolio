@@ -46,6 +46,15 @@
   white-space: nowrap;
 }
 
+/* The same applies to the pill around the tabs: v3's `.tabs` is a flex column,
+   so the list container stretches to the full width of the demo card and the
+   tabs sit at the left of an oversized pill. Shrink it to its tabs; max-width
+   keeps the built-in horizontal scroller working on narrow screens. */
+.tabs[data-orientation='horizontal'] > .tabs__list-container {
+  width: fit-content;
+  max-width: 100%;
+}
+
 @keyframes marquee-scroll-vertical {
   0% {
     transform: translateY(0);
@@ -68,10 +77,13 @@
 /* v3 fields default to `--field-border: transparent` and rely on
    --field-background, which resolves to the same value as --surface. Inside a
    surface-coloured demo container that makes Select/TimeField/Input invisible
-   (no border, no contrast). v2's inputs were bordered, so restore that. */
+   (no border, no contrast). v2's inputs were bordered, so restore that.
+   The colour alone is not enough: the theme also sets --field-border-width to
+   0px, so the width has to be restored too or the border never paints. */
 :root,
 .dark {
   --field-border: var(--border);
+  --field-border-width: var(--border-width);
 }
 
 /* Tailwind v4 changed the default border/divide colour from gray-200 to

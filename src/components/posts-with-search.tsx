@@ -2,7 +2,6 @@
 import { SearchField, Tabs, cn } from '@heroui/react'
 import { useMemo, useState } from 'react'
 import Posts from './posts'
-import { SearchIcon } from 'lucide-react'
 import { PostCategory, PostMetadata, PostTopic } from '@/types'
 import { IconFileInvoiceFilled, IconFilePowerFilled } from '@tabler/icons-react'
 import { getTopicCounts } from '@/libs/post-topic'
@@ -80,14 +79,18 @@ export default function PostsWithSearch({ posts }: props) {
           </Tabs.ListContainer>
         </Tabs>
 
+        {/* secondary + h-10/rounded-full match the category tabs pill beside
+            it (bg-default, 40px tall); the default variant is a shorter,
+            surface-coloured box that reads as a different control. */}
         <SearchField
           aria-label='Search posts'
           value={search}
           onChange={setSearch}
+          variant='secondary'
           className='sm:max-w-[16rem]'
         >
-          <SearchField.Group>
-            <SearchIcon size={16} className='text-muted shrink-0' />
+          <SearchField.Group className='h-10 rounded-full'>
+            <SearchField.SearchIcon />
             <SearchField.Input placeholder='Search posts...' />
             <SearchField.ClearButton />
           </SearchField.Group>

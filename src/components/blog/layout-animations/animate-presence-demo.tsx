@@ -63,9 +63,10 @@ export default function AnimatePresenceDemo() {
         variant='primary'
         selectedKey={withPresence ? 'with' : 'without'}
         onSelectionChange={key => toggle(key === 'with')}
+        className='mb-4'
       >
         <Tabs.ListContainer>
-          <Tabs.List className='mb-4'>
+          <Tabs.List>
             <Tabs.Tab id='without'>
               Without AnimatePresence
               <Tabs.Indicator />

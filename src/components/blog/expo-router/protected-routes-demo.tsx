@@ -549,9 +549,11 @@ export default function ExpoProtectedRoutesDemo() {
             }}
             size='sm'
           >
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+            </Switch.Content>
           </Switch>
         </div>
 
@@ -572,9 +574,11 @@ export default function ExpoProtectedRoutesDemo() {
             onChange={setOnboarded}
             size='sm'
           >
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+            </Switch.Content>
           </Switch>
         </div>
       </div>

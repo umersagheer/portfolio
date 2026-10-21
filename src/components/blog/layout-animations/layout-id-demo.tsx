@@ -17,9 +17,10 @@ export default function LayoutIdDemo() {
         variant='primary'
         selectedKey={useLayoutId ? 'with' : 'without'}
         onSelectionChange={key => setUseLayoutId(key === 'with')}
+        className='mb-4'
       >
         <Tabs.ListContainer>
-          <Tabs.List className='mb-4'>
+          <Tabs.List>
             <Tabs.Tab id='without'>
               Without layoutId
               <Tabs.Indicator />

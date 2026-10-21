@@ -292,7 +292,9 @@ export default function ScheduleSimulatorDemo() {
                       isDSTDay
                         ? 'text-warning'
                         : isPast
-                          ? 'text-accent'
+                          ? i < dstDay
+                            ? 'text-accent'
+                            : 'text-accent-foreground'
                           : 'text-muted'
                     }`}
                   >

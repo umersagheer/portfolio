@@ -170,9 +170,11 @@ export default function StagingArea() {
                     aria-label={`Stage ${f.name}`}
                     className='rounded-sm'
                   >
-                    <Checkbox.Control>
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
+                    <Checkbox.Content>
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                    </Checkbox.Content>
                   </Checkbox>
                   <FileIcon size={14} className='text-muted' />
                   <span className='font-sourceCodePro text-foreground text-xs'>
