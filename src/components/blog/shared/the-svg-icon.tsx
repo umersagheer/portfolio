@@ -45,7 +45,6 @@ export default function TheSvgIcon({
   // link's aria-label already names them.
   const imageProps = {
     unoptimized: true,
-    alt,
     width: size,
     height: size,
     style: { width: size, height: 'auto' },
@@ -56,6 +55,7 @@ export default function TheSvgIcon({
     return (
       <Image
         {...imageProps}
+        alt={alt}
         src={getTheSvgIconUrl(slug, variant ?? lightVariant)}
         className={cn('shrink-0', className)}
       />
@@ -69,11 +69,13 @@ export default function TheSvgIcon({
     <>
       <Image
         {...imageProps}
+        alt={alt}
         src={getTheSvgIconUrl(slug, lightVariant)}
         className={cn('shrink-0 dark:hidden', className)}
       />
       <Image
         {...imageProps}
+        alt={alt}
         src={getTheSvgIconUrl(slug, darkVariant)}
         className={cn('hidden shrink-0 dark:block', className)}
       />
