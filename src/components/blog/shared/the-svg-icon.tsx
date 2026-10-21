@@ -1,11 +1,9 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { cn } from '@heroui/react'
-import { useTheme } from 'next-themes'
-import { useIsClient } from '@/hooks/useIsClient'
 
 type TheSvgIconProps = {
   alt?: string
@@ -18,12 +16,17 @@ type TheSvgIconProps = {
   variant?: string
 }
 
+// Pinned to a commit: jsDelivr serves commit URLs as immutable (cached for a
+// year, vs 7 days on @main) and upstream changes can't alter the site. Bump
+// it deliberately when new icons are needed.
+const THESVG_COMMIT = '8d07be9f43d70ea6d66b7a10ab02f27d1f9bacd6'
+
 function getTheSvgIconUrl(slug: string, variant: string) {
-  return `https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/${slug}/${variant}.svg`
+  return `https://cdn.jsdelivr.net/gh/glincker/thesvg@${THESVG_COMMIT}/public/icons/${slug}/${variant}.svg`
 }
 
 export default function TheSvgIcon({
-  alt,
+  alt = '',
   className,
   darkVariant = 'default',
   fallback = null,
@@ -32,35 +35,48 @@ export default function TheSvgIcon({
   slug,
   variant
 }: TheSvgIconProps) {
-  const { resolvedTheme } = useTheme()
-  const isClient = useIsClient()
   const [hasError, setHasError] = useState(false)
-
-  // The theme is unknown on the server, so hydrate with the light variant and
-  // switch once mounted; reading it during hydration mismatched the img src.
-  const themeVariant =
-    isClient && resolvedTheme === 'dark' ? darkVariant : lightVariant
-  const iconVariant = variant ?? themeVariant
-  const src = getTheSvgIconUrl(slug, iconVariant)
-
-  useEffect(() => {
-    setHasError(false)
-  }, [src])
 
   if (hasError) {
     return <>{fallback}</>
   }
 
+  // Icons are decorative by default (alt=''): a visible label or the parent
+  // link's aria-label already names them.
+  const imageProps = {
+    unoptimized: true,
+    alt,
+    width: size,
+    height: size,
+    style: { width: size, height: 'auto' },
+    onError: () => setHasError(true)
+  }
+
+  if (variant || lightVariant === darkVariant) {
+    return (
+      <Image
+        {...imageProps}
+        src={getTheSvgIconUrl(slug, variant ?? lightVariant)}
+        className={cn('shrink-0', className)}
+      />
+    )
+  }
+
+  // Theme-specific files swap in CSS via the `dark` class, not in JS: no
+  // post-hydration src change, refetch or flash. Both are lazy, and a
+  // display:none lazy image isn't fetched until the theme flips to it.
   return (
-    <Image
-      unoptimized
-      src={src}
-      alt={alt ?? slug}
-      width={size}
-      height={size}
-      style={{ width: size, height: 'auto' }}
-      className={cn('shrink-0', className)}
-      onError={() => setHasError(true)}
-    />
+    <>
+      <Image
+        {...imageProps}
+        src={getTheSvgIconUrl(slug, lightVariant)}
+        className={cn('shrink-0 dark:hidden', className)}
+      />
+      <Image
+        {...imageProps}
+        src={getTheSvgIconUrl(slug, darkVariant)}
+        className={cn('hidden shrink-0 dark:block', className)}
+      />
+    </>
   )
 }
