@@ -87,7 +87,7 @@ export default function StandupBugDemo() {
         </div>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           onPress={toggleDST}
           isDisabled={animating}
         >

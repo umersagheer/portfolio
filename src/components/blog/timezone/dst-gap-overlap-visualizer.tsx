@@ -304,7 +304,7 @@ export default function DSTGapOverlapVisualizer() {
       <div className='flex items-center justify-between'>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           isDisabled={step === 0}
           onPress={() => {
             stop()
@@ -324,7 +324,7 @@ export default function DSTGapOverlapVisualizer() {
         </Button>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           isDisabled={step === sequence.length - 1}
           onPress={() => {
             stop()

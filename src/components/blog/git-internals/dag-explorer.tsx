@@ -256,7 +256,7 @@ export default function DagExplorer() {
             size='sm'
             variant='primary'
             onPress={() => dispatch({ type: 'commit' })}
-            className='rounded-sm'
+            className='rounded-[8px]'
           >
             <GitCommitHorizontalIcon size={15} />
             Commit
@@ -266,7 +266,7 @@ export default function DagExplorer() {
             variant='outline'
             isDisabled={!canBranch}
             onPress={() => dispatch({ type: 'branch' })}
-            className='rounded-sm'
+            className='rounded-[8px]'
           >
             <GitBranchIcon size={15} />
             Branch
@@ -277,7 +277,7 @@ export default function DagExplorer() {
               size='sm'
               variant='outline'
               onPress={() => dispatch({ type: 'merge', from: name })}
-              className='rounded-sm'
+              className='rounded-[8px]'
             >
               <GitMergeIcon size={15} />
               Merge {name}

@@ -300,7 +300,7 @@ function Zone({
 /** One file row in the Files world: a filename + a status dot. No objects here. */
 function FileRow({ name, status }: { name: FileName; status: FileStatus }) {
   const meta = {
-    committed: { dot: 'bg-surface-tertiary', label: '' },
+    committed: { dot: 'bg-border-secondary', label: '' },
     modified: { dot: 'bg-warning', label: 'modified' },
     staged: { dot: 'bg-success', label: 'staged' },
     'staged-modified': { dot: 'bg-warning', label: 'staged, edited' }
@@ -349,7 +349,7 @@ function HistoryTimeline({ repo }: { repo: Repo }) {
                     : 'border-border-secondary bg-surface'
                 )}
               />
-              {!isLast && <span className='bg-surface-tertiary w-px flex-1' />}
+              {!isLast && <span className='bg-border-secondary w-px flex-1' />}
             </div>
             {/* row content */}
             <div
@@ -760,9 +760,9 @@ function VscodeShell({
       {/* Title bar */}
       <div className='bg-surface-secondary flex items-center gap-2 px-3 py-1.5'>
         <span className='flex gap-1.5'>
-          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
-          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
-          <span className='bg-surface-tertiary h-2.5 w-2.5 rounded-full' />
+          <span className='bg-border-secondary h-2.5 w-2.5 rounded-full' />
+          <span className='bg-border-secondary h-2.5 w-2.5 rounded-full' />
+          <span className='bg-border-secondary h-2.5 w-2.5 rounded-full' />
         </span>
         <span className='text-muted ml-1 text-xs'>demo-repo — VS Code</span>
       </div>
@@ -915,12 +915,12 @@ function SourceControlPanel({
           placeholder='Message (commit)'
           value={message}
           onChange={e => onMessage(e.target.value)}
-          className='font-sourceCodePro border-border rounded-sm text-xs'
+          className='font-sourceCodePro border-border rounded-[8px] text-xs'
         />
         <Button
           size='sm'
           variant='primary'
-          className='mt-2 w-full rounded-sm'
+          className='mt-2 w-full rounded-[8px]'
           isDisabled={!canCommit}
           onPress={() => dispatch({ type: 'commit', message })}
         >
@@ -1038,7 +1038,7 @@ export default function ObjectInspector() {
             variant='outline'
             isDisabled={!canReset}
             onPress={() => dispatch({ type: 'reset' })}
-            className='rounded-sm'
+            className='rounded-[8px]'
           >
             <RotateCcwIcon size={13} />
             git reset --hard HEAD~1

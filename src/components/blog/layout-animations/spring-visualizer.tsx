@@ -123,7 +123,7 @@ export default function SpringVisualizer() {
       <div className='mt-4 flex justify-center gap-2'>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           onPress={play}
           isDisabled={isAnimating}
         >
@@ -132,7 +132,7 @@ export default function SpringVisualizer() {
         </Button>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           onPress={reset}
           isDisabled={isAnimating}
         >

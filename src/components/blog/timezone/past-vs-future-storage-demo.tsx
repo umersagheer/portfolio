@@ -119,7 +119,7 @@ export default function PastVsFutureStorageDemo() {
             </p>
             <Button
               size='sm'
-              variant='secondary'
+              variant='tertiary'
               className='h-6 min-w-0 px-2 text-[10px]'
               onPress={() => setDstToggle(t => !t)}
             >

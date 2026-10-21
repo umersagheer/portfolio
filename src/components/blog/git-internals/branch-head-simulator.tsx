@@ -135,7 +135,7 @@ export default function BranchHeadSimulator() {
                   <div
                     className={cn(
                       'h-16 w-3 rounded-full transition-colors',
-                      isActive ? 'bg-accent' : 'bg-surface-tertiary'
+                      isActive ? 'bg-accent' : 'bg-border-secondary'
                     )}
                   />
                   <span

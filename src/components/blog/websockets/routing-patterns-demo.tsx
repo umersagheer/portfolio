@@ -254,7 +254,7 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className='bg-accent/40 text-accent rounded-full px-4 py-1.5 text-xs font-medium'
+            className='bg-accent-soft text-accent-soft-foreground rounded-full px-4 py-1.5 text-xs font-medium'
           >
             {label}
           </motion.span>

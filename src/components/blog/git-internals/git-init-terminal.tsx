@@ -114,7 +114,7 @@ const HALF_DOT: Record<Half, string> = {
   stuff: 'bg-accent',
   pointer: 'bg-secondary',
   scratch: 'bg-warning',
-  plumbing: 'bg-surface-tertiary'
+  plumbing: 'bg-border-tertiary'
 }
 
 type Row = { node: Node; depth: number }
@@ -194,7 +194,7 @@ export default function GitInitTerminal() {
             </span>
           )}
           {!ran && (
-            <span className='bg-surface-tertiary ml-0.5 inline-block h-4 w-2 animate-pulse' />
+            <span className='bg-border-tertiary ml-0.5 inline-block h-4 w-2 animate-pulse' />
           )}
         </button>
 

@@ -115,7 +115,7 @@ export default function AnimatePresenceDemo() {
       </p>
 
       <div className='mt-4 flex justify-center'>
-        <Button size='sm' variant='secondary' onPress={addItem}>
+        <Button size='sm' variant='tertiary' onPress={addItem}>
           <IconPlus size={14} />
           Add item
         </Button>

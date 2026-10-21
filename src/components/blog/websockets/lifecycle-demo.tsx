@@ -61,7 +61,7 @@ const STATES = [
 const stateColors: Record<string, string> = {
   warning: 'bg-warning',
   success: 'bg-success',
-  default: 'bg-surface-tertiary'
+  default: 'bg-border-tertiary'
 }
 
 const stateTextColors: Record<string, string> = {
@@ -155,9 +155,7 @@ export default function LifecycleDemo() {
               >
                 <div
                   className={`flex size-10 items-center justify-center rounded-full transition-colors ${
-                    isActive
-                      ? stateColors[s.color]
-                      : 'bg-surface-tertiary dark:bg-surface-tertiary'
+                    isActive ? stateColors[s.color] : 'bg-border-secondary'
                   }`}
                 >
                   <Icon
@@ -179,9 +177,7 @@ export default function LifecycleDemo() {
               {i < 3 && (
                 <div
                   className={`mx-1 h-px w-4 sm:w-8 ${
-                    i < activeState
-                      ? 'bg-accent'
-                      : 'bg-surface-tertiary dark:bg-surface-tertiary'
+                    i < activeState ? 'bg-accent' : 'bg-border-secondary'
                   }`}
                 />
               )}

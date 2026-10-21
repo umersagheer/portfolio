@@ -107,7 +107,7 @@ function SnapshotView({ step }: { step: number }) {
       </div>
 
       {/* connector: the tree points down at its three files */}
-      <div className='bg-surface-tertiary mx-auto h-4 w-px' aria-hidden />
+      <div className='bg-border-secondary mx-auto h-4 w-px' aria-hidden />
       <div className='text-muted text-center text-[10px] tracking-wide uppercase'>
         points at
       </div>
@@ -333,7 +333,7 @@ export default function SnapshotVsDiff() {
               aria-label='Previous commit'
               isDisabled={atStart}
               onPress={() => setStep(s => Math.max(0, s - 1))}
-              className='rounded-sm'
+              className='rounded-[8px]'
             >
               <ChevronLeftIcon size={15} />
             </Button>
@@ -352,7 +352,7 @@ export default function SnapshotVsDiff() {
               aria-label='Next commit'
               isDisabled={atEnd}
               onPress={() => setStep(s => Math.min(HISTORY.length - 1, s + 1))}
-              className='rounded-sm'
+              className='rounded-[8px]'
             >
               <ChevronRightIcon size={15} />
             </Button>

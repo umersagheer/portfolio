@@ -285,7 +285,7 @@ export default function DatePipelineDemo() {
                 className={`flex items-center justify-center rounded-full text-[10px] font-semibold transition-colors ${
                   i === activeStage
                     ? 'bg-accent text-accent-foreground size-6'
-                    : 'bg-surface-tertiary text-foreground size-5'
+                    : 'bg-border-secondary text-foreground size-5'
                 }`}
               >
                 {i + 1}
@@ -295,7 +295,7 @@ export default function DatePipelineDemo() {
         </div>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           isDisabled={playing}
           onPress={playThrough}
         >

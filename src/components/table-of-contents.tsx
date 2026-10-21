@@ -70,7 +70,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
               {activeId === item.id && (
                 <motion.div
                   layoutId='toc-active-indicator'
-                  className='bg-surface-tertiary absolute top-2.5 left-0 h-4 w-0.5 rounded-full'
+                  className='bg-muted absolute top-2.5 left-0 h-4 w-0.5 rounded-full'
                   transition={{
                     type: 'spring',
                     stiffness: 350,

@@ -76,7 +76,7 @@ const STORE_ROWS = [
 const DOT: Record<'blob' | 'tree' | 'commit', string> = {
   blob: 'bg-secondary',
   tree: 'bg-accent',
-  commit: 'bg-surface-tertiary'
+  commit: 'bg-border-tertiary'
 }
 
 /** A downward parent-pointer arrow with its "points at" label. */
@@ -271,7 +271,7 @@ export default function ObjectLadder() {
               key={n}
               className={cn(
                 'h-1.5 w-1.5 rounded-full transition-colors',
-                step >= n ? 'bg-accent' : 'bg-surface-tertiary'
+                step >= n ? 'bg-accent' : 'bg-border-secondary'
               )}
             />
           ))}

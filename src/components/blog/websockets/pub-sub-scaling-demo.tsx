@@ -251,13 +251,13 @@ export default function PubSubScalingDemo() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className='dark:bg-danger bg-danger-soft text-danger flex size-10 items-center justify-center rounded-full text-lg font-bold'
+                      className='bg-danger-soft text-danger flex size-10 items-center justify-center rounded-full text-lg font-bold'
                     >
                       <IconX size={18} />
                     </motion.div>
                   )}
                   {(!animating || animStep < 2) && (
-                    <div className='bg-surface-tertiary h-px w-8' />
+                    <div className='bg-border-secondary h-px w-8' />
                   )}
                 </div>
               )}

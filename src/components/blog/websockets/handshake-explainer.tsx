@@ -360,20 +360,25 @@ export default function HandshakeExplainer() {
       <div className='mt-4 flex items-center justify-between'>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           isDisabled={step === 0}
           onPress={() => handleStepClick(step - 1)}
         >
           Back
         </Button>
-        <div className='bg-accent-soft bg-accent/40 flex items-center gap-2 rounded-full px-2 py-1'>
+        <div className='bg-accent-soft flex items-center gap-2 rounded-full px-2 py-1'>
           <RotatingValue
-            value={<StepIcon size={16} className='text-accent shrink-0' />}
+            value={
+              <StepIcon
+                size={16}
+                className='text-accent-soft-foreground shrink-0'
+              />
+            }
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-accent text-xs italic'>
+              <span className='text-accent-soft-foreground text-xs italic'>
                 {step === 0
                   ? 'Client sends HTTP Upgrade request...'
                   : step === 1
@@ -387,7 +392,7 @@ export default function HandshakeExplainer() {
         </div>
         <Button
           size='sm'
-          variant='secondary'
+          variant='tertiary'
           isDisabled={step === 2}
           onPress={() => handleStepClick(step + 1)}
         >

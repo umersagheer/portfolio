@@ -301,14 +301,19 @@ export default function FlipExplainer() {
         </div>
 
         {/* Narration with icon */}
-        <div className='bg-accent-soft dark:bg-accent/40 flex items-center gap-2 rounded-md px-3 py-1.5'>
+        <div className='bg-accent-soft flex items-center gap-2 rounded-md px-3 py-1.5'>
           <RotatingValue
-            value={<StepIcon size={16} className='text-accent shrink-0' />}
+            value={
+              <StepIcon
+                size={16}
+                className='text-accent-soft-foreground shrink-0'
+              />
+            }
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-accent dark:text-accent text-xs italic'>
+              <span className='text-accent-soft-foreground text-xs italic'>
                 {current.narration}
               </span>
             }
@@ -351,7 +356,7 @@ export default function FlipExplainer() {
         <div className='flex justify-between'>
           <Button
             size='sm'
-            variant='secondary'
+            variant='tertiary'
             isDisabled={step === 0}
             onPress={() => handleStepClick(step - 1)}
           >
@@ -359,7 +364,7 @@ export default function FlipExplainer() {
           </Button>
           <Button
             size='sm'
-            variant='secondary'
+            variant='tertiary'
             isDisabled={step === 3}
             onPress={() => handleStepClick(step + 1)}
           >
