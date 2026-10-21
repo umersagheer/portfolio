@@ -1,10 +1,14 @@
 import { techIcons } from '@/components/icons'
 
+// Frontmatter dates are date-only strings ('2026-07-19'), which parse as UTC
+// midnight. Formatting in UTC keeps the same calendar day for every reader
+// (and identical server/client output, so no hydration mismatch).
 export default function formatDate(date: string) {
   return new Date(date).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
+    timeZone: 'UTC'
   })
 }
 
