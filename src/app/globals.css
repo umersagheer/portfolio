@@ -36,6 +36,7 @@
 
 @theme {
   --animate-marquee-scroll-vertical: marquee-scroll-vertical 25s linear infinite;
+  --animate-fade-in: fade-in 0.4s ease-out backwards;
 }
 
 /* v3 tabs are `width: 100%` with a min-width, so they stretch to fill their
@@ -53,6 +54,14 @@
 .tabs[data-orientation='horizontal'] > .tabs__list-container {
   width: fit-content;
   max-width: 100%;
+}
+
+/* Section entrance (components/fade-in.tsx). Opacity + transform only. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes marquee-scroll-vertical {
