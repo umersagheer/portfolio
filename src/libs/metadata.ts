@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { brandDomain } from '@/remotion/shared/brand'
+import { brandDomain } from '@/constants/site-profile'
 
 const fallbackSiteUrl = `https://${brandDomain}`
 
