@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button, Tooltip } from '@heroui/react'
+import { Focusable } from 'react-aria-components'
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
 
@@ -183,26 +184,30 @@ export default function ISOStringAnatomy() {
 
             return (
               <Tooltip key={`${active}-${i}`}>
-                <motion.button
-                  type='button'
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.03 }}
-                  aria-label={seg.label}
-                  aria-pressed={selectedSegment === i}
-                  className={`font-inherit relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
-                    selectedSegment === i
-                      ? 'ring-accent ring-offset-surface-secondary scale-110 ring-2 ring-offset-2'
-                      : ''
-                  } transition-transform focus-visible:outline-none`}
-                  onMouseEnter={() => setSelectedSegment(i)}
-                  onFocus={() => setSelectedSegment(i)}
-                  onClick={() => setSelectedSegment(i)}
-                >
-                  {seg.text}
-                </motion.button>
+                {/* Focusable wires the tooltip to the button; v3 tooltips do
+                    not open from a plain element. */}
+                <Focusable>
+                  <motion.button
+                    type='button'
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    aria-label={seg.label}
+                    aria-pressed={selectedSegment === i}
+                    className={`font-inherit relative rounded-sm bg-transparent p-0 whitespace-pre ${seg.color} ${
+                      selectedSegment === i
+                        ? 'ring-accent ring-offset-surface-secondary scale-110 ring-2 ring-offset-2'
+                        : ''
+                    } transition-transform focus-visible:outline-none`}
+                    onMouseEnter={() => setSelectedSegment(i)}
+                    onFocus={() => setSelectedSegment(i)}
+                    onClick={() => setSelectedSegment(i)}
+                  >
+                    {seg.text}
+                  </motion.button>
+                </Focusable>
 
-                <Tooltip.Content>seg.label</Tooltip.Content>
+                <Tooltip.Content>{seg.label}</Tooltip.Content>
               </Tooltip>
             )
           })}

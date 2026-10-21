@@ -2,6 +2,7 @@
 
 import NextImage from 'next/image'
 import { Tooltip } from '@heroui/react'
+import { Link as AriaLink } from 'react-aria-components'
 import { MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
@@ -35,9 +36,11 @@ export default function AuthorCardInline({
         <span className='text-muted'>&middot;</span>
         <span>{readingTime} min read</span>
         <span className='text-muted'>&middot;</span>
+        {/* HeroUI v3 tooltips only open from a React Aria focusable trigger,
+            so these are react-aria-components Links (they render a plain <a>). */}
         <div className='-ml-1 flex items-center gap-0'>
           <Tooltip>
-            <a
+            <AriaLink
               href={siteProfile.socials.x.url}
               target='_blank'
               rel='noopener noreferrer'
@@ -49,12 +52,12 @@ export default function AuthorCardInline({
                 size={12}
                 className='opacity-70 grayscale transition-opacity hover:opacity-100'
               />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>X (Twitter)</Tooltip.Content>
           </Tooltip>
           <Tooltip>
-            <a
+            <AriaLink
               href={siteProfile.socials.github.url}
               target='_blank'
               rel='noopener noreferrer'
@@ -66,12 +69,12 @@ export default function AuthorCardInline({
                 size={12}
                 className='opacity-70 grayscale transition-opacity hover:opacity-100'
               />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>GitHub</Tooltip.Content>
           </Tooltip>
           <Tooltip>
-            <a
+            <AriaLink
               href={siteProfile.socials.linkedin.url}
               target='_blank'
               rel='noopener noreferrer'
@@ -83,12 +86,12 @@ export default function AuthorCardInline({
                 size={12}
                 className='opacity-70 grayscale transition-opacity hover:opacity-100'
               />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>LinkedIn</Tooltip.Content>
           </Tooltip>
           <Tooltip>
-            <a
+            <AriaLink
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
               className='hover:bg-surface-secondary rounded-md p-1 transition-colors'
@@ -99,7 +102,7 @@ export default function AuthorCardInline({
                 className='opacity-70 grayscale transition-opacity hover:opacity-100'
                 fallback={<MailIcon size={12} className='text-muted' />}
               />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>Email</Tooltip.Content>
           </Tooltip>

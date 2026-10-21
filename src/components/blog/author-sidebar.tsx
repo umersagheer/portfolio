@@ -3,6 +3,7 @@
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { Tooltip } from '@heroui/react'
+import { Link as AriaLink } from 'react-aria-components'
 import { CalendarIcon, ClockIcon, MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
@@ -51,9 +52,12 @@ export default function AuthorSidebar({
           {siteProfile.socials.x.label}
         </a>
 
+        {/* HeroUI v3 tooltips only open from a React Aria focusable trigger,
+            so tooltip anchors here are react-aria-components Links (a plain
+            <a>; internal hrefs route client-side via the app RouterProvider). */}
         <div className='-ml-1.5 flex items-center gap-0.5'>
           <Tooltip>
-            <a
+            <AriaLink
               href={siteProfile.socials.github.url}
               target='_blank'
               rel='noopener noreferrer'
@@ -61,12 +65,12 @@ export default function AuthorSidebar({
               className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='github' size={16} className='grayscale' />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>GitHub</Tooltip.Content>
           </Tooltip>
           <Tooltip>
-            <a
+            <AriaLink
               href={siteProfile.socials.linkedin.url}
               target='_blank'
               rel='noopener noreferrer'
@@ -74,12 +78,12 @@ export default function AuthorSidebar({
               className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='linkedin' size={16} className='grayscale' />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>LinkedIn</Tooltip.Content>
           </Tooltip>
           <Tooltip>
-            <a
+            <AriaLink
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
               className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
@@ -90,7 +94,7 @@ export default function AuthorSidebar({
                 className='grayscale'
                 fallback={<MailIcon size={16} className='text-muted' />}
               />
-            </a>
+            </AriaLink>
 
             <Tooltip.Content>Email</Tooltip.Content>
           </Tooltip>
@@ -119,12 +123,12 @@ export default function AuthorSidebar({
               Previous Article
             </span>
             <Tooltip delay={500}>
-              <Link
+              <AriaLink
                 href={`/posts/${newerPost.postId}`}
                 className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
               >
                 {newerPost.title}
-              </Link>
+              </AriaLink>
 
               <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
@@ -149,12 +153,12 @@ export default function AuthorSidebar({
               Next Article
             </span>
             <Tooltip delay={500}>
-              <Link
+              <AriaLink
                 href={`/posts/${olderPost.postId}`}
                 className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
               >
                 {olderPost.title}
-              </Link>
+              </AriaLink>
 
               <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>

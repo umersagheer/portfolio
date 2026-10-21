@@ -39,25 +39,51 @@ export const Navbar = () => {
               aria-label='Theme mode'
               className='gap-1 bg-transparent p-1'
             >
-              <Tabs.Tab id='light' className='px-0.5'>
+              {/* The Tab is the focusable control. Tooltips only open from a
+                  focusable trigger, so each icon gets a presentational
+                  Tooltip.Trigger kept out of the tab order (tabIndex -1): it
+                  feeds hover to the tooltip without adding a tab stop. */}
+              <Tabs.Tab id='light' aria-label='Light Mode' className='px-0.5'>
                 <Tooltip>
-                  <IconSunHighFilled className='size-4 md:size-5' />
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconSunHighFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
 
                   <Tooltip.Content>Light Mode</Tooltip.Content>
                 </Tooltip>
                 <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab id='dark' className='px-0.5'>
+              <Tabs.Tab id='dark' aria-label='Dark Mode' className='px-0.5'>
                 <Tooltip>
-                  <IconMoonFilled className='size-4 md:size-5' />
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconMoonFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
 
                   <Tooltip.Content>Dark Mode</Tooltip.Content>
                 </Tooltip>
                 <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab id='system' className='px-0.5'>
+              <Tabs.Tab
+                id='system'
+                aria-label='System Preferences'
+                className='px-0.5'
+              >
                 <Tooltip>
-                  <IconDeviceDesktopFilled className='size-4 md:size-5' />
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconDeviceDesktopFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
 
                   <Tooltip.Content>System Preferences</Tooltip.Content>
                 </Tooltip>

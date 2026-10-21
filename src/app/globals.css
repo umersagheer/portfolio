@@ -86,6 +86,13 @@
   --field-border-width: var(--border-width);
 }
 
+/* v3 waits 1500ms before opening a tooltip; v2 opened immediately. Tooltip
+   reads this variable for its default delay, so one value restores the old
+   feel everywhere (per-instance `delay` props still win). */
+:root {
+  --tooltip-delay: 0ms;
+}
+
 /* Tailwind v4 changed the default border/divide colour from gray-200 to
    currentColor. This restores v3 behaviour for the ~74 bare `border` usages
    so the upgrade is not a visual change. */
