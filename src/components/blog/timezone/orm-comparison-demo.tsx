@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Alert, Button } from '@heroui/react'
+import { Tabs, Alert, Button, cn } from '@heroui/react'
 import { IconArrowRight } from '@tabler/icons-react'
 import BrandIcon from '@/components/blog/shared/brand-icon'
 import DemoContainer from './demo-container'
@@ -164,6 +164,7 @@ export default function ORMComparisonDemo() {
         <div className='mb-2 flex items-center gap-2'>
           <Button
             variant={showFix ? 'primary' : 'secondary'}
+            className={cn(showFix && 'button--success')}
             size='sm'
             aria-pressed={showFix}
             onPress={() => setShowFix(f => !f)}
@@ -198,7 +199,9 @@ export default function ORMComparisonDemo() {
           <span className='text-muted'>Timezone Aware?</span>
           <span
             className={`font-medium ${
-              showFix ? 'text-success' : 'text-danger'
+              showFix
+                ? 'text-success-soft-foreground'
+                : 'text-danger-soft-foreground'
             }`}
           >
             {showFix ? 'Yes' : 'No (by default)'}

@@ -60,7 +60,7 @@ export default function ATTimeZoneTrapDemo() {
             >
               <div className='mb-2 flex items-center gap-2'>
                 <IconCircleX size={16} className='text-danger' />
-                <span className='text-danger text-xs font-medium'>
+                <span className='text-danger-soft-foreground text-xs font-medium'>
                   Single AT TIME ZONE
                 </span>
               </div>
@@ -78,7 +78,9 @@ export default function ATTimeZoneTrapDemo() {
               </div>
               <div ref={wrongRef} className='text-center'>
                 <p className='text-muted text-[10px]'>Result:</p>
-                <p className='text-danger font-mono text-xl font-bold'>07:00</p>
+                <p className='text-danger-soft-foreground font-mono text-xl font-bold'>
+                  07:00
+                </p>
                 <p className='text-danger text-[10px]'>
                   PostgreSQL assumed 12:00 IS Pakistan time,
                   <br />
@@ -101,7 +103,7 @@ export default function ATTimeZoneTrapDemo() {
             >
               <div className='mb-2 flex items-center gap-2'>
                 <IconCircleCheck size={16} className='text-success' />
-                <span className='text-success text-xs font-medium'>
+                <span className='text-success-soft-foreground text-xs font-medium'>
                   Double AT TIME ZONE
                 </span>
               </div>
@@ -123,7 +125,7 @@ export default function ATTimeZoneTrapDemo() {
               </div>
               <div ref={rightRef} className='text-center'>
                 <p className='text-muted text-[10px]'>Result:</p>
-                <p className='text-success font-mono text-xl font-bold'>
+                <p className='text-success-soft-foreground font-mono text-xl font-bold'>
                   17:00
                 </p>
                 <p className='text-success text-[10px]'>

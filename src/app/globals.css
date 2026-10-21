@@ -118,6 +118,50 @@
     --button-bg-pressed: var(--button-bg-hover);
     --button-fg: var(--secondary-foreground);
   }
+
+  /* v2's success colour and its flat (soft) warning/success styles carry
+     meaning in the demos (safe vs unsafe, fixed vs buggy); v3 only ships
+     danger / danger-soft. Same variable contract as above. */
+  .button--success {
+    --button-bg: var(--success);
+    --button-bg-hover: var(--success-hover);
+    --button-bg-pressed: var(--success-hover);
+    --button-fg: var(--success-foreground);
+  }
+  .button--success-soft {
+    --button-bg: var(--success-soft);
+    --button-bg-hover: var(--success-soft-hover);
+    --button-bg-pressed: var(--success-soft-hover);
+    --button-fg: var(--success-soft-foreground);
+  }
+  .button--warning-soft {
+    --button-bg: var(--warning-soft);
+    --button-bg-hover: var(--warning-soft-hover);
+    --button-bg-pressed: var(--warning-soft-hover);
+    --button-fg: var(--warning-soft-foreground);
+  }
+
+  /* v3 Alerts only colour the icon and title; the box is bg-surface, which
+     disappears inside a surface-coloured demo card. v2's flat alerts were
+     tinted by status (and unshadowed), so restore that. */
+  .alert--accent,
+  .alert--success,
+  .alert--warning,
+  .alert--danger {
+    box-shadow: none;
+  }
+  .alert--accent {
+    background-color: var(--accent-soft);
+  }
+  .alert--success {
+    background-color: var(--success-soft);
+  }
+  .alert--warning {
+    background-color: var(--warning-soft);
+  }
+  .alert--danger {
+    background-color: var(--danger-soft);
+  }
 }
 
 /* v3 fields default to `--field-border: transparent` and rely on

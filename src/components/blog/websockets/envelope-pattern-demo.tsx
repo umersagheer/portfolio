@@ -112,7 +112,7 @@ export default function EnvelopePatternDemo() {
             </EnvelopeLine>
             <EnvelopeLine label='payload' annotation='your data'>
               {'{ '}
-              <span className='text-success dark:text-success'>
+              <span className='text-success-soft-foreground dark:text-success'>
                 &quot;text&quot;
               </span>
               :{' '}
@@ -121,7 +121,7 @@ export default function EnvelopePatternDemo() {
                   key={message}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className='text-success dark:text-success'
+                  className='text-success-soft-foreground dark:text-success'
                 >
                   &quot;{message || '...'}&quot;
                 </motion.span>

@@ -65,8 +65,8 @@ const stateColors: Record<string, string> = {
 }
 
 const stateTextColors: Record<string, string> = {
-  warning: 'text-warning dark:text-warning',
-  success: 'text-success dark:text-success',
+  warning: 'text-warning-soft-foreground dark:text-warning',
+  success: 'text-success-soft-foreground dark:text-success',
   default: 'text-muted'
 }
 
@@ -250,7 +250,9 @@ export default function LifecycleDemo() {
           <div className='flex flex-col items-center gap-1'>
             <span
               className={`text-xs font-medium ${
-                ghostMode ? 'text-danger' : 'text-success dark:text-success'
+                ghostMode
+                  ? 'text-danger'
+                  : 'text-success-soft-foreground dark:text-success'
               }`}
             >
               {status}
@@ -311,7 +313,7 @@ export default function LifecycleDemo() {
       {/* Controls */}
       <div className='flex justify-center gap-3'>
         {activeState === 1 && !ghostMode && (
-          <Button variant='danger' size='sm' onPress={handleKillClient}>
+          <Button variant='danger-soft' size='sm' onPress={handleKillClient}>
             Kill Client
           </Button>
         )}

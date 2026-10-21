@@ -728,7 +728,7 @@ export default function ExpoProtectedRoutesDemo() {
                           ? 'text-warning'
                           : row.group && activeMatch
                             ? mode === 'after'
-                              ? 'text-success'
+                              ? 'text-success-soft-foreground'
                               : 'text-accent'
                             : undefined
                       )}

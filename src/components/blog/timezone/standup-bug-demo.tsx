@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button, Alert } from '@heroui/react'
+import { Button, Alert, cn } from '@heroui/react'
 import {
   IconCircleCheck,
   IconCircleX,
@@ -60,6 +60,7 @@ export default function StandupBugDemo() {
         </Button>
         <Button
           variant={strategy === 'wall' ? 'primary' : 'tertiary'}
+          className={cn(strategy === 'wall' && 'button--success')}
           size='sm'
           onPress={() => setStrategy('wall')}
         >
@@ -73,7 +74,7 @@ export default function StandupBugDemo() {
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
               dstActive
-                ? 'bg-warning-soft text-warning'
+                ? 'bg-warning-soft text-warning-soft-foreground'
                 : 'bg-surface-secondary text-muted'
             }`}
           >
@@ -120,7 +121,7 @@ export default function StandupBugDemo() {
                 ampm={ampm}
                 padHours={false}
                 className={`mt-1 block font-mono text-xs font-bold ${
-                  broken ? 'text-danger' : 'text-foreground'
+                  broken ? 'text-danger-soft-foreground' : 'text-foreground'
                 }`}
               />
             </div>
@@ -151,7 +152,9 @@ export default function StandupBugDemo() {
           <span className='text-muted'>Conversion</span>
           <span
             className={`font-mono ${
-              strategy === 'utc' && dstActive ? 'text-danger' : 'text-muted'
+              strategy === 'utc' && dstActive
+                ? 'text-danger-soft-foreground'
+                : 'text-muted'
             }`}
           >
             {strategy === 'utc'
@@ -163,7 +166,9 @@ export default function StandupBugDemo() {
           <span className='text-muted'>Meeting fires at</span>
           <span
             className={`font-mono font-bold ${
-              strategy === 'utc' && dstActive ? 'text-danger' : 'text-success'
+              strategy === 'utc' && dstActive
+                ? 'text-danger-soft-foreground'
+                : 'text-success-soft-foreground'
             }`}
           >
             {strategy === 'utc' && dstActive

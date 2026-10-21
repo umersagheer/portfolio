@@ -91,7 +91,7 @@ export default function PastVsFutureStorageDemo() {
         {/* Future Event Panel */}
         <div className='border-success bg-success-soft rounded-lg border p-4'>
           <div className='mb-3 flex items-center gap-2'>
-            <span className='bg-success-soft text-success rounded-full px-2 py-0.5 text-xs font-bold'>
+            <span className='bg-success-soft text-success-soft-foreground rounded-full px-2 py-0.5 text-xs font-bold'>
               FUTURE
             </span>
             <span className='text-muted text-xs'>Scheduling</span>
@@ -105,8 +105,10 @@ export default function PastVsFutureStorageDemo() {
           </div>
 
           <div className='bg-success-soft mb-3 rounded-md p-2'>
-            <p className='text-success text-[10px] font-medium'>Stored in DB</p>
-            <p className='text-success font-mono text-sm font-bold'>
+            <p className='text-success-soft-foreground text-[10px] font-medium'>
+              Stored in DB
+            </p>
+            <p className='text-success-soft-foreground font-mono text-sm font-bold'>
               wall_time: {futureWallTime} + tz: {futureZone}
             </p>
           </div>
@@ -159,7 +161,9 @@ export default function PastVsFutureStorageDemo() {
                 <span className='text-muted'>Computed UTC</span>
                 <span
                   className={`font-mono font-bold ${
-                    dstToggle ? 'text-warning' : 'text-foreground'
+                    dstToggle
+                      ? 'text-warning-soft-foreground'
+                      : 'text-foreground'
                   }`}
                 >
                   <NumberFlow
@@ -175,7 +179,7 @@ export default function PastVsFutureStorageDemo() {
           </AnimatePresence>
 
           <div className='border-success bg-success-soft mt-3 rounded-md border p-2'>
-            <div className='text-success flex items-start gap-2 text-[10px]'>
+            <div className='text-success-soft-foreground flex items-start gap-2 text-[10px]'>
               <IconCircleCheck size={14} className='mt-0.5 shrink-0' />
               <p>
                 Wall time stays 9:00 AM. The UTC equivalent shifts when DST

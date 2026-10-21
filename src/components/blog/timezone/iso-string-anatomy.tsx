@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button, Tooltip } from '@heroui/react'
+import { Button, Tooltip, cn } from '@heroui/react'
 import { Focusable } from 'react-aria-components'
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
 import DemoContainer from './demo-container'
@@ -155,7 +155,10 @@ export default function ISOStringAnatomy() {
                 )
               )
             }}
-            className='text-xs'
+            className={cn(
+              'text-xs',
+              active === f.key && f.safe && 'button--success'
+            )}
           >
             {f.label}
           </Button>
@@ -220,7 +223,9 @@ export default function ISOStringAnatomy() {
           <span className='text-muted'>Parsed as</span>
           <span
             className={`font-mono font-bold ${
-              format.safe ? 'text-success' : 'text-danger'
+              format.safe
+                ? 'text-success-soft-foreground'
+                : 'text-danger-soft-foreground'
             }`}
           >
             {format.parsedAs}
@@ -230,7 +235,9 @@ export default function ISOStringAnatomy() {
           <span className='text-muted'>Safe to use?</span>
           <span
             className={`font-bold ${
-              format.safe ? 'text-success' : 'text-danger'
+              format.safe
+                ? 'text-success-soft-foreground'
+                : 'text-danger-soft-foreground'
             }`}
           >
             <span className='inline-flex items-center gap-1'>

@@ -137,7 +137,7 @@ function ClockDisplay({
       <span
         className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
           isGap
-            ? 'bg-danger-soft text-danger'
+            ? 'bg-danger-soft text-danger-soft-foreground'
             : isSecond
               ? 'bg-secondary-soft text-secondary'
               : 'bg-surface-secondary text-muted'
@@ -252,7 +252,7 @@ export default function DSTGapOverlapVisualizer() {
               exit={{ opacity: 0, scale: 0.95 }}
               className={`rounded-lg p-3 text-center text-sm font-medium ${
                 transition === 'spring'
-                  ? 'bg-danger-soft text-danger'
+                  ? 'bg-danger-soft text-danger-soft-foreground'
                   : 'bg-secondary-soft text-secondary'
               }`}
             >

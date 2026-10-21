@@ -196,10 +196,10 @@ export default function OffByOneBugDemo() {
                     exit={{ opacity: 0, height: 0 }}
                     className='flex items-baseline justify-between text-xs'
                   >
-                    <span className='text-success'>
+                    <span className='text-success-soft-foreground'>
                       UTC range for {result.localDate}
                     </span>
-                    <span className='text-success font-mono'>
+                    <span className='text-success-soft-foreground font-mono'>
                       {result.utcStartDate} {result.utcRangeStart} →{' '}
                       {result.utcEndDate} {result.utcRangeEnd}
                     </span>
@@ -218,8 +218,8 @@ export default function OffByOneBugDemo() {
                   animate={{ opacity: 1, x: 0 }}
                   className={`font-mono font-bold ${
                     result.crossesDayBoundary && !withFix
-                      ? 'text-danger'
-                      : 'text-success'
+                      ? 'text-danger-soft-foreground'
+                      : 'text-success-soft-foreground'
                   }`}
                 >
                   {withFix ? fixTargetDate : bugTargetDate}
@@ -267,8 +267,8 @@ export default function OffByOneBugDemo() {
                           }}
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-medium transition-colors duration-300 ${
                             isWrong
-                              ? 'bg-danger-soft text-danger'
-                              : 'bg-success-soft text-success'
+                              ? 'bg-danger-soft text-danger-soft-foreground'
+                              : 'bg-success-soft text-success-soft-foreground'
                           }`}
                         >
                           <IconShoppingCart size={12} />
@@ -307,7 +307,13 @@ export default function OffByOneBugDemo() {
               </div>
             )}
 
-            <Button variant='secondary' onPress={() => setWithFix(f => !f)}>
+            <Button
+              variant='secondary'
+              className={
+                withFix ? 'button--success-soft' : 'button--warning-soft'
+              }
+              onPress={() => setWithFix(f => !f)}
+            >
               {withFix ? (
                 <IconArrowBackUp size={14} />
               ) : (

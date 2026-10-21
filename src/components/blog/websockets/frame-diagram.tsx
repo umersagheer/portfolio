@@ -36,25 +36,25 @@ const fields = [
   {
     label: 'MASK',
     bits: 1,
-    color: 'bg-warning/20 text-warning',
+    color: 'bg-warning/20 text-warning-soft-foreground',
     note: 'Masked?'
   },
   {
     label: 'Payload len',
     bits: 7,
-    color: 'bg-success/20 text-success',
+    color: 'bg-success/20 text-success-soft-foreground',
     note: '7 bits'
   },
   {
     label: 'Extended payload length',
     bits: 16,
-    color: 'bg-success/10 text-success',
+    color: 'bg-success/10 text-success-soft-foreground',
     note: 'if len = 126 → 16-bit, if 127 → 64-bit'
   },
   {
     label: 'Masking-key',
     bits: 32,
-    color: 'bg-warning/10 text-warning',
+    color: 'bg-warning/10 text-warning-soft-foreground',
     note: '0 or 4 bytes (present if MASK = 1)'
   },
   {

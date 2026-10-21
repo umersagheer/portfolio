@@ -304,9 +304,9 @@ function Row({
   highlight?: 'success' | 'danger' | 'warning'
 }) {
   const colorMap = {
-    success: 'text-success',
-    danger: 'text-danger',
-    warning: 'text-warning'
+    success: 'text-success-soft-foreground',
+    danger: 'text-danger-soft-foreground',
+    warning: 'text-warning-soft-foreground'
   }
 
   return (

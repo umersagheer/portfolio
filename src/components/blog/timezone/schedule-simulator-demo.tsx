@@ -150,13 +150,16 @@ export default function ScheduleSimulatorDemo() {
         <div className='border-danger bg-danger-soft rounded-lg border p-4'>
           <div className='mb-2 flex items-center gap-2'>
             <IconCircleX size={16} className='text-danger' />
-            <span className='text-danger text-xs font-medium'>
+            <span className='text-danger-soft-foreground text-xs font-medium'>
               Stored as UTC at schedule time
             </span>
           </div>
           <div className='space-y-1 font-mono text-xs'>
             <p className='text-muted'>
-              stored: <span className='text-danger'>{winter.label}</span>
+              stored:{' '}
+              <span className='text-danger-soft-foreground'>
+                {winter.label}
+              </span>
               <span className='text-muted ml-1'>(during {winter.abbr})</span>
             </p>
             <AnimatePresence mode='wait'>
@@ -167,7 +170,7 @@ export default function ScheduleSimulatorDemo() {
                 className='space-y-1'
               >
                 {isDSTActive && utcChanged && (
-                  <p className='text-danger'>
+                  <p className='text-danger-soft-foreground'>
                     {winter.label} {summer.offset < 0 ? '+' : '−'}{' '}
                     {Math.abs(summer.offset)}h ({summer.abbr}) ={' '}
                     {((winter.utcHour + summer.offset + 24) % 24)
@@ -181,7 +184,7 @@ export default function ScheduleSimulatorDemo() {
                   <span
                     className={
                       isDSTActive && utcChanged
-                        ? 'text-danger font-bold'
+                        ? 'text-danger-soft-foreground font-bold'
                         : 'text-foreground'
                     }
                   >
@@ -198,14 +201,14 @@ export default function ScheduleSimulatorDemo() {
         <div className='border-success bg-success-soft rounded-lg border p-4'>
           <div className='mb-2 flex items-center gap-2'>
             <IconCircleCheck size={16} className='text-success' />
-            <span className='text-success text-xs font-medium'>
+            <span className='text-success-soft-foreground text-xs font-medium'>
               Stored as wall time + timezone
             </span>
           </div>
           <div className='space-y-1 font-mono text-xs'>
             <p className='text-muted'>
               stored:{' '}
-              <span className='text-success'>
+              <span className='text-success-soft-foreground'>
                 {hour.toString().padStart(2, '0')}:00 + {zoneName}
               </span>
             </p>
@@ -229,7 +232,9 @@ export default function ScheduleSimulatorDemo() {
                     <p>
                       {hour.toString().padStart(2, '0')}:00 {sign}{' '}
                       {Math.abs(active.offset)}h ({active.abbr}) ={' '}
-                      <span className='text-success'>{active.label}</span>
+                      <span className='text-success-soft-foreground'>
+                        {active.label}
+                      </span>
                       {isDSTActive && utcChanged && (
                         <span className='text-success ml-1'>
                           (recalculated)
@@ -290,7 +295,7 @@ export default function ScheduleSimulatorDemo() {
                   <span
                     className={`text-[9px] font-bold ${
                       isDSTDay
-                        ? 'text-warning'
+                        ? 'text-warning-soft-foreground'
                         : isPast
                           ? i < dstDay
                             ? 'text-accent'

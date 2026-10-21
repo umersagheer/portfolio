@@ -129,7 +129,7 @@ function HttpMode() {
                   ? 'bg-surface-secondary text-muted'
                   : phase === 'request'
                     ? 'bg-accent-soft text-accent'
-                    : 'bg-success-soft text-success'
+                    : 'bg-success-soft text-success-soft-foreground'
               }`}
             >
               {phase === 'idle'
@@ -254,9 +254,9 @@ function WebSocketMode() {
           <span
             className={`rounded-full px-3 py-1 text-[10px] font-semibold ${
               connected
-                ? 'bg-success-soft text-success'
+                ? 'bg-success-soft text-success-soft-foreground'
                 : handshaking
-                  ? 'bg-warning-soft text-warning'
+                  ? 'bg-warning-soft text-warning-soft-foreground'
                   : 'bg-surface-secondary text-muted'
             }`}
           >
@@ -329,7 +329,7 @@ function WebSocketMode() {
         <div className='flex gap-2'>
           {!connected && !handshaking && (
             <Button
-              className='bg-success text-success-foreground'
+              className='button--success-soft'
               variant='secondary'
               size='sm'
               onPress={connect}
@@ -342,7 +342,7 @@ function WebSocketMode() {
               <Button variant='secondary' size='sm' onPress={sendMessage}>
                 Send Message
               </Button>
-              <Button variant='danger' size='sm' onPress={disconnect}>
+              <Button variant='danger-soft' size='sm' onPress={disconnect}>
                 Disconnect
               </Button>
             </>

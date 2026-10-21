@@ -128,7 +128,7 @@ export default function ContactForm() {
           </div>
 
           <Button
-            className='bg-success text-success-foreground'
+            className='button--success'
             variant='primary'
             fullWidth
             onPress={() => window.open('https://wa.me/+923018155698', '_blank')}
