@@ -49,3 +49,6 @@ data/
 
 # Prisma generated client
 src/generated/
+
+# Local design originals (processed WebP goes to public/images/projects)
+assets/
