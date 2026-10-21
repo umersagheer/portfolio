@@ -138,7 +138,7 @@ export default function PostsWithSearch({ posts }: props) {
       {filtered.length > 0 ? (
         <Posts posts={filtered} />
       ) : (
-        <div className='border-border dark:border-separator flex flex-col items-center gap-3 rounded-xl border border-dashed py-14 text-center'>
+        <div className='border-border flex flex-col items-center gap-3 rounded-xl border border-dashed py-14 text-center'>
           <p className='text-muted text-sm'>No posts match these filters.</p>
           <button
             type='button'

@@ -8,7 +8,7 @@ import { Checkbox } from '@heroui/react'
 export default function CheckItem({ label }: { label: string }) {
   return (
     <div className='my-1'>
-      <Checkbox defaultSelected={false} className='rounded-sm'>
+      <Checkbox defaultSelected={false}>
         <Checkbox.Content>
           <Checkbox.Control>
             <Checkbox.Indicator />

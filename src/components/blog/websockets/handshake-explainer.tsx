@@ -314,7 +314,7 @@ export default function HandshakeExplainer() {
                     key={i}
                     className={
                       isHighlighted
-                        ? 'text-accent dark:text-accent'
+                        ? 'text-accent'
                         : 'text-foreground dark:text-muted'
                     }
                   >
@@ -343,13 +343,13 @@ export default function HandshakeExplainer() {
             key='established'
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className='dark:bg-success/30 bg-success-soft flex flex-col items-center gap-2 rounded-md py-6'
+            className='bg-success-soft flex flex-col items-center gap-2 rounded-md py-6'
           >
             <IconCircleCheck size={32} className='text-success' />
-            <span className='text-success-soft-foreground dark:text-success text-sm font-medium'>
+            <span className='text-success-soft-foreground text-sm font-medium'>
               Tunnel Established — Full-Duplex Active
             </span>
-            <span className='text-success-soft-foreground/70 dark:text-success/70 text-xs'>
+            <span className='text-success-soft-foreground/70 text-xs'>
               HTTP has been upgraded. Both sides can send data freely.
             </span>
           </motion.div>

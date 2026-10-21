@@ -21,7 +21,7 @@ export default function Posts({ posts }: PostProps) {
         <Link
           key={post.postId}
           href={`/posts/${post.postId}`}
-          className='group border-border bg-surface hover:border-accent dark:border-separator flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.02]'
+          className='group border-border bg-surface hover:border-accent flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.02]'
         >
           {post.image && (
             <div className='relative aspect-video w-full overflow-hidden'>

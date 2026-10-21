@@ -168,7 +168,6 @@ export default function StagingArea() {
                     isDisabled={isStaged || done}
                     onChange={() => toggle(f.name)}
                     aria-label={`Stage ${f.name}`}
-                    className='rounded-sm'
                   >
                     <Checkbox.Content>
                       <Checkbox.Control>

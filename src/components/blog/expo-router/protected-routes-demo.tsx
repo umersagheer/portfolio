@@ -756,7 +756,7 @@ export default function ExpoProtectedRoutesDemo() {
                         className={cn('ml-2 inline-flex items-center gap-1')}
                       >
                         {CalloutIcon && <CalloutIcon size={12} />}
-                        {statusLabel}
+                        <Chip.Label>{statusLabel}</Chip.Label>
                       </Chip>
                     )}
                   </div>

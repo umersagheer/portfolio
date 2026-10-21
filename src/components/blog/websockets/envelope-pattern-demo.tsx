@@ -90,7 +90,7 @@ export default function EnvelopePatternDemo() {
         </div>
 
         {/* Structured Envelope */}
-        <div className='border-accent bg-background dark:border-accent rounded-lg border p-4'>
+        <div className='border-accent bg-background rounded-lg border p-4'>
           <p className='text-accent mb-2 text-xs font-semibold tracking-wider uppercase'>
             Envelope
           </p>
@@ -112,7 +112,7 @@ export default function EnvelopePatternDemo() {
             </EnvelopeLine>
             <EnvelopeLine label='payload' annotation='your data'>
               {'{ '}
-              <span className='text-success-soft-foreground dark:text-success'>
+              <span className='text-success-soft-foreground'>
                 &quot;text&quot;
               </span>
               :{' '}
@@ -121,7 +121,7 @@ export default function EnvelopePatternDemo() {
                   key={message}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className='text-success-soft-foreground dark:text-success'
+                  className='text-success-soft-foreground'
                 >
                   &quot;{message || '...'}&quot;
                 </motion.span>

@@ -241,7 +241,7 @@ export default function PubSubScalingDemo() {
                 <IconCard
                   ref={redisRef}
                   label='Redis'
-                  className='border-danger dark:border-danger'
+                  className='border-danger'
                 >
                   <WebSocketBrokerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                 </IconCard>

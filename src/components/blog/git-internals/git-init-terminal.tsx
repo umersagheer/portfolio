@@ -159,9 +159,9 @@ export default function GitInitTerminal() {
   const rows = flatten(TREE, expanded)
 
   return (
-    <div className='border-border bg-surface dark:border-separator my-8 overflow-hidden rounded-xl border font-mono text-sm'>
+    <div className='border-border bg-surface my-8 overflow-hidden rounded-xl border font-mono text-sm'>
       {/* terminal title bar */}
-      <div className='border-border bg-surface-secondary/60 dark:border-separator flex items-center gap-2 border-b px-4 py-2'>
+      <div className='border-border bg-surface-secondary/60 flex items-center gap-2 border-b px-4 py-2'>
         <TerminalIcon size={14} className='text-muted' />
         <span className='text-muted text-xs'>your-project — zsh</span>
         {ran && (
@@ -338,7 +338,7 @@ export default function GitInitTerminal() {
                 })}
               </div>
 
-              <p className='border-border text-muted dark:border-separator mt-4 border-t pt-3 text-xs'>
+              <p className='border-border text-muted mt-4 border-t pt-3 text-xs'>
                 <span className='inline-flex items-center gap-1.5'>
                   <span className='bg-accent h-1.5 w-1.5 rounded-full' /> the
                   stuff

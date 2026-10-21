@@ -110,7 +110,7 @@ export default function Projects({ projects }: ProjectProps) {
                         className='inline-flex items-center gap-1'
                       >
                         <IconLink className='size-5' />
-                        Live Link
+                        <Chip.Label>Live Link</Chip.Label>
                       </Chip>
                     </Link>
                   )}
@@ -130,7 +130,7 @@ export default function Projects({ projects }: ProjectProps) {
                         className='inline-flex items-center gap-1'
                       >
                         <IconBrandGithub className='size-5' />
-                        Code
+                        <Chip.Label>Code</Chip.Label>
                       </Chip>
                     </button>
                   )}
@@ -157,7 +157,7 @@ export default function Projects({ projects }: ProjectProps) {
                               className='inline-flex items-center gap-1'
                             >
                               {icon}
-                              {name}
+                              <Chip.Label>{name}</Chip.Label>
                             </Chip>
                           ))}
                         </div>

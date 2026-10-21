@@ -223,7 +223,7 @@ export default function HashPlayground() {
                   className='bg-secondary-soft text-secondary-soft-foreground'
                 >
                   <CheckIcon size={13} />
-                  stored once — deduplicated
+                  <Chip.Label>stored once — deduplicated</Chip.Label>
                 </Chip>
               </motion.span>
             ) : (

@@ -527,7 +527,6 @@ function FileRow({
         isDisabled={disabled}
         onChange={onToggle}
         aria-label={`Stage ${name}`}
-        className='rounded-sm'
       >
         <Checkbox.Content>
           <Checkbox.Control>

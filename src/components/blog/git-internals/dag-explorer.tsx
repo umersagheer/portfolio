@@ -470,7 +470,7 @@ export default function DagExplorer() {
                             }}
                             className='overflow-hidden'
                           >
-                            <div className='border-border dark:border-separator mt-1 ml-3 space-y-1 border-l pl-2'>
+                            <div className='border-border mt-1 ml-3 space-y-1 border-l pl-2'>
                               <div className='bg-background flex items-center gap-1 rounded-md px-2 py-1'>
                                 <ShardHash hash={tree} color='text-accent' />
                                 <span className='text-muted ml-auto text-[10px]'>
