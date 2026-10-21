@@ -53,6 +53,11 @@ const spanVariants = {
 
 const transition = { delay: 0.1, type: 'spring', bounce: 0, duration: 0.6 }
 
+// One element per item: the animated pill *is* the link, so each item is a
+// single tab stop with an accessible name (a button nested inside a link was
+// two stops and invalid markup).
+const MotionLink = motion.create(Link)
+
 export function ExpandableTabs({
   tabs,
   className,
@@ -98,52 +103,51 @@ export function ExpandableTabs({
             {/* Focusable hands the tooltip's trigger props to the link, which
                 v3 tooltips need to open (a bare next/link gets nothing). */}
             <Focusable>
-              <Link href={tab.href}>
-                <motion.button
-                  variants={buttonVariants}
-                  initial={false}
-                  animate='animate'
-                  custom={isSelected}
-                  onClick={() => handleSelect(index)}
-                  transition={transition}
-                  className={cn(
-                    'relative flex h-7 items-center rounded-[8px] px-3 py-1 text-xs font-medium transition-colors duration-300',
-                    isSelected
-                      ? activeColor
-                      : 'text-muted hover:text-foreground'
-                  )}
-                >
-                  {/* Shared layout cursor - only rendered on selected tab */}
+              <MotionLink
+                href={tab.href}
+                aria-label={tab.title}
+                aria-current={isSelected ? 'page' : undefined}
+                variants={buttonVariants}
+                initial={false}
+                animate='animate'
+                custom={isSelected}
+                onClick={() => handleSelect(index)}
+                transition={transition}
+                className={cn(
+                  'relative flex h-7 items-center rounded-[8px] px-3 py-1 text-xs font-medium transition-colors duration-300',
+                  isSelected ? activeColor : 'text-muted hover:text-foreground'
+                )}
+              >
+                {/* Shared layout cursor - only rendered on selected tab */}
+                {isSelected && (
+                  <motion.div
+                    layoutId='active-tab-cursor'
+                    className='bg-surface-secondary absolute inset-0 rounded-[8px]'
+                    transition={{
+                      type: 'spring',
+                      bounce: 0.2,
+                      duration: 0.6
+                    }}
+                  />
+                )}
+                <span className='relative z-10'>
+                  <Icon size={16} />
+                </span>
+                <AnimatePresence initial={false}>
                   {isSelected && (
-                    <motion.div
-                      layoutId='active-tab-cursor'
-                      className='bg-surface-secondary absolute inset-0 rounded-[8px]'
-                      transition={{
-                        type: 'spring',
-                        bounce: 0.2,
-                        duration: 0.6
-                      }}
-                    />
+                    <motion.span
+                      variants={spanVariants}
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      transition={transition}
+                      className='relative z-10 overflow-hidden'
+                    >
+                      {tab.title}
+                    </motion.span>
                   )}
-                  <span className='relative z-10'>
-                    <Icon size={16} />
-                  </span>
-                  <AnimatePresence initial={false}>
-                    {isSelected && (
-                      <motion.span
-                        variants={spanVariants}
-                        initial='initial'
-                        animate='animate'
-                        exit='exit'
-                        transition={transition}
-                        className='relative z-10 overflow-hidden'
-                      >
-                        {tab.title}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </motion.button>
-              </Link>
+                </AnimatePresence>
+              </MotionLink>
             </Focusable>
 
             <Tooltip.Content>{tab.title}</Tooltip.Content>
