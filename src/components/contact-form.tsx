@@ -19,7 +19,6 @@ import {
 } from '@heroui/react'
 import { z } from 'zod'
 import { sendEmail } from '@/libs/actions'
-import { handleApiError } from '@/libs/handle-api-error'
 import { MessageCircleHeartIcon } from 'lucide-react'
 
 export default function ContactForm() {
@@ -40,23 +39,35 @@ export default function ContactForm() {
   })
 
   const onSubmit = async (data: z.infer<typeof ContactFormSchema>) => {
-    try {
-      setLoading(true)
-      await sendEmail(data)
+    setLoading(true)
+    // A thrown error (e.g. the network dropped) is a failure too.
+    const result = await sendEmail(data).catch(() => ({ ok: false as const }))
+    setLoading(false)
+
+    if (result.ok) {
       toast('Thank you for your message!', {
         description: 'I will be in touch with you soon.',
         variant: 'success'
       })
-    } catch (error) {
-      handleApiError(error)
-    } finally {
-      setLoading(false)
       reset()
+      return
     }
+
+    // Keep what they typed so they can retry without rewriting it.
+    toast("Couldn't send your message", {
+      description: 'Please try again, or reach me on WhatsApp.',
+      variant: 'danger'
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex justify-center'>
+    // noValidate: Zod is the single validator; type='email' is only there for
+    // the right mobile keyboard and autofill.
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className='flex justify-center'
+    >
       <Card className='max-w-2xl grow'>
         <Card.Content className='grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2'>
           <Controller
@@ -65,6 +76,7 @@ export default function ContactForm() {
             render={({ field }) => (
               <TextField
                 type='text'
+                autoComplete='name'
                 name={field.name}
                 value={field.value ?? ''}
                 onChange={field.onChange}
@@ -83,7 +95,8 @@ export default function ContactForm() {
             control={control}
             render={({ field }) => (
               <TextField
-                type='text'
+                type='email'
+                autoComplete='email'
                 name={field.name}
                 value={field.value ?? ''}
                 onChange={field.onChange}

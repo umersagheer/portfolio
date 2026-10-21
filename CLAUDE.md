@@ -65,7 +65,8 @@ When adding projects, update BOTH locations to maintain consistency.
 `src/libs/actions.ts`:
 - `sendEmail()` - Server action for contact form using Resend API
 - Validates input with Zod schema from `src/libs/schemas.ts`
-- Sends to: mhadisb1212@gmail.com (cc: umersagheer0075@gmail.com)
+- Returns `{ ok: true } | { ok: false, error }`; the form shows an error toast and keeps the input on failure
+- Sender/recipients come from `CONTACT_FROM_EMAIL` / `CONTACT_TO_EMAIL` (defaults: Resend's test sender → mhadisb1212@gmail.com); `replyTo` is the visitor's email
 - Requires `RESEND_API_KEY` environment variable
 
 ### Styling & Theming
@@ -109,6 +110,10 @@ Match this style when writing new code.
 
 Required for production:
 - `RESEND_API_KEY` - For contact form email functionality
+
+Optional:
+- `CONTACT_FROM_EMAIL` - Contact form sender, e.g. `Umer Sagheer <contact@umersagheer.dev>` (needs the domain verified in Resend; defaults to the Resend test sender, which only delivers to the account owner)
+- `CONTACT_TO_EMAIL` - Comma-separated recipients (defaults to mhadisb1212@gmail.com)
 
 ## Common Patterns
 
