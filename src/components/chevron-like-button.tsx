@@ -10,7 +10,6 @@ const MOCK_API = false
 
 type ChevronLikeButtonProps = {
   postId: string
-  size?: 'sm' | 'md'
 }
 
 type LikesPayload = {
@@ -33,11 +32,6 @@ const MAX_LABELS = [
   'SIGSEGV',
   'KERNEL PANIC'
 ]
-
-const SIZES = {
-  md: { button: 32, icon: 28 },
-  sm: { button: 24, icon: 18 }
-} as const
 
 // 6 discrete color/intensity states (0–5 user clicks)
 // glowColor: CSS color string, intensity: opacity for ::before/::after
@@ -152,10 +146,9 @@ function ChevronsUp({ color }: { color: string }) {
   )
 }
 
-export default function ChevronLikeButton({
-  postId,
-  size = 'md'
-}: ChevronLikeButtonProps) {
+// One instance per post: it floats bottom-right on small screens and sits under
+// the table of contents on xl, so its size is responsive in CSS.
+export default function ChevronLikeButton({ postId }: ChevronLikeButtonProps) {
   const [globalCount, setGlobalCount] = useState(0)
   const [userClicks, setUserClicks] = useState(0)
   const [showMaxLabel, setShowMaxLabel] = useState(false)
@@ -170,7 +163,6 @@ export default function ChevronLikeButton({
   const chevronControls = useAnimation()
   const countControls = useAnimation()
 
-  const s = SIZES[size]
   const glowStep = GLOW_STEPS[Math.min(userClicks, MAX_CLICKS)]
 
   // Color transitions from default-500 (muted) → primary across 0→5 clicks
@@ -306,11 +298,9 @@ export default function ChevronLikeButton({
         aria-label={`Like this post (${userClicks} of ${MAX_CLICKS})`}
         aria-pressed={userClicks > 0}
         animate={buttonControls}
-        className='neon-glow relative flex cursor-pointer items-center justify-center overflow-visible rounded-full'
+        className='neon-glow relative flex size-6 cursor-pointer items-center justify-center overflow-visible rounded-full xl:size-8'
         style={
           {
-            width: s.button,
-            height: s.button,
             background: 'var(--surface)',
             '--glow-color': glowColor,
             '--glow-intensity': glowStep.intensity
@@ -320,8 +310,7 @@ export default function ChevronLikeButton({
         {/* Animated chevrons */}
         <motion.svg
           xmlns='http://www.w3.org/2000/svg'
-          width={s.icon}
-          height={s.icon}
+          className='size-[18px] xl:size-7'
           viewBox='0 0 24 24'
           fill='currentColor'
           animate={chevronControls}

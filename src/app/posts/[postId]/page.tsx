@@ -121,13 +121,16 @@ export default async function Post({ params }: PostProps) {
         </article>
       </div>
 
-      <div className='fixed top-24 bottom-14 left-[calc(50%+384px+1.5rem)] hidden w-56 xl:flex xl:flex-col'>
+      <div className='fixed top-24 bottom-28 left-[calc(50%+384px+1.5rem)] hidden w-56 xl:flex xl:flex-col'>
         <div className='min-h-0 flex-1'>
           <TableOfContents items={toc} />
         </div>
-        <div className='flex shrink-0 justify-center pt-6'>
-          <ChevronLikeButton postId={postId} />
-        </div>
+      </div>
+
+      {/* One like button (one fetch, one state): floats bottom-right on small
+          screens, sits centred under the table of contents on xl. */}
+      <div className='fixed right-6 bottom-6 z-50 xl:right-auto xl:bottom-14 xl:left-[calc(50%+384px+1.5rem)] xl:flex xl:w-56 xl:justify-center'>
+        <ChevronLikeButton postId={postId} />
       </div>
 
       <AuthorSidebar
@@ -135,11 +138,6 @@ export default async function Post({ params }: PostProps) {
         publishedAt={publishedAt ?? ''}
         readingTime={readingTime ?? 1}
       />
-
-      {/* Mobile floating crystal */}
-      <div className='fixed right-6 bottom-6 z-50 xl:hidden'>
-        <ChevronLikeButton postId={postId} size='sm' />
-      </div>
 
       {/* Mobile prev/next nav */}
       <nav className='border-border mt-16 flex flex-col gap-4 border-t pt-6 xl:hidden'>
