@@ -224,8 +224,22 @@
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+}
+
+/* Motion is opt-in: only readers who haven't asked to reduce it get smooth
+   scrolling and the decorative CSS animations. framer-motion is handled by
+   <MotionConfig reducedMotion='user'> in providers.tsx. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-marquee-scroll-vertical {
+    animation: none;
+  }
 }
 
 /* for code highlighting from sugar-high */

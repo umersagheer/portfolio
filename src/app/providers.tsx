@@ -1,6 +1,7 @@
 'use client'
 
 import { Toast } from '@heroui/react'
+import { MotionConfig } from 'framer-motion'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { useRouter } from 'next/navigation'
 import { RouterProvider } from 'react-aria-components'
@@ -18,7 +19,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <Toast.Provider placement='top end' />
-        {children}
+        {/* Readers with Reduce Motion on get no transform/layout animation. */}
+        <MotionConfig reducedMotion='user'>{children}</MotionConfig>
       </NextThemesProvider>
     </RouterProvider>
   )
