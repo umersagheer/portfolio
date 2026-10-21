@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import React from 'react'
 import { ArrowRightIcon } from 'lucide-react'
-import Heading from './heading'
-import Projects from './projects'
+import Heading from '@/components/heading'
+import Projects from '@/components/projects'
 import { projects } from '@/content/projects'
 
 export default async function RecentProjects() {

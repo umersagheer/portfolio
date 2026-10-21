@@ -3,6 +3,8 @@ import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
 import { slugify } from '@/libs/toc'
+// Static (server-only) demo: rendered on the server, ships no client JS.
+import FrameDiagram from '@/components/blog/websockets/frame-diagram'
 
 import {
   CheckItem,
@@ -19,7 +21,6 @@ import {
   EnvelopePatternDemo,
   RoutingPatternsDemo,
   PubSubScalingDemo,
-  FrameDiagram,
   ProtocolComparisonTable,
   ParseTrapDemo,
   DatePipelineDemo,

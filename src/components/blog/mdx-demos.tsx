@@ -90,12 +90,6 @@ export const PubSubScalingDemo = dynamic(
       /* webpackChunkName: "demos-websockets" */ '@/components/blog/websockets/pub-sub-scaling-demo'
     )
 )
-export const FrameDiagram = dynamic(
-  () =>
-    import(
-      /* webpackChunkName: "demos-websockets" */ '@/components/blog/websockets/frame-diagram'
-    )
-)
 export const ProtocolComparisonTable = dynamic(
   () =>
     import(

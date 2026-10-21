@@ -1,7 +1,7 @@
 'use client'
 import { SearchField, Tabs, cn } from '@heroui/react'
 import { useMemo, useState } from 'react'
-import Posts from './posts'
+import Posts from '@/components/posts'
 import { PostCategory, PostMetadata, PostTopic } from '@/types'
 import { IconFileInvoiceFilled, IconFilePowerFilled } from '@tabler/icons-react'
 import { getTopicCounts } from '@/libs/post-topic'

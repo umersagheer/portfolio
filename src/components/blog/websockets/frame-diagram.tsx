@@ -1,6 +1,4 @@
-'use client'
-
-import DemoContainer from './demo-container'
+import DemoContainer from '@/components/blog/websockets/demo-container'
 
 const fields = [
   {
