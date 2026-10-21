@@ -41,7 +41,7 @@ pnpm lint
 **MDX rendering**:
 - `src/components/mdx-content.tsx` - Uses `next-mdx-remote/rsc` for server-side MDX rendering
 - Includes custom components: `Code` (syntax highlighting via `sugar-high`) plus the interactive blog demos in `src/components/blog/`
-- Add new MDX components to the `components` object in this file
+- Blog demos are registered in `src/components/blog/mdx-demos.tsx` (a `'use client'` module of `next/dynamic` imports, one chunk per post via `webpackChunkName`) and imported into the `components` object. Never import a demo statically into `mdx-content.tsx`: `/posts/[postId]` is one route, so a static import ships that demo to every post, and `dynamic()` called from the server component does not split client components
 
 ### Projects Data
 
@@ -128,6 +128,7 @@ Optional:
 3. Project appears on `/projects` and homepage
 
 **Adding MDX components**:
-- Define component in `src/components/`
-- Import and add to `components` object in `src/components/mdx-content.tsx`
+- Define component in `src/components/` (blog demos in `src/components/blog/<series>/`)
+- Blog demo: add `export const X = dynamic(() => import(/* webpackChunkName: "demos-<post>" */ '...'))` to `src/components/blog/mdx-demos.tsx`, then import it into the `components` object in `src/components/mdx-content.tsx`. Demos used by the same post share a chunk name
+- Small static (non-demo) components can be imported directly into `mdx-content.tsx`
 - Component becomes available in all MDX files

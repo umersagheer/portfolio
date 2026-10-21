@@ -2,46 +2,49 @@ import { JSX } from 'react'
 import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
-import CheckItem from '@/components/check-item'
 import { slugify } from '@/libs/toc'
-import LayoutAnimationDemo from '@/components/blog/layout-animations/layout-animation-demo'
-import LayoutIdDemo from '@/components/blog/layout-animations/layout-id-demo'
-import AnimatePresenceDemo from '@/components/blog/layout-animations/animate-presence-demo'
-import FlipExplainer from '@/components/blog/layout-animations/flip-explainer'
-import SpringVisualizer from '@/components/blog/layout-animations/spring-visualizer'
-import MorphingDialogDemo from '@/components/blog/layout-animations/morphing-dialog-demo'
-import TransformVsLayoutDemo from '@/components/blog/layout-animations/transform-vs-layout-demo'
-import HttpVsWebSocketDemo from '@/components/blog/websockets/http-vs-websocket-demo'
-import HandshakeExplainer from '@/components/blog/websockets/handshake-explainer'
-import LifecycleDemo from '@/components/blog/websockets/lifecycle-demo'
-import EnvelopePatternDemo from '@/components/blog/websockets/envelope-pattern-demo'
-import RoutingPatternsDemo from '@/components/blog/websockets/routing-patterns-demo'
-import PubSubScalingDemo from '@/components/blog/websockets/pub-sub-scaling-demo'
-import FrameDiagram from '@/components/blog/websockets/frame-diagram'
-import ProtocolComparisonTable from '@/components/blog/websockets/protocol-comparison-table'
-import ParseTrapDemo from '@/components/blog/timezone/parse-trap-demo'
-import DatePipelineDemo from '@/components/blog/timezone/date-pipeline-demo'
-import TimezoneConverterDemo from '@/components/blog/timezone/timezone-converter-demo'
-import DSTGapOverlapVisualizer from '@/components/blog/timezone/dst-gap-overlap-visualizer'
-import ScheduleSimulatorDemo from '@/components/blog/timezone/schedule-simulator-demo'
-import PastVsFutureStorageDemo from '@/components/blog/timezone/past-vs-future-storage-demo'
-import ORMComparisonDemo from '@/components/blog/timezone/orm-comparison-demo'
-import OffByOneBugDemo from '@/components/blog/timezone/off-by-one-bug-demo'
-import ATTimeZoneTrapDemo from '@/components/blog/timezone/at-timezone-trap-demo'
-import StandupBugDemo from '@/components/blog/timezone/standup-bug-demo'
-import ISOStringAnatomy from '@/components/blog/timezone/iso-string-anatomy'
-import GetHoursComparisonTable from '@/components/blog/timezone/get-hours-comparison-table'
-import LibraryComparisonTable from '@/components/blog/timezone/library-comparison-table'
-import ExpoProtectedRoutesDemo from '@/components/blog/expo-router/protected-routes-demo'
-import GitInitTerminal from '@/components/blog/git-internals/git-init-terminal'
-import HashPlayground from '@/components/blog/git-internals/hash-playground'
-import ObjectLadder from '@/components/blog/git-internals/object-ladder'
-import BranchHeadSimulator from '@/components/blog/git-internals/branch-head-simulator'
-import HeadPointer from '@/components/blog/git-internals/head-pointer'
-import StagingArea from '@/components/blog/git-internals/staging-area'
-import ResetModes from '@/components/blog/git-internals/reset-modes'
-import SnapshotVsDiff from '@/components/blog/git-internals/snapshot-vs-diff'
-import DagExplorer from '@/components/blog/git-internals/dag-explorer'
+
+import {
+  CheckItem,
+  LayoutAnimationDemo,
+  LayoutIdDemo,
+  AnimatePresenceDemo,
+  FlipExplainer,
+  SpringVisualizer,
+  MorphingDialogDemo,
+  TransformVsLayoutDemo,
+  HttpVsWebSocketDemo,
+  HandshakeExplainer,
+  LifecycleDemo,
+  EnvelopePatternDemo,
+  RoutingPatternsDemo,
+  PubSubScalingDemo,
+  FrameDiagram,
+  ProtocolComparisonTable,
+  ParseTrapDemo,
+  DatePipelineDemo,
+  TimezoneConverterDemo,
+  DSTGapOverlapVisualizer,
+  ScheduleSimulatorDemo,
+  PastVsFutureStorageDemo,
+  ORMComparisonDemo,
+  OffByOneBugDemo,
+  ATTimeZoneTrapDemo,
+  StandupBugDemo,
+  ISOStringAnatomy,
+  GetHoursComparisonTable,
+  LibraryComparisonTable,
+  ExpoProtectedRoutesDemo,
+  GitInitTerminal,
+  HashPlayground,
+  ObjectLadder,
+  BranchHeadSimulator,
+  HeadPointer,
+  StagingArea,
+  ResetModes,
+  SnapshotVsDiff,
+  DagExplorer
+} from '@/components/blog/mdx-demos'
 
 function Code({ children, ...props }: any) {
   let codeHTML = highlight(children)
