@@ -34,9 +34,12 @@ HeroUI is the **last** domino, not the first.
 |---|---|---|---|---|
 | **0** | React 19 + Next 15 (HeroUI/Tailwind untouched) | ✅ Done | `migration/phase-0-react19-next15` | see log |
 | **1** | Tailwind v3 → v4 **+ HeroUI 2.8** | ✅ Done | `migration/phase-1-tailwind-v4` | `a5f593c` |
-| **2** | Color token map (v2 semantic → v3 oklch) | ⬜ Not started | — | — |
-| **3** | Component API migration (leaf-first) | ⬜ Not started | — | — |
-| **4** | Visual regression sweep | ⬜ Not started | — | — |
+| **2** | Color token map (v2 semantic → v3 oklch) | ✅ Done (folded into 3) | `migration/phase-3-heroui-v3` | `dda16e7` (3f) |
+| **3** | Component API migration (leaf-first) | ✅ Done | `migration/phase-3-heroui-v3` | `3e3a357`…`dda16e7` (3a–3f) |
+| **4** | Visual regression sweep + audit fixes | ✅ Done | `migration/phase-3-heroui-v3` | `9f9b05a`…`beb989c` (4a–4k, 5a–5c) |
+
+Phases 2–4 all live on `migration/phase-3-heroui-v3`, which sits directly on
+`master` (0 behind), so it merges as a fast-forward.
 
 Legend: ⬜ Not started · 🔄 In progress · ✅ Done · ⚠️ Blocked
 
@@ -60,10 +63,12 @@ Legend: ⬜ Not started · 🔄 In progress · ✅ Done · ⚠️ Blocked
  1  HeroUIProvider, ToastProvider, Accordion, Divider, Switch, CardFooter
 ```
 
-### v3 token map (from the official styling migration guide)
+### v3 token map (as shipped)
 
 v3's colour system is a **reduction**, not a rename. Numbered scales are gone entirely,
-`primary` becomes `accent`, and `secondary` is **removed**.
+`primary` becomes `accent`, and `secondary` is **removed** — this project restores it
+as a brand token (4h). Rows marked ⚠️ differ from the official guide's advice; the
+commit in brackets explains why.
 
 | v2 (yours) | count | v3 | Note |
 |---|---|---|---|
@@ -71,15 +76,17 @@ v3's colour system is a **reduction**, not a rename. Numbered scales are gone en
 | `text-default-500` | 160 | `text-muted` | ″ |
 | `text-default-600` | 57 | `text-muted` / `text-foreground` | judgement call |
 | `text-foreground` | 76 | `text-foreground` | ✅ unchanged |
-| `bg-default-100` | 69 | `bg-surface` | `content1-4` → `surface`/`overlay` |
-| `border-default-200` | 48 | `border-default` | |
+| `bg-default-50/100/200` | 69 | `bg-surface` / `-secondary` / `-tertiary` | `content1-3` → the same surface ladder |
+| `bg-default-300/400/600` | — | `bg-border-secondary` / `bg-border-tertiary` / `bg-muted` | ⚠️ 3f sent these to `surface-tertiary` (lighter than 200 → invisible); fixed in 4j |
+| `border-default-200` | 48 | `border-border` (`separator` for dividers) | ⚠️ `border-default` is a fill colour, not a border (3f) |
 | `text-primary` / `bg-primary` | 66 | `text-accent` / `bg-accent` | primary → accent |
 | `text-primary-500/600/700` | ~36 | `text-accent` | numbered scales removed |
-| `text-secondary` | 13 | `text-default` | **secondary removed in v3** |
+| `text-secondary` (all shades) | 37 | `text-secondary` (brand token in `globals.css`) | ⚠️ guide says `text-default` (near-invisible); 3f used `accent`, which merged blob/tree etc.; restored in 4h |
 | `text-success-500` etc. | ~60 | `text-success` | numbered scales removed |
+| `text-{success,warning,danger}-600…900` | 54 | `text-*-soft-foreground` | ⚠️ base tokens are ~2:1 on white (4i) |
 | `text-tiny/small/medium/large` | — | `text-xs/sm/base/lg` | |
-| `rounded-small/medium/large` | — | `rounded-sm/md/lg` | ⚠️ values shrink 8→4, 12→6, 14→8px |
-| `classNames` prop | — | `className` | prop renamed in v3 |
+| `rounded-small/medium/large`, `radius='sm'` | — | `rounded-[8px]/[12px]/[14px]` | ⚠️ exact v2 px; `rounded-sm/md/lg` are smaller (4a, 4j) |
+| `classNames` prop | — | `className` on the matching **sub-component** | ⚠️ e.g. `classNames.tabList` goes on `<Tabs>`, not `Tabs.List` (inside the pill) — 4f |
 
 > ⚠️ **Design consequence, not just a rename:** your three-level grey ramp
 > (`default-400/500/600`, 392 uses) collapses into a single `muted` token. Text hierarchy
@@ -110,6 +117,10 @@ v3's colour system is a **reduction**, not a rename. Numbered scales are gone en
 | D4 | **Phase 2 before Phase 3** | Token breakage is silent (no build error, just invisible text). Fix tokens while components still render, so regressions are attributable. |
 | D5 | **Tabs migrated last in Phase 3** | 15 files, highest-complexity compound rewrite. Validate the pattern on Buttons first. |
 | D6 | **HeroUI 2.7.4 → 2.8.10 inside Phase 1** | HeroUI 2.7.4 *cannot* run on Tailwind v4 (see Phase 1 log). 2.8.x can. Without this the staged plan collapses into a big-bang Tailwind+v3 migration. Component API stays v2, so this stays a styling-only phase. |
+| D8 | **Restore `secondary` as a brand token** | v3 removed it, but the demos use it as a second hue beside accent (blob vs tree, month vs year, opcode vs FIN). Light #006fee / dark #338ef7 (4h). |
+| D9 | **Tab style left mixed** | Content tabs keep v3's solid pill; only the navbar theme switcher matches the outlined nav pill (owner's call, 2026-10-21). |
+| D10 | **v2 page background restored** | `--background` #fff / #000 and `body` bg/colour, so dark mode is near-black like v2 instead of v3's 0.12 grey (owner's call, 4k). |
+| D11 | **Extra Button hues are variable modifiers, not `bg-*` utilities** | `.button--success`, `--success-soft`, `--warning-soft`, `--brand-secondary` fill `--button-bg/-hover/-pressed/-fg`; a `bg-*` utility wins over the `.button` hover rule and kills hover feedback (4h/4i). |
 | D7 | **Bulk edits are scripted, never hand-edited** | Renames run as one boundary-aware pass over the file tree. Safer than `sed`: it skips comments and non-class contexts, which is what caught `blur = '6px'` and HeroUI's `variant='shadow'` prop. Phase 2's 1,155 tokens use the same method. |
 
 ---
@@ -223,7 +234,8 @@ Isolated it with two throwaway configs built via the Tailwind CLI (seconds, not 
 while unlocking Tailwind v4 — so the staged plan survives instead of collapsing into a
 big-bang Tailwind + HeroUI v3 migration (D6).
 
-**Config shape now:**
+**Config shape at the end of Phase 1** (superseded in 4b — both config files were
+deleted and ported to CSS in `globals.css`):
 - `hero.ts` (new, repo root) — HeroUI theme, loaded via `@plugin '../../hero.ts'`
 - `tailwind.config.ts` — custom plugins only, bridged via `@config '../../tailwind.config.ts'`
 - `globals.css` — `@import 'tailwindcss'` + `@plugin` + `@source` + `@custom-variant dark`
@@ -251,6 +263,40 @@ before any future Next 16 bump.
 
 **Next up:** Phase 2 — token mapping. Note this phase is only *needed* once HeroUI v3 lands,
 since 2.8 still generates the v2 `default-*` ramp. Consider folding Phase 2 into Phase 3.
+
+### 2026-09-08 — Phase 3 (+2) ✅ COMPLETE — `3e3a357`…`dda16e7`
+- **3a** install `@heroui/react@3.2.4`, CSS-first setup (`@import '@heroui/styles'`), drop
+  `HeroUIProvider` for React Aria's `RouterProvider` + `next-themes` + `Toast.Provider`.
+- **3b–3e** component API to compound parts, leaf-first: Button/Tooltip/Alert/Link/Chip →
+  removed/renamed (Image, Divider, TimeInput…) → Table/Select/Input/TextArea → Tabs last (D5).
+- **3f** colour tokens (Phase 2 folded in): primary→accent, grey ramp → muted/foreground,
+  content1-3 → surface ladder, light tints → `-soft`.
+
+### 2026-09-09 — Phase 4 visual sweep, round 1 — `9f9b05a`…`7f3b350`
+- **4a** v2 sizing utilities (`rounded-/border-/text-small…`) generated no CSS in v3.
+- **4b** root cause of "everything transparent": the `@config` bridge mis-compiles HeroUI's
+  `@theme inline` into self-referential vars. Deleted `tailwind.config.ts` + `hero.ts`, ported to CSS.
+- **4c–4e** theme switcher pill, tab label wrap, same-hue step indicators, field borders,
+  Switch/Checkbox `Control`/`Thumb`/`Indicator` parts.
+
+### 2026-10-21 — Phase 4 round 2: audit + fixes ✅ COMPLETE — `9f028b4`…`beb989c`
+Side-by-side audit against `master` (v2 running on a second port), every page and demo, both
+themes, 390px; plus a code audit against HeroUI's source. Classes of bug found:
+
+| Commit | Bug class | Lesson |
+|---|---|---|
+| 4f | Switch/Checkbox still not clickable | The **Field** root is a div; the clickable part is `Switch.Content` / `Checkbox.Content`. tsc can't catch missing compound parts — children are optional. |
+| 4f | `--field-border` had no effect | v3 also sets `--field-border-width: 0px`; restore both. |
+| 4g | No tooltip could open (14) | v3 tooltip triggers must consume React Aria's `FocusableContext`: RAC `Link`/`Button`, `Tooltip.Trigger`, or `<Focusable>`. A plain `<a>`/`next/link` gets nothing. v3 delay is 1500ms (v2: 0) → `--tooltip-delay`. |
+| 4h | `secondary` merged into accent | See D8. |
+| 4i | Status meaning lost | Alerts untinted (bg-surface), success/soft buttons → primary, 600+ text shades too light. |
+| 4j | Greys invisible / purple text | default-300/400/600 → surface-tertiary; v2 `flat` default → v3 `secondary` (purple fg) instead of `tertiary`. |
+| 4k | Chrome | body background/colour (D10), `next/link` lost `inline-flex`, no pending spinner on v3 Button. |
+| 5a | Pre-existing (also on master) | Machine-timezone parsing during SSR → hydration error; it masked a theme-dependent `<img src>` mismatch in `TheSvgIcon` (React does not patch attributes). `useIsClient` hook. |
+| 5b–5c | Leftovers | `Chip.Label`, no-op classes on Field roots, redundant `dark:` pairs, 8 dead components. |
+
+**`dark:` rule of thumb now:** v3 semantic tokens already switch with the theme. Use `dark:`
+only for raw palette colours, images, `prose`, or to pick a *different* token in dark mode.
 
 ---
 
