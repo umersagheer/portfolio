@@ -115,9 +115,9 @@ export default async function Post({ params }: PostProps) {
       </div>
 
       <div className='relative mt-10'>
-        <main className='prose dark:prose-invert max-w-3xl'>
+        <article className='prose dark:prose-invert max-w-3xl'>
           <MDXContent source={content} />
-        </main>
+        </article>
       </div>
 
       <div className='fixed top-24 bottom-14 left-[calc(50%+384px+1.5rem)] hidden w-56 xl:flex xl:flex-col'>
