@@ -18,7 +18,7 @@
 
 | Phase | Scope | Status | Commits |
 |---|---|---|---|
-| **1** | Fix what's broken (no design decisions) | ⬜ | |
+| **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
 | **2** | Performance & hygiene | ⬜ | |
 | **3** | Visual system ("technical drawing") | ⬜ | |
 | **4** | Projects as pages (+ Munshi) | ⬜ | |
@@ -206,6 +206,8 @@ Production correctness only. No visual redesign.
 - **1g. Nested `<main>`:** change the inner one on post and project pages to `<article>`/`<div>` (A4).
 
 **Done when:** no broken images on production, a working nav in the server HTML, a contact form that reports failures honestly, and identical dates in every timezone.
+
+**Deferred from Phase 1:** IP rate limiting on the likes API. The per-visitor cap is now atomic, but visitor IDs are client-generated. A limit needs shared storage or a Vercel WAF rate-limit rule (no code). Revisit if abuse shows up.
 
 ### Phase 2: Performance & hygiene
 
@@ -403,6 +405,44 @@ A processing script (sharp) converts these to WebP, caps them at about 1600px, a
 ### 2026-10-22: Screenshot sources settled
 - D8 refined: Munshi demo shots; Figma frame exports for the mobile apps; Engagemo captured from a seeded local `staging` run with mock AI output.
 - `assets/` is gitignored for local originals.
+
+### 2026-10-22: Phase 1 ✅ COMPLETE: `43126bf`…`35995d3`
+
+| Item | Commit | Result |
+|---|---|---|
+| 1a projects quick fix (B1, B2, B7) | `43126bf` | Template MDX pages deleted (now 404); missing screenshot lists emptied; placeholder code link removed |
+| 1b navbar (B4, A2) | `2f9a649` | Nav in server HTML; the theme control shows a same-size placeholder until hydration; each nav item is one `Link` with `aria-label` and `aria-current` |
+| 1c motion (B5) | `0ae2a3b` | `BlurFade` replaced by the CSS-only `FadeIn` (opacity and transform, `backwards` fill); the hero is not wrapped; `/posts` has no entrance animation |
+| 1c reduced motion (A3) | `55e5eb6` | `MotionConfig reducedMotion='user'` app-wide; layout-animations demos opt out (`'never'`); smooth scroll, fade and marquee are gated in CSS |
+| 1d contact form (B3) | `e788c78` | Typed `{ ok }` result; error toast keeps the input; `CONTACT_FROM_EMAIL` / `CONTACT_TO_EMAIL` env vars, `replyTo`; `type='email'` plus `noValidate`, so Zod stays the only validator |
+| 1e dates (B6) | `d79d7de` | `formatDate` uses `timeZone: 'UTC'` (Los Angeles showed July 18 for 2026-07-19) |
+| 1f likes API (B8) | `b36ea20` | 404 for unknown posts (drafts allowed); IDs in headers instead of the query string; `createMany skipDuplicates` plus a capped `updateMany` in one transaction; MDX traced into the function |
+| 1g landmarks (A4, partial) | `35995d3` | Inner `<main>` changed to `<article>` |
+
+**Verified** with `pnpm build`, `pnpm lint` (clean), a production server on localhost with a throwaway local Postgres, and an invalid Resend key so no mail could be sent:
+- **Server HTML:** the nav is in it, and it has no `filter:blur` / `opacity:0`.
+- **Routes:** template project URLs return 404; the draft post still returns 200.
+- **Dates:** they match the frontmatter.
+- **Keyboard:** one stop per nav item, with a focus ring and tooltip.
+- **Contact:** the failure toast appears and the input is kept.
+- **Likes:**
+  - 10 parallel first clicks give 5, and 10 parallel clicks on an existing visitor stop at 5.
+  - Each post's total equals the sum of its visitors' likes.
+  - The concurrency test caught a bug in the first version: brand-new visitors bypassed the cap. It was fixed before the commit.
+
+**First Load JS after Phase 1:**
+
+| Route | Before | After |
+|---|---|---|
+| `/` | 247 kB | 246 kB |
+| `/posts` | 268 kB | 228 kB |
+| `/contact` | 191 kB | 171 kB |
+
+Post pages are unchanged at 449 kB; that is Phase 2 (P1).
+
+**Not yet verified on production:**
+- The contact **success** path (needs the real Resend key).
+- The likes API against Neon after deploy.
 
 ---
 
