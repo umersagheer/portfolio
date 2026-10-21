@@ -210,7 +210,10 @@ export default function ChevronLikeButton({
       const { data } = await axios.get<LikesPayload>(
         `/api/posts/${postId}/likes`,
         {
-          params: { vid: visitorId.current, fp: fingerprint.current }
+          headers: {
+            'x-visitor-id': visitorId.current,
+            'x-fingerprint': fingerprint.current
+          }
         }
       )
 

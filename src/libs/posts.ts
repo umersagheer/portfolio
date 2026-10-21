@@ -13,6 +13,15 @@ function getPostFiles() {
     .map(entry => entry.name)
 }
 
+const POST_ID_PATTERN = /^[a-z0-9-]+$/
+
+// True for any post file, drafts included (drafts are reachable by direct URL).
+export function postExists(postId: string) {
+  return (
+    POST_ID_PATTERN.test(postId) && getPostFiles().includes(`${postId}.mdx`)
+  )
+}
+
 export async function getPostById(postId: string): Promise<Post | null> {
   try {
     const filePath = path.join(rootDirectory, `${postId}.mdx`)
