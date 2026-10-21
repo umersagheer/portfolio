@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tabs, Tab } from '@heroui/react'
+import { Button, Tabs } from '@heroui/react'
 import { IconCheck, IconX } from '@tabler/icons-react'
 import { AnimatedBeam } from '@/components/ui/beam'
 import { DotPattern } from '@/components/ui/dot-pattern'
@@ -122,15 +122,27 @@ export default function PubSubScalingDemo() {
       description='See why a single server works but horizontal scaling needs a message broker'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={mode}
         onSelectionChange={key => setMode(key as Mode)}
         className='mb-4'
       >
-        <Tab key='single' title='Single Server' />
-        <Tab key='no-broker' title='Multi (No Broker)' />
-        <Tab key='redis' title='Multi + Redis' />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='single'>
+              Single Server
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='no-broker'>
+              Multi (No Broker)
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='redis'>
+              Multi + Redis
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       <AnimatePresence mode='wait'>
@@ -142,7 +154,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={singleContainerRef}
-            className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+            className='border-separator bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               glow
@@ -202,7 +214,7 @@ export default function PubSubScalingDemo() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={multiContainerRef}
-            className='relative flex flex-col items-center gap-6 rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+            className='border-separator bg-background relative flex flex-col items-center gap-6 rounded-lg border px-6 py-8 sm:px-10'
           >
             <DotPattern
               width={16}
@@ -229,7 +241,7 @@ export default function PubSubScalingDemo() {
                 <IconCard
                   ref={redisRef}
                   label='Redis'
-                  className='border-danger-300 dark:border-danger-800'
+                  className='border-danger'
                 >
                   <WebSocketBrokerIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                 </IconCard>
@@ -239,13 +251,13 @@ export default function PubSubScalingDemo() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className='dark:bg-danger-950 flex size-10 items-center justify-center rounded-full bg-danger-100 text-lg font-bold text-danger-500'
+                      className='bg-danger-soft text-danger flex size-10 items-center justify-center rounded-full text-lg font-bold'
                     >
                       <IconX size={18} />
                     </motion.div>
                   )}
                   {(!animating || animStep < 2) && (
-                    <div className='h-px w-8 bg-default-200' />
+                    <div className='bg-border-secondary h-px w-8' />
                   )}
                 </div>
               )}
@@ -336,12 +348,13 @@ export default function PubSubScalingDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className={`flex items-center gap-1.5 text-xs font-medium ${mode === 'no-broker' && animStep >= 2
-              ? 'text-danger-500'
-              : mode === 'redis' && animStep >= 4
-                ? 'text-success-500'
-                : 'text-default-500'
-              }`}
+            className={`flex items-center gap-1.5 text-xs font-medium ${
+              mode === 'no-broker' && animStep >= 2
+                ? 'text-danger'
+                : mode === 'redis' && animStep >= 4
+                  ? 'text-success'
+                  : 'text-muted'
+            }`}
           >
             {mode === 'redis' && animStep >= 4 && <IconCheck size={14} />}
             {mode === 'no-broker' && animStep >= 2 && <IconX size={14} />}
@@ -349,9 +362,8 @@ export default function PubSubScalingDemo() {
           </motion.span>
         </AnimatePresence>
         <Button
+          variant='secondary'
           size='sm'
-          variant='flat'
-          color='primary'
           isDisabled={animating}
           onPress={sendMessage}
         >

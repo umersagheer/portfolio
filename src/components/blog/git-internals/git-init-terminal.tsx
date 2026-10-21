@@ -111,10 +111,10 @@ const TREE: Node[] = [
 ]
 
 const HALF_DOT: Record<Half, string> = {
-  stuff: 'bg-primary',
+  stuff: 'bg-accent',
   pointer: 'bg-secondary',
   scratch: 'bg-warning',
-  plumbing: 'bg-default-400'
+  plumbing: 'bg-border-tertiary'
 }
 
 type Row = { node: Node; depth: number }
@@ -159,16 +159,16 @@ export default function GitInitTerminal() {
   const rows = flatten(TREE, expanded)
 
   return (
-    <div className='my-8 overflow-hidden rounded-xl border border-default-200 bg-default-50 font-mono text-sm dark:border-default-100'>
+    <div className='border-border bg-surface my-8 overflow-hidden rounded-xl border font-mono text-sm'>
       {/* terminal title bar */}
-      <div className='flex items-center gap-2 border-b border-default-200 bg-default-100/60 px-4 py-2 dark:border-default-100'>
-        <TerminalIcon size={14} className='text-default-500' />
-        <span className='text-xs text-default-500'>your-project — zsh</span>
+      <div className='border-border bg-surface-secondary/60 flex items-center gap-2 border-b px-4 py-2'>
+        <TerminalIcon size={14} className='text-muted' />
+        <span className='text-muted text-xs'>your-project — zsh</span>
         {ran && (
           <button
             type='button'
             onClick={reset}
-            className='ml-auto flex items-center gap-1 text-xs text-default-500 transition-colors hover:text-foreground'
+            className='text-muted hover:text-foreground ml-auto flex items-center gap-1 text-xs transition-colors'
           >
             <RotateCcwIcon size={12} /> run again
           </button>
@@ -186,15 +186,15 @@ export default function GitInitTerminal() {
             !ran && 'hover:bg-white/[0.03]'
           )}
         >
-          <span className='select-none text-success'>$</span>
+          <span className='text-success select-none'>$</span>
           <span className='text-foreground'>git init</span>
           {!ran && (
-            <span className='ml-2 rounded bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary transition-colors group-hover:bg-primary/20'>
+            <span className='bg-accent/10 text-accent group-hover:bg-accent/20 ml-2 rounded-sm px-2 py-0.5 text-[11px] font-medium transition-colors'>
               click to run ▸
             </span>
           )}
           {!ran && (
-            <span className='ml-0.5 inline-block h-4 w-2 animate-pulse bg-default-400' />
+            <span className='bg-border-tertiary ml-0.5 inline-block h-4 w-2 animate-pulse' />
           )}
         </button>
 
@@ -206,13 +206,13 @@ export default function GitInitTerminal() {
               transition={{ duration: 0.35, ease: 'easeOut' }}
               className='overflow-hidden'
             >
-              <p className='mb-3 mt-1 pl-3 text-xs text-default-500'>
+              <p className='text-muted mt-1 mb-3 pl-3 text-xs'>
                 Initialized empty Git repository in{' '}
-                <span className='text-default-600'>./.git/</span>
+                <span className='text-foreground'>./.git/</span>
               </p>
 
               <div className='space-y-0.5'>
-                <div className='px-1 py-1 text-default-500'>.git/</div>
+                <div className='text-muted px-1 py-1'>.git/</div>
 
                 {rows.map(({ node, depth }, i) => {
                   const isFolder =
@@ -250,7 +250,7 @@ export default function GitInitTerminal() {
                           type='button'
                           onClick={() => toggle(node.id)}
                           aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${node.label}`}
-                          className='text-default-500 transition-colors hover:text-foreground'
+                          className='text-muted hover:text-foreground transition-colors'
                         >
                           <ChevronRightIcon
                             size={13}
@@ -278,19 +278,16 @@ export default function GitInitTerminal() {
                         isOpen ? (
                           <FolderOpenIcon
                             size={14}
-                            className='shrink-0 text-default-500'
+                            className='text-muted shrink-0'
                           />
                         ) : (
                           <FolderIcon
                             size={14}
-                            className='shrink-0 text-default-500'
+                            className='text-muted shrink-0'
                           />
                         )
                       ) : (
-                        <FileIcon
-                          size={14}
-                          className='shrink-0 text-default-400'
-                        />
+                        <FileIcon size={14} className='text-muted shrink-0' />
                       )}
 
                       {/* name — loudest signal; the two half-defining rows are
@@ -299,9 +296,9 @@ export default function GitInitTerminal() {
                         className={cn(
                           'shrink-0',
                           isDeep
-                            ? 'text-default-500'
+                            ? 'text-muted'
                             : isHeadline
-                              ? 'font-medium text-foreground'
+                              ? 'text-foreground font-medium'
                               : 'text-foreground'
                         )}
                       >
@@ -314,15 +311,15 @@ export default function GitInitTerminal() {
                         <span
                           className={cn(
                             'ml-2 hidden shrink-0 sm:inline',
-                            isHeadline ? 'text-default-500' : 'text-default-400'
+                            isHeadline ? 'text-muted' : 'text-muted'
                           )}
                         >
                           ←{' '}
                           <span
                             className={cn(
                               isHeadline
-                                ? 'font-medium text-foreground/90'
-                                : 'text-default-500'
+                                ? 'text-foreground/90 font-medium'
+                                : 'text-muted'
                             )}
                           >
                             {node.role}
@@ -332,7 +329,7 @@ export default function GitInitTerminal() {
 
                       {/* trailing gloss — quietest, optional detail */}
                       {node.note && (
-                        <span className='ml-2 truncate text-xs text-default-400/80'>
+                        <span className='text-muted/80 ml-2 truncate text-xs'>
                           — {node.note}
                         </span>
                       )}
@@ -341,22 +338,22 @@ export default function GitInitTerminal() {
                 })}
               </div>
 
-              <p className='mt-4 border-t border-default-200 pt-3 text-xs text-default-500 dark:border-default-100'>
+              <p className='border-border text-muted mt-4 border-t pt-3 text-xs'>
                 <span className='inline-flex items-center gap-1.5'>
-                  <span className='h-1.5 w-1.5 rounded-full bg-primary' /> the
+                  <span className='bg-accent h-1.5 w-1.5 rounded-full' /> the
                   stuff
                 </span>
                 <span className='mx-3 inline-flex items-center gap-1.5'>
-                  <span className='h-1.5 w-1.5 rounded-full bg-secondary' /> the
+                  <span className='bg-secondary h-1.5 w-1.5 rounded-full' /> the
                   pointers
                 </span>
                 <span className='inline-flex items-center gap-1.5'>
-                  <span className='h-1.5 w-1.5 rounded-full bg-warning' />{' '}
+                  <span className='bg-warning h-1.5 w-1.5 rounded-full' />{' '}
                   scratchpad
                 </span>
-                <span className='ml-3 text-default-400'>
-                  · expand <span className='text-default-500'>objects/</span> and{' '}
-                  <span className='text-default-500'>refs/</span> to look deeper
+                <span className='text-muted ml-3'>
+                  · expand <span className='text-muted'>objects/</span> and{' '}
+                  <span className='text-muted'>refs/</span> to look deeper
                 </span>
               </p>
             </motion.div>

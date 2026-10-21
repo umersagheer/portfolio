@@ -2,7 +2,8 @@
 
 import NextImage from 'next/image'
 import Link from 'next/link'
-import { Image, Tooltip } from '@heroui/react'
+import { Tooltip } from '@heroui/react'
+import { Link as AriaLink } from 'react-aria-components'
 import { CalendarIcon, ClockIcon, MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
@@ -27,11 +28,10 @@ export default function AuthorSidebar({
   const { newerPost, olderPost } = adjacentPosts
 
   return (
-    <div className='fixed right-[calc(50%+384px+1.5rem)] top-24 hidden w-48 xl:block'>
+    <div className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden w-48 xl:block'>
       {/* Author info */}
       <div className='flex flex-col gap-2'>
-        <Image
-          as={NextImage}
+        <NextImage
           src={siteProfile.avatar}
           alt={siteProfile.name}
           width={44}
@@ -47,51 +47,60 @@ export default function AuthorSidebar({
           href={siteProfile.socials.x.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='-mt-1 text-xs text-primary'
+          className='text-accent -mt-1 text-xs'
         >
           {siteProfile.socials.x.label}
         </a>
 
+        {/* HeroUI v3 tooltips only open from a React Aria focusable trigger,
+            so tooltip anchors here are react-aria-components Links (a plain
+            <a>; internal hrefs route client-side via the app RouterProvider). */}
         <div className='-ml-1.5 flex items-center gap-0.5'>
-          <Tooltip content='GitHub' size='sm'>
-            <a
+          <Tooltip>
+            <AriaLink
               href={siteProfile.socials.github.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='GitHub'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='github' size={16} className='grayscale' />
-            </a>
+            </AriaLink>
+
+            <Tooltip.Content>GitHub</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='LinkedIn' size='sm'>
-            <a
+          <Tooltip>
+            <AriaLink
               href={siteProfile.socials.linkedin.url}
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon slug='linkedin' size={16} className='grayscale' />
-            </a>
+            </AriaLink>
+
+            <Tooltip.Content>LinkedIn</Tooltip.Content>
           </Tooltip>
-          <Tooltip content='Email' size='sm'>
-            <a
+          <Tooltip>
+            <AriaLink
               href='mailto:umersagheer0075@gmail.com'
               aria-label='Email'
-              className='rounded-md p-1.5 transition-colors hover:bg-default-100'
+              className='hover:bg-surface-secondary rounded-md p-1.5 transition-colors'
             >
               <TheSvgIcon
                 slug='gmail'
                 size={16}
                 className='grayscale'
-                fallback={<MailIcon size={16} className='text-default-500' />}
+                fallback={<MailIcon size={16} className='text-muted' />}
               />
-            </a>
+            </AriaLink>
+
+            <Tooltip.Content>Email</Tooltip.Content>
           </Tooltip>
         </div>
 
-        <div className='flex flex-col gap-1 text-xs text-default-400'>
+        <div className='text-muted flex flex-col gap-1 text-xs'>
           <span className='flex items-center gap-1.5'>
             <ClockIcon size={12} />
             {readingTime} min read
@@ -104,92 +113,78 @@ export default function AuthorSidebar({
       </div>
 
       {/* Divider */}
-      <div className='my-3 h-px w-3/4 bg-default-200' />
+      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
 
       {/* Adjacent posts navigation */}
       <div className='flex flex-col gap-3'>
         {newerPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-[10px] uppercase tracking-wider text-default-400'>
+            <span className='text-muted text-[10px] tracking-wider uppercase'>
               Previous Article
             </span>
-            <Tooltip
-              size='sm'
-              delay={500}
-              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
-              content={
+            <Tooltip delay={500}>
+              <AriaLink
+                href={`/posts/${newerPost.postId}`}
+                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
+              >
+                {newerPost.title}
+              </AriaLink>
+
+              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {newerPost.image && (
-                    <Image
-                      as={NextImage}
+                    <NextImage
                       src={newerPost.image}
                       alt={newerPost.title ?? ''}
                       width={208}
                       height={117}
                       className='aspect-video w-full rounded-none object-cover'
-                      classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
-                  <span className='px-2 py-1.5 text-xs'>
-                    {newerPost.title}
-                  </span>
+                  <span className='px-2 py-1.5 text-xs'>{newerPost.title}</span>
                 </div>
-              }
-            >
-              <Link
-                href={`/posts/${newerPost.postId}`}
-                className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
-              >
-                {newerPost.title}
-              </Link>
+              </Tooltip.Content>
             </Tooltip>
           </div>
         )}
         {olderPost && (
           <div className='flex flex-col gap-1'>
-            <span className='text-[10px] uppercase tracking-wider text-default-400'>
+            <span className='text-muted text-[10px] tracking-wider uppercase'>
               Next Article
             </span>
-            <Tooltip
-              size='sm'
-              delay={500}
-              classNames={{ content: 'max-w-52 p-0 overflow-hidden' }}
-              content={
+            <Tooltip delay={500}>
+              <AriaLink
+                href={`/posts/${olderPost.postId}`}
+                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
+              >
+                {olderPost.title}
+              </AriaLink>
+
+              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
                 <div className='flex flex-col'>
                   {olderPost.image && (
-                    <Image
-                      as={NextImage}
+                    <NextImage
                       src={olderPost.image}
                       alt={olderPost.title ?? ''}
                       width={208}
                       height={117}
                       className='aspect-video w-full rounded-none object-cover'
-                      classNames={{ wrapper: 'rounded-none' }}
                     />
                   )}
-                  <span className='px-2 py-1.5 text-xs'>
-                    {olderPost.title}
-                  </span>
+                  <span className='px-2 py-1.5 text-xs'>{olderPost.title}</span>
                 </div>
-              }
-            >
-              <Link
-                href={`/posts/${olderPost.postId}`}
-                className='line-clamp-2 text-xs text-default-600 transition-colors hover:text-primary'
-              >
-                {olderPost.title}
-              </Link>
+              </Tooltip.Content>
             </Tooltip>
           </div>
         )}
       </div>
 
       {/* Divider + Back */}
-      <div className='my-3 h-px w-3/4 bg-default-200' />
+      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
 
       <Link
         href='/posts'
-        className='text-xs text-default-500 transition-colors hover:text-primary'
+        className='text-muted hover:text-accent text-xs transition-colors'
       >
         &larr; Back to posts
       </Link>

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tabs, Tab, Button } from '@heroui/react'
+import { Tabs, Button, cn } from '@heroui/react'
 import { IconBroadcast, IconMessage } from '@tabler/icons-react'
 import IconCard from '@/components/blog/shared/icon-card'
 import { AnimatedBeam } from '@/components/ui/beam'
@@ -57,39 +57,36 @@ export default function RoutingPatternsDemo() {
       description='Toggle between patterns to see which clients receive the message'
     >
       <Tabs
-        size='sm'
-        variant='bordered'
+        variant='primary'
         selectedKey={pattern}
         onSelectionChange={key => setPattern(key as Pattern)}
         className='mb-4'
       >
-        <Tab
-          key='broadcast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconBroadcast size={14} />
-              <span>Broadcast</span>
-            </div>
-          }
-        />
-        <Tab
-          key='unicast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconMessage size={14} />
-              <span>Unicast</span>
-            </div>
-          }
-        />
-        <Tab
-          key='multicast'
-          title={
-            <div className='flex items-center gap-1.5'>
-              <IconBroadcast size={14} />
-              <span>Multicast</span>
-            </div>
-          }
-        />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='broadcast'>
+              <div className='flex items-center gap-1.5'>
+                <IconBroadcast size={14} />
+                <span>Broadcast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='unicast'>
+              <div className='flex items-center gap-1.5'>
+                <IconMessage size={14} />
+                <span>Unicast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='multicast'>
+              <div className='flex items-center gap-1.5'>
+                <IconBroadcast size={14} />
+                <span>Multicast</span>
+              </div>
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
       {/* Controls for unicast/multicast */}
@@ -105,10 +102,9 @@ export default function RoutingPatternsDemo() {
             <div className='mb-4 flex flex-wrap gap-2'>
               {CLIENTS.map((c, i) => (
                 <Button
+                  variant={unicastTarget === i ? 'primary' : 'tertiary'}
                   key={c.name}
                   size='sm'
-                  variant={unicastTarget === i ? 'solid' : 'flat'}
-                  color={unicastTarget === i ? 'primary' : 'default'}
                   onPress={() => setUnicastTarget(i)}
                 >
                   {c.name}
@@ -127,17 +123,21 @@ export default function RoutingPatternsDemo() {
           >
             <div className='mb-4 flex gap-2'>
               <Button
+                variant={multicastRoom === 'A' ? 'primary' : 'tertiary'}
+                className={cn(
+                  multicastRoom === 'A' && 'button--brand-secondary'
+                )}
                 size='sm'
-                variant={multicastRoom === 'A' ? 'solid' : 'flat'}
-                color={multicastRoom === 'A' ? 'secondary' : 'default'}
                 onPress={() => setMulticastRoom('A')}
               >
                 Room A
               </Button>
               <Button
+                variant={multicastRoom === 'B' ? 'primary' : 'tertiary'}
+                className={cn(
+                  multicastRoom === 'B' && 'button--brand-secondary'
+                )}
                 size='sm'
-                variant={multicastRoom === 'B' ? 'solid' : 'flat'}
-                color={multicastRoom === 'B' ? 'secondary' : 'default'}
                 onPress={() => setMulticastRoom('B')}
               >
                 Room B
@@ -150,7 +150,7 @@ export default function RoutingPatternsDemo() {
       {/* Diagram */}
       <div
         ref={containerRef}
-        className='relative flex items-center justify-between rounded-lg border border-default-100 bg-background px-6 py-8 sm:px-10'
+        className='border-separator bg-background relative flex items-center justify-between rounded-lg border px-6 py-8 sm:px-10'
       >
         <DotPattern
           glow
@@ -185,15 +185,16 @@ export default function RoutingPatternsDemo() {
                     <WebSocketPersonIcon size={WEBSOCKET_NODE_ICON_SIZE} />
                   </IconCard>
                   <div className='flex flex-col'>
-                    <span className='text-xs font-medium text-default-600'>
+                    <span className='text-foreground text-xs font-medium'>
                       {client.name}
                     </span>
                     {pattern === 'multicast' && (
                       <span
-                        className={`text-[10px] ${client.room === multicastRoom
-                            ? 'font-semibold text-secondary-500'
-                            : 'text-default-400'
-                          }`}
+                        className={`text-[10px] ${
+                          client.room === multicastRoom
+                            ? 'text-secondary font-semibold'
+                            : 'text-muted'
+                        }`}
                       >
                         Room {client.room}
                       </span>
@@ -202,7 +203,7 @@ export default function RoutingPatternsDemo() {
                       <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className='text-[10px] text-success-500'
+                        className='text-success text-[10px]'
                       >
                         received
                       </motion.span>
@@ -253,7 +254,7 @@ export default function RoutingPatternsDemo() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className='rounded-full bg-primary-900/40 px-4 py-1.5 text-xs font-medium text-primary-900'
+            className='bg-accent-soft text-accent-soft-foreground rounded-full px-4 py-1.5 text-xs font-medium'
           >
             {label}
           </motion.span>

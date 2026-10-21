@@ -40,7 +40,7 @@ pnpm lint
 
 **MDX rendering**:
 - `src/components/mdx-content.tsx` - Uses `next-mdx-remote/rsc` for server-side MDX rendering
-- Includes custom components: `Code` (syntax highlighting via `sugar-high`), `Counter`
+- Includes custom components: `Code` (syntax highlighting via `sugar-high`) plus the interactive blog demos in `src/components/blog/`
 - Add new MDX components to the `components` object in this file
 
 ### Projects Data
@@ -70,20 +70,22 @@ When adding projects, update BOTH locations to maintain consistency.
 
 ### Styling & Theming
 
-**UI Framework**: HeroUI (v2.7.4) - fork/successor of NextUI
-- Provider: `src/app/nextui-provider.tsx` wraps app with HeroUI + theme support
-- Theme switcher: `src/components/theme-switcher.tsx`
-- Custom theme colors defined in `tailwind.config.ts` (purple primary, blue secondary)
+**UI Framework**: HeroUI v3 (`@heroui/react` + `@heroui/styles` 3.2.4) on Tailwind CSS v4 and React Aria. Migration history and decisions: `docs/heroui-v3-migration.md`.
+- No HeroUI provider in v3. `src/app/providers.tsx` wraps the app with React Aria's `RouterProvider` (client-side routing for RAC links), `next-themes`, and `Toast.Provider`
+- Theme switcher: the `Tabs` in `src/components/navbar.tsx`
+- CSS-first config, no `tailwind.config.ts`: everything lives in `src/app/globals.css` (`@import 'tailwindcss'` then `@import '@heroui/styles'`, typography plugin, font utilities, theme overrides)
+- Brand colours are overrides in `globals.css`: `--accent` (purple), `--secondary` (blue; a custom token, v3 has none), and v2's `--background` (#fff / #000)
 
-**Tailwind customizations**:
-- Custom utilities: `bg-grid`, `bg-grid-small`, `bg-dot` for SVG background patterns
-- Grid patterns component: `src/components/grid-patterns.tsx`
-- Typography plugin enabled for MDX content styling
+**HeroUI v3 gotchas (each one shipped a bug during the migration)**:
+- Compound parts are required even though TypeScript won't complain: `Switch`/`Checkbox` need `.Content > .Control > .Thumb/.Indicator`; `Tabs.Tab` needs `Tabs.Indicator`
+- Tooltip triggers must be React Aria focusables (RAC `Link`/`Button`, `Tooltip.Trigger`, or wrap in `<Focusable>`); a plain `<a>` or `next/link` never opens the tooltip
+- Extra Button colours are modifier classes in `globals.css` (`button--success`, `button--success-soft`, `button--warning-soft`, `button--brand-secondary`); don't use `bg-*` on a Button, it kills the hover state
+- Semantic tokens (`accent`, `surface`, `muted`, `*-soft`, `*-soft-foreground`) already switch with the theme. Only use `dark:` for raw palette colours, images, `prose`, or to pick a different token in dark mode
+- Render browser-only values (local timezone, resolved theme) behind `useIsClient()` from `src/hooks/useIsClient.ts` to avoid hydration mismatches
 
 **Fonts**:
-- Poppins (400, 600, 700, 800, 900) - Main font
-- Source Code Pro (400, 600, 700, 800, 900) - Monospace for code
-- Defined in `src/app/layout.tsx` via `next/font/google`
+- Poppins (400, 600, 700, 800, 900) and Source Code Pro (400, 600, 700, 800, 900) via `next/font/google` in `src/app/layout.tsx`, exposed as CSS variables
+- Applied with the `font-poppins` / `font-sourceCodePro` utilities defined in `globals.css`
 
 ### Path Aliases
 

@@ -62,11 +62,7 @@ export default function ScreenshotMarquee({
           {gridItems.map((item, i) => (
             <div
               key={i}
-              style={
-                item.wide
-                  ? { gridColumn: `span ${columns}` }
-                  : undefined
-              }
+              style={item.wide ? { gridColumn: `span ${columns}` } : undefined}
             >
               <Image
                 src={item.src}
@@ -82,10 +78,10 @@ export default function ScreenshotMarquee({
       </div>
 
       {/* Gradient fades on all 4 edges */}
-      <div className='pointer-events-none absolute inset-x-0 top-0 h-1/6 bg-gradient-to-b from-content1' />
-      <div className='pointer-events-none absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t from-content1' />
-      <div className='pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-content1' />
-      <div className='pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-content1' />
+      <div className='from-surface pointer-events-none absolute inset-x-0 top-0 h-1/6 bg-gradient-to-b' />
+      <div className='from-surface pointer-events-none absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t' />
+      <div className='from-surface pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r' />
+      <div className='from-surface pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l' />
     </div>
   )
 }

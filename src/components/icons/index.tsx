@@ -1,3 +1,5 @@
+import type { JSX } from 'react'
+
 import IconNext from './next'
 import IconAuthJs from './authjs'
 import IconNextUI from './nextui'

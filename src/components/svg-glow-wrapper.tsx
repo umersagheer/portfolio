@@ -13,7 +13,7 @@ interface SVGGlowWrapperProps {
 export function SVGGlowWrapper({
   children,
   className = '',
-  glowColor = 'hsl(var(--heroui-primary))',
+  glowColor = 'var(--accent)',
   size = 96
 }: SVGGlowWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -65,7 +65,7 @@ export function SVGGlowWrapper({
   })
 
   return (
-    <div ref={containerRef} className={`text-default-500 ${className}`}>
+    <div ref={containerRef} className={`text-muted ${className}`}>
       {enhancedSVG}
     </div>
   )

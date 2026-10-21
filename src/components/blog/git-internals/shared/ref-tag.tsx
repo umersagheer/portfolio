@@ -30,7 +30,7 @@ const RefTag = forwardRef<HTMLDivElement, RefTagProps>(
       <div
         ref={ref}
         className={cn(
-          'inline-flex items-center gap-1 rounded-md border px-2 py-0.5 font-sourceCodePro text-xs font-semibold shadow-sm',
+          'inline-flex items-center gap-1 rounded-md border px-2 py-0.5 font-sourceCodePro text-xs font-semibold shadow-xs',
           isHead ? 'border-dashed' : '',
           style,
           className

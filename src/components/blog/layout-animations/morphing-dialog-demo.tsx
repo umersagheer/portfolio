@@ -44,14 +44,14 @@ export default function MorphingDialogDemo() {
           <motion.div
             layoutId='morphing-demo-card'
             onClick={() => setIsOpen(true)}
-            className='w-64 cursor-pointer overflow-hidden border border-default-200 bg-background p-4 shadow-sm transition-shadow hover:shadow-md'
+            className='border-border bg-background w-64 cursor-pointer overflow-hidden border p-4 shadow-xs transition-shadow hover:shadow-md'
             style={{ borderRadius: 12 }}
             transition={springTransition}
           >
             <motion.div
               layout='preserve-aspect'
               layoutId='morphing-demo-image'
-              className='mb-3 h-32 bg-gradient-to-br from-primary-300 to-secondary-300'
+              className='from-accent to-secondary mb-3 h-32 bg-gradient-to-br'
               style={{ borderRadius: 8 }}
               transition={springTransition}
             />
@@ -66,7 +66,7 @@ export default function MorphingDialogDemo() {
             <motion.p
               layout='position'
               layoutId='morphing-demo-subtitle'
-              className='text-xs text-default-500'
+              className='text-muted text-xs'
               transition={springTransition}
             >
               Click to expand
@@ -88,20 +88,20 @@ export default function MorphingDialogDemo() {
               <motion.div
                 ref={contentRef}
                 layoutId='morphing-demo-card'
-                className='relative w-full max-w-md overflow-hidden border border-default-200 bg-background p-6 shadow-xl'
+                className='border-border bg-background relative w-full max-w-md overflow-hidden border p-6 shadow-xl'
                 style={{ borderRadius: 12 }}
                 transition={springTransition}
               >
                 <button
                   onClick={() => setIsOpen(false)}
-                  className='absolute right-3 top-3 rounded-full p-1.5 text-default-400 transition-colors hover:bg-default-100 hover:text-foreground'
+                  className='text-muted hover:bg-surface-secondary hover:text-foreground absolute top-3 right-3 rounded-full p-1.5 transition-colors'
                 >
                   <IconX size={16} />
                 </button>
                 <motion.div
                   layout='preserve-aspect'
                   layoutId='morphing-demo-image'
-                  className='mb-4 h-48 bg-gradient-to-br from-primary-300 to-secondary-300'
+                  className='from-accent to-secondary mb-4 h-48 bg-gradient-to-br'
                   style={{ borderRadius: 8 }}
                   transition={springTransition}
                 />
@@ -116,7 +116,7 @@ export default function MorphingDialogDemo() {
                 <motion.p
                   layout='position'
                   layoutId='morphing-demo-subtitle'
-                  className='text-sm text-default-500'
+                  className='text-muted text-sm'
                   transition={springTransition}
                 >
                   Click to expand
@@ -128,16 +128,16 @@ export default function MorphingDialogDemo() {
                   transition={{ delay: 0.15 }}
                   className='mt-4'
                 >
-                  <p className='text-sm text-default-600'>
+                  <p className='text-foreground text-sm'>
                     This is the expanded dialog content. The card morphed into
                     this dialog using{' '}
-                    <code className='rounded bg-default-200 px-1.5 py-0.5 text-xs'>
+                    <code className='bg-surface-tertiary rounded-sm px-1.5 py-0.5 text-xs'>
                       layoutId
                     </code>{' '}
                     — the same technique used in this portfolio&apos;s project
                     cards.
                   </p>
-                  <p className='mt-2 text-sm text-default-600'>
+                  <p className='text-foreground mt-2 text-sm'>
                     The image, title, and subtitle all share layout IDs between
                     the card and dialog states, creating a seamless morphing
                     transition.

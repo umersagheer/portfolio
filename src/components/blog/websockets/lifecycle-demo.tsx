@@ -59,15 +59,15 @@ const STATES = [
 ] as const
 
 const stateColors: Record<string, string> = {
-  warning: 'bg-warning-400',
-  success: 'bg-success-400',
-  default: 'bg-default-400'
+  warning: 'bg-warning',
+  success: 'bg-success',
+  default: 'bg-border-tertiary'
 }
 
 const stateTextColors: Record<string, string> = {
-  warning: 'text-warning-600 dark:text-warning-400',
-  success: 'text-success-600 dark:text-success-400',
-  default: 'text-default-500'
+  warning: 'text-warning-soft-foreground',
+  success: 'text-success-soft-foreground',
+  default: 'text-muted'
 }
 
 export default function LifecycleDemo() {
@@ -149,36 +149,36 @@ export default function LifecycleDemo() {
                     setStatus(i === 1 ? 'Heartbeat active' : `State: ${s.name}`)
                   }
                 }}
-                className={`flex flex-col items-center gap-1 rounded-lg px-2 py-2 transition-all sm:px-3 ${isActive ? 'scale-105' : 'opacity-50 hover:opacity-75'
-                  }`}
+                className={`flex flex-col items-center gap-1 rounded-lg px-2 py-2 transition-all sm:px-3 ${
+                  isActive ? 'scale-105' : 'opacity-50 hover:opacity-75'
+                }`}
               >
                 <div
-                  className={`flex size-10 items-center justify-center rounded-full transition-colors ${isActive
-                    ? stateColors[s.color]
-                    : 'bg-default-200 dark:bg-default-700'
-                    }`}
+                  className={`flex size-10 items-center justify-center rounded-full transition-colors ${
+                    isActive ? stateColors[s.color] : 'bg-border-secondary'
+                  }`}
                 >
                   <Icon
                     size={20}
-                    className={isActive ? 'text-white' : 'text-default-500'}
+                    className={isActive ? 'text-white' : 'text-muted'}
                   />
                 </div>
                 <span
-                  className={`text-[10px] font-bold ${isActive ? stateTextColors[s.color] : 'text-default-400'
-                    }`}
+                  className={`text-[10px] font-bold ${
+                    isActive ? stateTextColors[s.color] : 'text-muted'
+                  }`}
                 >
                   {s.name}
                 </span>
-                <span className='font-mono text-[10px] text-default-400'>
+                <span className='text-muted font-mono text-[10px]'>
                   ({s.code})
                 </span>
               </button>
               {i < 3 && (
                 <div
-                  className={`mx-1 h-px w-4 sm:w-8 ${i < activeState
-                    ? 'bg-primary-300'
-                    : 'bg-default-200 dark:bg-default-700'
-                    }`}
+                  className={`mx-1 h-px w-4 sm:w-8 ${
+                    i < activeState ? 'bg-accent' : 'bg-border-secondary'
+                  }`}
                 />
               )}
             </div>
@@ -194,21 +194,21 @@ export default function LifecycleDemo() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.15 }}
-          className='mb-4 rounded-md bg-default-100 px-4 py-3 dark:bg-default-50'
+          className='bg-surface-secondary dark:bg-surface mb-4 rounded-md px-4 py-3'
         >
           <div className='flex flex-wrap gap-x-6 gap-y-1 text-xs'>
-            <span className='text-default-500'>
-              <span className='text-default-400'>Trigger:</span>{' '}
+            <span className='text-muted'>
+              <span className='text-muted'>Trigger:</span>{' '}
               {STATES[activeState].trigger}
             </span>
-            <span className='text-default-500'>
-              <span className='text-default-400'>Event:</span>{' '}
-              <span className='font-mono text-primary-500'>
+            <span className='text-muted'>
+              <span className='text-muted'>Event:</span>{' '}
+              <span className='text-accent font-mono'>
                 {STATES[activeState].event}
               </span>
             </span>
           </div>
-          <p className='mt-1 text-xs text-default-500'>
+          <p className='text-muted mt-1 text-xs'>
             {STATES[activeState].description}
           </p>
         </motion.div>
@@ -226,7 +226,7 @@ export default function LifecycleDemo() {
       >
         <div
           ref={containerRef}
-          className='relative mb-4 flex items-center justify-between rounded-lg border border-default-100 bg-background px-10 py-8'
+          className='border-separator bg-background relative mb-4 flex items-center justify-between rounded-lg border px-10 py-8'
         >
           <DotPattern
             glow
@@ -245,15 +245,14 @@ export default function LifecycleDemo() {
 
           <div className='flex flex-col items-center gap-1'>
             <span
-              className={`text-xs font-medium ${ghostMode
-                ? 'text-danger-500'
-                : 'text-success-600 dark:text-success-400'
-                }`}
+              className={`text-xs font-medium ${
+                ghostMode ? 'text-danger' : 'text-success-soft-foreground'
+              }`}
             >
               {status}
             </span>
             {!ghostMode && (
-              <span className='font-mono text-[10px] text-default-400'>
+              <span className='text-muted font-mono text-[10px]'>
                 pong count: {pongCount}
               </span>
             )}
@@ -308,22 +307,12 @@ export default function LifecycleDemo() {
       {/* Controls */}
       <div className='flex justify-center gap-3'>
         {activeState === 1 && !ghostMode && (
-          <Button
-            size='sm'
-            variant='flat'
-            color='danger'
-            onPress={handleKillClient}
-          >
+          <Button variant='danger-soft' size='sm' onPress={handleKillClient}>
             Kill Client
           </Button>
         )}
         {(ghostMode || activeState === 3) && (
-          <Button
-            size='sm'
-            variant='flat'
-            color='primary'
-            onPress={handleReset}
-          >
+          <Button variant='secondary' size='sm' onPress={handleReset}>
             Reset
           </Button>
         )}

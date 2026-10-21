@@ -1,9 +1,13 @@
 'use client'
 
-import { Accordion, AccordionItem, addToast,  Chip, Link, ScrollShadow } from '@heroui/react'
+import { Accordion, toast, Chip, Link, ScrollShadow } from '@heroui/react'
 import React from 'react'
 import { ProjectType } from '@/content/projects'
-import { IconBrandGithub,  IconEngineFilled, IconLink } from '@tabler/icons-react'
+import {
+  IconBrandGithub,
+  IconEngineFilled,
+  IconLink
+} from '@tabler/icons-react'
 import Image from 'next/image'
 import {
   MorphingDialog,
@@ -14,7 +18,7 @@ import {
   MorphingDialogSubtitle,
   MorphingDialogImage,
   MorphingDialogDescription,
-  MorphingDialogClose,
+  MorphingDialogClose
 } from '@/components/ui/morphing-dialog'
 import ScreenshotMarquee from '@/components/ui/screenshot-marquee'
 
@@ -29,7 +33,7 @@ export default function Projects({ projects }: ProjectProps) {
         <MorphingDialog key={project.title}>
           {/* Card Trigger */}
           <MorphingDialogTrigger
-            className='cursor-pointer overflow-hidden rounded-lg bg-content1 px-3 py-4 transition-colors duration-250 hover:bg-content2 active:bg-content3'
+            className='bg-surface hover:bg-surface-secondary active:bg-surface-tertiary cursor-pointer overflow-hidden rounded-lg px-3 py-4 transition-colors duration-250'
             style={{ borderRadius: 8 }}
           >
             <div className='flex items-center gap-2'>
@@ -39,13 +43,14 @@ export default function Projects({ projects }: ProjectProps) {
                   alt={project.title}
                   width={40}
                   height={30}
+                  className={project.logoClassName}
                 />
               </MorphingDialogImage>
               <div>
                 <MorphingDialogTitle className='text-lg font-bold'>
                   {project.title}
                 </MorphingDialogTitle>
-                <MorphingDialogSubtitle className='line-clamp-1 text-sm text-default-500'>
+                <MorphingDialogSubtitle className='text-muted line-clamp-1 text-sm'>
                   {project.subTitle}
                 </MorphingDialogSubtitle>
               </div>
@@ -55,7 +60,7 @@ export default function Projects({ projects }: ProjectProps) {
           {/* Expanded Dialog */}
           <MorphingDialogContainer>
             <MorphingDialogContent
-              className='relative w-full max-w-2xl overflow-hidden rounded-xl bg-content1 p-6 shadow-xl'
+              className='bg-surface relative w-full max-w-2xl overflow-hidden rounded-xl p-6 shadow-xl'
               style={{ borderRadius: 12 }}
             >
               <MorphingDialogClose />
@@ -68,13 +73,14 @@ export default function Projects({ projects }: ProjectProps) {
                     alt={project.title}
                     width={60}
                     height={50}
+                    className={project.logoClassName}
                   />
                 </MorphingDialogImage>
                 <div>
                   <MorphingDialogTitle className='text-xl font-bold'>
                     {project.title}
                   </MorphingDialogTitle>
-                  <MorphingDialogSubtitle className='text-base font-semibold text-default-500'>
+                  <MorphingDialogSubtitle className='text-muted text-base font-semibold'>
                     {project.subTitle}
                   </MorphingDialogSubtitle>
                 </div>
@@ -87,67 +93,77 @@ export default function Projects({ projects }: ProjectProps) {
                   <ScreenshotMarquee
                     screenshots={project.screenshots}
                     variant='3d'
-                  // speed={55}
+                    // speed={55}
                   />
                 )}
 
                 {/* Links */}
                 <div className='flex items-center gap-2'>
                   {project.liveLink && (
-                    <Chip
-                      size='sm'
-                      as={Link}
-                      startContent={<IconLink className='size-5' />}
-                      aria-pressed
-                      isExternal
+                    <Link
                       href={project.liveLink}
+                      target='_blank'
+                      rel='noopener noreferrer'
                     >
-                      Live Link
-                    </Chip>
+                      <Chip
+                        size='sm'
+                        className='inline-flex items-center gap-1'
+                      >
+                        <IconLink className='size-5' />
+                        <Chip.Label>Live Link</Chip.Label>
+                      </Chip>
+                    </Link>
                   )}
                   {project.codeLink && (
-                    <Chip
-                      size='sm'
-                      aria-pressed
-                      as={Link}
-                      isExternal
-                      onPress={() =>
-                        addToast({
-                          title: 'Access Restricted',
+                    <button
+                      type='button'
+                      onClick={() =>
+                        toast('Access Restricted', {
                           description:
                             'This code is private and cant be viewed.',
-                          variant: 'flat',
-                          color: 'warning'
+                          variant: 'warning'
                         })
                       }
-                      startContent={
-                        <IconBrandGithub className='size-5' />
-                      }
                     >
-                      Code
-                    </Chip>
+                      <Chip
+                        size='sm'
+                        className='inline-flex items-center gap-1'
+                      >
+                        <IconBrandGithub className='size-5' />
+                        <Chip.Label>Code</Chip.Label>
+                      </Chip>
+                    </button>
                   )}
                 </div>
 
                 {/* Tech Stack */}
-                <Accordion isCompact>
-                  <AccordionItem
-                    key='tech'
-                    aria-label='Tech Stack'
-                    title={<div className='flex items-center gap-2'><IconEngineFilled size={20}/><span>Tech Stack</span></div>}
-                    classNames={{ title: 'text-sm font-semibold' }}
-                  >
-                    <div className='flex flex-wrap gap-2 pb-2'>
-                      {project.tech.map(({ name, icon }) => (
-                        <Chip
-                          key={name}
-                          startContent={icon}
-                        >
-                          {name}
-                        </Chip>
-                      ))}
-                    </div>
-                  </AccordionItem>
+                <Accordion>
+                  <Accordion.Item id='tech'>
+                    <Accordion.Heading>
+                      <Accordion.Trigger className='text-sm font-semibold'>
+                        <div className='flex items-center gap-2'>
+                          <IconEngineFilled size={20} />
+                          <span>Tech Stack</span>
+                        </div>
+                        <Accordion.Indicator />
+                      </Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Panel>
+                      <Accordion.Body>
+                        <div className='flex flex-wrap gap-2 pb-2'>
+                          {project.tech.map(({ name, icon }) => (
+                            <Chip
+                              key={name}
+                              className='inline-flex items-center gap-1'
+                            >
+                              {icon}
+                              <Chip.Label>{name}</Chip.Label>
+                            </Chip>
+                          ))}
+                        </div>
+                      </Accordion.Body>
+                    </Accordion.Panel>
+                  </Accordion.Item>
                 </Accordion>
 
                 {/* Description & Features */}
@@ -155,16 +171,13 @@ export default function Projects({ projects }: ProjectProps) {
                   <p className='text-sm'>{project.description}</p>
                   {project.features && (
                     <>
-                      <h3 className='mt-4 text-medium font-semibold'>
+                      <h3 className='mt-4 text-base font-semibold'>
                         Key Features
                       </h3>
                       <ul className='mt-1 list-disc space-y-1 text-base'>
                         {project.features.map((feature, index) => (
-                          <li
-                            key={index}
-                            className='flex items-start gap-2'
-                          >
-                            <span className='mt-1 text-primary'>
+                          <li key={index} className='flex items-start gap-2'>
+                            <span className='text-accent mt-1'>
                               {feature.icon}
                             </span>
                             <span>{feature.title}</span>

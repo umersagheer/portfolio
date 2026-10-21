@@ -1,6 +1,6 @@
 'use client'
 
-import { Tab, Tabs, Tooltip } from '@heroui/react'
+import { Tabs, Tooltip } from '@heroui/react'
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import {
@@ -27,42 +27,70 @@ export const Navbar = () => {
         {/* Gradient blob */}
 
         <Tabs
-          aria-label='Theme mode'
           selectedKey={theme}
           onSelectionChange={key => setTheme(key as string)}
-          radius='sm'
-          variant='bordered'
-          // size='sm'
-          classNames={{
-            tabList: 'gap-1 backdrop-blur-lg',
-            tab: ' px-0.5'
-          }}
+          variant='primary'
         >
-          <Tab
-            key={'light'}
-            title={
-              <Tooltip content='Light Mode' size='sm'>
-                <IconSunHighFilled className='size-4 md:size-5' />
-              </Tooltip>
-            }
-          />
+          {/* Container styled to match the nav pill in ui/tabs.tsx: v3's default
+              Tabs container is a solid bg-default block, the v2 `bordered`
+              variant was a transparent bordered pill. */}
+          <Tabs.ListContainer className='border-border rounded-[12px] border-2 bg-transparent shadow-xs backdrop-blur-lg'>
+            <Tabs.List
+              aria-label='Theme mode'
+              className='gap-1 bg-transparent p-1'
+            >
+              {/* The Tab is the focusable control. Tooltips only open from a
+                  focusable trigger, so each icon gets a presentational
+                  Tooltip.Trigger kept out of the tab order (tabIndex -1): it
+                  feeds hover to the tooltip without adding a tab stop. */}
+              <Tabs.Tab id='light' aria-label='Light Mode' className='px-0.5'>
+                <Tooltip>
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconSunHighFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
 
-          <Tab
-            key={'dark'}
-            title={
-              <Tooltip content='Dark Mode' size='sm'>
-                <IconMoonFilled className='size-4 md:size-5' />
-              </Tooltip>
-            }
-          />
-          <Tab
-            key={'system'}
-            title={
-              <Tooltip content='System Preferences' size='sm'>
-                <IconDeviceDesktopFilled className='size-4 md:size-5' />
-              </Tooltip>
-            }
-          />
+                  <Tooltip.Content>Light Mode</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='dark' aria-label='Dark Mode' className='px-0.5'>
+                <Tooltip>
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconMoonFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
+
+                  <Tooltip.Content>Dark Mode</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab
+                id='system'
+                aria-label='System Preferences'
+                className='px-0.5'
+              >
+                <Tooltip>
+                  <Tooltip.Trigger
+                    role='presentation'
+                    tabIndex={-1}
+                    className='flex'
+                  >
+                    <IconDeviceDesktopFilled className='size-4 md:size-5' />
+                  </Tooltip.Trigger>
+
+                  <Tooltip.Content>System Preferences</Tooltip.Content>
+                </Tooltip>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
         <ExpandableTabs tabs={navLinks} />
       </div>

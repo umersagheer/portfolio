@@ -2,8 +2,7 @@ import { JSX } from 'react'
 import { highlight } from 'sugar-high'
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
 
-import { Checkbox } from '@heroui/react'
-import Counter from '@/components/counter'
+import CheckItem from '@/components/check-item'
 import { slugify } from '@/libs/toc'
 import LayoutAnimationDemo from '@/components/blog/layout-animations/layout-animation-demo'
 import LayoutIdDemo from '@/components/blog/layout-animations/layout-id-demo'
@@ -98,22 +97,11 @@ function Anchor({
   )
 }
 
-function CheckItem({ label }: { label: string }) {
-  return (
-    <div className='my-1'>
-      <Checkbox defaultSelected={false} size='sm' radius='sm'>
-        <span className='text-sm text-foreground'>{label}</span>
-      </Checkbox>
-    </div>
-  )
-}
-
 const components = {
   code: Code,
   a: Anchor,
   h2: HeadingTwo,
   h3: HeadingThree,
-  Counter,
   LayoutAnimationDemo,
   LayoutIdDemo,
   AnimatePresenceDemo,

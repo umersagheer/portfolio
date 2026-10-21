@@ -1,6 +1,218 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* HeroUI v3 is CSS-first: no Tailwind plugin, no provider. Must come after
+   Tailwind. Replaces the v2 `@plugin ./hero.ts` + `@source` setup. */
+@import '@heroui/styles';
+
+/* NO @config here. The legacy JS-config bridge makes Tailwind mis-compile
+   HeroUI's `@theme inline` block: it strips the `--color-` prefix and emits
+   self-referential vars (`--surface: var(--surface)`) that override the real
+   theme, so every surface/border/muted colour resolves to nothing. The old
+   tailwind.config.ts is ported to CSS below instead. */
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Ported from tailwind.config.ts ------------------------------------------ */
+
+/* next/font exposes --font-poppins and --font-source-code-pro on <body>.
+   These are @utility (not @theme) because a theme key named --font-poppins
+   would self-reference the next/font variable of the same name. */
+@utility font-poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+@utility font-sourceCodePro {
+  font-family: var(--font-source-code-pro), monospace;
+}
+
+/* v2 config had container: { center, padding: 1rem, screens: { 2xl: 1400px } } */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 96rem) {
+    max-width: 1400px;
+  }
+}
+
+@theme {
+  --animate-marquee-scroll-vertical: marquee-scroll-vertical 25s linear infinite;
+}
+
+/* v3 tabs are `width: 100%` with a min-width, so they stretch to fill their
+   container and wrap long labels onto two lines ("Bite-sized", "--mixed").
+   v2 tabs were content-sized; restore that for every Tabs instance. */
+.tabs__tab {
+  width: auto;
+  white-space: nowrap;
+}
+
+/* The same applies to the pill around the tabs: v3's `.tabs` is a flex column,
+   so the list container stretches to the full width of the demo card and the
+   tabs sit at the left of an oversized pill. Shrink it to its tabs; max-width
+   keeps the built-in horizontal scroller working on narrow screens. */
+.tabs[data-orientation='horizontal'] > .tabs__list-container {
+  width: fit-content;
+  max-width: 100%;
+}
+
+@keyframes marquee-scroll-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+/* v3's stock --accent is blue; this portfolio's brand colour is purple.
+   These are the exact primary values from the old v2 heroui() theme, so
+   `accent` keeps rendering the brand rather than HeroUI's default. */
+:root {
+  --accent: #7828c8;
+}
+.dark {
+  --accent: #9353d3;
+}
+
+/* v2 painted <body> with its theme background (#fff / #000) and foreground.
+   v3 sets neither, so the browser's default dark canvas (a dark grey) showed
+   through the background art, and v3's own --background is off-white / grey
+   (0.97 / 0.12). Restore v2's values so the page and every bg-background
+   demo surface look as they did. */
+:root {
+  --background: #ffffff;
+}
+.dark {
+  --background: #000000;
+}
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/* v3 dropped `secondary`, but the demos use it as a *second* hue next to
+   accent (git blob vs tree, ISO month vs year, frame opcode vs FIN, the
+   morph gradient). Folding it into accent made those pairs identical, so it
+   is restored as a brand token with the v2 blues. (v2's light DEFAULT was
+   #7828c8 -- a copy of primary, so light mode was already merged on master;
+   #006fee is the light 500 the rest of that scale used.) The -soft pair
+   mirrors how v3 derives --accent-soft / --accent-soft-foreground. */
+:root {
+  --secondary: #006fee;
+  --secondary-foreground: #ffffff;
+  --secondary-soft: color-mix(in oklab, var(--secondary) 15%, transparent);
+  --secondary-soft-foreground: color-mix(
+    in oklab,
+    var(--secondary) 70%,
+    var(--foreground) 30%
+  );
+}
+.dark {
+  --secondary: #338ef7;
+}
+
+@theme inline {
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-secondary-soft-foreground: var(--secondary-soft-foreground);
+}
+
+/* v3 Button colours come from --button-bg/-hover/-pressed/-fg. A bg-* utility
+   would win over the .button hover rule and kill hover/pressed feedback, so
+   extra hues are added as modifiers that fill the same variables, mirroring
+   .button--primary. Same layer as HeroUI's buttons and declared after them,
+   so they override the variant they are paired with. */
+@layer components {
+  .button--brand-secondary {
+    --button-bg: var(--secondary);
+    --button-bg-hover: color-mix(
+      in oklab,
+      var(--secondary) 90%,
+      var(--secondary-foreground) 10%
+    );
+    --button-bg-pressed: var(--button-bg-hover);
+    --button-fg: var(--secondary-foreground);
+  }
+
+  /* v2's success colour and its flat (soft) warning/success styles carry
+     meaning in the demos (safe vs unsafe, fixed vs buggy); v3 only ships
+     danger / danger-soft. Same variable contract as above. */
+  .button--success {
+    --button-bg: var(--success);
+    --button-bg-hover: var(--success-hover);
+    --button-bg-pressed: var(--success-hover);
+    --button-fg: var(--success-foreground);
+  }
+  .button--success-soft {
+    --button-bg: var(--success-soft);
+    --button-bg-hover: var(--success-soft-hover);
+    --button-bg-pressed: var(--success-soft-hover);
+    --button-fg: var(--success-soft-foreground);
+  }
+  .button--warning-soft {
+    --button-bg: var(--warning-soft);
+    --button-bg-hover: var(--warning-soft-hover);
+    --button-bg-pressed: var(--warning-soft-hover);
+    --button-fg: var(--warning-soft-foreground);
+  }
+
+  /* v3 Alerts only colour the icon and title; the box is bg-surface, which
+     disappears inside a surface-coloured demo card. v2's flat alerts were
+     tinted by status (and unshadowed), so restore that. */
+  .alert--accent,
+  .alert--success,
+  .alert--warning,
+  .alert--danger {
+    box-shadow: none;
+  }
+  .alert--accent {
+    background-color: var(--accent-soft);
+  }
+  .alert--success {
+    background-color: var(--success-soft);
+  }
+  .alert--warning {
+    background-color: var(--warning-soft);
+  }
+  .alert--danger {
+    background-color: var(--danger-soft);
+  }
+}
+
+/* v3 fields default to `--field-border: transparent` and rely on
+   --field-background, which resolves to the same value as --surface. Inside a
+   surface-coloured demo container that makes Select/TimeField/Input invisible
+   (no border, no contrast). v2's inputs were bordered, so restore that.
+   The colour alone is not enough: the theme also sets --field-border-width to
+   0px, so the width has to be restored too or the border never paints. */
+:root,
+.dark {
+  --field-border: var(--border);
+  --field-border-width: var(--border-width);
+}
+
+/* v3 waits 1500ms before opening a tooltip; v2 opened immediately. Tooltip
+   reads this variable for its default delay, so one value restores the old
+   feel everywhere (per-instance `delay` props still win). */
+:root {
+  --tooltip-delay: 0ms;
+}
+
+/* Tailwind v4 changed the default border/divide colour from gray-200 to
+   currentColor. This restores v3 behaviour for the ~74 bare `border` usages
+   so the upgrade is not a visual change. */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 html {
   scroll-behavior: smooth;
@@ -79,5 +291,11 @@ html {
   }
   .prose pre {
     @apply font-sourceCodePro leading-snug dark:bg-zinc-900;
+  }
+  /* Long unbroken inline code (e.g. Intl.DateTimeFormat().resolvedOptions()
+     .timeZone) pushed posts wider than a phone screen; let it wrap. Code
+     blocks keep their own horizontal scroll. */
+  .prose :not(pre) > code {
+    overflow-wrap: anywhere;
   }
 }

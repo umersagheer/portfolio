@@ -1,7 +1,13 @@
+import Link from 'next/link'
 import formatDate from '@/libs/utils'
 import { PostCategory, PostMetadata } from '@/types'
-import { Image, Link } from '@heroui/react'
-import { IconClock, IconFileInvoice, IconFilePower, IconHelpSmall } from '@tabler/icons-react'
+import NextImage from 'next/image'
+import {
+  IconClock,
+  IconFileInvoice,
+  IconFilePower,
+  IconHelpSmall
+} from '@tabler/icons-react'
 import React from 'react'
 
 type PostProps = {
@@ -15,31 +21,27 @@ export default function Posts({ posts }: PostProps) {
         <Link
           key={post.postId}
           href={`/posts/${post.postId}`}
-          className='group flex flex-col overflow-hidden rounded-xl border border-default-200 bg-default-50 transition-all duration-300 hover:scale-[1.02] hover:border-primary dark:border-default-100'
+          className='group border-border bg-surface hover:border-accent flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.02]'
         >
           {post.image && (
-            <div className='aspect-video w-full overflow-hidden'>
-              <Image
+            <div className='relative aspect-video w-full overflow-hidden'>
+              <NextImage
                 src={post.image}
                 alt={post.title ?? ''}
-                classNames={{
-                  wrapper: 'w-full h-full !max-w-full',
-                  img: 'h-full w-full object-cover rounded-none'
-                }}
-                radius='none'
+                fill
+                sizes='(max-width: 768px) 100vw, 33vw'
+                className='object-cover'
               />
             </div>
           )}
           <div className='flex flex-1 flex-col justify-between space-y-2 p-4'>
             <div className='space-y-1'>
-              <p className='font-sourceCodePro text-base font-semibold text-foreground'>
+              <p className='font-sourceCodePro text-foreground text-base font-semibold'>
                 {post.title}
               </p>
-              <p className='line-clamp-2 text-sm text-default-500'>
-                {post.summary}
-              </p>
+              <p className='text-muted line-clamp-2 text-sm'>{post.summary}</p>
             </div>
-            <div className='flex items-center gap-2 pt-2 text-xs text-default-400'>
+            <div className='text-muted flex items-center gap-2 pt-2 text-xs'>
               {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
               {post.readingTime && (
                 <>
@@ -53,8 +55,12 @@ export default function Posts({ posts }: PostProps) {
               {post.category && (
                 <>
                   <span>·</span>
-                  <span className='capitalize text-xs flex items-center gap-1'>
-                    {post.category === 'bite-sized' as PostCategory ? <IconFilePower size={12} /> : <IconFileInvoice size={12} />}
+                  <span className='flex items-center gap-1 text-xs capitalize'>
+                    {post.category === ('bite-sized' as PostCategory) ? (
+                      <IconFilePower size={12} />
+                    ) : (
+                      <IconFileInvoice size={12} />
+                    )}
                     {post.category}
                   </span>
                 </>

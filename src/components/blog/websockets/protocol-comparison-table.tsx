@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell
-} from '@heroui/react'
+import { Table } from '@heroui/react'
 
 const rows = [
   {
@@ -55,29 +48,34 @@ const columns = [
 export default function ProtocolComparisonTable() {
   return (
     <div className='not-prose my-6'>
-      <Table
-        aria-label='Protocol comparison'
-        removeWrapper
-        classNames={{
-          base: 'overflow-x-auto',
-          th: 'text-[11px] font-semibold uppercase tracking-wider',
-          td: 'text-xs'
-        }}
-      >
-        <TableHeader columns={columns}>
-          {col => <TableColumn key={col.key}>{col.label}</TableColumn>}
-        </TableHeader>
-        <TableBody items={rows}>
-          {row => (
-            <TableRow key={row.key}>
-              {columnKey => (
-                <TableCell>
-                  {row[columnKey as keyof typeof row]}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
+      <Table>
+        <Table.ScrollContainer className='overflow-x-auto'>
+          <Table.Content aria-label='Protocol comparison'>
+            <Table.Header>
+              {columns.map((col, i) => (
+                <Table.Column
+                  key={col.key}
+                  id={col.key}
+                  isRowHeader={i === 0}
+                  className='text-[11px] font-semibold tracking-wider uppercase'
+                >
+                  {col.label}
+                </Table.Column>
+              ))}
+            </Table.Header>
+            <Table.Body>
+              {rows.map(row => (
+                <Table.Row key={row.key} id={row.key}>
+                  {columns.map(col => (
+                    <Table.Cell key={col.key} className='text-xs'>
+                      {row[col.key as keyof typeof row]}
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Content>
+        </Table.ScrollContainer>
       </Table>
     </div>
   )

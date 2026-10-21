@@ -71,7 +71,10 @@ export function getTimeZoneShortName(date: Date, timeZone: string) {
 }
 
 export function getTimeZoneOffsetLabel(date: Date, timeZone: string) {
-  return getTimeZonePart(date, timeZone, 'shortOffset').replace('GMT', 'UTC')
+  // Engines disagree on a zero offset: Node's ICU says "GMT", Chrome says
+  // "GMT+0". Normalise so server and client render the same label.
+  const label = getTimeZonePart(date, timeZone, 'shortOffset')
+  return (label === 'GMT' ? 'GMT+0' : label).replace('GMT', 'UTC')
 }
 
 export function getTimeZoneOffsetMinutes(date: Date, timeZone: string) {

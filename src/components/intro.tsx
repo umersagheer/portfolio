@@ -1,6 +1,6 @@
 'use client'
 
-import { Image } from '@heroui/react'
+import NextImage from 'next/image'
 import React from 'react'
 import { siteProfile } from '@/constants/site-profile'
 
@@ -8,14 +8,15 @@ export default function Intro() {
   return (
     <div className='flex flex-col items-start justify-center'>
       <div className='flex items-center justify-start gap-3'>
-        <Image
-          src={siteProfile.avatar}
-          alt={siteProfile.name}
-          width={80}
-          height={80}
-          className='size-20 grayscale'
-          isZoomed
-        />
+        <div className='size-20 shrink-0 overflow-hidden rounded-xl'>
+          <NextImage
+            src={siteProfile.avatar}
+            alt={siteProfile.name}
+            width={832}
+            height={832}
+            className='size-20 grayscale transition-transform duration-300 hover:scale-110'
+          />
+        </div>
         <div className=''>
           <h2 className='font-sourceCodePro text-2xl font-bold'>
             {siteProfile.name}
@@ -25,7 +26,7 @@ export default function Intro() {
       </div>
       <div className='mt-5 max-w-2xl space-y-1'>
         <h3 className='font-sourceCodePro text-xl font-semibold'>About</h3>
-        <p className='text-small tracking-wide'>
+        <p className='text-sm tracking-wide'>
           Hi, I&apos;m a software engineer from Pakistan 🇵🇰, turning ideas into
           sleek web & mobile apps.
         </p>

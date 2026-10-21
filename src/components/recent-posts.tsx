@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import { getPosts } from '@/libs/posts'
 import React from 'react'
 import Posts from './posts'
-import { Link } from "@heroui/react"
 import { ArrowRightIcon } from 'lucide-react'
 
 export default async function RecentPosts() {
@@ -12,10 +12,7 @@ export default async function RecentPosts() {
       <Posts posts={posts} />
       <Link
         href='/posts'
-        color='foreground'
-        isBlock
-        className='self-center'
-        size='sm'
+        className='text-foreground hover:bg-surface-secondary inline-flex items-center self-center rounded-md px-2 py-1 text-sm transition-colors'
       >
         <p className='font-medium'>All posts</p>
         <ArrowRightIcon className='ml-2 size-5' />

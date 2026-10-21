@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '@heroui/react'
-import { GitCommitHorizontalIcon, GitBranchIcon, RotateCcwIcon } from 'lucide-react'
+import {
+  GitCommitHorizontalIcon,
+  GitBranchIcon,
+  RotateCcwIcon
+} from 'lucide-react'
 
 import GitDemoContainer from './shared/git-demo-container'
 import StageDots from './shared/stage-dots'
@@ -77,9 +81,10 @@ export default function BranchHeadSimulator() {
       description='What a Git GUI shows as a heavy parallel lane is, underneath, a tiny text file holding one hash. Commit and watch that single line get rewritten — that is the entire mechanism of a branch “moving.”'
       caption={
         <>
-          <code>refs/heads/&lt;name&gt;</code> is a ~41-byte file: a 40-character commit hash
-          plus a newline. Committing overwrites that line; branching writes a new such file. No
-          commit is ever moved or copied — only a pointer is rewritten.
+          <code>refs/heads/&lt;name&gt;</code> is a ~41-byte file: a
+          40-character commit hash plus a newline. Committing overwrites that
+          line; branching writes a new such file. No commit is ever moved or
+          copied — only a pointer is rewritten.
         </>
       }
     >
@@ -88,7 +93,7 @@ export default function BranchHeadSimulator() {
         <button
           type='button'
           onClick={commit}
-          className='inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] active:scale-95'
+          className='bg-accent text-accent-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-transform hover:scale-[1.02] active:scale-95'
         >
           <GitCommitHorizontalIcon size={15} /> Commit on {active}
         </button>
@@ -96,14 +101,14 @@ export default function BranchHeadSimulator() {
           type='button'
           onClick={branch}
           disabled={hasFeature}
-          className='inline-flex items-center gap-1.5 rounded-lg border border-default-200 px-3 py-1.5 text-sm text-default-600 transition-colors hover:border-primary hover:text-primary disabled:opacity-40 disabled:hover:border-default-200 disabled:hover:text-default-600'
+          className='border-border text-foreground hover:border-accent hover:text-accent disabled:hover:border-border disabled:hover:text-foreground inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:opacity-40'
         >
           <GitBranchIcon size={15} /> Branch feature
         </button>
         <button
           type='button'
           onClick={reset}
-          className='ml-auto inline-flex items-center gap-1 text-[11px] text-default-400 transition-colors hover:text-default-600'
+          className='text-muted hover:text-foreground ml-auto inline-flex items-center gap-1 text-[11px] transition-colors'
         >
           <RotateCcwIcon size={12} /> reset
         </button>
@@ -111,13 +116,13 @@ export default function BranchHeadSimulator() {
 
       <div className='grid gap-3 lg:grid-cols-2'>
         {/* LEFT — what a GUI shows: the fat parallel lane */}
-        <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-4 shadow-sm'>
+        <div className='border-separator bg-background relative overflow-hidden rounded-xl border p-4 shadow-xs'>
           <StageDots />
-          <div className='relative mb-3 flex items-center gap-1.5 text-xs font-medium text-default-500'>
+          <div className='text-muted relative mb-3 flex items-center gap-1.5 text-xs font-medium'>
             <TheSvgIcon
               slug='git'
               size={16}
-              fallback={<GitBranchIcon size={16} className='text-primary' />}
+              fallback={<GitBranchIcon size={16} className='text-accent' />}
             />
             what a Git GUI shows
           </div>
@@ -130,15 +135,15 @@ export default function BranchHeadSimulator() {
                   <div
                     className={cn(
                       'h-16 w-3 rounded-full transition-colors',
-                      isActive ? 'bg-primary' : 'bg-default-300'
+                      isActive ? 'bg-accent' : 'bg-border-secondary'
                     )}
                   />
                   <span
                     className={cn(
-                      'inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-sourceCodePro text-xs font-semibold',
+                      'font-sourceCodePro inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold',
                       isActive
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-default-200 text-default-500'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'bg-surface-tertiary text-muted'
                     )}
                   >
                     <GitBranchIcon size={11} />
@@ -148,24 +153,24 @@ export default function BranchHeadSimulator() {
               )
             })}
           </div>
-          <p className='relative mt-3 text-[11px] text-default-400'>
+          <p className='text-muted relative mt-3 text-[11px]'>
             Looks like separate lanes of work…
           </p>
         </div>
 
         {/* RIGHT — what Git keeps: the literal files */}
-        <div className='rounded-xl bg-default-100 p-4 font-sourceCodePro shadow-sm'>
-          <div className='mb-3 text-xs font-medium text-default-500'>
+        <div className='bg-surface-secondary font-sourceCodePro rounded-xl p-4 shadow-xs'>
+          <div className='text-muted mb-3 text-xs font-medium'>
             what Git keeps under the hood
           </div>
 
           <div className='space-y-3'>
             {branches.map(b => (
               <div key={b.name}>
-                <div className='mb-1 text-[11px] text-default-400'>
+                <div className='text-muted mb-1 text-[11px]'>
                   .git/refs/heads/{b.name}
                 </div>
-                <div className='flex h-7 items-center rounded-md bg-background px-2 shadow-sm'>
+                <div className='bg-background flex h-7 items-center rounded-md px-2 shadow-xs'>
                   <AnimatePresence mode='wait'>
                     <motion.code
                       key={b.tip}
@@ -173,7 +178,7 @@ export default function BranchHeadSimulator() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={swap}
-                      className='text-xs font-semibold text-secondary'
+                      className='text-secondary text-xs font-semibold'
                     >
                       {b.tip}
                     </motion.code>
@@ -183,7 +188,7 @@ export default function BranchHeadSimulator() {
             ))}
           </div>
 
-          <p className='mt-3 text-[11px] text-default-400'>
+          <p className='text-muted mt-3 text-[11px]'>
             …but each is just one line: a hash.
           </p>
         </div>
@@ -197,7 +202,7 @@ export default function BranchHeadSimulator() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='bg-surface-secondary text-foreground mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>

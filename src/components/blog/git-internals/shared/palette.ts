@@ -2,14 +2,15 @@
  * The shared visual language for every Git-internals component.
  *
  * Deliberately a *small, flat* system: only base semantic tokens — gray
- * (`default`), `primary`, `secondary`, plus `success` / `danger` for the two
- * states that need them. No tint/shade ladders (`-400`, `-500`, …), no opacity
- * fills, no hardcoded hex. Base tokens (`primary`, `secondary`, `success`, …)
- * already adapt to light/dark on their own, so we lean on them everywhere.
+ * (`surface` / `muted`), `accent`, `secondary`, plus `success` / `danger` for
+ * the two states that need them. No tint/shade ladders (`-400`, `-500`, …), no
+ * hardcoded hex. Base tokens (`accent`, `secondary`, `success`, …) already
+ * adapt to light/dark on their own, so we lean on them everywhere.
+ * (`secondary` is a brand token defined in globals.css — HeroUI v3 has none.)
  *
  *   blob   → secondary   (blue)
- *   tree   → primary     (purple)
- *   commit → default     (gray), with a primary ring when it is HEAD
+ *   tree   → accent      (purple)
+ *   commit → surface     (gray), with an accent ring when it is HEAD
  *   ref    → success     (branch / HEAD tags)
  *   added / staged → success   |   removed → danger
  *
@@ -35,7 +36,7 @@ type ObjectStyle = {
 
 /**
  * Resting styles per object type — base tokens only. Surfaces use the neutral
- * `default-100` gray (reads correctly in both themes); accents use the color's
+ * `surface-secondary` gray (reads correctly in both themes); accents use the color's
  * base token. State overlays (new / orphaned / head) apply on top.
  */
 export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
@@ -47,13 +48,13 @@ export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
     accent: 'text-secondary'
   },
   tree: {
-    container: 'border-primary bg-primary/10',
-    badge: 'bg-primary text-primary-foreground',
-    accent: 'text-primary'
+    container: 'border-accent bg-accent/10',
+    badge: 'bg-accent text-accent-foreground',
+    accent: 'text-accent'
   },
   commit: {
-    container: 'border-default-300 bg-default-100/60',
-    badge: 'bg-default-200 text-foreground',
+    container: 'border-border-secondary bg-surface-secondary/60',
+    badge: 'bg-surface-tertiary text-foreground',
     accent: 'text-foreground'
   }
 }
@@ -66,29 +67,29 @@ export const OBJECT_STYLES: Record<GitObjectType, ObjectStyle> = {
 export const STATE_STYLES: Record<GitNodeState, string> = {
   normal: '',
   /** Freshly created object — a primary ring to draw the eye on first appearance. */
-  new: 'ring-1 ring-primary',
+  new: 'ring-1 ring-accent',
   /** Unreferenced / orphaned — dashed gray border + muted gray text. */
-  orphaned: 'border-dashed border-default-300 text-default-400',
+  orphaned: 'border-dashed border-border-secondary text-muted',
   /** The commit HEAD currently points at — a primary ring, the focal point. */
-  head: 'ring-1 ring-primary'
+  head: 'ring-1 ring-accent'
 }
 
 /** Branch / HEAD sticky-note pills — success for branches, primary outline for HEAD. */
 export const REF_STYLES = {
-  branch: 'border-success bg-default-50 text-success',
-  head: 'border-primary bg-default-50 text-primary',
-  detached: 'border-danger bg-default-50 text-danger'
+  branch: 'border-success bg-surface text-success',
+  head: 'border-accent bg-surface text-accent',
+  detached: 'border-danger bg-surface text-danger'
 }
 
 /**
  * Edges connecting nodes (always drawn child → parent by the caller). The
- * `--heroui-*` vars hold HSL channels, so they must be wrapped in hsl(). Base
+ * v3 theme vars hold complete oklch() colours, so they are used directly. Base
  * tokens only: neutral gray by default, primary when newly drawn.
  */
 export const EDGE = {
-  stroke: 'hsl(var(--heroui-default-300))',
-  strokeNew: 'hsl(var(--heroui-primary))',
-  strokeOrphaned: 'hsl(var(--heroui-default-300))'
+  stroke: 'var(--border)',
+  strokeNew: 'var(--accent)',
+  strokeOrphaned: 'var(--border)'
 }
 
 /** Human-readable labels for the type badge. */

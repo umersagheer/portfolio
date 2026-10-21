@@ -172,27 +172,29 @@ export default function HandshakeExplainer() {
             <button
               key={s.label}
               onClick={() => handleStepClick(i)}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${i === step
-                  ? 'bg-primary-400 text-white'
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+                i === step
+                  ? 'bg-accent text-white'
                   : i < step
-                    ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
-                    : 'bg-default-100 text-default-400'
-                }`}
+                    ? 'bg-accent-soft text-accent'
+                    : 'bg-surface-secondary text-muted'
+              }`}
             >
               {i + 1}
             </button>
           ))}
         </div>
         <Button
+          variant={playing ? 'secondary' : 'tertiary'}
           size='sm'
-          variant='flat'
-          color={playing ? 'primary' : 'default'}
           isDisabled={playing}
-          startContent={
-            playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />
-          }
           onPress={handlePlayAll}
         >
+          {playing ? (
+            <IconPlayerPause size={14} />
+          ) : (
+            <IconPlayerPlay size={14} />
+          )}
           {playing ? 'Playing...' : 'Play All'}
         </Button>
       </div>
@@ -200,7 +202,7 @@ export default function HandshakeExplainer() {
       {/* Client → Server diagram */}
       <div
         ref={containerRef}
-        className='relative mb-5 flex items-center justify-between rounded-lg border border-default-100 bg-background px-8 py-6'
+        className='border-separator bg-background relative mb-5 flex items-center justify-between rounded-lg border px-8 py-6'
       >
         <DotPattern
           glow
@@ -220,7 +222,7 @@ export default function HandshakeExplainer() {
         <div className='flex flex-col items-center'>
           <RotatingValue
             value={
-              <span className='rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300'>
+              <span className='bg-accent-soft text-accent rounded-full px-3 py-1 text-xs font-medium'>
                 {current.label}
               </span>
             }
@@ -300,7 +302,7 @@ export default function HandshakeExplainer() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            <div className='overflow-x-auto rounded-md bg-default-100 p-3 font-mono text-xs leading-relaxed dark:bg-default-50'>
+            <div className='bg-surface-secondary dark:bg-surface overflow-x-auto rounded-md p-3 font-mono text-xs leading-relaxed'>
               {current.code.split('\n').map((line, i) => {
                 const isHighlighted = current.annotations.some(
                   a =>
@@ -312,8 +314,8 @@ export default function HandshakeExplainer() {
                     key={i}
                     className={
                       isHighlighted
-                        ? 'text-primary-600 dark:text-primary-400'
-                        : 'text-default-600 dark:text-default-400'
+                        ? 'text-accent'
+                        : 'text-foreground dark:text-muted'
                     }
                   >
                     {line}
@@ -326,12 +328,12 @@ export default function HandshakeExplainer() {
             <div className='mt-3 space-y-1.5'>
               {current.annotations.map(a => (
                 <div key={a.header} className='flex items-start gap-2 text-xs'>
-                  <span className='shrink-0 font-mono text-primary-500'>
+                  <span className='text-accent shrink-0 font-mono'>
                     {a.header.length > 30
                       ? a.header.slice(0, 28) + '...'
                       : a.header}
                   </span>
-                  <span className='text-default-400'>→ {a.note}</span>
+                  <span className='text-muted'>→ {a.note}</span>
                 </div>
               ))}
             </div>
@@ -341,13 +343,13 @@ export default function HandshakeExplainer() {
             key='established'
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className='dark:bg-success-950/30 flex flex-col items-center gap-2 rounded-md bg-success-50 py-6'
+            className='bg-success-soft flex flex-col items-center gap-2 rounded-md py-6'
           >
-            <IconCircleCheck size={32} className='text-success-500' />
-            <span className='text-sm font-medium text-success-700 dark:text-success-400'>
+            <IconCircleCheck size={32} className='text-success' />
+            <span className='text-success-soft-foreground text-sm font-medium'>
               Tunnel Established — Full-Duplex Active
             </span>
-            <span className='text-xs text-success-600/70 dark:text-success-500/70'>
+            <span className='text-success-soft-foreground/70 text-xs'>
               HTTP has been upgraded. Both sides can send data freely.
             </span>
           </motion.div>
@@ -358,20 +360,25 @@ export default function HandshakeExplainer() {
       <div className='mt-4 flex items-center justify-between'>
         <Button
           size='sm'
-          variant='flat'
+          variant='tertiary'
           isDisabled={step === 0}
           onPress={() => handleStepClick(step - 1)}
         >
           Back
         </Button>
-        <div className='flex items-center gap-2 rounded-full bg-primary-50 bg-primary-900/40 px-2 py-1'>
+        <div className='bg-accent-soft flex items-center gap-2 rounded-full px-2 py-1'>
           <RotatingValue
-            value={<StepIcon size={16} className='shrink-0 text-primary-900' />}
+            value={
+              <StepIcon
+                size={16}
+                className='text-accent-soft-foreground shrink-0'
+              />
+            }
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-xs italic text-primary-900'>
+              <span className='text-accent-soft-foreground text-xs italic'>
                 {step === 0
                   ? 'Client sends HTTP Upgrade request...'
                   : step === 1
@@ -385,12 +392,12 @@ export default function HandshakeExplainer() {
         </div>
         <Button
           size='sm'
-          variant='flat'
-          endContent={step < 2 ? <IconChevronRight size={14} /> : undefined}
+          variant='tertiary'
           isDisabled={step === 2}
           onPress={() => handleStepClick(step + 1)}
         >
           {step < 2 ? 'Next' : 'Done'}
+          {step < 2 ? <IconChevronRight size={14} /> : undefined}
         </Button>
       </div>
     </DemoContainer>

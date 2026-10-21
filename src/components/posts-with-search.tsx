@@ -1,8 +1,7 @@
 'use client'
-import { Input, Tab, Tabs, cn } from '@heroui/react'
+import { SearchField, Tabs, cn } from '@heroui/react'
 import { useMemo, useState } from 'react'
 import Posts from './posts'
-import { SearchIcon } from 'lucide-react'
 import { PostCategory, PostMetadata, PostTopic } from '@/types'
 import { IconFileInvoiceFilled, IconFilePowerFilled } from '@tabler/icons-react'
 import { getTopicCounts } from '@/libs/post-topic'
@@ -52,49 +51,50 @@ export default function PostsWithSearch({ posts }: props) {
     <div className='space-y-5'>
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <Tabs
-          size='sm'
-          radius='sm'
-          variant='bordered'
+          variant='primary'
           selectedKey={category}
           onSelectionChange={key => setCategory(key as PostFilter)}
         >
-          <Tab key='all' title='All' />
-          <Tab
-            key='post'
-            title={
-              <div className='flex items-center space-x-2'>
-                <IconFileInvoiceFilled size={18} />
-                <span>Posts</span>
-              </div>
-            }
-          />
-          <Tab
-            key='bite-sized'
-            title={
-              <div className='flex items-center space-x-2'>
-                <IconFilePowerFilled size={18} />
-                <span>Bite-sized</span>
-              </div>
-            }
-          />
+          <Tabs.ListContainer>
+            <Tabs.List>
+              <Tabs.Tab id='all'>
+                All
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='post'>
+                <div className='flex items-center space-x-2'>
+                  <IconFileInvoiceFilled size={18} />
+                  <span>Posts</span>
+                </div>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='bite-sized'>
+                <div className='flex items-center space-x-2'>
+                  <IconFilePowerFilled size={18} />
+                  <span>Bite-sized</span>
+                </div>
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
 
-        <Input
-          type='text'
-          size='sm'
-          radius='sm'
-          variant='flat'
-          value={search}
-          onValueChange={setSearch}
-          onClear={() => setSearch('')}
-          isClearable
-          placeholder='Search posts...'
+        {/* secondary + h-10/rounded-full match the category tabs pill beside
+            it (bg-default, 40px tall); the default variant is a shorter,
+            surface-coloured box that reads as a different control. */}
+        <SearchField
           aria-label='Search posts'
-          startContent={
-            <SearchIcon size={16} className='shrink-0 text-default-400' />
-          }
+          value={search}
+          onChange={setSearch}
+          variant='secondary'
           className='sm:max-w-[16rem]'
-        />
+        >
+          <SearchField.Group className='h-10 rounded-full'>
+            <SearchField.SearchIcon />
+            <SearchField.Input placeholder='Search posts...' />
+            <SearchField.ClearButton />
+          </SearchField.Group>
+        </SearchField>
       </div>
 
       {topicCounts.length > 1 && (
@@ -111,8 +111,8 @@ export default function PostsWithSearch({ posts }: props) {
                 className={cn(
                   'flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
                   isActive
-                    ? 'bg-primary/15 text-primary ring-1 ring-inset ring-primary/40'
-                    : 'bg-default-100 text-default-600 hover:bg-default-200 hover:text-foreground'
+                    ? 'bg-accent/15 text-accent ring-accent/40 ring-1 ring-inset'
+                    : 'bg-surface-secondary text-foreground hover:bg-surface-tertiary hover:text-foreground'
                 )}
               >
                 {topic}
@@ -127,7 +127,7 @@ export default function PostsWithSearch({ posts }: props) {
             <button
               type='button'
               onClick={() => setTopics([])}
-              className='px-1 text-xs text-default-400 underline-offset-4 transition-colors hover:text-foreground hover:underline'
+              className='text-muted hover:text-foreground px-1 text-xs underline-offset-4 transition-colors hover:underline'
             >
               Clear
             </button>
@@ -138,14 +138,12 @@ export default function PostsWithSearch({ posts }: props) {
       {filtered.length > 0 ? (
         <Posts posts={filtered} />
       ) : (
-        <div className='flex flex-col items-center gap-3 rounded-xl border border-dashed border-default-200 py-14 text-center dark:border-default-100'>
-          <p className='text-sm text-default-500'>
-            No posts match these filters.
-          </p>
+        <div className='border-border flex flex-col items-center gap-3 rounded-xl border border-dashed py-14 text-center'>
+          <p className='text-muted text-sm'>No posts match these filters.</p>
           <button
             type='button'
             onClick={resetFilters}
-            className='text-xs font-medium text-primary underline-offset-4 hover:underline'
+            className='text-accent text-xs font-medium underline-offset-4 hover:underline'
           >
             Reset filters
           </button>

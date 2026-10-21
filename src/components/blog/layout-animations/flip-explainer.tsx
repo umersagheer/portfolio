@@ -54,7 +54,8 @@ const steps = [
   {
     label: 'First',
     letter: 'F',
-    description: 'Record the element\'s current position and size before any changes.',
+    description:
+      "Record the element's current position and size before any changes.",
     narration: 'Measuring position with getBoundingClientRect()...',
     icon: IconRulerMeasure,
     boxLeft: FIRST_LEFT,
@@ -69,7 +70,8 @@ const steps = [
   {
     label: 'Last',
     letter: 'L',
-    description: 'Apply the layout change. The element jumps to its final position instantly.',
+    description:
+      'Apply the layout change. The element jumps to its final position instantly.',
     narration: 'DOM updated — element jumped to final position',
     icon: IconBolt,
     boxLeft: LAST_LEFT,
@@ -84,7 +86,8 @@ const steps = [
   {
     label: 'Invert',
     letter: 'I',
-    description: 'Use transforms to make the element look like it\'s still at the starting position.',
+    description:
+      "Use transforms to make the element look like it's still at the starting position.",
     narration: 'Applied inverse transform — visually back at start',
     icon: IconTransform,
     boxLeft: FIRST_LEFT,
@@ -99,7 +102,8 @@ const steps = [
   {
     label: 'Play',
     letter: 'P',
-    description: 'Animate the transform back to zero — the element smoothly moves to its final spot.',
+    description:
+      'Animate the transform back to zero — the element smoothly moves to its final spot.',
     narration: 'Animating transform to zero — smooth GPU-accelerated motion',
     icon: IconPlayerPlayFilled,
     boxLeft: LAST_LEFT,
@@ -136,17 +140,20 @@ export default function FlipExplainer() {
     setPlaying(false)
   }, [])
 
-  const scheduleNext = useCallback((currentStep: number) => {
-    if (currentStep >= 3) {
-      setPlaying(false)
-      return
-    }
-    timerRef.current = setTimeout(() => {
-      const next = currentStep + 1
-      goTo(next)
-      scheduleNext(next)
-    }, 1800)
-  }, [goTo])
+  const scheduleNext = useCallback(
+    (currentStep: number) => {
+      if (currentStep >= 3) {
+        setPlaying(false)
+        return
+      }
+      timerRef.current = setTimeout(() => {
+        const next = currentStep + 1
+        goTo(next)
+        scheduleNext(next)
+      }, 1800)
+    },
+    [goTo]
+  )
 
   const handlePlayAll = useCallback(() => {
     goTo(0)
@@ -156,10 +163,13 @@ export default function FlipExplainer() {
     }, 1800)
   }, [scheduleNext, goTo])
 
-  const handleStepClick = useCallback((i: number) => {
-    stopAutoPlay()
-    goTo(i)
-  }, [stopAutoPlay, goTo])
+  const handleStepClick = useCallback(
+    (i: number) => {
+      stopAutoPlay()
+      goTo(i)
+    },
+    [stopAutoPlay, goTo]
+  )
 
   useEffect(() => {
     return () => {
@@ -175,43 +185,44 @@ export default function FlipExplainer() {
             <button
               key={s.letter}
               onClick={() => handleStepClick(i)}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${i === step
-                  ? 'bg-primary-400 text-white'
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+                i === step
+                  ? 'bg-accent text-white'
                   : i < step
-                    ? 'bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300'
-                    : 'bg-default-100 text-default-400'
-                }`}
+                    ? 'bg-accent-soft text-accent'
+                    : 'bg-surface-secondary text-muted'
+              }`}
             >
               {s.letter}
             </button>
           ))}
         </div>
         <Button
+          variant={playing ? 'secondary' : 'tertiary'}
           size='sm'
-          variant='flat'
-          color={playing ? 'primary' : 'default'}
           isDisabled={playing}
-          startContent={playing ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />}
           onPress={handlePlayAll}
         >
+          {playing ? (
+            <IconPlayerPause size={14} />
+          ) : (
+            <IconPlayerPlay size={14} />
+          )}
           {playing ? 'Playing...' : 'Play All'}
         </Button>
       </div>
 
-      <div className='relative h-40 rounded-lg border border-default-200 bg-background overflow-hidden'>
+      <div className='border-border bg-background relative h-40 overflow-hidden rounded-lg border'>
         {/* Position labels above the box */}
         <span
-          className='absolute top-2 font-mono text-[11px] text-default-500'
+          className='text-muted absolute top-2 font-mono text-[11px]'
           style={{ left: current.boxLeft }}
         >
           x:{' '}
-          <RotatingValue
-            value={current.properties.x}
-            direction={direction}
-          />
+          <RotatingValue value={current.properties.x} direction={direction} />
         </span>
         <span
-          className='absolute top-2 font-mono text-[11px] text-default-500'
+          className='text-muted absolute top-2 font-mono text-[11px]'
           style={{ left: current.boxLeft + current.boxWidth + 8 }}
         >
           w:{' '}
@@ -223,17 +234,17 @@ export default function FlipExplainer() {
 
         {/* Start ghost */}
         <div
-          className='absolute top-1/2 h-14 -translate-y-1/2 rounded-md border-2 border-dashed border-default-300'
+          className='border-border-secondary absolute top-1/2 h-14 -translate-y-1/2 rounded-md border-2 border-dashed'
           style={{ left: FIRST_LEFT, width: FIRST_WIDTH }}
         />
         {/* End ghost */}
         <div
-          className='absolute top-1/2 h-14 -translate-y-1/2 rounded-md border-2 border-dashed border-default-300'
+          className='border-border-secondary absolute top-1/2 h-14 -translate-y-1/2 rounded-md border-2 border-dashed'
           style={{ left: LAST_LEFT, width: LAST_WIDTH }}
         />
         {/* Moving box */}
         <motion.div
-          className='absolute top-1/2 h-14 -translate-y-1/2 rounded-md bg-primary-400'
+          className='bg-accent absolute top-1/2 h-14 -translate-y-1/2 rounded-md'
           animate={{
             left: current.boxLeft,
             width: current.boxWidth
@@ -245,14 +256,17 @@ export default function FlipExplainer() {
           }
         />
         {/* Labels */}
-        <span className='absolute bottom-8 left-6 text-xs text-default-400'>
+        <span className='text-muted absolute bottom-8 left-6 text-xs'>
           Start
         </span>
-        <span className='absolute bottom-8 text-xs text-default-400' style={{ left: LAST_LEFT + 15 }}>
+        <span
+          className='text-muted absolute bottom-8 text-xs'
+          style={{ left: LAST_LEFT + 15 }}
+        >
           End
         </span>
         {/* Transform value in the box area */}
-        <span className='absolute bottom-2 left-3 font-mono text-[11px] text-primary-500'>
+        <span className='text-accent absolute bottom-2 left-3 font-mono text-[11px]'>
           <RotatingValue
             value={
               current.properties.transform
@@ -269,7 +283,7 @@ export default function FlipExplainer() {
         <div className='flex items-start gap-2'>
           <RotatingValue
             value={
-              <span className='rounded-md bg-primary-400 px-2 py-0.5 text-xs font-bold text-white'>
+              <span className='bg-accent rounded-md px-2 py-0.5 text-xs font-bold text-white'>
                 {current.label}
               </span>
             }
@@ -277,7 +291,7 @@ export default function FlipExplainer() {
           />
           <RotatingValue
             value={
-              <span className='text-sm text-default-600'>
+              <span className='text-foreground text-sm'>
                 {current.description}
               </span>
             }
@@ -287,14 +301,19 @@ export default function FlipExplainer() {
         </div>
 
         {/* Narration with icon */}
-        <div className='flex items-center gap-2 rounded-md bg-primary-50 px-3 py-1.5 dark:bg-primary-950/40'>
+        <div className='bg-accent-soft flex items-center gap-2 rounded-md px-3 py-1.5'>
           <RotatingValue
-            value={<StepIcon size={16} className='shrink-0 text-primary-500' />}
+            value={
+              <StepIcon
+                size={16}
+                className='text-accent-soft-foreground shrink-0'
+              />
+            }
             direction={direction}
           />
           <RotatingValue
             value={
-              <span className='text-xs italic text-primary-600 dark:text-primary-400'>
+              <span className='text-accent-soft-foreground text-xs italic'>
                 {current.narration}
               </span>
             }
@@ -304,28 +323,28 @@ export default function FlipExplainer() {
         </div>
 
         {/* Property values panel */}
-        <div className='flex flex-wrap gap-3 rounded-md bg-default-100 px-3 py-2 font-mono text-[11px] text-default-600 dark:bg-default-50'>
+        <div className='bg-surface-secondary text-foreground dark:bg-surface flex flex-wrap gap-3 rounded-md px-3 py-2 font-mono text-[11px]'>
           <span>
-            <span className='text-default-400'>x:</span>{' '}
+            <span className='text-muted'>x:</span>{' '}
             <RotatingValue
               value={`${current.properties.x}px`}
               direction={direction}
-              className='text-primary-500'
+              className='text-accent'
             />
           </span>
           <span>
-            <span className='text-default-400'>width:</span>{' '}
+            <span className='text-muted'>width:</span>{' '}
             <RotatingValue
               value={`${current.properties.width}px`}
               direction={direction}
-              className='text-primary-500'
+              className='text-accent'
             />
           </span>
           <span>
-            <span className='text-default-400'>transform:</span>{' '}
+            <span className='text-muted'>transform:</span>{' '}
             <RotatingValue
               value={
-                <span className='text-primary-500'>
+                <span className='text-accent'>
                   {current.properties.transform ?? 'none'}
                 </span>
               }
@@ -337,7 +356,7 @@ export default function FlipExplainer() {
         <div className='flex justify-between'>
           <Button
             size='sm'
-            variant='flat'
+            variant='tertiary'
             isDisabled={step === 0}
             onPress={() => handleStepClick(step - 1)}
           >
@@ -345,12 +364,12 @@ export default function FlipExplainer() {
           </Button>
           <Button
             size='sm'
-            variant='flat'
-            endContent={step < 3 ? <IconChevronRight size={14} /> : undefined}
+            variant='tertiary'
             isDisabled={step === 3}
             onPress={() => handleStepClick(step + 1)}
           >
             {step < 3 ? 'Next' : 'Done'}
+            {step < 3 ? <IconChevronRight size={14} /> : undefined}
           </Button>
         </div>
       </div>

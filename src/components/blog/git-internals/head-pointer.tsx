@@ -71,9 +71,11 @@ export default function HeadPointer() {
       description='HEAD does not hold a commit — it holds the name of a branch. Follow the two hops: HEAD → a branch → a commit. Check out a branch to swing HEAD; commit to slide a branch forward while HEAD stays put.'
       caption={
         <>
-          <code>.git/HEAD</code> normally holds <code>ref: refs/heads/&lt;name&gt;</code> — a
-          reference to a branch, not a commit. Because HEAD points at the branch, committing moves
-          the branch and HEAD comes along for free; only <em>checkout</em> rewrites HEAD itself.
+          <code>.git/HEAD</code> normally holds{' '}
+          <code>ref: refs/heads/&lt;name&gt;</code> — a reference to a branch,
+          not a commit. Because HEAD points at the branch, committing moves the
+          branch and HEAD comes along for free; only <em>checkout</em> rewrites
+          HEAD itself.
         </>
       }
     >
@@ -82,11 +84,11 @@ export default function HeadPointer() {
         <button
           type='button'
           onClick={commit}
-          className='inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] active:scale-95'
+          className='bg-accent text-accent-foreground inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-transform hover:scale-[1.02] active:scale-95'
         >
           <GitCommitHorizontalIcon size={15} /> Commit on {head}
         </button>
-        <span className='ml-1 text-[11px] uppercase tracking-wide text-default-400'>
+        <span className='text-muted ml-1 text-[11px] tracking-wide uppercase'>
           checkout:
         </span>
         {branches.map(b => (
@@ -95,10 +97,10 @@ export default function HeadPointer() {
             type='button'
             onClick={() => checkout(b)}
             className={cn(
-              'inline-flex items-center gap-1 rounded-md px-2.5 py-1 font-sourceCodePro text-xs font-semibold transition-colors',
+              'font-sourceCodePro inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors',
               b === head
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-default-100 text-default-500 hover:text-foreground'
+                ? 'bg-accent text-accent-foreground'
+                : 'bg-surface-secondary text-muted hover:text-foreground'
             )}
           >
             <GitBranchIcon size={11} />
@@ -108,27 +110,33 @@ export default function HeadPointer() {
         <button
           type='button'
           onClick={reset}
-          className='ml-auto inline-flex items-center gap-1 text-[11px] text-default-400 transition-colors hover:text-default-600'
+          className='text-muted hover:text-foreground ml-auto inline-flex items-center gap-1 text-[11px] transition-colors'
         >
           <RotateCcwIcon size={12} /> reset
         </button>
       </div>
 
       {/* The chain: HEAD → branch → commit, drawn as three columns */}
-      <div className='relative overflow-hidden rounded-xl border border-default-100 bg-background p-5 shadow-sm'>
+      <div className='border-separator bg-background relative overflow-hidden rounded-xl border p-5 shadow-xs'>
         <StageDots />
         <div className='relative grid grid-cols-[auto_1fr_auto_1fr_auto] items-center gap-x-2 gap-y-4'>
           {/* Column headers */}
-          <div className='text-[10px] uppercase tracking-wide text-default-400'>HEAD</div>
+          <div className='text-muted text-[10px] tracking-wide uppercase'>
+            HEAD
+          </div>
           <div />
-          <div className='text-[10px] uppercase tracking-wide text-default-400'>branches</div>
+          <div className='text-muted text-[10px] tracking-wide uppercase'>
+            branches
+          </div>
           <div />
-          <div className='text-[10px] uppercase tracking-wide text-default-400'>commits</div>
+          <div className='text-muted text-[10px] tracking-wide uppercase'>
+            commits
+          </div>
 
           {/* HEAD box (spans both branch rows, arrow swings to the active one) */}
           <div className='row-span-2 self-center'>
-            <div className='inline-flex flex-col items-center gap-1 rounded-lg border border-primary bg-default-50 px-3 py-2'>
-              <span className='rounded bg-primary px-1.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground'>
+            <div className='border-accent bg-surface inline-flex flex-col items-center gap-1 rounded-lg border px-3 py-2'>
+              <span className='bg-accent text-accent-foreground rounded-sm px-1.5 text-[10px] font-semibold tracking-wide uppercase'>
                 HEAD
               </span>
               <div className='relative h-4 w-[7.5rem] text-center'>
@@ -139,7 +147,7 @@ export default function HeadPointer() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={swap}
-                    className='absolute inset-0 font-sourceCodePro text-[10px] text-foreground'
+                    className='font-sourceCodePro text-foreground absolute inset-0 text-[10px]'
                   >
                     ref: …/{head}
                   </motion.code>
@@ -153,7 +161,7 @@ export default function HeadPointer() {
             <motion.div
               animate={{ y: head === 'main' ? -24 : 24 }}
               transition={spring}
-              className='text-primary'
+              className='text-accent'
             >
               <MoveRightIcon size={26} strokeWidth={2.25} />
             </motion.div>
@@ -183,7 +191,7 @@ export default function HeadPointer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className='mt-4 rounded-lg bg-default-100 px-3 py-2 text-xs leading-5 text-default-600 shadow-sm'
+          className='bg-surface-secondary text-foreground mt-4 rounded-lg px-3 py-2 text-xs leading-5 shadow-xs'
         >
           {note}
         </motion.p>
@@ -210,10 +218,10 @@ function BranchRow({
       <div>
         <div
           className={cn(
-            'inline-flex items-center gap-1 rounded-md border px-2 py-1 font-sourceCodePro text-xs font-semibold transition-colors',
+            'font-sourceCodePro inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold transition-colors',
             isHead
-              ? 'border-success bg-default-50 text-success'
-              : 'border-default-200 bg-default-50 text-default-400'
+              ? 'border-success bg-surface text-success'
+              : 'border-border bg-surface text-muted'
           )}
         >
           <GitBranchIcon size={11} />
@@ -222,7 +230,7 @@ function BranchRow({
       </div>
 
       {/* branch → commit arrow */}
-      <div className='flex items-center justify-center text-default-400'>
+      <div className='text-muted flex items-center justify-center'>
         <MoveRightIcon size={20} strokeWidth={2} />
       </div>
 

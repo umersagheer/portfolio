@@ -7,14 +7,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ContactFormSchema } from '@/libs/schemas'
 import {
   Card,
-  CardBody,
+  TextField,
+  Label,
   Input,
+  TextArea,
+  FieldError,
   Button,
-  CardFooter,
-  Textarea,
-  Link,
-  Divider,
-  addToast
+  Separator,
+  Spinner,
+  toast
 } from '@heroui/react'
 import { z } from 'zod'
 import { sendEmail } from '@/libs/actions'
@@ -42,11 +43,9 @@ export default function ContactForm() {
     try {
       setLoading(true)
       await sendEmail(data)
-      addToast({
-        title: 'Thank you for your message!',
+      toast('Thank you for your message!', {
         description: 'I will be in touch with you soon.',
-        color: 'success',
-        timeout: 5000
+        variant: 'success'
       })
     } catch (error) {
       handleApiError(error)
@@ -59,19 +58,23 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex justify-center'>
       <Card className='max-w-2xl grow'>
-        <CardBody className='grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2'>
+        <Card.Content className='grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2'>
           <Controller
             name='name'
             control={control}
             render={({ field }) => (
-              <Input
-                label='Name'
+              <TextField
                 type='text'
-                size='sm'
-                {...field}
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.name)}
-                errorMessage={errors.name?.message}
-              />
+              >
+                <Label>Name</Label>
+                <Input ref={field.ref} />
+                <FieldError>{errors.name?.message}</FieldError>
+              </TextField>
             )}
           />
 
@@ -79,14 +82,18 @@ export default function ContactForm() {
             name='email'
             control={control}
             render={({ field }) => (
-              <Input
-                label='Email'
+              <TextField
                 type='text'
-                size='sm'
-                {...field}
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.email)}
-                errorMessage={errors.email?.message}
-              />
+              >
+                <Label>Email</Label>
+                <Input ref={field.ref} />
+                <FieldError>{errors.email?.message}</FieldError>
+              </TextField>
             )}
           />
 
@@ -94,53 +101,48 @@ export default function ContactForm() {
             name='message'
             control={control}
             render={({ field }) => (
-              <Textarea
-                minRows={1}
-                maxRows={4}
-                label='Message'
-                type='text'
-                size='sm'
-                {...field}
+              <TextField
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
                 isInvalid={Boolean(errors.message)}
-                errorMessage={errors.message?.message}
                 className='md:col-span-2'
-              />
+              >
+                <Label>Message</Label>
+                <TextArea ref={field.ref} rows={4} />
+                <FieldError>{errors.message?.message}</FieldError>
+              </TextField>
             )}
           />
-        </CardBody>
-        <CardFooter className='flex flex-col gap-3'>
-          <Button
-            color='primary'
-            variant='flat'
-            type='submit'
-            fullWidth
-            isLoading={loading}
-          >
-            Send
+        </Card.Content>
+        <Card.Footer className='flex flex-col gap-3'>
+          <Button variant='primary' type='submit' fullWidth isPending={loading}>
+            {/* v3 Button has no built-in loading spinner (v2's isLoading had one) */}
+            {({ isPending }) => (
+              <>
+                {isPending && <Spinner size='sm' color='current' />}
+                Send
+              </>
+            )}
           </Button>
 
           <div className='flex w-full items-center justify-center gap-3'>
-            <Divider className='w-1/3' />
+            <Separator className='w-1/3' />
             <p>OR</p>
-            <Divider className='w-1/3' />
+            <Separator className='w-1/3' />
           </div>
 
           <Button
-            color='success'
-            variant='solid'
+            className='button--success'
+            variant='primary'
             fullWidth
-            endContent={<MessageCircleHeartIcon size={16} />}
             onPress={() => window.open('https://wa.me/+923018155698', '_blank')}
           >
             Whatsapp
+            <MessageCircleHeartIcon size={16} />
           </Button>
-          <p className='justify-start text-small'>
-            By submitting this form, I agree to the{' '}
-            <Link underline='hover' href='' className='font-medium' size='sm'>
-              privacy policy
-            </Link>
-          </p>
-        </CardFooter>
+        </Card.Footer>
       </Card>
     </form>
   )

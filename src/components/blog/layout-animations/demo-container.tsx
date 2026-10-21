@@ -5,10 +5,8 @@ type DemoContainerProps = {
 
 export default function DemoContainer({ children, title }: DemoContainerProps) {
   return (
-    <div className='not-prose my-8 rounded-xl border border-default-200 bg-default-50 p-6 dark:border-default-100'>
-      {title && (
-        <p className='mb-4 text-sm font-medium text-default-500'>{title}</p>
-      )}
+    <div className='not-prose border-border bg-surface my-8 rounded-xl border p-6'>
+      {title && <p className='text-muted mb-4 text-sm font-medium'>{title}</p>}
       {children}
     </div>
   )

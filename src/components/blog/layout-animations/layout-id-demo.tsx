@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Tab, Tabs } from '@heroui/react'
+import { Tabs } from '@heroui/react'
 import DemoContainer from './demo-container'
 
 const tabs = ['Home', 'About', 'Blog', 'Contact']
@@ -14,18 +14,26 @@ export default function LayoutIdDemo() {
   return (
     <DemoContainer title='Click the tabs — watch the indicator morph'>
       <Tabs
-        size='sm'
-        variant='bordered'
-        radius='sm'
+        variant='primary'
         selectedKey={useLayoutId ? 'with' : 'without'}
         onSelectionChange={key => setUseLayoutId(key === 'with')}
-        classNames={{ tabList: 'mb-4' }}
+        className='mb-4'
       >
-        <Tab key='without' title='Without layoutId' />
-        <Tab key='with' title='With layoutId' />
+        <Tabs.ListContainer>
+          <Tabs.List>
+            <Tabs.Tab id='without'>
+              Without layoutId
+              <Tabs.Indicator />
+            </Tabs.Tab>
+            <Tabs.Tab id='with'>
+              With layoutId
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
       </Tabs>
 
-      <div className='flex w-fit gap-1 rounded-lg bg-default-100 p-1'>
+      <div className='bg-surface-secondary flex w-fit gap-1 rounded-lg p-1'>
         {tabs.map(tab => (
           <button
             key={tab}
@@ -36,17 +44,15 @@ export default function LayoutIdDemo() {
               (useLayoutId ? (
                 <motion.div
                   layoutId='blog-tab-indicator'
-                  className='absolute inset-0 rounded-md bg-default-foreground/10 dark:bg-default-foreground/15'
+                  className='bg-default-foreground/10 dark:bg-default-foreground/15 absolute inset-0 rounded-md'
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               ) : (
-                <div className='absolute inset-0 rounded-md bg-default-foreground/10 dark:bg-default-foreground/15' />
+                <div className='bg-default-foreground/10 dark:bg-default-foreground/15 absolute inset-0 rounded-md' />
               ))}
             <span
               className={`relative z-10 ${
-                active === tab
-                  ? 'font-medium text-foreground'
-                  : 'text-default-500'
+                active === tab ? 'text-foreground font-medium' : 'text-muted'
               }`}
             >
               {tab}
@@ -55,13 +61,13 @@ export default function LayoutIdDemo() {
         ))}
       </div>
 
-      <p className='mt-4 text-sm text-default-500'>
+      <p className='text-muted mt-4 text-sm'>
         Active tab:{' '}
-        <span className='font-medium text-foreground'>{active}</span>
+        <span className='text-foreground font-medium'>{active}</span>
         {useLayoutId ? (
           <>
             {' — '}the indicator smoothly transitions using{' '}
-            <code className='rounded bg-default-200 px-1.5 py-0.5 text-xs'>
+            <code className='bg-surface-tertiary rounded-sm px-1.5 py-0.5 text-xs'>
               layoutId
             </code>
           </>

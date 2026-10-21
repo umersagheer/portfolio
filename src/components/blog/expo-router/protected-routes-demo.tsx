@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import {  motion } from 'framer-motion'
-import { Chip, Switch, Tab, Tabs, cn } from '@heroui/react'
+import { motion } from 'framer-motion'
+import { Chip, Switch, Tabs, cn } from '@heroui/react'
 import {
   AlertTriangleIcon,
   ArrowRightIcon,
@@ -160,8 +160,8 @@ function getToneClasses(tone: CalloutTone) {
   switch (tone) {
     case 'primary':
       return {
-        line: 'bg-primary',
-        text: 'text-primary-900'
+        line: 'bg-accent',
+        text: 'text-accent'
       }
     case 'success':
       return {
@@ -170,7 +170,7 @@ function getToneClasses(tone: CalloutTone) {
       }
     case 'warning':
       return {
-        line: 'bg-amber-warning',
+        line: 'bg-warning',
         text: 'text-amber-200'
       }
     default:
@@ -500,68 +500,90 @@ export default function ExpoProtectedRoutesDemo() {
   }
 
   return (
-    <section className='not-prose my-8 overflow-hidden rounded-2xl border border-default-200 bg-default-50 p-5 sm:p-6'>
+    <section className='not-prose border-border bg-surface my-8 overflow-hidden rounded-2xl border p-5 sm:p-6'>
       <div className='flex flex-col gap-4'>
         <div className='space-y-1'>
-          <p className='font-sourceCodePro text-sm font-semibold text-foreground'>
+          <p className='font-sourceCodePro text-foreground text-sm font-semibold'>
             Auth Routing Visualizer
           </p>
-          <p className='max-w-2xl text-sm text-default-500'>
+          <p className='text-muted max-w-2xl text-sm'>
             Compare redirect-driven auth routing with guarded route groups,
             using the file-based mental model Expo Router actually gives you.
           </p>
         </div>
 
         <Tabs
-          size='sm'
-          radius='sm'
-          variant='bordered'
+          variant='primary'
           selectedKey={mode}
           onSelectionChange={key => setMode(key as DemoMode)}
         >
-          <Tab key='before' title='useEffect redirects' />
-          <Tab key='after' title='Stack.Protected' />
+          <Tabs.ListContainer>
+            <Tabs.List>
+              <Tabs.Tab id='before'>
+                useEffect redirects
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id='after'>
+                Stack.Protected
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
         </Tabs>
       </div>
 
       <div className='mt-2 flex flex-wrap items-center gap-3'>
-        <div className='flex items-center gap-3 rounded-large bg-background px-3 py-2'>
+        <div className='bg-background flex items-center gap-3 rounded-[14px] px-3 py-2'>
           <div className='space-y-0.5'>
-            <p className='text-xs font-medium text-foreground'>Signed in</p>
-            <p className='text-[11px] text-default-500'>Clerk/session exists</p>
+            <p className='text-foreground text-xs font-medium'>Signed in</p>
+            <p className='text-muted text-[11px]'>Clerk/session exists</p>
           </div>
           <Switch
+            aria-label='Signed in'
             isSelected={signedIn}
-            onValueChange={nextValue => {
+            onChange={nextValue => {
               setSignedIn(nextValue)
               if (!nextValue) {
                 setOnboarded(false)
               }
             }}
             size='sm'
-          />
+          >
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+            </Switch.Content>
+          </Switch>
         </div>
 
         <div
           className={cn(
-            'flex items-center gap-3 rounded-large px-3 py-2 transition-opacity',
-            signedIn ? 'bg-background' : 'bg-default-100/70 opacity-60'
+            'flex items-center gap-3 rounded-[14px] px-3 py-2 transition-opacity',
+            signedIn ? 'bg-background' : 'bg-surface-secondary/70 opacity-60'
           )}
         >
           <div className='space-y-0.5'>
-            <p className='text-xs font-medium text-foreground'>Onboarded</p>
-            <p className='text-[11px] text-default-500'>Profile completed</p>
+            <p className='text-foreground text-xs font-medium'>Onboarded</p>
+            <p className='text-muted text-[11px]'>Profile completed</p>
           </div>
           <Switch
+            aria-label='Onboarded'
             isSelected={onboarded}
             isDisabled={!signedIn}
-            onValueChange={setOnboarded}
+            onChange={setOnboarded}
             size='sm'
-          />
+          >
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+            </Switch.Content>
+          </Switch>
         </div>
       </div>
 
-      <div className='relative mt-2 overflow-hidden rounded-large border border-default-200 bg-[#070708] p-4'>
+      <div className='border-border relative mt-2 overflow-hidden rounded-[14px] border bg-[#070708] p-4'>
         <DotPattern
           glow
           width={18}
@@ -665,7 +687,7 @@ export default function ExpoProtectedRoutesDemo() {
                       <span
                         key={`${row.id}-guide-${index}`}
                         aria-hidden='true'
-                        className='absolute bottom-1 top-1 w-px rounded-full bg-white/[0.08]'
+                        className='absolute top-1 bottom-1 w-px rounded-full bg-white/[0.08]'
                         style={{ left: `${24 + index * 28}px` }}
                       />
                     ))}
@@ -699,15 +721,15 @@ export default function ExpoProtectedRoutesDemo() {
 
                     <span
                       className={cn(
-                        'text-white font-sourceCodePro text-sm',
+                        'font-sourceCodePro text-sm text-white',
                         row.group &&
                           previewMatch &&
                           previewGroup !== activeGroup
-                          ? 'text-warning-100'
+                          ? 'text-warning'
                           : row.group && activeMatch
                             ? mode === 'after'
-                              ? 'text-success-900'
-                              : 'text-primary-500'
+                              ? 'text-success-soft-foreground'
+                              : 'text-accent'
                             : undefined
                       )}
                     >
@@ -716,27 +738,25 @@ export default function ExpoProtectedRoutesDemo() {
 
                     {statusLabel && (
                       <Chip
-                      startContent={CalloutIcon && <CalloutIcon size={12} />}
                         size='sm'
-                        variant='shadow'
+                        variant='primary'
                         color={
                           statusLabel === 'Active'
                             ? 'success'
                             : statusLabel === 'Open'
-                              ? 'primary'
+                              ? 'accent'
                               : statusLabel === 'Flash'
                                 ? 'warning'
                                 : statusLabel === 'Visible'
                                   ? 'warning'
                                   : statusLabel === 'Target'
-                                    ? 'primary'
+                                    ? 'accent'
                                     : 'default'
                         }
-                        classNames={{
-                          base: cn('ml-2'),
-                        }}
+                        className={cn('ml-2 inline-flex items-center gap-1')}
                       >
-                        {statusLabel}
+                        {CalloutIcon && <CalloutIcon size={12} />}
+                        <Chip.Label>{statusLabel}</Chip.Label>
                       </Chip>
                     )}
                   </div>
@@ -747,7 +767,7 @@ export default function ExpoProtectedRoutesDemo() {
                         <div className={cn('h-px flex-1', toneClasses.line)} />
                         <div
                           className={cn(
-                            'flex items-center gap-2 whitespace-nowrap text-sm',
+                            'flex items-center gap-2 text-sm whitespace-nowrap',
                             toneClasses.text
                           )}
                         >

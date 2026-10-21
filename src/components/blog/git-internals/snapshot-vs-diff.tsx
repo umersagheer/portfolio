@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Tab, Tabs, cn } from '@heroui/react'
+import { Button, Tabs, cn } from '@heroui/react'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -58,7 +58,8 @@ const HISTORY: Snapshot[] = [
       // app.py changed
       'app.py': 'def main():\n    print(greeting("world"))\n\nmain()',
       // utils.py changed (gained a helper)
-      'utils.py': 'def add(a, b):\n    return a + b\n\ndef greeting(name):\n    return f"hi, {name}"',
+      'utils.py':
+        'def add(a, b):\n    return a + b\n\ndef greeting(name):\n    return f"hi, {name}"',
       // README.md UNCHANGED → same blob as c1
       'README.md': '# Demo\n\nA tiny repo.'
     }
@@ -67,9 +68,11 @@ const HISTORY: Snapshot[] = [
     message: 'Document usage',
     files: {
       // app.py changed
-      'app.py': 'def main():\n    print(greeting("world"))\n    print(add(2, 3))\n\nmain()',
+      'app.py':
+        'def main():\n    print(greeting("world"))\n    print(add(2, 3))\n\nmain()',
       // utils.py UNCHANGED → same blob as c2
-      'utils.py': 'def add(a, b):\n    return a + b\n\ndef greeting(name):\n    return f"hi, {name}"',
+      'utils.py':
+        'def add(a, b):\n    return a + b\n\ndef greeting(name):\n    return f"hi, {name}"',
       // README.md changed
       'README.md': '# Demo\n\nA tiny repo.\n\n## Usage\n\nRun `python app.py`.'
     }
@@ -97,15 +100,15 @@ function SnapshotView({ step }: { step: number }) {
       {/* The tree that names this snapshot. Its hash changes each commit (the
           listing changed), but most of what it POINTS AT is reused unchanged. */}
       <div className='flex flex-col items-center gap-1'>
-        <div className='text-[10px] uppercase tracking-wide text-primary'>
+        <div className='text-accent text-[10px] tracking-wide uppercase'>
           the tree for this commit
         </div>
         <TreeBox hash={treeOf(step)} />
       </div>
 
       {/* connector: the tree points down at its three files */}
-      <div className='mx-auto h-4 w-px bg-default-300' aria-hidden />
-      <div className='text-center text-[10px] uppercase tracking-wide text-default-400'>
+      <div className='bg-border-secondary mx-auto h-4 w-px' aria-hidden />
+      <div className='text-muted text-center text-[10px] tracking-wide uppercase'>
         points at
       </div>
 
@@ -122,12 +125,12 @@ function SnapshotView({ step }: { step: number }) {
             <div key={name} className='flex flex-col items-start gap-1'>
               <BlobBox hash={hash} label={name} />
               {shared ? (
-                <span className='inline-flex items-center gap-1 text-[10px] font-medium text-success'>
+                <span className='text-success inline-flex items-center gap-1 text-[10px] font-medium'>
                   <LinkIcon size={10} />
                   tree reuses the same blob — not re-stored
                 </span>
               ) : (
-                <span className='text-[10px] text-default-400'>
+                <span className='text-muted text-[10px]'>
                   {step === 0 ? 'first version' : 'new content, new blob'}
                 </span>
               )}
@@ -146,10 +149,10 @@ function SnapshotView({ step }: { step: number }) {
  */
 function TreeBox({ hash }: { hash: string }) {
   return (
-    <div className='inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border border-primary bg-default-50 p-1.5'>
+    <div className='border-accent bg-surface inline-flex min-w-[5.5rem] flex-col items-center gap-0.5 rounded-lg border p-1.5'>
       <div className='flex items-center gap-1'>
-        <FolderIcon size={12} className='text-primary' aria-hidden />
-        <span className='rounded bg-primary px-1 text-[9px] font-semibold uppercase tracking-wide text-primary-foreground'>
+        <FolderIcon size={12} className='text-accent' aria-hidden />
+        <span className='bg-accent text-accent-foreground rounded-sm px-1 text-[9px] font-semibold tracking-wide uppercase'>
           tree
         </span>
       </div>
@@ -161,7 +164,7 @@ function TreeBox({ hash }: { hash: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className='absolute inset-0 font-sourceCodePro text-xs font-semibold text-primary'
+            className='font-sourceCodePro text-accent absolute inset-0 text-xs font-semibold'
           >
             {hash}
           </motion.code>
@@ -179,7 +182,7 @@ function TreeBox({ hash }: { hash: string }) {
  */
 function BlobBox({ hash, label }: { hash: string; label: string }) {
   return (
-    <div className='inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border border-secondary bg-default-50 p-1.5'>
+    <div className='border-secondary bg-surface inline-flex min-w-[5.5rem] flex-col gap-0.5 rounded-lg border p-1.5'>
       <div className='flex items-center gap-1'>
         <FileIcon size={12} className='text-secondary' aria-hidden />
       </div>
@@ -193,7 +196,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className='absolute inset-0 font-sourceCodePro text-xs font-semibold text-secondary'
+            className='font-sourceCodePro text-secondary absolute inset-0 text-xs font-semibold'
           >
             {hash}
           </motion.code>
@@ -201,7 +204,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
       </div>
 
       <span
-        className='max-w-[7rem] truncate text-[10px] text-default-500'
+        className='text-muted max-w-[7rem] truncate text-[10px]'
         title={label}
       >
         {label}
@@ -214,7 +217,7 @@ function BlobBox({ hash, label }: { hash: string; label: string }) {
 
 function DiffRows({ rows }: { rows: DiffRow[] }) {
   return (
-    <div className='overflow-hidden rounded-md bg-default-100 font-sourceCodePro text-[11px] leading-5 shadow-sm'>
+    <div className='bg-surface-secondary font-sourceCodePro overflow-hidden rounded-md text-[11px] leading-5 shadow-xs'>
       <div className='max-h-40 overflow-auto'>
         {rows.map((row, i) => (
           <div
@@ -223,13 +226,15 @@ function DiffRows({ rows }: { rows: DiffRow[] }) {
               'flex gap-2 border-l-2 px-2',
               row.type === 'add' && 'border-success text-success',
               row.type === 'remove' && 'border-danger text-danger',
-              row.type === 'context' && 'border-transparent text-default-500'
+              row.type === 'context' && 'text-muted border-transparent'
             )}
           >
-            <span className='select-none text-default-400'>
+            <span className='text-muted select-none'>
               {row.type === 'add' ? '+' : row.type === 'remove' ? '−' : ' '}
             </span>
-            <span className='whitespace-pre-wrap break-all'>{row.text || ' '}</span>
+            <span className='break-all whitespace-pre-wrap'>
+              {row.text || ' '}
+            </span>
           </div>
         ))}
       </div>
@@ -255,7 +260,7 @@ function DiffView({ step }: { step: number }) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='flex items-center gap-2 text-[10px] uppercase tracking-wide text-default-500'>
+      <div className='text-muted flex items-center gap-2 text-[10px] tracking-wide uppercase'>
         <GitCompareIcon size={12} />
         {prev >= 0
           ? `computed just now: commit ${prev + 1} → commit ${step + 1} (never stored)`
@@ -265,9 +270,11 @@ function DiffView({ step }: { step: number }) {
       {changed.map(f => (
         <div key={f.name} className='flex flex-col gap-1'>
           <div className='flex items-center gap-2'>
-            <span className='font-sourceCodePro text-xs text-foreground'>{f.name}</span>
-            <span className='text-[10px] text-success'>+{f.added}</span>
-            <span className='text-[10px] text-danger'>−{f.removed}</span>
+            <span className='font-sourceCodePro text-foreground text-xs'>
+              {f.name}
+            </span>
+            <span className='text-success text-[10px]'>+{f.added}</span>
+            <span className='text-danger text-[10px]'>−{f.removed}</span>
           </div>
           <DiffRows rows={f.rows} />
         </div>
@@ -279,7 +286,7 @@ function DiffView({ step }: { step: number }) {
         .map(f => (
           <div
             key={f.name}
-            className='flex items-center gap-2 rounded-md bg-default-100 px-2 py-1.5 text-[11px] text-default-500 shadow-sm'
+            className='bg-surface-secondary text-muted flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] shadow-xs'
           >
             <LinkIcon size={12} className='text-success' />
             <span className='font-sourceCodePro text-foreground'>{f.name}</span>
@@ -307,10 +314,11 @@ export default function SnapshotVsDiff() {
       description='Each commit stores a complete snapshot of every file — not a list of changes. That sounds wasteful, until you see the trick: files that did not change between commits reuse the exact same blob, so a snapshot costs almost nothing. Step through the history and flip between what Git stores (snapshots) and what it shows you (diffs, computed on the fly).'
       caption={
         <>
-          What Git <em>stores</em> is on the snapshot side: full trees of blobs, with unchanged
-          content shared across commits by its hash. What Git <em>shows</em> you in{' '}
-          <code>git diff</code> or <code>git log -p</code> is computed on demand by comparing two
-          snapshots — it is never saved to disk. Same content ⇒ same blob is why history is cheap.
+          What Git <em>stores</em> is on the snapshot side: full trees of blobs,
+          with unchanged content shared across commits by its hash. What Git{' '}
+          <em>shows</em> you in <code>git diff</code> or <code>git log -p</code>{' '}
+          is computed on demand by comparing two snapshots — it is never saved
+          to disk. Same content ⇒ same blob is why history is cheap.
         </>
       }
     >
@@ -320,29 +328,31 @@ export default function SnapshotVsDiff() {
           <div className='flex items-center gap-2'>
             <Button
               size='sm'
-              variant='bordered'
-              radius='sm'
+              variant='outline'
               isIconOnly
               aria-label='Previous commit'
               isDisabled={atStart}
               onPress={() => setStep(s => Math.max(0, s - 1))}
+              className='rounded-[8px]'
             >
               <ChevronLeftIcon size={15} />
             </Button>
             <div className='min-w-0'>
-              <div className='font-sourceCodePro text-xs font-semibold text-foreground'>
+              <div className='font-sourceCodePro text-foreground text-xs font-semibold'>
                 commit {step + 1} of {HISTORY.length}
               </div>
-              <div className='truncate text-[11px] text-default-500'>{snap.message}</div>
+              <div className='text-muted truncate text-[11px]'>
+                {snap.message}
+              </div>
             </div>
             <Button
               size='sm'
-              variant='bordered'
-              radius='sm'
+              variant='outline'
               isIconOnly
               aria-label='Next commit'
               isDisabled={atEnd}
               onPress={() => setStep(s => Math.min(HISTORY.length - 1, s + 1))}
+              className='rounded-[8px]'
             >
               <ChevronRightIcon size={15} />
             </Button>
@@ -350,31 +360,28 @@ export default function SnapshotVsDiff() {
 
           {/* Mode toggle — the shared HeroUI Tabs (same as the navbar) */}
           <Tabs
-            aria-label='What Git stores vs what Git shows'
             selectedKey={view}
             onSelectionChange={key => setView(key as ViewMode)}
-            variant='bordered'
-            radius='sm'
-            size='sm'
+            variant='primary'
           >
-            <Tab
-              key='snapshot'
-              title={
-                <span className='flex items-center gap-1.5'>
-                  <CameraIcon size={13} />
-                  What Git stores
-                </span>
-              }
-            />
-            <Tab
-              key='diff'
-              title={
-                <span className='flex items-center gap-1.5'>
-                  <GitCompareIcon size={13} />
-                  What Git shows
-                </span>
-              }
-            />
+            <Tabs.ListContainer>
+              <Tabs.List aria-label='What Git stores vs what Git shows'>
+                <Tabs.Tab id='snapshot'>
+                  <span className='flex items-center gap-1.5'>
+                    <CameraIcon size={13} />
+                    What Git stores
+                  </span>
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id='diff'>
+                  <span className='flex items-center gap-1.5'>
+                    <GitCompareIcon size={13} />
+                    What Git shows
+                  </span>
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
         </div>
 
@@ -383,16 +390,20 @@ export default function SnapshotVsDiff() {
             unchanged blob (keyed by filename inside) sit perfectly still. */}
         <div
           className={cn(
-            'relative overflow-hidden rounded-xl p-3 shadow-sm sm:p-4',
+            'relative overflow-hidden rounded-xl p-3 shadow-xs sm:p-4',
             view === 'snapshot'
-              ? 'border border-default-100 bg-background'
-              : 'bg-default-100'
+              ? 'border-separator bg-background border'
+              : 'bg-surface-secondary'
           )}
         >
           {view === 'snapshot' && <StageDots />}
           <AnimatePresence mode='wait'>
             <motion.div key={view} {...fade} className='relative'>
-              {view === 'snapshot' ? <SnapshotView step={step} /> : <DiffView step={step} />}
+              {view === 'snapshot' ? (
+                <SnapshotView step={step} />
+              ) : (
+                <DiffView step={step} />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
