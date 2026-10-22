@@ -1,0 +1,391 @@
+/* Fig. 01, the request journey. Structure is monochrome from the theme; the
+   accent marks only what is live. The drawing's classes come from server-built
+   SVG markup, so they are reached with :global() under the module's root. */
+
+.root {
+  --j-top: color-mix(in oklab, var(--foreground) 2%, var(--background));
+  --j-face: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --j-side: color-mix(in oklab, var(--foreground) 9%, var(--background));
+  --j-line: color-mix(in oklab, var(--foreground) 28%, var(--background));
+  --j-detail: color-mix(in oklab, var(--foreground) 15%, var(--background));
+  margin: 0;
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  padding: 18px 20px 14px;
+}
+
+:global(.dark) .root {
+  --j-top: color-mix(in oklab, var(--foreground) 9%, var(--background));
+  --j-face: color-mix(in oklab, var(--foreground) 6%, var(--background));
+  --j-side: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --j-line: color-mix(in oklab, var(--foreground) 24%, var(--background));
+  --j-detail: color-mix(in oklab, var(--foreground) 14%, var(--background));
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.ship {
+  flex: none;
+  white-space: nowrap;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--foreground);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.ship:hover,
+.ship:focus-visible,
+.root[data-shipping] .ship {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.drawing {
+  position: relative;
+  margin-top: 6px;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.svg :global(*) {
+  vector-effect: non-scaling-stroke;
+}
+
+.svg :global(.f-top) {
+  fill: var(--j-top);
+  stroke: var(--j-line);
+}
+.svg :global(.f-front) {
+  fill: var(--j-face);
+  stroke: var(--j-line);
+}
+.svg :global(.f-side) {
+  fill: var(--j-side);
+  stroke: var(--j-line);
+}
+.svg :global(.det) {
+  fill: none;
+  stroke: var(--j-detail);
+}
+.svg :global(.lit) {
+  fill: var(--accent);
+  fill-opacity: 0.4;
+  stroke: var(--accent);
+  stroke-opacity: 0.5;
+  transition:
+    fill-opacity 0.3s,
+    stroke-opacity 0.3s;
+}
+.svg :global(.ink) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.svg :global(.bus) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-opacity: 0.3;
+  stroke-width: 1.5;
+}
+.svg :global(.flow) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 70 930;
+  animation: flow 3.2s ease-in-out infinite alternate;
+}
+.svg :global(.station) {
+  cursor: pointer;
+}
+.svg :global(.live) {
+  fill: var(--accent);
+  fill-opacity: 1;
+  stroke: var(--accent);
+  stroke-opacity: 1;
+}
+.svg :global(.crate) {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* A chosen step: its station lights fully, the rest dim but stay solid. */
+.root[data-active] .svg :global(.lit) {
+  fill-opacity: 0.12;
+  stroke-opacity: 0.25;
+}
+.root[data-active] .svg :global(.ink) {
+  stroke-opacity: 0.2;
+}
+.root[data-active] .svg :global(.station.on .lit),
+.root[data-active] .svg :global(.lit.live) {
+  fill-opacity: 1;
+  stroke-opacity: 1;
+}
+.root[data-active] .svg :global(.station.on .ink) {
+  stroke-opacity: 1;
+}
+.svg :global(.station.on .pad .f-top),
+.svg :global(.station.on .pad .f-front),
+.svg :global(.station.on .pad .f-side) {
+  stroke: var(--accent);
+}
+
+/* Glow only in the dark theme; the light theme keeps flat accent. */
+:global(.dark) .svg :global(.flow),
+:global(.dark) .svg :global(.live),
+:global(.dark) .svg :global(.station.on .lit) {
+  filter: drop-shadow(0 0 5px var(--accent));
+}
+
+@keyframes flow {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 70;
+  }
+}
+
+.badge {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--j-line);
+  border-radius: 50%;
+  background: var(--background);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  pointer-events: none;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.badge:global(.on) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--background);
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 32px;
+  margin-top: 14px;
+  border-top: 1px solid var(--hair);
+  padding-top: 10px;
+}
+
+.rows {
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  width: calc(100% + 16px);
+  align-items: center;
+  column-gap: 10px;
+  margin: 0 -8px;
+  border-radius: 8px;
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    opacity 0.3s,
+    background-color 0.2s;
+}
+
+.row:hover {
+  background: color-mix(in oklab, var(--accent) 7%, transparent);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.root[data-active] .row {
+  opacity: 0.55;
+}
+
+.root[data-active] .row[aria-pressed='true'] {
+  opacity: 1;
+}
+
+.name {
+  flex: none;
+  width: 104px;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.num {
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.row[aria-pressed='true'] .name {
+  color: var(--accent);
+}
+
+.tools {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.supporting {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.word {
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.row[aria-pressed='true'] .tools,
+.row[aria-pressed='true'] .supporting {
+  color: var(--accent);
+}
+
+.glyph {
+  flex: none;
+}
+
+.supporting [data-tip] {
+  position: relative;
+}
+
+.supporting [data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: var(--foreground);
+  padding: 2px 6px;
+  color: var(--background);
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.panel {
+  min-height: 132px;
+  padding-top: 4px;
+  font-size: 14px;
+}
+
+.panel h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.panel li {
+  margin: 2px 0;
+}
+
+.note {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+@media (max-width: 800px) {
+  .legend {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    border-top: 1px solid var(--hair);
+    padding-top: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .keys {
+    display: none;
+  }
+  .badge {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    line-height: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg :global(.flow) {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-opacity: 0.5;
+  }
+}
