@@ -38,7 +38,6 @@
 }
 
 @theme {
-  --animate-marquee-scroll-vertical: marquee-scroll-vertical 25s linear infinite;
   --animate-fade-in: fade-in 0.4s ease-out backwards;
 }
 
@@ -64,15 +63,6 @@
   from {
     opacity: 0;
     transform: translateY(-6px);
-  }
-}
-
-@keyframes marquee-scroll-vertical {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-50%);
   }
 }
 
@@ -247,8 +237,7 @@ html {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in,
-  .animate-marquee-scroll-vertical {
+  .animate-fade-in {
     animation: none;
   }
 }
