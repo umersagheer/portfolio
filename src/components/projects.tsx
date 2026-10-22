@@ -35,7 +35,7 @@ export default function Projects({ projects }: ProjectProps) {
           <MorphingDialog key={project.title}>
             {/* Card Trigger */}
             <MorphingDialogTrigger
-              className='bg-surface hover:bg-surface-secondary active:bg-surface-tertiary cursor-pointer overflow-hidden rounded-lg px-3 py-4 transition-colors duration-250'
+              className='bg-surface hover:bg-surface-secondary active:bg-surface-tertiary border-hair cursor-pointer overflow-hidden rounded-lg border px-3 py-4 transition-colors duration-250'
               style={{ borderRadius: 8 }}
             >
               <div className='flex items-center gap-2'>
