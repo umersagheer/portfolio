@@ -1,0 +1,139 @@
+---
+title: Munshi
+tagline:
+  An all-in-one restaurant system for Pakistan. Orders, kitchen, stock, staff,
+  cash and khata, for every branch, in one app.
+logo: /images/projects/munshi.svg
+order: 1
+featured: true
+status: In production
+platform: Web · tablet · phone
+client: RFC, its first customer
+links:
+  - label: RFC's ordering page
+    href: https://rfc.hotel.munshi.app
+  - label: Munshi POS
+    href: https://business.hotel.munshi.app
+code: private
+stack:
+  - name: Next.js
+    icon: nextdotjs
+  - name: PostgreSQL
+    icon: postgresql
+  - name: Prisma
+    icon: prisma
+  - name: Socket.IO
+    icon: socketdotio
+  - name: TanStack Query
+    icon: react-query
+  - name: Serwist (offline)
+  - name: Dexie (IndexedDB)
+  - name: Zustand
+  - name: Zod
+    icon: zod
+  - name: HeroUI
+    icon: heroui
+  - name: Cloudinary
+    icon: cloudinary
+  - name: Resend
+    icon: resend
+  - name: Playwright
+    icon: playwright
+  - name: Vitest
+    icon: vitest
+screens:
+  - file: orders
+    alt:
+      Munshi's orders board on a tablet, with dine-in, takeaway and delivery
+      orders and their status
+    caption: The orders board, the counter's home screen
+  - file: kitchen
+    alt: Kitchen display with order tokens in Preparing and Ready columns
+    caption: The kitchen display. Tokens move from preparing to ready
+  - file: online
+    alt:
+      A restaurant's online ordering page on a phone, with the menu by category
+    caption: Online ordering, one page per restaurant
+  - file: cash
+    alt: The day book with daily sales, expenses and cash in hand
+    caption: The day book. The drawer is counted every night
+  - file: stock
+    alt: Stock levels for ingredients and products
+    caption: Stock, from purchases in to recipes out
+  - file: reports
+    alt: Sales reports with charts by day and by menu item
+    caption: Reports across orders, menu items and branches
+screensNote:
+  Screens show Grill Street, a made-up restaurant seeded for screenshots, never
+  real customer data.
+---
+
+## Overview
+
+Munshi is an all-in-one restaurant system built for Pakistan. Orders, the
+kitchen, stock, staff, cash and _khata_ (running credit for regulars and for
+suppliers) live in one app, from a first counter to a tenth branch.
+
+It keeps taking orders when the internet drops, prints kitchen tickets, bills
+and tokens, and shows Urdu menu names next to the English ones.
+
+## RFC, the first customer
+
+RFC serves karahi, BBQ, burgers and pizza on Main Faisalabad–Lahore Road in
+Manawala. It was the first restaurant to run on Munshi.
+
+- **10,500+** orders taken on Munshi
+- **163** orders on its busiest day
+- **9** staff on attendance and payroll
+- Running on Munshi since **September 2025**
+
+**Before.** Orders went through one system, stock lived in a register, and
+salaries were worked out by hand at the end of the month. Every report meant
+collecting numbers from three places, and a short cash drawer was found weeks
+later, if at all.
+
+**Switching over.** Munshi was built alongside RFC's own counter and kitchen, so
+every screen was tested in a real rush before it shipped. Staff moved over one
+area at a time: the counter first, then the kitchen tickets, then purchases and
+payroll.
+
+**Now.** Orders, kitchen tickets, purchases, attendance and the day book all run
+in one place. The drawer is counted every night, supplier balances update
+themselves, and salaries come out of the attendance the staff already mark.
+
+## What it does
+
+- **Orders:** dine-in, takeaway and delivery, with payments, bills and kitchen
+  tickets (including modification tickets)
+- **Kitchen:** a live display, updated across every screen as orders change
+- **Stock and purchases:** products, variants, recipes and ingredients, stock
+  intake, adjustments and waste
+- **Staff:** roles you design, attendance, and payroll worked out from it
+- **Cash and khata:** opening and closing the drawer, expenses, and running
+  balances for regulars and suppliers
+- **Reports:** sales, menu items and branches
+- **Branches:** each outlet runs on its own, managers see only theirs, owners
+  see all of them
+- **Online ordering:** a page for each restaurant on its own subdomain
+
+## Under the hood
+
+A Next.js app on PostgreSQL through Prisma. Socket.IO keeps the counter, kitchen
+and admin screens in sync.
+
+The app works offline, so a dropped connection doesn't stop the counter:
+
+- a Serwist service worker serves the app
+- the TanStack Query cache is persisted
+- writes made offline go into an outbox in IndexedDB (Dexie) and replay when the
+  connection returns
+
+Each replayed write carries an idempotency key, so a resend is recognised
+instead of applied twice.
+
+Staff sign in with a PIN, and every outlet has its own role-based permissions.
+
+## What's next
+
+The restaurant system is the first in a family of management systems. Grocery
+management is next.

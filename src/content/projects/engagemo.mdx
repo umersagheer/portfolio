@@ -1,0 +1,67 @@
+---
+title: Engagemo
+tagline:
+  An AI writing coach and classroom platform for schools and independent
+  teachers.
+logo: /images/projects/engagemo.png
+order: 2
+featured: true
+status: Live
+platform: Web
+links:
+  - label: engagemo.ai
+    href: https://engagemo.ai
+code: private
+stack:
+  - name: React
+    icon: react
+  - name: Vite
+    icon: vite
+  - name: TypeScript
+    icon: typescript
+  - name: Node.js
+    icon: nodedotjs
+  - name: Express
+    icon: express
+  - name: PostgreSQL
+    icon: postgresql
+  - name: TypeORM
+    icon: typeorm
+  - name: Redux Toolkit
+    icon: redux
+  - name: Tailwind CSS
+    icon: tailwind-css
+  - name: Socket.IO
+    icon: socketdotio
+  - name: BullMQ + Redis
+    icon: redis
+  - name: LangChain
+    icon: langchain
+  - name: xAI (Grok)
+    icon: xai-grok
+  - name: Google Cloud Vision
+    icon: gcp-cloud-vision-api
+  - name: Stripe
+    icon: stripe
+  - name: AWS S3
+    icon: aws-res-amazon-simple-storage-service-s3-standard
+---
+
+## Overview
+
+A full-stack writing education platform for schools and independent teachers,
+with 30–40 institutions onboard. Students write, an AI coach gives feedback, and
+teachers run their classrooms: assignments, grading, progress and reports, with
+subscription-based feature controls.
+
+## What I built
+
+- Role-based platform for students, teachers and admins, with secure auth flows
+- Bulk AI feedback processing on BullMQ + Redis queues, with retries and live
+  progress updates
+- OCR for image and PDF submissions using Google Cloud Vision
+- Automated individual and class reports with AI analysis and downloadable PDF
+  export
+- Realtime notifications and report status updates over Socket.IO
+- Stripe subscription billing with feature gating (AI usage, OCR access,
+  institutional limits)

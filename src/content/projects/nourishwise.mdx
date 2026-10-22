@@ -1,0 +1,89 @@
+---
+title: NourishWise
+tagline: A postpartum nutrition, recovery and community app for new mothers.
+logo: /images/projects/postpartum.png
+order: 3
+featured: false
+status: On the App Store
+platform: iOS app
+links:
+  - label: App Store
+    href: https://apps.apple.com/pk/app/postpartum-diet-nourishwise/id6752439792
+code: private
+stack:
+  - name: React Native
+    icon: react
+  - name: Expo
+    icon: expo
+  - name: Expo Router
+  - name: TypeScript
+    icon: typescript
+  - name: Supabase
+    icon: supabase
+  - name: TanStack Query
+    icon: react-query
+  - name: Zustand
+  - name: React Hook Form
+    icon: react-hook-form
+  - name: Zod
+    icon: zod
+  - name: NativeWind
+    icon: nativewind
+  - name: RevenueCat
+    icon: revenuecat
+  - name: Axios
+    icon: axios
+  - name: AWS S3
+    icon: aws-res-amazon-simple-storage-service-s3-standard
+screens:
+  - file: home
+    alt:
+      NourishWise home screen with a mood check-in, today's calories and macros,
+      and the day's meal plan
+    caption: Home. A mood check-in, today's calories and the meal plan
+  - file: meal-plan
+    alt:
+      The day's meal plan with breakfast, lunch and dinner and calories for each
+    caption: The daily meal plan
+  - file: recipe
+    alt: A recipe with nutrition per serving and step-by-step instructions
+    caption: Recipes with nutrition worked out per serving
+  - file: grocery
+    alt: A grocery list with quantities, prices and a merge-duplicates action
+    caption: Groceries, straight from recipes, with duplicates merged
+  - file: analytics
+    alt:
+      Stats and analytics with nutrition per day, mood logs and an eight-day
+      streak
+    caption: Nutrition, mood trends and streaks
+  - file: community
+    alt: Community forums with posts, likes and comments
+    caption: The community forums
+screensNote: Screens are from the app's design files.
+---
+
+## Overview
+
+A mobile-first postpartum wellness app built with React Native and Expo. It
+works out personal calorie and macro targets during onboarding, then supports
+the day with meal planning, mood and nutrition tracking, recipes, groceries and
+community forums, plus premium subscriptions. Supabase handles auth, behind a
+typed API service layer.
+
+## What I built
+
+- Supabase authentication with email and password, plus Google, Apple and
+  Facebook sign-in
+- Dynamic onboarding that calculates personalised postpartum calorie and macro
+  targets
+- A daily dashboard with a calendar, mood logging, recommendations, a nutrition
+  graph and meal cards
+- A recipe system with search, favourites, user-created recipes, and nutrition
+  calculated before publishing
+- Grocery management with add, edit and delete, merged duplicates, and a
+  recipe-to-grocery flow
+- Analytics for nutrition, mood trends, streaks, badges and engagement
+- Community forums with posts, comments, likes, filters, and follow and follower
+  interactions
+- RevenueCat premium subscriptions with feature gating and in-app plan
+  management

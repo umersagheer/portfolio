@@ -1,0 +1,99 @@
+---
+title: Meridian Profits
+tagline:
+  A business-clarity app that shows small business owners what each service
+  really earns.
+logo: /images/projects/meridian.png
+order: 4
+featured: false
+status: On the App Store
+platform: iOS app
+links:
+  - label: App Store
+    href: https://apps.apple.com/pk/app/meridian-profits/id6761718786
+  - label: meridianprofitsapp.com
+    href: https://meridianprofitsapp.com
+code: private
+stack:
+  - name: React Native
+    icon: react
+  - name: Expo
+    icon: expo
+  - name: Expo Router
+  - name: NestJS
+    icon: nestjs
+  - name: PostgreSQL
+    icon: postgresql
+  - name: Prisma
+    icon: prisma
+  - name: Clerk
+    icon: clerk
+  - name: OpenAI
+    icon: openai
+  - name: LangChain
+    icon: langchain
+  - name: LangGraph
+    icon: langgraph
+  - name: BullMQ + Redis
+    icon: redis
+  - name: Socket.IO
+    icon: socketdotio
+  - name: TanStack Query
+    icon: react-query
+  - name: Zustand
+  - name: RevenueCat
+    icon: revenuecat
+  - name: Sentry
+    icon: sentry
+  - name: Tailwind (Uniwind)
+    icon: tailwind-css
+screens:
+  - file: welcome
+    alt:
+      Meridian welcome screen reading "See what your services really earn by
+      connecting time, cost, and effort"
+    caption: See what your services really earn
+  - file: business-setup
+    alt: Business profile setup with a choice of industry
+    caption: Onboarding with industry presets
+  - file: dashboard
+    alt:
+      Dashboard with the best and weakest service, monthly profit and overhead,
+      and AI reports
+    caption: The dashboard. Best and weakest services at a glance
+  - file: services
+    alt: Services list with profit per hour and a health label for each
+    caption: Every service's true profit per hour
+  - file: ai-report
+    alt:
+      AI report for a service listing pricing clarity, time and labour
+      efficiency, and delegation insights
+    caption: An AI report for one service
+  - file: pricing-insight
+    alt:
+      A pricing insight with the recommendation, the reasoning and the expected
+      impact
+    caption: A pricing recommendation, with the reasoning and the impact
+screensNote: Screens are from the app's design files.
+---
+
+## Overview
+
+A full-stack mobile app that helps small business owners understand true service
+profitability from labour, overhead, capacity and AI-powered recommendations. An
+Expo React Native client runs on a NestJS and PostgreSQL backend.
+
+## What I built
+
+- Clerk authentication with protected app flows and secure webhook-based user
+  sync
+- Guided onboarding with industry presets, suggested roles, and overhead setup
+  (simple or categorised)
+- A service profitability engine that calculates true cost, margin, profit per
+  hour and the minimum safe price
+- Automatic recalculation of every related service when role rates or overhead
+  change
+- An AI insights pipeline on LangChain and LangGraph with OpenAI, with
+  queue-based generation and report history
+- Realtime AI generation status over Socket.IO, and a RevenueCat paywall for
+  locked insight reports

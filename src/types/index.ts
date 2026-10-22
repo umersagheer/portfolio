@@ -22,16 +22,5 @@ export type PostMetadata = {
   postId: string
 }
 
-export type Project = {
-  metadata: ProjectMetadata
-  content: string
-}
-
-export type ProjectMetadata = {
-  title?: string
-  summary?: string
-  image?: string
-  author?: string
-  publishedAt?: string
-  projectId: string
-}
+// Project types are inferred from the validated frontmatter: see
+// src/libs/projects.ts (Project, ProjectMeta, ProjectScreen).
