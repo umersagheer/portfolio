@@ -10,6 +10,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
+    "screens": "node scripts/process-project-screens.mjs",
     "build:vercel": "pnpm db:deploy && next build",
     "db:generate": "prisma generate",
     "db:deploy": "prisma migrate deploy && prisma generate",
@@ -64,6 +65,7 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "prisma": "^7.4.2",
     "remotion": "4.0.434",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"
   },

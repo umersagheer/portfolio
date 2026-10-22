@@ -1,0 +1,138 @@
+{
+  "munshi/orders": {
+    "device": "tablet",
+    "width": 1440,
+    "height": 1080,
+    "dark": true
+  },
+  "munshi/kitchen": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": true
+  },
+  "munshi/online": {
+    "device": "phone",
+    "width": 780,
+    "height": 1646,
+    "dark": true
+  },
+  "munshi/cash": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": true
+  },
+  "munshi/stock": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": true
+  },
+  "munshi/reports": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": true
+  },
+  "nourishwise/home": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 2211
+    }
+  },
+  "nourishwise/meal-plan": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 2858
+    }
+  },
+  "nourishwise/recipe": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 3189
+    }
+  },
+  "nourishwise/grocery": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false
+  },
+  "nourishwise/analytics": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 2748
+    }
+  },
+  "nourishwise/community": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 2850
+    }
+  },
+  "meridian/welcome": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false
+  },
+  "meridian/business-setup": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false
+  },
+  "meridian/dashboard": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 3114
+    }
+  },
+  "meridian/services": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false
+  },
+  "meridian/ai-report": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false
+  },
+  "meridian/pricing-insight": {
+    "device": "phone",
+    "width": 780,
+    "height": 1688,
+    "dark": false,
+    "full": {
+      "width": 780,
+      "height": 2394
+    }
+  }
+}
