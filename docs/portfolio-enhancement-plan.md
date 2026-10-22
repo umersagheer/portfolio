@@ -21,7 +21,7 @@
 | **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
 | **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
 | **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
-| **4** | Projects as pages (+ Munshi) | 🔄 4A ✅ · 4B ✅ · 4C (case-study writing) next | `f0fca25`…`a218adf` |
+| **4** | Projects as pages (+ Munshi) | ✅ 4A · 4B · 4C | `f0fca25`…`c0dbcd2` |
 | **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
 | **6** | Home page recomposition | ⬜ | |
 | **7** | SEO & sharing | ⬜ | |
@@ -604,6 +604,38 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - `~/Code/softaims/writing-coach` is unchanged: branch, HEAD, status, stash and refs all match the snapshot taken before.
 - The original PNGs (all 8, dashboard included) stay in the gitignored `assets/engagemo/`.
 - Re-shooting later means rebuilding the demo environment from this description.
+
+### 2026-10-22: Phase 4C ✅ COMPLETE (Phase 4 done): `c3981cd`…`c0dbcd2`
+
+| Commit | Case study | Words | Rail |
+|---|---|---|---|
+| `c3981cd` | Munshi | ~1,600 | Founder · sole engineer · Own product (RFC is the first customer) · Jul 2025 – present |
+| `fb4ad0c` | Engagemo | ~1,100 | Lead engineer · full-stack · Built at Softaims · Jun 2025 – present |
+| `27cba0b` | NourishWise | ~750 | Sole mobile engineer · Built at Softaims · Aug – Dec 2025 |
+| `c0dbcd2` | Meridian Profits | ~780 | Mobile lead · backend foundation · Built at Softaims · Feb – Apr 2026 |
+
+**The template.** Every study uses the same `##` headings: The problem → My role → How it works → Decisions → The hard part → Outcome so far. Munshi adds "RFC, the first customer". Under the hood:
+- *How it works* splits into "What people use" and "Under the hood" (`###`, so they stay out of the TOC).
+- Each decision reads "X, because Y, at the cost of Z".
+- *The hard part* is one story with named traps and a one-line lesson, plus a short "another one".
+
+**How it was written.** Teach-then-draft:
+- Munshi went section by section; the other three were approved as a whole outline.
+- Facts came from five read-only research passes on 2026-10-22: local git for rfc-pos, writing-coach and the Mediterranean fork, and `gh api` for the Meridian app and backend and the NourishWise app.
+- Every number has a source or the owner's confirmation: RFC stats, 30–40 institutions, 368 activations in two weeks, Engagemo's load-time fix, launch months.
+
+**Credit rules** (also in memory: `case-study-credit-rules`):
+- "we" for team work, "I" for the owner's own; teammates by role, never by name.
+- No exploitable weakness of a live product, and no client-confidential detail.
+- Two claims were corrected: OCR and the Oral Defense core are framed as led, not built; Meridian's engine and LangGraph pipeline are credited to "our backend engineer".
+
+**Verified:** for each page, lint and build passed (throwaway `portfolio_p4c_test`, dropped afterwards); every TOC link matched its heading id; the rail facts rendered; no overflow, CLS 0 and no console errors at 390px (puppeteer-core device emulation).
+
+**Follow-ups:**
+- Tailwind Typography adds visible backticks around inline code site-wide (posts too); hide them with `prose-code:before/after:content-none`.
+- Munshi runs about double the 600–900-word target. Kept for the flagship; the "What people use" list is the first cut if it needs trimming.
+- Add `munshi.app` to Munshi's links once the domain resolves (not yet, 2026-10-22).
+- The `Softaims/postpartum-diet-app` repo now returns 404 to the owner's account. A committed Firebase Admin key was reported to the owner for rotation; it is not in the portfolio.
 
 ---
 
