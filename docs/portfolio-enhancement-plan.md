@@ -20,7 +20,7 @@
 |---|---|---|---|
 | **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
 | **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
-| **3** | Visual system ("technical drawing") | ⬜ | |
+| **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
 | **4** | Projects as pages (+ Munshi) | ⬜ | |
 | **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
 | **6** | Home page recomposition | ⬜ | |
@@ -58,11 +58,12 @@ Phases 1 and 2 are small enough to plan in one session if you prefer. Phases 3�
 |---|---|---|
 | D1 | **Drafts stay reachable by direct URL** (an unlisted preview). This is intentional and not a leak. Never set `dynamicParams = false` on `/posts/[postId]`. Anything that *enumerates* posts (sitemap, RSS, ⌘K, prev/next) must use the filtered `getAllPostMetadata()`. | 2026-10-21 |
 | D2 | **Projects move to dedicated pages**; the modal goes. | 2026-10-21 |
-| D3 | **Design direction is "the site as a technical drawing":** monochrome hairlines on a flat panel, with *one accent colour only on what is live*. This is iso-glow's rule applied site-wide. | 2026-10-21 |
+| D3 | **Design direction (revised after seeing the preview):** professional, modern and minimal, readable for laypeople and engineers alike. Monochrome structure on a flat background with whitespace and quiet solid hairlines, **no decorative frames** (dashed rails, crosshairs, brackets and centre-lines were all tried and dropped as too close to the inspirations or too busy). *One accent colour, only on what is live* (iso-glow's rule): the current nav item, the label of the section being read, hover and focus. | 2026-10-22 |
 | D4 | **Exactly two iso-glow figures:** About (Fig. 01, "The whole stack") and 404 (Fig. 404, "Unplugged"). Everywhere else uses the *rule*, not the figures. | 2026-10-21 |
-| D5 | **Typography is a serif display face for headings, a clean sans for body, and mono only for labels, dates and `Fig.` captions.** Poppins is dropped. | 2026-10-21 |
+| D5 | **Typography:** **Fraunces 500** for headings ("readable and funky"), self-hosted with the full optical-size axis; the **system sans** for body (0 KB); **Source Code Pro** only for metadata. Poppins dropped. Instrument Serif (too condensed) and Newsreader were tried in the preview. | 2026-10-22 |
 | D6 | **The hero status pill reads "Open to roles & freelance".** | 2026-10-21 |
 | D7 | **Munshi replaces RFC as a project.** Munshi is the product and company: a family of management systems (restaurant first, grocery coming). RFC is Munshi's *first customer*, not the project. Source: `~/Code/RFC/munshi-site` (marketing site), `~/Code/RFC/rfc-pos` (the POS), live customer page `rfc.hotel.munshi.app`. | 2026-10-21 |
+| D9 | **Theme control is a single light/dark toggle**; first visits follow the OS. | 2026-10-22 |
 | D8 | **Screenshots never show production data, and device frames are drawn in code.** Munshi uses its demo shots; NourishWise and Meridian use flat Figma frame exports; Engagemo is captured from a local `staging` run seeded with mock data, including every AI output. See [Screenshot strategy](#screenshot-strategy). | 2026-10-22 |
 
 ---
@@ -177,7 +178,7 @@ Fonts         Poppins 5 files preloaded (unused) + Source Code Pro 1 variable fi
 |---|---|---|---|
 | [syedsubhan.in](https://www.syedsubhan.in/) | ⌘K command palette; "Available" status pill; a closing CTA with a line of personality | ⌘K suits a developer audience and frees the nav from the theme switch | Three floating controls at once (top pill, bottom dock, search button), anime avatar, Playfair everywhere |
 | [imlunahey.com](https://imlunahey.com/) | Mono section numbering (`01 //`); a status card (location, local time, stack); a `~/now` block; a **colophon footer listing the site's data sources and cache times** | The colophon shows backend thinking in a human way: "here's how this page is built and cached" | Full terminal aesthetic, dot-matrix display font, live weather and music widgets |
-| [harshitparmar.in](https://www.harshitparmar.in/) | Project card layout (framed screenshot, stack chips, status, "View details →"); project page sections (Overview, Learnings, **Challenges I faced**); tech chips inline in prose; dashed rails | It's the closest match to what we want for projects, and "Challenges" is where engineering judgement shows | Quote footer; project pages with no way back or to the next project |
+| [harshitparmar.in](https://www.harshitparmar.in/) | Project card layout (framed screenshot, stack chips, status, "View details →"); project page sections (Overview, Learnings, **Challenges I faced**); tech chips inline in prose | It's the closest match to what we want for projects, and "Challenges" is where engineering judgement shows | Quote footer; project pages with no way back or to the next project |
 | [10xshivam.dev](https://10xshivam.dev/) | A one-line role tagline (frontend • backend • devops); playful first-person copy; an **About page with the stack grouped by layer and a journey grouped by year**; local time in the footer | It's friendly and human, which is exactly the tone asked for | Figma-style selection boxes on labels (a second visual language that would fight iso-glow) |
 
 ---
@@ -227,9 +228,9 @@ Production correctness only. No visual redesign.
 
 **Done when:** the build route table shows smaller First Load JS for posts and projects, and nothing in the H lists remains.
 
-### Phase 3: Visual system ("technical drawing")
+### Phase 3: Visual system
 
-Applied to the existing pages without restructuring their content.
+Applied to the existing pages without restructuring their content. **As shipped** (see the phase log); the original sub-items below are kept for history. Rails were dropped (D3), the font is Fraunces (D5), and the theme control is a single toggle (D9).
 
 - **3a. Tokens:**
   - A flat panel background (drop `bbblurry.svg`), hairline and rail colours, and one accent (brand purple) reserved for live states. These are the active nav item, the status dot, hover and focus, the current TOC item, and lit figure parts.
@@ -492,6 +493,41 @@ Post pages are unchanged at 449 kB; that is Phase 2 (P1).
 - **Demos:** every demo control hydrated on all six posts (65/65 timezones, 31/31 git-internals, 40/40 layout, 30/30 websockets, 10/10 expo, 7/7 reset), with no console errors; the reset demo was exercised end to end.
 - **Icons:** they swap correctly in both themes, and the hidden variant isn't fetched.
 - **Like button:** it records and restores likes.
+
+### 2026-10-22: Phase 3 ✅ COMPLETE: `4b48889`…`24b5fb5`
+
+The direction was settled with a local HTML preview first. The user chose Fraunces, the system body font, a single theme toggle, no frame decorations, and live section labels.
+
+| Commit | Result |
+|---|---|
+| `4b48889` fonts | Fraunces 500 self-hosted (`src/fonts/`, OFL included) via `next/font/local` with the opsz 9–144 axis (34.8 KB; `next/font/google` only allows that axis with the full weight range); Source Code Pro variable; Poppins removed. **Fonts preloaded per page: 6 → 2 (≈61 KB → ≈57 KB).** `font-display` utility and `--hair` / `border-hair` token. |
+| `c4d1069` nav | A sticky top bar (opaque, no `backdrop-filter`): serif wordmark ("Umer" on phones), sans text links with an accent active item, and a single theme toggle (`dark:` icon swap, so nothing changes after hydration). No framer-motion, HeroUI Tabs/Tooltip or icon library in the layout. `ui/tabs.tsx` deleted. |
+| `8dd288c` footer | CTA, socials, Pakistan local time (client, fills in after hydration), and a "how this site works" colophon |
+| `7b82c1a` type + background | `bbblurry.svg` layer removed (one request, no full-screen fixed image); `SectionHeader` (`01 · Work` plus a serif h2) replaces `Heading`; the home name is an `h1` (A4); page titles, post titles and prose h2/h3 in Fraunces; card titles in sans. Also removed a nested `container` on home that put content 16px off the nav's edge. |
+| `2b44719` live labels | `live-sections.tsx`: one IntersectionObserver band at 40% of the viewport, plus an end-of-page observer so short last sections (the footer) can go live |
+| `57c619d` framer scope | `MotionConfig` moved out of `providers.tsx` into `reduced-motion.tsx`, around post pages and the project list |
+| `8ec088e` A6 | Post page scrollbar restored |
+| `50ba9e7` docs | `CLAUDE.md`: fonts, layout chrome, visual-system rules |
+| `24b5fb5` rows | A hairline outline on project rows (they lost their edge on the flat light background) |
+
+**Per-page JS after Phase 3** (gzip; Phase 2 in brackets):
+
+| Page | Phase 2 | Phase 3 |
+|---|---|---|
+| `/` | 278 KB | 246 KB |
+| `/projects` | 278 KB | 246 KB |
+| `/contact` | 312 KB | 282 KB |
+| `/posts` | 289 KB | 282 KB |
+| Post pages | unchanged | ±3 KB (the new nav, toggle, clock and observer are tiny) |
+
+**Other results:**
+- **Layout shift:** CLS is 0 on home and on a post.
+- **LCP:** the home LCP is now the serif `h1` (168 ms locally).
+- **Overflow:** none at 390px on home, `/posts`, `/projects`, `/contact` or a post.
+
+**Found and recorded:**
+- **framer-motion still ships on every page (38 KB gzip)** even though the layout no longer imports it. Webpack grouped `next/link` and `next/image` into the same shared chunk as `projects.tsx` (the modal, which uses framer-motion). Phase 4 removes the modal, the last framer-motion user outside posts, and should drop this chunk from non-post pages. Verify the route table then.
+- **Pre-existing:** a WebSockets demo stepper overflows below ~330px width (fine at 390px).
 
 ---
 
