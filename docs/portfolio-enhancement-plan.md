@@ -21,7 +21,7 @@
 | **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
 | **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
 | **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
-| **4** | Projects as pages (+ Munshi) | ⬜ | |
+| **4** | Projects as pages (+ Munshi) | 🔄 4A ✅ · 4B (Engagemo capture) and 4C (case-study writing) next | `f0fca25`…`768b7c0` |
 | **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
 | **6** | Home page recomposition | ⬜ | |
 | **7** | SEO & sharing | ⬜ | |
@@ -62,7 +62,7 @@ Phases 1 and 2 are small enough to plan in one session if you prefer. Phases 3�
 | D4 | **Exactly two iso-glow figures:** About (Fig. 01, "The whole stack") and 404 (Fig. 404, "Unplugged"). Everywhere else uses the *rule*, not the figures. | 2026-10-21 |
 | D5 | **Typography:** **Fraunces 500** for headings ("readable and funky"), self-hosted with the full optical-size axis; the **system sans** for body (0 KB); **Source Code Pro** only for metadata. Poppins dropped. Instrument Serif (too condensed) and Newsreader were tried in the preview. | 2026-10-22 |
 | D6 | **The hero status pill reads "Open to roles & freelance".** | 2026-10-21 |
-| D7 | **Munshi replaces RFC as a project.** Munshi is the product and company: a family of management systems (restaurant first, grocery coming). RFC is Munshi's *first customer*, not the project. Source: `~/Code/RFC/munshi-site` (marketing site), `~/Code/RFC/rfc-pos` (the POS), live customer page `rfc.hotel.munshi.app`. | 2026-10-21 |
+| D7 | **Munshi replaces RFC as a project.** Munshi is the product and company: a family of management systems (restaurant first, grocery coming). RFC is Munshi's *first customer*, not the project. Source: `~/Code/RFC/munshi-site` (marketing site), `~/Code/RFC/rfc-pos` (the POS). Live links: `rfc.hotel.munshi.app` (RFC's ordering page) and `business.hotel.munshi.app` (the POS). **`munshi.app` has no DNS yet: add it to `munshi.mdx` once it resolves.** | 2026-10-22 |
 | D9 | **Theme control is a single light/dark toggle**; first visits follow the OS. | 2026-10-22 |
 | D8 | **Screenshots never show production data, and device frames are drawn in code.** Munshi uses its demo shots; NourishWise and Meridian use flat Figma frame exports; Engagemo is captured from a local `staging` run seeded with mock data, including every AI output. See [Screenshot strategy](#screenshot-strategy). | 2026-10-22 |
 
@@ -528,6 +528,47 @@ The direction was settled with a local HTML preview first. The user chose Fraunc
 **Found and recorded:**
 - **framer-motion still ships on every page (38 KB gzip)** even though the layout no longer imports it. Webpack grouped `next/link` and `next/image` into the same shared chunk as `projects.tsx` (the modal, which uses framer-motion). Phase 4 removes the modal, the last framer-motion user outside posts, and should drop this chunk from non-post pages. Verify the route table then.
 - **Pre-existing:** a WebSockets demo stepper overflows below ~330px width (fine at 390px).
+
+### 2026-10-22: Phase 4A ✅ COMPLETE: `f0fca25`…`768b7c0`
+
+Phase 4 is split into three chunks: 4A (infrastructure and pages, done), 4B (the Engagemo demo capture) and 4C (case-study writing with the user).
+
+| Commit | Result |
+|---|---|
+| `f0fca25` screens pipeline | `pnpm screens` (sharp) turns `assets/` and Munshi originals into WebP plus the `screens.json` size manifest. Phones get a screen-height crop (780×1688) and a `-full` copy only when the frame is >5% taller; `-dark` twins. 18 screens, 1.8 MB in total (the RFC PNGs they replace were 5.1 MB). Idempotent; clears its output first. |
+| `095f4cf` data | `src/content/projects/{munshi,engagemo,nourishwise,meridian}.mdx` with Zod-validated frontmatter; `libs/projects.ts` resolves screens against the manifest and **fails the build on a missing screen** (tested). Old `[projectId]` route and types removed. Munshi's copy is drawn from its own site and repo: offline outbox in IndexedDB with idempotency keys (verified in `rfc-pos`), and RFC stats. |
+| `8575dda` pages | `/projects/[slug]` (static, `dynamicParams = false`): server-rendered rail (facts, links, "Private repository", on-this-page, prev/next, keyboard hint), serif header, stack chips, phone apps lead with 3 screens, MDX body, gallery with a native `<dialog>` lightbox (full-height phones load on open), and a pager. `BackLink` + `nav-history.tsx` return to the list's scroll position; `KeyboardNav`: Esc back, ←/→ projects. No framer-motion. |
+| `2bcb8a6` cards | `/projects` cards (cover peeking from a stage) and home `ProjectRows` |
+| `aba3c7d` stores | Google Play links for NourishWise and Meridian (tracking params stripped); platform iOS · Android |
+| `a046a28` cleanup | Modal, morphing dialog, marquee, `index.tsx`, `useClickOutside`, zustand icon, the RFC images and the marquee CSS removed (20 files, −2,137 lines) |
+| `768b7c0` docs | `CLAUDE.md`: project content model, `pnpm screens`, adding a project, routes |
+
+**JS after 4A** (gzip; Phase 3 in brackets):
+
+| Page | Phase 3 | 4A |
+|---|---|---|
+| `/` | 246 KB | 195 KB |
+| `/projects` | 246 KB | 192 KB |
+| `/contact` | 282 KB | 234 KB |
+| `/posts` | 282 KB | 234 KB |
+| Project pages | n/a | ≈197 KB |
+
+**framer-motion is now only on post pages** (checked via the `framerAppearId` literal), which resolves the Phase 3 finding.
+
+First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
+
+**Verified:**
+- **Routes:** 4 project pages return 200; unknown and old slugs return 404.
+- **Images and layout:** 0 broken images and CLS 0 on home, `/projects` and every project page; no overflow at 390px.
+- **Navigation:** Esc from a project returns to `/projects` at the same scroll position; ←/→ step through projects; a direct visit + Esc opens `/projects`.
+- **Lightbox:** opens large; Esc closes it without leaving the page; focus returns to the screenshot.
+- **Theme:** Munshi light and dark twins swap with the theme, and the hidden twin is never fetched.
+
+**Notes:**
+- Munshi's "dark" ordering screenshot is light by design: that customer page has no dark mode.
+- The first request for each image size after a deploy is slow (AVIF encode in the optimizer), then cached.
+- Engagemo shows its logo until 4B.
+- Role and period are blank on all projects until 4C.
 
 ---
 
