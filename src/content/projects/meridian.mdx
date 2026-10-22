@@ -8,6 +8,9 @@ order: 4
 featured: false
 status: On the App Store and Google Play
 platform: iOS · Android
+client: Built at Softaims
+role: Mobile lead · backend foundation
+period: Feb – Apr 2026
 links:
   - label: App Store
     href: https://apps.apple.com/pk/app/meridian-profits/id6761718786
@@ -79,23 +82,94 @@ screens:
 screensNote: Screens are from the app's design files.
 ---
 
-## Overview
+## The problem
 
-A full-stack mobile app that helps small business owners understand true service
-profitability from labour, overhead, capacity and AI-powered recommendations. An
-Expo React Native client runs on a NestJS and PostgreSQL backend.
+Picture a salon owner pricing a haircut. The number usually comes from gut
+feeling or from what the shop down the street charges. Once the stylist's time,
+the rent and the electricity are counted, some services quietly lose money, and
+the owner has no way to see which. A spreadsheet could answer it, but most
+owners will never build one.
 
-## What I built
+Meridian does that maths for them. For the app, that meant turning a price, the
+roles involved with their hourly rates and time, direct costs and a share of
+overhead into a true cost, a margin and a profit per hour for every service, and
+working it all out again the moment any input changes.
 
-- Clerk authentication with protected app flows and secure webhook-based user
-  sync
-- Guided onboarding with industry presets, suggested roles, and overhead setup
-  (simple or categorised)
-- A service profitability engine that calculates true cost, margin, profit per
-  hour and the minimum safe price
-- Automatic recalculation of every related service when role rates or overhead
-  change
-- An AI insights pipeline on LangChain and LangGraph with OpenAI, with
-  queue-based generation and report history
-- Realtime AI generation status over Socket.IO, and a RevenueCat paywall for
-  locked insight reports
+## My role
+
+I built the mobile app end to end: sign-in, onboarding, the five-step service
+builder, the dashboard, the AI insights screens, the paywall and the store
+releases. I also set up the backend's foundation: NestJS with Clerk for sign-in,
+a verified webhook that keeps users in sync, and Prisma. Our backend engineer
+built the profitability engine and the AI pipeline on top of it.
+
+## How it works
+
+### What people use
+
+- **Onboarding** starts from an industry preset with suggested roles. Overhead
+  goes in as one total or category by category.
+- **Services** are priced per hour, per job or per month, with a fixed time or a
+  range, and the roles and direct costs they use.
+- **For every service:** the true cost, the margin, the profit per hour and the
+  minimum safe price, with a health status at a glance.
+- **AI insights:** a report per service covering pricing, labour, delegation,
+  overhead and focus. The first report for each service is free; after that,
+  each report is a single purchase.
+
+### Under the hood
+
+An Expo and React Native app with Expo Router, TanStack Query for server data,
+Zustand for app state and MMKV for fast storage on the device. Sign-in runs on
+Clerk. The API is NestJS on PostgreSQL through Prisma. AI reports run as jobs on
+BullMQ, through a LangGraph pipeline over OpenAI, with progress pushed to the
+app over Socket.IO. Purchases run on RevenueCat, the backend on Railway and the
+app builds on EAS.
+
+## Decisions
+
+**The server owns every number.** The app never works out a figure itself; it
+only shows what the API calculated and stored, so every screen and every AI
+report agrees. The cost: change one role's hourly rate, and every service that
+uses that role has to be recalculated, which we do inside one transaction.
+
+**AI reports are background jobs with live progress.** A report takes about a
+minute. The server pushes each stage as it happens, and I made the app fill the
+gaps with estimated progress, so the screen never looks frozen. The cost: an
+estimate is a promise, and it has to stay close to the truth.
+
+**Purchases belong to the account.** Payments only start after sign-in and are
+tied to that user, so a purchase follows them to a new phone. The server, not
+the app, decides what's unlocked.
+
+## The hard part
+
+**Paid, but still locked.** When someone buys a report, the store tells the app
+"purchase complete" a few seconds before our server hears about it. In that gap,
+a person who had just paid could still see a locked report, which is the worst
+possible moment to look broken.
+
+- **Check, don't assume.** After a purchase, the app asks the server a few times
+  whether the report is unlocked, instead of trusting the store's answer alone.
+- **Remember the in-between.** A short-lived "unlocking" note is saved on the
+  phone, so leaving the screen and coming back still shows the purchase in
+  progress, not a paywall.
+- **Clean hand-overs.** The purchase identity resets on sign-out, so the next
+  person to sign in on that phone never inherits someone else's purchase.
+
+What it taught me: in payments, "paid" happens at a different moment for every
+party involved. Design the in-between state on purpose.
+
+**Another one, briefly.** Getting reliable output from the AI was the backend's
+hard part. We started with a loop that checked the model's answer and asked
+again when it was wrong. We replaced it with five agents working in parallel,
+one per insight area, each held to a fixed output shape, and a report is only
+put together when all five are valid.
+
+## Outcome so far
+
+Meridian has been on the App Store and Google Play since May 2026, and we've
+since added voice onboarding, so owners can talk through their business instead
+of typing it in.
+
+What I'd change: I'd set up tests and CI in the first week, not later.
