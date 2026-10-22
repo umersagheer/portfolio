@@ -23,6 +23,9 @@ pnpm start
 
 # Lint code
 pnpm lint
+
+# Rebuild project screenshots (WebP + src/content/projects/screens.json)
+pnpm screens
 ```
 
 ## Key Architecture
@@ -31,11 +34,11 @@ pnpm lint
 
 **MDX-based content** stored in `src/content/`:
 - `posts/` - Blog posts as `.mdx` files with frontmatter (title, summary, publishedAt, author, image)
-- `projects/` - Project pages as `.mdx` files with same frontmatter structure
+- `projects/` - One `.mdx` per project (case study), with validated frontmatter (see Projects Data)
 
 **Content utilities** in `src/libs/`:
 - `posts.ts` - Functions: `getPostById()`, `getPosts()`, sorted by publishedAt descending
-- `projects.ts` - Functions: `getProjectById()`, `getProjects()`, sorted by publishedAt descending
+- `projects.ts` - Functions: `getProjects()` (sorted by `order`), `getProjectBySlug()`, `getAdjacentProjects()`
 - Both use `gray-matter` for frontmatter parsing and `fs` for file reading
 
 **MDX rendering**:
@@ -45,19 +48,39 @@ pnpm lint
 
 ### Projects Data
 
-Projects are defined in TWO places:
-1. **Structured data**: `src/content/projects/index.tsx` - Array with detailed project info (features, tech stack, images, links)
-2. **MDX content**: `src/content/projects/*.mdx` - Long-form project descriptions
+Each project is ONE file: `src/content/projects/<slug>.mdx`.
 
-When adding projects, update BOTH locations to maintain consistency.
+**Frontmatter** is validated by a Zod schema in `src/libs/projects.ts`; an invalid field fails the build and names the file. Fields:
+- Required: `title`, `tagline`, `logo`, `order`, `status`, `platform`
+- Optional: `client`, `role`, `period`, `screensNote`, `featured`
+- Lists: `links[] {label, href}`, `stack[] {name, icon?}`, `screens[] {file, alt, caption?}`
+- `code`: `private` or a repo URL
+
+`stack[].icon` is a slug on the pinned icon CDN (`TheSvgIcon`); omit it when the CDN lacks one.
+
+**The MDX body** is the case study. Its `##` headings become the page's "On this page" anchors.
+
+**Screenshots** are generated, never hand-placed:
+1. Originals live outside git: `assets/<slug>/` (gitignored), or Munshi's repo via `MUNSHI_SCREENS_DIR`.
+2. `scripts/project-screens.config.mjs` lists, per project, `{ file, device: phone|tablet|desktop, from, fromDark? }`.
+3. `pnpm screens` writes WebP to `public/images/projects/<slug>/` (phones: a screen-height crop plus a `-full` for the lightbox; `-dark` twins swap with the theme) and the size manifest `src/content/projects/screens.json`.
+4. Commit the WebP files and the manifest.
+
+A `screens[].file` that isn't in the manifest fails the build, so a missing image can't ship.
+
+**Pages:**
+- `/projects` renders `ProjectCard`s; the home page renders `ProjectRows`.
+- `/projects/[slug]` mirrors the post layout: a server-rendered `ProjectRail`, device frames, and a native-`<dialog>` screenshot lightbox.
+- `BackLink` returns to the list with `router.back()` when the reader came from it (scroll restored), using `nav-history.tsx`. `KeyboardNav` maps Esc to back and ←/→ to the previous/next project.
+- No framer-motion on project pages.
 
 ### Routing Structure
 
-- `/` - Home page with intro, recent projects, tech stack grid
+- `/` - Home page with intro, project rows, recent posts, tech stack grid
 - `/posts` - All blog posts with search functionality
 - `/posts/[postId]` - Individual post page (dynamic route, postId = filename without .mdx)
-- `/projects` - All projects listing
-- `/projects/[projectId]` - Individual project page (dynamic route, projectId = filename without .mdx)
+- `/projects` - Project cards
+- `/projects/[slug]` - Case study (slug = filename without .mdx; statically generated, `dynamicParams = false`)
 - `/contact` - Contact form page
 
 ### Server Actions
@@ -130,9 +153,9 @@ Optional:
 3. Post automatically appears on `/posts` (sorted by date)
 
 **Adding a new project**:
-1. Create `src/content/projects/your-project-slug.mdx` with frontmatter
-2. Add project data to `src/content/projects/index.tsx` array
-3. Project appears on `/projects` and homepage
+1. Put screenshot originals in `assets/<slug>/` and list them in `scripts/project-screens.config.mjs`; run `pnpm screens`
+2. Create `src/content/projects/<slug>.mdx` with the frontmatter above (and a logo in `public/images/projects/`)
+3. `pnpm build` validates it; the project appears on `/projects`, the home page and at `/projects/<slug>`
 
 **Adding MDX components**:
 - Define component in `src/components/` (blog demos in `src/components/blog/<series>/`)
