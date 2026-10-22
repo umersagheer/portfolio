@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { Poppins, Source_Code_Pro } from 'next/font/google'
+import { Source_Code_Pro } from 'next/font/google'
+import localFont from 'next/font/local'
 
 import './globals.css'
 import { Providers } from '@/app/providers'
@@ -7,16 +8,22 @@ import { Navbar } from '@/components/navbar'
 import Image from 'next/image'
 import { getSiteUrl } from '@/libs/metadata'
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '600', '700', '800', '900'],
-  variable: '--font-poppins'
+// Headings. One self-hosted file: Fraunces 500 with the full optical-size
+// axis (opsz 9-144), so every heading size gets its own drawing. next/font/
+// google only exposes that axis with the whole weight range (much larger).
+const fraunces = localFont({
+  src: '../fonts/fraunces-opsz-500.woff2',
+  weight: '500',
+  variable: '--font-display',
+  display: 'swap',
+  adjustFontFallback: 'Times New Roman'
 })
+// Metadata, labels and code. A variable font: one file for every weight.
 const sourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
-  weight: ['400', '700', '800', '900', '600'],
   variable: '--font-source-code-pro'
 })
+// Body text uses the system sans (HeroUI's --font-sans): no download.
 
 const siteUrl = getSiteUrl()
 
@@ -33,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={`${poppins.variable} ${sourceCodePro.variable}`}>
+      <body className={`${fraunces.variable} ${sourceCodePro.variable}`}>
         <Providers>
           <Navbar />
           <div className='fixed inset-0 -z-10'>

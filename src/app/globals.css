@@ -15,11 +15,14 @@
 
 /* Ported from tailwind.config.ts ------------------------------------------ */
 
-/* next/font exposes --font-poppins and --font-source-code-pro on <body>.
-   These are @utility (not @theme) because a theme key named --font-poppins
-   would self-reference the next/font variable of the same name. */
-@utility font-poppins {
-  font-family: var(--font-poppins), sans-serif;
+/* next/font exposes --font-display and --font-source-code-pro on <body>.
+   These are @utility (not @theme) because a theme key named after the
+   next/font variable would self-reference it. Body text is the system sans. */
+@utility font-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
 }
 @utility font-sourceCodePro {
   font-family: var(--font-source-code-pro), monospace;
@@ -122,7 +125,15 @@
   --secondary: #338ef7;
 }
 
+/* Hairline for dividers: a quiet line that follows the theme. Used as
+   `border-hair`. Structure stays monochrome; accent is only for live states
+   (active nav item, the section being read, hover, focus). */
+:root {
+  --hair: color-mix(in oklab, var(--foreground) 9%, transparent);
+}
+
 @theme inline {
+  --color-hair: var(--hair);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary-soft: var(--secondary-soft);
