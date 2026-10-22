@@ -73,7 +73,7 @@ When adding projects, update BOTH locations to maintain consistency.
 
 **UI Framework**: HeroUI v3 (`@heroui/react` + `@heroui/styles` 3.2.4) on Tailwind CSS v4 and React Aria. Migration history and decisions: `docs/heroui-v3-migration.md`.
 - No HeroUI provider in v3. `src/app/providers.tsx` wraps the app with React Aria's `RouterProvider` (client-side routing for RAC links), `next-themes`, and `Toast.Provider`
-- Theme switcher: the `Tabs` in `src/components/navbar.tsx`
+- Layout chrome: sticky top bar `src/components/navbar.tsx` (server) with `nav-links.tsx` and `theme-toggle.tsx` (one light/dark button; icons swap via `dark:` classes, no hydration flip), and `src/components/footer.tsx` (CTA, socials, `local-time.tsx`, a "how this site works" colophon). Keep the layout free of framer-motion and HeroUI: they're page-level
 - CSS-first config, no `tailwind.config.ts`: everything lives in `src/app/globals.css` (`@import 'tailwindcss'` then `@import '@heroui/styles'`, typography plugin, font utilities, theme overrides)
 - Brand colours are overrides in `globals.css`: `--accent` (purple), `--secondary` (blue; a custom token, v3 has none), and v2's `--background` (#fff / #000)
 
@@ -84,9 +84,16 @@ When adding projects, update BOTH locations to maintain consistency.
 - Semantic tokens (`accent`, `surface`, `muted`, `*-soft`, `*-soft-foreground`) already switch with the theme. Only use `dark:` for raw palette colours, images, `prose`, or to pick a different token in dark mode
 - Render browser-only values (local timezone, resolved theme) behind `useIsClient()` from `src/hooks/useIsClient.ts` to avoid hydration mismatches
 
-**Fonts**:
-- Poppins (400, 600, 700, 800, 900) and Source Code Pro (400, 600, 700, 800, 900) via `next/font/google` in `src/app/layout.tsx`, exposed as CSS variables
-- Applied with the `font-poppins` / `font-sourceCodePro` utilities defined in `globals.css`
+**Fonts** (two files total):
+- Headings: Fraunces 500, self-hosted at `src/fonts/fraunces-opsz-500.woff2` (with its OFL licence) via `next/font/local`. It has the full optical-size axis, so each heading size gets its own drawing. Use the `font-display` utility
+- Body: the system sans (HeroUI's `--font-sans`). No download
+- Mono: Source Code Pro (variable) via `next/font/google`, `font-sourceCodePro` utility, for metadata only: dates, read times, labels, the colophon, code and demos
+
+**Visual system** (see `docs/portfolio-enhancement-plan.md`):
+- Monochrome structure on a flat background. Dividers are `border-hair` (a theme-aware hairline token). No decorative frames or background images
+- The accent is only for live states: the current nav item, the label of the section being read, hover, focus and the TOC's current item
+- Section headings: `src/components/section-header.tsx` (`01 · Work` mono label over a serif title). Put `data-section` on the section wrapper and `live-sections.tsx` (mounted in the layout) lights its `.section-label` while it's under the reading line
+- framer-motion's reduced-motion config is page-level: wrap framer-using UI in `src/components/reduced-motion.tsx` (post pages and the project list already are)
 
 ### Path Aliases
 
