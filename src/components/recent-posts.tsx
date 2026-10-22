@@ -1,22 +1,20 @@
-import Link from 'next/link'
 import { getPosts } from '@/libs/posts'
 import React from 'react'
+import SectionHeader from '@/components/section-header'
 import Posts from '@/components/posts'
-import { ArrowRightIcon } from 'lucide-react'
 
 export default async function RecentPosts() {
   const posts = await getPosts(2)
   return (
-    <div className='flex flex-col gap-1'>
-      <h3 className='font-sourceCodePro text-xl font-semibold'>Recent Posts</h3>
-      <Posts posts={posts} />
-      <Link
+    <>
+      <SectionHeader
+        index='02'
+        label='Writing'
+        title='Recent posts'
         href='/posts'
-        className='text-foreground hover:bg-surface-secondary inline-flex items-center self-center rounded-md px-2 py-1 text-sm transition-colors'
-      >
-        <p className='font-medium'>All posts</p>
-        <ArrowRightIcon className='ml-2 size-5' />
-      </Link>
-    </div>
+        linkText='All posts'
+      />
+      <Posts posts={posts} />
+    </>
   )
 }

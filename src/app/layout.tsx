@@ -6,7 +6,6 @@ import './globals.css'
 import { Providers } from '@/app/providers'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import Image from 'next/image'
 import { getSiteUrl } from '@/libs/metadata'
 
 // Headings. One self-hosted file: Fraunces 500 with the full optical-size
@@ -44,15 +43,6 @@ export default function RootLayout({
       <body className={`${fraunces.variable} ${sourceCodePro.variable}`}>
         <Providers>
           <Navbar />
-          <div className='fixed inset-0 -z-10'>
-            <Image
-              src='/backgrounds/bbblurry.svg'
-              alt=''
-              width={1920}
-              height={1080}
-              className='h-full w-full object-cover'
-            />
-          </div>
           <main className='container min-h-screen max-w-3xl pt-10 pb-20'>
             {children}
           </main>

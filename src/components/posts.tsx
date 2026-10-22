@@ -36,7 +36,7 @@ export default function Posts({ posts }: PostProps) {
           )}
           <div className='flex flex-1 flex-col justify-between space-y-2 p-4'>
             <div className='space-y-1'>
-              <p className='font-sourceCodePro text-foreground text-base font-semibold'>
+              <p className='text-foreground text-base leading-snug font-semibold'>
                 {post.title}
               </p>
               <p className='text-muted line-clamp-2 text-sm'>{post.summary}</p>

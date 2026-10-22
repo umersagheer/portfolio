@@ -4,8 +4,8 @@ import { siteProfile } from '@/constants/site-profile'
 
 export default function Intro() {
   return (
-    <div className='flex flex-col items-start justify-center'>
-      <div className='flex items-center justify-start gap-3'>
+    <div className='flex flex-col items-start justify-center pb-12'>
+      <div className='flex items-center justify-start gap-4'>
         <div className='size-20 shrink-0 overflow-hidden rounded-xl'>
           {/* Above the fold and the page's LCP element: sized to its 80px box
               and fetched eagerly. */}
@@ -19,15 +19,17 @@ export default function Intro() {
           />
         </div>
         <div className=''>
-          <h2 className='font-sourceCodePro text-2xl font-bold'>
+          <h1 className='font-display text-4xl leading-tight sm:text-5xl'>
             {siteProfile.name}
-          </h2>
-          <h3 className='text-sm font-medium'>{siteProfile.role}</h3>
+          </h1>
+          <p className='text-muted text-sm font-medium'>{siteProfile.role}</p>
         </div>
       </div>
-      <div className='mt-5 max-w-2xl space-y-1'>
-        <h3 className='font-sourceCodePro text-xl font-semibold'>About</h3>
-        <p className='text-sm tracking-wide'>
+      <div className='mt-6 max-w-2xl space-y-2'>
+        <p className='font-sourceCodePro text-muted text-xs tracking-wide'>
+          About
+        </p>
+        <p className='leading-relaxed'>
           Hi, I&apos;m a software engineer from Pakistan 🇵🇰, turning ideas into
           sleek web & mobile apps.
         </p>

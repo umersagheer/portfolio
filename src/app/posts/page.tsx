@@ -6,9 +6,7 @@ export default async function PostsPage() {
   const posts = await getPosts()
   return (
     <div className='space-y-4'>
-      <div className='space-y-1'>
-        <h1 className='font-sourceCodePro text-xl font-bold'>Posts</h1>
-      </div>
+      <h1 className='font-display text-4xl leading-tight'>Posts</h1>
       <PostsWithSearch posts={posts} />
     </div>
   )

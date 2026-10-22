@@ -321,7 +321,7 @@ html {
 
 @layer base {
   .title {
-    @apply font-sourceCodePro text-3xl font-bold underline decoration-2 underline-offset-8;
+    @apply font-display text-4xl leading-tight md:text-5xl;
   }
   .prose pre {
     @apply font-sourceCodePro leading-snug dark:bg-zinc-900;
@@ -332,4 +332,14 @@ html {
   .prose :not(pre) > code {
     overflow-wrap: anywhere;
   }
+}
+
+/* Post headings in the display serif. Unlayered so it beats the typography
+   plugin's weight; demos (.not-prose) keep their own type. */
+.prose
+  :where(h2, h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
 }

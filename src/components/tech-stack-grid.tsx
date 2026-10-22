@@ -2,7 +2,7 @@
 
 import { Card } from '@heroui/react'
 import React from 'react'
-import Heading from '@/components/heading'
+import SectionHeader from '@/components/section-header'
 import {
   IconBrandDocker,
   IconBrandGit,
@@ -16,8 +16,8 @@ import {
 
 export default function TechStackGrid() {
   return (
-    <div className='flex flex-col gap-1'>
-      <Heading>What I work with...</Heading>
+    <div>
+      <SectionHeader index='03' label='Stack' title='What I work with' />
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
         <Card className='border-separator border stroke-[0.1] hover:stroke-[0.2]'>
           <Card.Content className='flex-row items-center'>
