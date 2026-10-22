@@ -1,7 +1,6 @@
-import React from 'react'
 import SectionHeader from '@/components/section-header'
-import Projects from '@/components/projects'
-import { projects } from '@/content/projects'
+import ProjectRows from '@/components/projects/project-rows'
+import { getProjects } from '@/libs/projects'
 
 export default function RecentProjects() {
   return (
@@ -13,7 +12,7 @@ export default function RecentProjects() {
         href='/projects'
         linkText='All projects'
       />
-      <Projects projects={projects} />
+      <ProjectRows projects={getProjects()} />
     </>
   )
 }
