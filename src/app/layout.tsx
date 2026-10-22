@@ -6,6 +6,7 @@ import './globals.css'
 import { Providers } from '@/app/providers'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
+import LiveSections from '@/components/live-sections'
 import { getSiteUrl } from '@/libs/metadata'
 
 // Headings. One self-hosted file: Fraunces 500 with the full optical-size
@@ -47,6 +48,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <LiveSections />
         </Providers>
       </body>
     </html>

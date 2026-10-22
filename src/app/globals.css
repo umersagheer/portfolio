@@ -343,3 +343,17 @@ html {
   font-optical-sizing: auto;
   letter-spacing: -0.02em;
 }
+
+/* The section being read: its label is the one live mark on the page
+   (components/live-sections.tsx sets data-live). */
+.section-label {
+  transition: color 0.3s ease;
+}
+[data-live] .section-label {
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-label {
+    transition: none;
+  }
+}
