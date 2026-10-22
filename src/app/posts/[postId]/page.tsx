@@ -92,7 +92,6 @@ export default async function Post({ params }: PostProps) {
   return (
     <ReducedMotion>
       <section className='pb-20'>
-        <style>{`html{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar{display:none}`}</style>
         <ScrollProgress className='h-[3px]' />
         <div className='space-y-4'>
           {image && (
