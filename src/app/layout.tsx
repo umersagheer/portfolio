@@ -5,6 +5,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { Providers } from '@/app/providers'
 import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 import Image from 'next/image'
 import { getSiteUrl } from '@/libs/metadata'
 
@@ -55,6 +56,7 @@ export default function RootLayout({
           <main className='container min-h-screen max-w-3xl pt-10 pb-20'>
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>
