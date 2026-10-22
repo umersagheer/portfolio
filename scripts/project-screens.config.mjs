@@ -47,6 +47,31 @@ export const projectScreens = {
       fromDark: `${munshi}/reports-dark.png`
     }
   ],
+  engagemo: [
+    { file: 'writing', device: 'desktop', from: 'assets/engagemo/writing.png' },
+    {
+      file: 'feedback-review',
+      device: 'desktop',
+      from: 'assets/engagemo/feedback-draft.png'
+    },
+    { file: 'handwriting', device: 'desktop', from: 'assets/engagemo/ocr.png' },
+    {
+      file: 'oral-defense',
+      device: 'desktop',
+      from: 'assets/engagemo/oral-defense.png'
+    },
+    {
+      file: 'gradebook',
+      device: 'desktop',
+      from: 'assets/engagemo/gradebook.png'
+    },
+    {
+      file: 'rubric',
+      device: 'desktop',
+      from: 'assets/engagemo/grade-breakdown.png'
+    },
+    { file: 'report', device: 'desktop', from: 'assets/engagemo/report.png' }
+  ],
   nourishwise: [
     { file: 'home', device: 'phone', from: 'assets/nourishwise/01.png' },
     { file: 'meal-plan', device: 'phone', from: 'assets/nourishwise/02.png' },

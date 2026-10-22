@@ -35,6 +35,48 @@
     "height": 900,
     "dark": true
   },
+  "engagemo/writing": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/feedback-review": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/handwriting": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/oral-defense": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/gradebook": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/rubric": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
+  "engagemo/report": {
+    "device": "desktop",
+    "width": 1440,
+    "height": 900,
+    "dark": false
+  },
   "nourishwise/home": {
     "device": "phone",
     "width": 780,
