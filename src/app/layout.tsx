@@ -52,7 +52,7 @@ export default function RootLayout({
               className='h-full w-full object-cover'
             />
           </div>
-          <main className='container min-h-screen max-w-3xl py-20'>
+          <main className='container min-h-screen max-w-3xl pt-10 pb-20'>
             {children}
           </main>
         </Providers>
