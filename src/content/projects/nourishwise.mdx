@@ -6,6 +6,9 @@ order: 3
 featured: false
 status: On the App Store and Google Play
 platform: iOS · Android
+client: Built at Softaims
+role: Sole mobile engineer
+period: Aug – Dec 2025
 links:
   - label: App Store
     href: https://apps.apple.com/pk/app/postpartum-diet-nourishwise/id6752439792
@@ -64,28 +67,99 @@ screens:
 screensNote: Screens are from the app's design files.
 ---
 
-## Overview
+## The problem
 
-A mobile-first postpartum wellness app built with React Native and Expo. It
-works out personal calorie and macro targets during onboarding, then supports
-the day with meal planning, mood and nutrition tracking, recipes, groceries and
-community forums, plus premium subscriptions. Supabase handles auth, behind a
-typed API service layer.
+Most nutrition apps are built for losing weight. After birth, a mother's body
+needs something different: recovery from the delivery, often breastfeeding, and
+almost no time or energy left to plan meals. A generic calorie target doesn't
+fit, and the first months can feel lonely.
 
-## What I built
+NourishWise is a daily companion for that stretch: targets worked out for her,
+meals planned for her, and other mothers to talk to. For the app, that meant
+targets that depend on how she delivered, her baby's age and how she feeds;
+daily screens that take seconds to use; and a community that feels instant on a
+phone.
 
-- Supabase authentication with email and password, plus Google, Apple and
-  Facebook sign-in
-- Dynamic onboarding that calculates personalised postpartum calorie and macro
-  targets
-- A daily dashboard with a calendar, mood logging, recommendations, a nutrition
-  graph and meal cards
-- A recipe system with search, favourites, user-created recipes, and nutrition
-  calculated before publishing
-- Grocery management with add, edit and delete, merged duplicates, and a
-  recipe-to-grocery flow
-- Analytics for nutrition, mood trends, streaks, badges and engagement
-- Community forums with posts, comments, likes, filters, and follow and follower
-  interactions
-- RevenueCat premium subscriptions with feature gating and in-app plan
-  management
+## My role
+
+I was the only mobile engineer. I built the whole app, from sign-in to
+subscriptions, and shipped it to the App Store and Google Play. I worked with
+our backend team on the API it runs on.
+
+## How it works
+
+### What people use
+
+- **Onboarding** asks about the delivery, the baby's age and feeding, then works
+  out personal calorie and macro targets.
+- **A daily dashboard** with mood check-ins, the day's meals, recommendations
+  and a nutrition graph, plus a notification when a new meal plan is ready.
+- **Recipes** with nutrition per serving, favourites, and recipes users write
+  themselves.
+- **Groceries** straight from recipes, with duplicates merged.
+- **Progress:** nutrition and mood trends, streaks, and badges that can be
+  shared with the community.
+- **Community forums** with posts, comments, likes and follows.
+- **Premium** features through a subscription.
+
+### Under the hood
+
+An Expo and React Native app. Sign-in runs through Supabase in four ways: an
+email code, Google, Apple and Facebook. Everything else goes through a typed
+service layer to our REST API, with React Query for server data and Zustand for
+app state. Subscriptions run on RevenueCat, and fixes ship over the air through
+EAS update channels.
+
+## Decisions
+
+**Browse free, pay per feature.** The first version put the paywall at the door.
+I replaced it with gates on individual premium actions, so people can see the
+value before they're asked to pay. The cost: every premium action needs its own
+gate and its own upsell.
+
+**The maths lives on the server.** Calorie targets, recipe nutrition and the
+analytics are all computed by the API, so the app stays thin and every screen
+agrees. When someone edits a recipe's ingredients, its nutrition is marked stale
+and worked out again. The cost: some of that work runs through AI and takes
+time, so the app shows a "meals preparing" state and waits longer than a normal
+request would.
+
+**Updates over the air.** Most fixes reach phones without waiting for store
+review. The cost: anything that touches native code still needs a full store
+release.
+
+## The hard part
+
+**One subscription, two stores.** Premium has to behave the same on an iPhone
+and an Android phone, for people who signed up in four different ways. Under the
+hood, the App Store and Google Play model subscriptions differently, and every
+difference showed up as a confused customer.
+
+- **Every sign-in has to lead to the same customer.** At first, people who
+  signed up with an email code weren't linked to their subscription account, so
+  their premium status couldn't follow them. Now every sign-in method ends in
+  the same link.
+- **Android thinks in plans.** On Google Play, monthly and yearly are two plans
+  of one subscription, and RevenueCat's ready-made "manage subscription" screen
+  couldn't switch between them there. I built a custom flow for Android: the
+  plan you're not on is pre-selected, and cancelling takes you straight to Play.
+- **One source of truth.** Subscription logic had grown across screens. I moved
+  it into one place with five clear states: free, trial, active, cancelled and
+  expired.
+
+What it taught me: "one subscription" is really two different store systems
+wearing the same name. Design for both from day one.
+
+**Another one, briefly.** In the community feed, likes and comments appear the
+moment you tap, before the server answers. If the server refuses, the change
+rolls back cleanly, and it has to stay consistent across the feed, the post page
+and the profile at the same time.
+
+## Outcome so far
+
+NourishWise has been live on the App Store and Google Play since October 2025,
+and is now at version 1.0.2.
+
+What I'd change: I'd write tests from the start, because it shipped with almost
+none. And I'd build the Android subscription flow before the iOS one, since
+Android's rules shaped everything in the end.
