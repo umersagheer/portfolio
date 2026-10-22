@@ -8,7 +8,9 @@ order: 1
 featured: true
 status: In production
 platform: Web · tablet · phone
-client: RFC, its first customer
+client: Own product · RFC is the first customer
+role: Founder · sole engineer
+period: Jul 2025 – present
 links:
   - label: RFC's ordering page
     href: https://rfc.hotel.munshi.app
@@ -68,72 +70,183 @@ screensNote:
   real customer data.
 ---
 
-## Overview
+## The problem
 
-Munshi is an all-in-one restaurant system built for Pakistan. Orders, the
-kitchen, stock, staff, cash and _khata_ (running credit for regulars and for
-suppliers) live in one app, from a first counter to a tenth branch.
+At the end of the night, a restaurant owner in Pakistan often can't say what was
+actually sold. Orders were taken in one system, stock was tracked in a paper
+register, and salaries were worked out by hand at the end of the month. Every
+report meant collecting numbers from three places, and a short cash drawer was
+found weeks later, if at all.
 
-It keeps taking orders when the internet drops, prints kitchen tickets, bills
-and tokens, and shows Urdu menu names next to the English ones.
+The software on offer didn't fit how these restaurants work. Most point-of-sale
+systems are built for steady internet, English menus and card payments. Here,
+the connection drops in the middle of the dinner rush, menus are written in
+Urdu, regulars and suppliers run on _khata_ (credit kept in a notebook), and the
+kitchen works from paper tickets.
+
+So the brief was simple to say and hard to build: one app that runs the whole
+restaurant, keeps taking orders when the internet is down, prints on the cheap
+thermal printers restaurants already own, and reads in Urdu.
 
 ## RFC, the first customer
 
 RFC serves karahi, BBQ, burgers and pizza on Main Faisalabad–Lahore Road in
-Manawala. It was the first restaurant to run on Munshi.
+Manawala. It was the first restaurant to run on Munshi, and it still does.
 
 - **10,500+** orders taken on Munshi
 - **163** orders on its busiest day
 - **9** staff on attendance and payroll
 - Running on Munshi since **September 2025**
 
-**Before.** Orders went through one system, stock lived in a register, and
-salaries were worked out by hand at the end of the month. Every report meant
-collecting numbers from three places, and a short cash drawer was found weeks
-later, if at all.
-
 **Switching over.** Munshi was built alongside RFC's own counter and kitchen, so
 every screen was tested in a real rush before it shipped. Staff moved over one
 area at a time: the counter first, then the kitchen tickets, then purchases and
-payroll.
+payroll. The restaurant never had to stop and switch everything at once.
 
-**Now.** Orders, kitchen tickets, purchases, attendance and the day book all run
-in one place. The drawer is counted every night, supplier balances update
-themselves, and salaries come out of the attendance the staff already mark.
+**Now.** Every order, ticket, purchase and shift lives in one place. The drawer
+is counted every night, so a shortage shows up the same day instead of weeks
+later. _Khata_ balances for regulars and suppliers update themselves as bills
+and payments go in. Salaries come straight out of the attendance the staff
+already mark, so nobody works out payroll by hand.
 
-## What it does
+## My role
 
-- **Orders:** dine-in, takeaway and delivery, with payments, bills and kitchen
-  tickets (including modification tickets)
-- **Kitchen:** a live display, updated across every screen as orders change
-- **Stock and purchases:** products, variants, recipes and ingredients, stock
-  intake, adjustments and waste
-- **Staff:** roles you design, attendance, and payroll worked out from it
+Munshi is mine end to end: I decide what to build, design the screens, write the
+code, ship it and support the restaurants that use it.
+
+- **Product.** I built it from RFC's counter, watching orders go through in a
+  real rush and then fixing whatever slowed the staff down.
+- **Design.** Every screen is made for a cashier in the middle of a rush, with
+  Urdu names beside the English ones.
+- **Engineering.** 50+ data models, 100+ database migrations and over 1,000
+  automated tests.
+- **Running it.** Deploys, onboarding new restaurants, and the call when
+  something goes wrong.
+
+I use AI coding tools to move faster. The design decisions, code review and
+testing stay with me.
+
+## How it works
+
+### What people use
+
+- **Orders:** dine-in, takeaway and delivery, plus an online ordering page for
+  each restaurant. Bills, payments and kitchen tickets, including tickets for
+  changes to an order.
+- **Kitchen:** a live display that updates on every screen as orders change.
+- **Stock:** products, variants and recipes, so selling a dish takes its
+  ingredients out of stock. Intake, adjustments and waste.
+- **Staff:** roles the owner designs, attendance, and payroll worked out from
+  it.
 - **Cash and khata:** opening and closing the drawer, expenses, and running
-  balances for regulars and suppliers
-- **Reports:** sales, menu items and branches
-- **Branches:** each outlet runs on its own, managers see only theirs, owners
-  see all of them
-- **Online ordering:** a page for each restaurant on its own subdomain
+  balances for regulars and suppliers.
+- **Branches and reports:** each outlet runs on its own. Managers see theirs,
+  owners see all of them, with sales and menu reports across branches.
 
-## Under the hood
+### Under the hood
 
-A Next.js app on PostgreSQL through Prisma. Socket.IO keeps the counter, kitchen
-and admin screens in sync.
+One Next.js app on PostgreSQL through Prisma, with a small realtime server
+beside it (Socket.IO) that keeps the counter, kitchen and admin screens in sync
+and runs the scheduled jobs.
 
-The app works offline, so a dropped connection doesn't stop the counter:
+- Every restaurant lives in one database and gets its own subdomain.
+- Staff sign in with an outlet code, a staff code and a PIN. Permissions are set
+  per role and per outlet.
+- Bills, kitchen tickets and tokens print through the browser, sized for 80mm
+  thermal paper.
+- It installs like an app and keeps working offline. That part has its own story
+  [below](#the-hard-part).
 
-- a Serwist service worker serves the app
-- the TanStack Query cache is persisted
-- writes made offline go into an outbox in IndexedDB (Dexie) and replay when the
-  connection returns
+## Decisions
 
-Each replayed write carries an idempotency key, so a resend is recognised
-instead of applied twice.
+**All restaurants share one database.** Munshi first ran each customer on its
+own server and database. Onboarding a restaurant was a manual job of about three
+days, and every update had to be rolled out once per customer. I moved everyone
+onto one shared database before the third customer arrived, while the move was
+still cheap. Now adding a restaurant is a single step, and one migration updates
+everyone. The cost: keeping one restaurant's data away from another's is the
+code's job, not the database's. That's why a suite of 19 test files exists only
+to try to reach one restaurant's data from another.
 
-Staff sign in with a PIN, and every outlet has its own role-based permissions.
+**Printing goes through the browser.** Bills, kitchen tickets and tokens are
+laid out in the browser and sent to whatever printer the computer already has,
+so there's nothing to install at the restaurant. The receipt is built from order
+data already on the device, which means printing keeps working when the internet
+is down. It also solved Urdu for free: the browser draws the text, so Urdu
+prints like any other script, which is hard with raw printer commands. The cost:
+tickets can't yet be routed automatically to a separate kitchen printer. I'll
+add direct printer commands when a restaurant actually needs that.
 
-## What's next
+**Each restaurant gets its own subdomain.** Browsers tie sign-in cookies, the
+offline cache and the installed app to a domain, not a path. Two restaurants on
+one address would share a cookie jar and install the same app icon. A subdomain
+each keeps them apart, even on a shared device. The server works out the
+restaurant from the address itself and ignores any restaurant the browser claims
+to be. Branches share their restaurant's subdomain; staff reach their outlet
+through the code they sign in with.
 
-The restaurant system is the first in a family of management systems. Grocery
-management is next.
+**Urdu names are data, not translation.** A restaurant's Urdu menu isn't a
+translation of its English one: <span lang='ur'>چکن کڑاہی</span> is simply the
+dish's name. So each dish and category carries its own Urdu name, and each
+restaurant picks English, Urdu or both, with right-to-left text only where Urdu
+appears. It took one database column instead of a translation framework. The
+cost: buttons and labels are still in English, and a fully right-to-left
+interface waits until a restaurant needs it.
+
+## The hard part
+
+**Taking orders with the internet down.** Picture a full night, and the
+connection drops. The cashier has to keep ringing up orders and the kitchen has
+to keep getting tickets. When the internet comes back, every one of those orders
+has to reach the server exactly once: none lost, none counted twice.
+
+At first the app opened offline and let a waiter build a whole order, then
+failed at the moment of saving, with no warning. That was worse than an outage,
+because it lied until the money was on the counter.
+
+The fix is an outbox on the device. An order taken offline is saved locally with
+a temporary number like #TMP-4F2A, its bill and kitchen ticket print straight
+away, and a background loop sends the backlog whenever the server can be
+reached. When the order lands, its card quietly becomes #014.
+
+The traps were in the details:
+
+- **The browser said we were online.** `navigator.onLine` only knows the Wi-Fi
+  is up. At RFC the router stayed connected with a dead line behind it, so the
+  app now checks whether the server itself answers.
+- **The cache was too helpful.** The service worker's default setup cached every
+  API response for 24 hours, so a stale answer could make the app look online,
+  and staff could see day-old data. API calls now always go to the network.
+- **Retries must not double orders.** Every queued write carries an idempotency
+  key, so the server recognises a resend and does the work once. Some refusals
+  really mean "already done", like cancelling an order that's already cancelled,
+  and count as success.
+- **Not every failure is the same.** No network or an expired sign-in pauses the
+  queue, a server error backs off and retries, and a real conflict is parked for
+  a person to fix. A background sync never throws a waiter onto the login screen
+  in the middle of service.
+- **Two tabs, one queue.** A browser lock stops two tabs from sending the same
+  orders, and editing an order that hasn't synced yet rewrites it in the queue
+  instead of queueing behind it.
+
+What it taught me: offline isn't a feature you add at the end. It changes what
+every write has to promise.
+
+**Another one, briefly.** One day a manager couldn't sign in, and nothing
+anywhere said why. Granting their role one more permission had pushed the
+sign-in token past 4 KB, and browsers silently drop a cookie that large. I cut
+the token from about 4 KB to 3.4 KB and added a check that warns long before the
+limit.
+
+## Outcome so far
+
+RFC has run on Munshi since September 2025, and the numbers above are its own.
+Moving every restaurant onto one database changed what growth costs: adding a
+new restaurant went from about three days of manual setup to under five minutes.
+
+What I'd change: I'd test offline mode on real restaurant hardware sooner. Half
+of its scenarios have so far only been tested in the browser. And I'd add CI
+instead of relying on the check script I run before each deploy.
+
+What's next: the restaurant system is the first of a family of management
+systems built on the same foundation. Grocery management comes next.
