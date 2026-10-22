@@ -21,7 +21,7 @@
 | **1** | Fix what's broken (no design decisions) | ✅ | `43126bf`…`35995d3` |
 | **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
 | **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
-| **4** | Projects as pages (+ Munshi) | 🔄 4A ✅ · 4B (Engagemo capture) and 4C (case-study writing) next | `f0fca25`…`768b7c0` |
+| **4** | Projects as pages (+ Munshi) | 🔄 4A ✅ · 4B ✅ · 4C (case-study writing) next | `f0fca25`…`a218adf` |
 | **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
 | **6** | Home page recomposition | ⬜ | |
 | **7** | SEO & sharing | ⬜ | |
@@ -350,6 +350,8 @@ These rules apply to every project:
 
 ### Engagemo demo capture (runs in Phase 4, under its own plan)
 
+**Done in 4B (see the Phase log).** Changes from this plan: a separate clone instead of a worktree, Puppeteer instead of Playwright, and the S3 photo served from a local file through request interception instead of MinIO.
+
 **Isolation.** Nothing here touches your work or the client repo.
 - **Separate checkout:** a `git worktree` of `staging` outside the main checkout, so your current branch and working tree are untouched.
 - **Separate database, no Docker:** a dedicated database on the native Homebrew Postgres 18 and its own DB index on the local Redis, so `db:reset-and-seed` can't wipe local dev data.
@@ -390,7 +392,7 @@ A processing script (sharp) converts these to WebP, caps them at about 1600px, a
 |---|---|
 | 1 | Is a sending domain verified in Resend, and which address should contact mail go to? |
 | 3 | Which serif display face (from a specimen)? Single-icon theme toggle or a compact three-way control? |
-| 4 | Case-study details per project; your role versus a designer's on the NourishWise/Meridian UI (for the role section); MinIO or local files for Engagemo's S3 previews; client sign-off. |
+| 4 | Case-study details per project; your role versus a designer's on the NourishWise/Meridian UI (for the role section); client sign-off. |
 | 5 | About content interview. |
 | 7 | `noindex` for draft posts? |
 
@@ -569,6 +571,39 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - The first request for each image size after a deploy is slow (AVIF encode in the optimizer), then cached.
 - Engagemo shows its logo until 4B.
 - Role and period are blank on all projects until 4C.
+
+### 2026-10-22: Phase 4B ✅ COMPLETE: `a218adf`
+
+| Commit | Result |
+|---|---|
+| `a218adf` screens | 7 Engagemo desktop screens (1440×900 WebP, 411 KB in total), in product order: writing (the cover), feedback review, handwriting, Oral Defense, gradebook, rubric drawer, class report. Each has alt text and a caption, plus a `screensNote` saying the school and AI output are made up. The dashboard shot was dropped as the weakest (one stock photo repeated on generic cards). |
+
+**How the screens were made** (nothing left the machine, no production data):
+- **Environment:**
+  - A fresh clone of the client's `staging` branch in the scratchpad, with its remote removed.
+  - A dummy-only `server/.env` (the client repo's real `.env` was never read or used).
+  - Homebrew Postgres 18 (`engagemo_demo`) and Redis DB 9. No Docker.
+  - Migrations ran on server boot; the repo's offline `seed:subscriptions` and `seed:ai-prompts` also ran.
+- **Seed:** a hand-written script for Northwood Academy, a made-up school.
+  - People and classes: teacher Amelia Hart, 12 students, 5 classes, a 4-criterion rubric (24 points) and 5 tasks.
+  - Submissions in every state: graded (AI and teacher-override grade records), in review with an AI draft, missing, a draft.
+  - Features: an OCR upload, two Oral Defense sessions (Pass, and Borderline with an integrity event) and a completed class report.
+  - Every AI output was written by hand; essays use public-domain *To Build a Fire* for the analysis task.
+- **Capture:** a Puppeteer script at 1440×900 @2x.
+  - Student AI feedback (never stored, generated per click) came from a mocked `POST /api/agentFeedbacks/generate`.
+  - The OCR photo was a locally rendered handwritten page served through a mocked `GET /api/submissions/:id/photos`.
+  - Oral Defense audio was left empty.
+- **Gotcha:** in `grade_record`, `total_points` is the rubric maximum and the earned score goes in `ai_raw_score` (null on teacher overrides). The first seed had them swapped, which showed "21/21" in the gradebook.
+
+**Verified:**
+- `pnpm lint` and `pnpm build` pass (throwaway local DB, dropped afterwards).
+- The page, gallery, lightbox and `/projects` card were checked in light and dark: no console errors or failed requests, CLS 0 and no overflow at 390px.
+
+**Teardown:**
+- The clone (including the seed and capture scripts), `engagemo_demo` and Redis DB 9 are deleted.
+- `~/Code/softaims/writing-coach` is unchanged: branch, HEAD, status, stash and refs all match the snapshot taken before.
+- The original PNGs (all 8, dashboard included) stay in the gitignored `assets/engagemo/`.
+- Re-shooting later means rebuilding the demo environment from this description.
 
 ---
 
