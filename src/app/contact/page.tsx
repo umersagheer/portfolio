@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import ContactForm from '@/components/contact-form'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description:
+    'Hiring, or building something? Send a message about the role or the problem you are solving.',
+  alternates: { canonical: '/contact' },
+  openGraph: { url: '/contact' }
+}
 
 export default function ContactPage() {
   return (

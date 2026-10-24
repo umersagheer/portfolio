@@ -39,7 +39,7 @@ export async function generateMetadata({
     return {}
   }
 
-  const { title, summary, image, author, publishedAt } = post.metadata
+  const { title, summary, image, author, publishedAt, draft } = post.metadata
   const postUrl = getAbsoluteUrl(`/posts/${postId}`)
   const coverImageUrl = image ? getAbsoluteUrl(image) : undefined
   const coverImage =
@@ -54,6 +54,8 @@ export async function generateMetadata({
   return {
     title,
     description: summary,
+    // Drafts stay reachable by link but out of search results.
+    robots: draft ? { index: false, follow: true } : undefined,
     authors: author ? [{ name: author }] : undefined,
     alternates: {
       canonical: postUrl

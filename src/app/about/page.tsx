@@ -9,9 +9,11 @@ import SectionHeader from '@/components/section-header'
 import { siteProfile } from '@/constants/site-profile'
 
 export const metadata: Metadata = {
-  title: 'About · Umer Sagheer',
+  title: 'About',
   description:
-    'A full-stack engineer who learned the fundamentals before AI and now builds AI into real products, from the first tap to the database and out to the stores.'
+    'A full-stack engineer who learned the fundamentals before AI and now builds AI into real products, from the first tap to the database and out to the stores.',
+  alternates: { canonical: '/about' },
+  openGraph: { url: '/about' }
 }
 
 // Each trait links to proof already on the site.

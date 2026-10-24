@@ -8,6 +8,7 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import LiveSections from '@/components/live-sections'
 import NavHistory from '@/components/nav-history'
+import { siteProfile } from '@/constants/site-profile'
 import { getSiteUrl } from '@/libs/metadata'
 
 // Headings. One self-hosted file: Fraunces 500 with the full optical-size
@@ -29,10 +30,32 @@ const sourceCodePro = Source_Code_Pro({
 
 const siteUrl = getSiteUrl()
 
+const description = `${siteProfile.name}: ${siteProfile.role} Case studies, interactive deep dives, and how I build from the screen to the database.`
+
 export const metadata: Metadata = {
   metadataBase: siteUrl,
-  title: 'Umer Sagheer',
-  description: 'Personal Portfolio of Umer Sagheer'
+  title: {
+    default: `${siteProfile.name} · Full-stack engineer`,
+    template: `%s · ${siteProfile.name}`
+  },
+  description,
+  applicationName: siteProfile.name,
+  authors: [{ name: siteProfile.name, url: siteUrl }],
+  creator: siteProfile.name,
+  alternates: {
+    canonical: '/',
+    types: { 'application/rss+xml': '/rss.xml' }
+  },
+  openGraph: {
+    type: 'website',
+    siteName: siteProfile.name,
+    locale: 'en_US',
+    url: '/'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: siteProfile.socials.x.label
+  }
 }
 
 export default function RootLayout({

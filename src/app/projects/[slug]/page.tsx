@@ -36,24 +36,17 @@ export async function generateMetadata({
   const project = getProjectBySlug(slug)
   if (!project) return {}
 
-  const { title, tagline, screens } = project.meta
-  const cover = screens[0]
+  // The preview image comes from ./opengraph-image.tsx.
+  const { title, tagline } = project.meta
   return {
-    title: `${title} · Umer Sagheer`,
+    title,
     description: tagline,
+    alternates: { canonical: `/projects/${slug}` },
     openGraph: {
+      type: 'article',
+      url: `/projects/${slug}`,
       title,
-      description: tagline,
-      images: cover
-        ? [
-            {
-              url: cover.src,
-              width: cover.width,
-              height: cover.height,
-              alt: cover.alt
-            }
-          ]
-        : undefined
+      description: tagline
     }
   }
 }

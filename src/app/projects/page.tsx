@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import ProjectCard from '@/components/projects/project-card'
 import { getProjects } from '@/libs/projects'
+
+export const metadata: Metadata = {
+  title: 'Projects',
+  description:
+    'Case studies: a restaurant system that runs offline, an AI writing coach used by 7,000+ people, and two apps on the App Store and Google Play.',
+  alternates: { canonical: '/projects' },
+  openGraph: { url: '/projects' }
+}
 
 export default function ProjectsPage() {
   const projects = getProjects()
