@@ -10,6 +10,9 @@ export const siteProfile = {
   cv: '/umer-sagheer-cv.pdf',
   // A Cal.com or Calendly link; the "Book a call" link appears once this is set.
   booking: '' as string,
+  // Shows the GitHub contribution heatmap on /about. Off until private
+  // contributions are counted on the profile, so the calendar reflects the work.
+  showGithubActivity: false as boolean,
   socials: {
     x: {
       platform: 'X',

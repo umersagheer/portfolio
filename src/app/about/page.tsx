@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import GithubActivity from '@/components/about/github-activity'
 import Journey from '@/components/about/journey/journey'
 import SectionHeader from '@/components/section-header'
 import { siteProfile } from '@/constants/site-profile'
@@ -98,8 +99,8 @@ export default function AboutPage() {
         <p className='text-muted max-w-2xl leading-relaxed'>
           For four years I’ve taken products from the first tap to the database
           and out to the stores: a restaurant system that keeps taking orders
-          when the internet drops, an AI writing coach used by 30 to 40 schools,
-          and two apps on the App Store and Google Play.
+          when the internet drops, an AI writing coach used by 30 to 40
+          institutions, and two apps on the App Store and Google Play.
         </p>
       </div>
 
@@ -167,10 +168,24 @@ export default function AboutPage() {
             </div>
           ))}
         </dl>
+        {siteProfile.showGithubActivity && <GithubActivity />}
       </section>
 
       <section data-section>
-        <SectionHeader index='05' label='Contact' title='Let’s talk' />
+        <SectionHeader
+          index='05'
+          label='Off the clock'
+          title='Away from the screen'
+        />
+        <p className='max-w-2xl leading-relaxed'>
+          Off the clock, I’m usually out finding a new food spot in Lahore, or
+          playing table tennis or badminton. I’ll happily take a recommendation
+          for either.
+        </p>
+      </section>
+
+      <section data-section>
+        <SectionHeader index='06' label='Contact' title='Let’s talk' />
         <p className='text-muted mb-6 max-w-2xl leading-relaxed'>
           Open to full-time roles and freelance work.
         </p>
