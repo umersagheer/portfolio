@@ -30,12 +30,13 @@ const sourceCodePro = Source_Code_Pro({
 
 const siteUrl = getSiteUrl()
 
-const description = `${siteProfile.name}: ${siteProfile.role} Case studies, interactive deep dives, and how I build from the screen to the database.`
+const description =
+  'Full-stack developer in Lahore building web and mobile products with React, Next.js, Expo, Node.js and NestJS, plus AI with LangChain. Open to remote roles.'
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: `${siteProfile.name} · Full-stack engineer`,
+    default: `${siteProfile.name} – Full-Stack Developer (React, Node.js, AI)`,
     template: `%s · ${siteProfile.name}`
   },
   description,

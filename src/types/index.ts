@@ -19,6 +19,8 @@ export type PostMetadata = {
   category: PostCategory
   topic?: PostTopic
   draft?: boolean
+  // The <title> in search results; the page heading keeps `title`.
+  seoTitle?: string
   postId: string
 }
 

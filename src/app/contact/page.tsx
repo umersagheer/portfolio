@@ -3,9 +3,9 @@ import ContactForm from '@/components/contact-form'
 import React from 'react'
 
 export const metadata: Metadata = {
-  title: 'Contact',
+  title: { absolute: 'Hire a Full-Stack Developer – Contact Umer Sagheer' },
   description:
-    'Hiring, or building something? Send a message about the role or the problem you are solving.',
+    'Hiring a full-stack or React Native developer, or building an AI product? Send a message, WhatsApp, or book a 15-minute call.',
   alternates: { canonical: '/contact' },
   openGraph: { url: '/contact' }
 }

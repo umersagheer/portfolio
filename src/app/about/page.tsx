@@ -9,9 +9,9 @@ import SectionHeader from '@/components/section-header'
 import { siteProfile } from '@/constants/site-profile'
 
 export const metadata: Metadata = {
-  title: 'About',
+  title: { absolute: 'About Umer Sagheer – Full-Stack Engineer in Lahore' },
   description:
-    'A full-stack engineer who learned the fundamentals before AI and now builds AI into real products, from the first tap to the database and out to the stores.',
+    'Four years shipping React, Expo, Node.js and NestJS products: an offline-first POS, an AI writing platform used by 7,000+ people, and two store apps.',
   alternates: { canonical: '/about' },
   openGraph: { url: '/about' }
 }
@@ -94,6 +94,11 @@ export default function AboutPage() {
     <div className='space-y-16'>
       <div className='space-y-4'>
         <h1 className='font-display text-4xl leading-tight'>About</h1>
+        {/* The plain facts first, the way search and AI assistants quote them. */}
+        <p className='font-sourceCodePro text-muted text-xs leading-relaxed'>
+          Umer Sagheer · Full-stack developer · Lahore, Pakistan · React,
+          Next.js, Expo, Node.js, NestJS, PostgreSQL, AI
+        </p>
         <p className='max-w-2xl text-lg leading-relaxed'>
           I’m Umer, a full-stack engineer in Lahore. I learned to build software
           the slow way, from documentation and Stack Overflow threads, before AI

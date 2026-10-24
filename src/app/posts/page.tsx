@@ -4,9 +4,9 @@ import { getPosts } from '@/libs/posts'
 import React from 'react'
 
 export const metadata: Metadata = {
-  title: 'Posts',
+  title: { absolute: 'Interactive Guides to Git, WebSockets & React – Blog' },
   description:
-    'Interactive deep dives on Git, WebSockets, timezones and layout animations, with demos you can play with.',
+    'Deep dives with live demos: how Git works, WebSockets from handshake to scaling, timezone bugs, FLIP layout animations and Expo Router auth.',
   alternates: { canonical: '/posts' },
   openGraph: { url: '/posts' }
 }

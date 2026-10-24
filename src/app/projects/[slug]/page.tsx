@@ -39,9 +39,9 @@ export async function generateMetadata({
   if (!project) return {}
 
   // The preview image comes from ./opengraph-image.tsx.
-  const { title, tagline } = project.meta
+  const { title, tagline, seoTitle } = project.meta
   return {
-    title,
+    title: seoTitle ? { absolute: seoTitle } : title,
     description: tagline,
     alternates: { canonical: `/projects/${slug}` },
     openGraph: {

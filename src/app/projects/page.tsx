@@ -3,9 +3,9 @@ import ProjectCard from '@/components/projects/project-card'
 import { getProjects } from '@/libs/projects'
 
 export const metadata: Metadata = {
-  title: 'Projects',
+  title: { absolute: 'Full-Stack & AI Case Studies – Umer Sagheer' },
   description:
-    'Case studies: a restaurant system that runs offline, an AI writing coach used by 7,000+ people, and two apps on the App Store and Google Play.',
+    'An offline-first restaurant POS on Next.js and PostgreSQL, an AI writing platform for 30–40 universities, and React Native apps on iOS and Android.',
   alternates: { canonical: '/projects' },
   openGraph: { url: '/projects' }
 }

@@ -38,7 +38,9 @@ const FrontmatterSchema = z.object({
       })
     )
     .default([]),
-  screensNote: z.string().optional()
+  screensNote: z.string().optional(),
+  // The <title> in search results (under 60 characters, keyword first).
+  seoTitle: z.string().max(60).optional()
 })
 
 type ManifestEntry = {
