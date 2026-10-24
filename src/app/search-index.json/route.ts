@@ -107,6 +107,8 @@ export async function GET() {
   for (const post of await getPosts()) {
     const href = `/posts/${post.postId}`
     const title = post.title ?? post.postId
+    // Sections show the shorter search title as their breadcrumb.
+    const short = post.seoTitle ?? title
     docs.push({
       id: `post-${post.postId}`,
       type: 'post',
@@ -122,7 +124,7 @@ export async function GET() {
         type: 'section',
         title: h.text,
         href: `${href}${h.anchor}`,
-        group: title,
+        group: short,
         topic: post.topic
       })
     )

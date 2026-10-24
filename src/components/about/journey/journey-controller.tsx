@@ -123,7 +123,8 @@ export default function JourneyController({
         event.metaKey ||
         event.ctrlKey ||
         event.altKey ||
-        isTyping(event.target)
+        isTyping(event.target) ||
+        document.querySelector('dialog[open]')
       )
         return
       const n = Number(event.key)

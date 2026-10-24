@@ -45,6 +45,24 @@ function loadCal(onError: () => void): CalApi {
   return cal
 }
 
+// Opens a Cal.com booking in a modal, loading Cal's script on first use.
+// If the script can't load, the booking page opens in a new tab instead.
+export function openCal(href: string, onFallback?: () => void) {
+  const fallback = () => {
+    onFallback?.()
+    window.open(href, '_blank', 'noopener,noreferrer')
+  }
+  const cal = loadCal(fallback)
+  cal('modal', {
+    calLink: new URL(href).pathname.replace(/^\//, ''),
+    config: {
+      theme: document.documentElement.classList.contains('dark')
+        ? 'dark'
+        : 'light'
+    }
+  })
+}
+
 // A real link to the booking page. With JavaScript, a click opens the booking
 // form in a modal instead, loading Cal.com's script only at that moment; if the
 // script can't load, the link opens as normal.
@@ -64,19 +82,7 @@ export default function BookCall({
       return
     event.preventDefault()
     setOpening(true)
-    const fallback = () => {
-      setOpening(false)
-      window.open(href, '_blank', 'noopener,noreferrer')
-    }
-    const cal = loadCal(fallback)
-    cal('modal', {
-      calLink: new URL(href).pathname.replace(/^\//, ''),
-      config: {
-        theme: document.documentElement.classList.contains('dark')
-          ? 'dark'
-          : 'light'
-      }
-    })
+    openCal(href, () => setOpening(false))
     // The modal takes over once the script runs; the label only bridges the wait.
     window.setTimeout(() => setOpening(false), 1500)
   }

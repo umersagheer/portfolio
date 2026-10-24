@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import NavLinks from '@/components/nav-links'
+import SearchTrigger from '@/components/search/search-trigger'
 import ThemeToggle from '@/components/theme-toggle'
 import { siteProfile } from '@/constants/site-profile'
 
@@ -19,6 +20,7 @@ export function Navbar() {
         </Link>
         <nav aria-label='Main' className='flex items-center'>
           <NavLinks />
+          <SearchTrigger />
           <ThemeToggle />
         </nav>
       </div>
