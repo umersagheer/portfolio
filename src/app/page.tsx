@@ -1,4 +1,5 @@
 import Intro from '@/components/intro'
+import JsonLd, { personAndSite } from '@/components/json-ld'
 import RecentPosts from '@/components/recent-posts'
 import RecentProjects from '@/components/recent-projects'
 import StackGlance from '@/components/stack-glance'
@@ -10,6 +11,7 @@ const section = 'border-hair border-t py-12'
 export default function Home() {
   return (
     <div className='w-full'>
+      <JsonLd data={personAndSite()} />
       {/* The intro is the main content: it paints immediately. */}
       <Intro />
       <section id='work' data-section className={`${section} scroll-mt-20`}>

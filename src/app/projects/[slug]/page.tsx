@@ -17,6 +17,8 @@ import {
   type ProjectMeta
 } from '@/libs/projects'
 import { extractToc } from '@/libs/toc'
+import JsonLd, { personRef } from '@/components/json-ld'
+import { getAbsoluteUrl } from '@/libs/metadata'
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>
@@ -71,8 +73,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       : [])
   ]
 
+  const work = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: meta.title,
+    description: meta.tagline,
+    url: getAbsoluteUrl(`/projects/${meta.slug}`),
+    image: getAbsoluteUrl(`/projects/${meta.slug}/opengraph-image`),
+    author: personRef
+  }
+
   return (
     <>
+      <JsonLd data={work} />
       <KeyboardNav
         previousHref={previous ? `/projects/${previous.slug}` : null}
         nextHref={next ? `/projects/${next.slug}` : null}

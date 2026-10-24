@@ -15,6 +15,7 @@ import { ScrollProgress } from '@/components/ui/scroll-progress'
 import AuthorSidebar from '@/components/blog/author-sidebar'
 import AuthorCardInline from '@/components/blog/author-card-inline'
 import { extractToc } from '@/libs/toc'
+import JsonLd, { personRef } from '@/components/json-ld'
 
 type PostProps = {
   params: Promise<{
@@ -89,11 +90,25 @@ export default async function Post({ params }: PostProps) {
 
   const { metadata, content } = post
   const { title, image, publishedAt, readingTime } = metadata
+  const article = metadata.draft
+    ? null
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description: metadata.summary,
+        image: image ? getAbsoluteUrl(image) : undefined,
+        datePublished: publishedAt,
+        url: getAbsoluteUrl(`/posts/${postId}`),
+        mainEntityOfPage: getAbsoluteUrl(`/posts/${postId}`),
+        author: personRef
+      }
   const toc = extractToc(content)
   const { newerPost, olderPost } = await getAdjacentPosts(postId)
 
   return (
     <ReducedMotion>
+      {article && <JsonLd data={article} />}
       <section className='pb-20'>
         <ScrollProgress className='h-[3px]' />
         <div className='space-y-4'>
