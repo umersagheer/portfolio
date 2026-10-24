@@ -24,7 +24,7 @@
 | **4** | Projects as pages (+ Munshi) | ✅ 4A · 4B · 4C | `f0fca25`…`c0dbcd2` |
 | **5** | About page (+ iso-glow Fig. 01) | ✅ | `cea2787`…`3911886` |
 | **6** | Home page recomposition | ✅ | `54ae663`…`4a7e52b` |
-| **7** | SEO & sharing | ⬜ | |
+| **7** | SEO & sharing | ✅ | `213c6f9`…`f7e81f3` |
 | **8** | Delight: ⌘K palette, 404 figure | ⬜ | |
 
 Legend: ⬜ Not started · 📝 Planned (plan approved) · 🔄 In progress · ✅ Done · ⚠️ Blocked
@@ -697,6 +697,24 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - "See my work" lands on the work section;
 - four project links render, and the heatmap shows;
 - Cal.com makes no request before a click.
+
+### 2026-10-24: Phase 7 ✅ COMPLETE: `213c6f9`…`f7e81f3`
+
+| Commit | Result |
+|---|---|
+| `213c6f9` titles | Title template `%s · Umer Sagheer` (default: "Umer Sagheer · Full-stack engineer"). A real site description, `openGraph` defaults, `twitter.creator`, canonical URLs on every page, and an RSS `alternate`. Per-page titles and descriptions for /about, /projects, /posts and /contact (S1). **Draft posts get `noindex, follow`** (7e: they stay shareable by link, out of search). |
+| `ab0a927` feeds | `sitemap.ts`: 5 pages, 4 projects and the published posts only. `robots.ts`: allow all, disallow `/api/`, link to the sitemap. `rss.xml`: a static RSS 2.0 feed of published posts (S2). |
+| `e24e961` fix | Post pages keep `twitter:creator` (their own Twitter metadata had replaced the site default). |
+| `e54ca3e` previews | `src/libs/og.tsx` renders 1200×630 previews at build time in the site's style: a dark panel, hairline frame, purple dot, Fraunces title, mono labels. **Home** shows the name, tagline and status pill. **About, Projects, Writing and Contact** each get their own label. **Each project** shows its cover screen (dark variant, converted from WebP by sharp). Posts keep their cover art. Satori can't read woff2, so static TTFs ship in `src/fonts/` (all OFL, licences included): Fraunces at display and text optical sizes, plus Source Code Pro. Images are 32–250 KB (S3). |
+| `f7e81f3` data | `json-ld.tsx`: `Person` + `WebSite` on home; `BlogPosting` on published posts; `CreativeWork` on projects. `<` is escaped (S4). |
+
+**Verified:**
+- All the new routes are static (○/●) in the build.
+- On `pnpm start`, every page has a unique `<title>`, a canonical URL, its own `og:image` and `twitter:creator`; the draft post has `noindex`.
+- The sitemap lists 15 URLs with no drafts. The RSS parses, with 6 items. The JSON-LD parses on home, a post and a project.
+- I looked at the preview PNGs. The first round had a description running under the Munshi screenshot and a thin display cut at small sizes; both are fixed.
+
+**After deploy:** paste a link into LinkedIn's Post Inspector (linkedin.com/post-inspector) to warm its cache, and submit `/sitemap.xml` in Google Search Console.
 
 ---
 
