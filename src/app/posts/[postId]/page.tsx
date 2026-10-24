@@ -72,6 +72,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: coverImageUrl ? 'summary_large_image' : 'summary',
+      creator: siteProfile.socials.x.label,
       title,
       description: summary,
       images: coverImageUrl ? [coverImageUrl] : undefined
