@@ -25,7 +25,7 @@
 | **5** | About page (+ iso-glow Fig. 01) | ✅ | `cea2787`…`3911886` |
 | **6** | Home page recomposition | ✅ | `54ae663`…`4a7e52b` |
 | **7** | SEO & sharing | ✅ | `213c6f9`…`f7e81f3` |
-| **8** | Delight: ⌘K palette, 404 figure | ⬜ | |
+| **8** | Delight: ⌘K palette, 404 figure | ✅ | `11fe28b`…`34c0414` |
 
 Legend: ⬜ Not started · 📝 Planned (plan approved) · 🔄 In progress · ✅ Done · ⚠️ Blocked
 
@@ -724,6 +724,22 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 **Realistic targets:** your name; "full stack developer Lahore / Pakistan"; and long-tail blog queries. Generic "full stack engineer" belongs to job boards.
 
 **After deploy:** paste a link into LinkedIn's Post Inspector (linkedin.com/post-inspector) to warm its cache, and submit `/sitemap.xml` in Google Search Console.
+
+### 2026-10-24: Phase 8 ✅ COMPLETE: `11fe28b`…`34c0414` (all 8 phases done)
+
+| Commit | Result |
+|---|---|
+| `11fe28b` index | `/search-index.json` (static) holds 136 docs: 5 pages, 4 projects, 6 published posts and 121 `##`/`###` sections. Section anchors match the page ids, sections show the post's short search title as their breadcrumb, and code fences and JSX comments are skipped. It is fetched only when search first opens. |
+| `5e2c4c9` palette | ⌘K / Ctrl+K / "/" plus a navbar button. The palette code and MiniSearch load on first open only, so **no page grew**. Search is grouped (Pages · Projects · Posts · Sections · Actions, 4 each with "Show all"), typo-tolerant ("websokets" finds WebSockets), prefix-matching and highlighted, with scope chips and topic filters (Git · Frontend · Backend). Before typing, it shows curated suggestions plus the visitor's own recent picks (localStorage, no tracking, no database). Actions: Book a 15-minute intro (`openCal` extracted from `BookCall`), copy email, toggle theme, CV, GitHub, LinkedIn, RSS. Uses a native `<dialog>`. The About figure's keys ignore input while a dialog is open. |
+| `34c0414` 404 | "Unplugged" (Fig. 404): the iso kernel draws, on the server, a monitor, a wall socket, a plug on the floor and a slack cable. Clicking the plug or "Plug it back in" slides it into the socket, lights the LED, runs a pulse to the screen and goes home (instantly with reduced motion). It returns a real 404 status with `noindex`. |
+
+**8c, view transitions: tried and dropped.** Next's `experimental.viewTransition` switches the site to React's experimental build, which adds **+12 kB to the shared bundle on every page** (104 → 116 kB; home 113 → 125 kB). The bar was ≤ 2 kB. The change was reverted before committing. Revisit when view transitions reach stable React.
+
+**Verified:**
+- All routes return 200 and unknown URLs return 404. Page JS is unchanged (home 113 kB, shared 104 kB).
+- Palette: opens with each trigger; search, scopes, sections (it lands on the heading), recents after a reload, Esc to close. No errors.
+- 404: no overflow on a phone or desktop; the plug-in flow lands on `/`.
+- A stale `.next` from a build that overlapped a running server once gave 500s; a clean rebuild fixed it. Don't run `pnpm build` while `pnpm start` is serving.
 
 ---
 
