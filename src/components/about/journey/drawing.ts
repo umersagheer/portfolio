@@ -357,7 +357,7 @@ export function drawJourney() {
   ] as [number, number][][]
   svg += sides.map(s => `<path class="cable" d="${wire(s, 5)}"/>`).join('')
   svg += `<path class="cable main" d="${request}"/>`
-  svg += `<path class="pulse" pathLength="1000" d="${request}"/><path class="pulse late" pathLength="1000" d="${request}"/>`
+  svg += `<path class="pulse" pathLength="1000" d="${request}"/>`
 
   const stations: [StepId, () => string][] = [
     ['device', device],

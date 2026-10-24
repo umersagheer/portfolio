@@ -231,6 +231,14 @@ export default function Journey() {
         </span>
         <span className={styles.keys}>1–6 · ← → · ESC</span>
       </div>
+      <a
+        href='https://iso-glow.vercel.app'
+        target='_blank'
+        rel='noopener noreferrer'
+        className={`${styles.credit} font-sourceCodePro`}
+      >
+        Made with ISO-GLOW ↗
+      </a>
     </JourneyController>
   )
 }
