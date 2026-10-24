@@ -10,8 +10,8 @@ export const siteProfile = {
   cv: '/umer-sagheer-cv.pdf',
   // Cal.com meetings: a short intro for hiring, a longer call for projects.
   booking: {
-    intro: 'https://cal.com/umer-sagheer/15min',
-    project: 'https://cal.com/umer-sagheer/30min'
+    intro: 'https://cal.com/umer-sagheer/intro',
+    project: 'https://cal.com/umer-sagheer/project'
   },
   // Shows the GitHub contribution heatmap on /about. Off until private
   // contributions are counted on the profile, so the calendar reflects the work.
