@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import BookCall from '@/components/about/book-call'
+import CvPreview from '@/components/about/cv-preview'
 import GithubActivity from '@/components/about/github-activity'
 import Journey from '@/components/about/journey/journey'
 import SectionHeader from '@/components/section-header'
@@ -100,8 +101,9 @@ export default function AboutPage() {
         <p className='text-muted max-w-2xl leading-relaxed'>
           For four years I’ve taken products from the first tap to the database
           and out to the stores: a restaurant system that keeps taking orders
-          when the internet drops, an AI writing coach used by 30 to 40
-          institutions, and two apps on the App Store and Google Play.
+          when the internet drops, an AI writing coach used by more than 7,000
+          people across 30 to 40 institutions, and two apps on the App Store and
+          Google Play.
         </p>
       </div>
 
@@ -197,9 +199,12 @@ export default function AboutPage() {
               Here’s my CV and the quickest ways to reach me.
             </p>
             <div className='flex flex-col items-start gap-1.5'>
-              <a href={siteProfile.cv} download className={linkClass}>
-                Download my CV <span aria-hidden='true'>↓</span>
-              </a>
+              <CvPreview href={siteProfile.cv} className={linkClass} />
+              <BookCall
+                href={siteProfile.booking.intro}
+                label='Book a 15-minute intro'
+                className={linkClass}
+              />
               <a
                 href={siteProfile.socials.linkedin.url}
                 target='_blank'
@@ -231,9 +236,11 @@ export default function AboutPage() {
                 WhatsApp {siteProfile.whatsapp.label}{' '}
                 <span aria-hidden='true'>↗</span>
               </a>
-              {siteProfile.booking && (
-                <BookCall href={siteProfile.booking} className={linkClass} />
-              )}
+              <BookCall
+                href={siteProfile.booking.project}
+                label='Book a 30-minute project call'
+                className={linkClass}
+              />
             </div>
           </div>
         </div>

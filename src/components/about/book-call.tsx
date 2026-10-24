@@ -50,9 +50,11 @@ function loadCal(onError: () => void): CalApi {
 // script can't load, the link opens as normal.
 export default function BookCall({
   href,
+  label = 'Book a call',
   className
 }: {
   href: string
+  label?: string
   className?: string
 }) {
   const [opening, setOpening] = useState(false)
@@ -88,7 +90,7 @@ export default function BookCall({
       aria-busy={opening}
       className={className}
     >
-      {opening ? 'Opening…' : 'Book a call'} <span aria-hidden='true'>↗</span>
+      {opening ? 'Opening…' : label} <span aria-hidden='true'>↗</span>
     </a>
   )
 }
