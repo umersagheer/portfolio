@@ -209,7 +209,7 @@
 .deployButton {
   position: absolute;
   z-index: 2;
-  transform: translate(-10%, -100%);
+  transform: translate(-50%, -50%);
   border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent);
   border-radius: 999px;
   background: var(--background);
@@ -286,6 +286,14 @@
 .root:global(.dep-up) .cloudChip,
 .root:global(.dep-down) .storeChip {
   opacity: 1;
+}
+
+/* The two stores stack, one per line. */
+.storeChip {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 4px 8px;
 }
 
 .chipItem {

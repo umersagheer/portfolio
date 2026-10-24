@@ -223,6 +223,8 @@ type Callout = {
   anchor: Point3
   // up: the chip floats this many units above the anchor; [x, y]: it sits on the floor there.
   to: number | [number, number]
+  // Shift an up-callout sideways (screen units), to clear a neighbour.
+  dx?: number
 }
 
 const w = (x: number, y: number, z: number): Point3 => [x, y, z]
@@ -231,9 +233,10 @@ const CALLOUTS: Callout[] = [
     step: 'device',
     tools: ['react', 'next', 'tailwind'],
     anchor: w(7.5, 546, 58),
-    to: 28
+    to: 28,
+    dx: 56
   },
-  { step: 'device', tools: ['expo'], anchor: w(70, 540, 46), to: 74 },
+  { step: 'device', tools: ['expo'], anchor: w(70, 540, 46), to: 26, dx: 58 },
   {
     step: 'data',
     tools: ['query', 'axios'],
@@ -277,7 +280,7 @@ const CALLOUTS: Callout[] = [
     step: 'ai',
     tools: ['langgraph'],
     anchor: w(420, 200, 3.5),
-    to: [455, 262]
+    to: [445, 248]
   },
   { step: 'ai', tools: ['mem0'], anchor: w(525, 165, 26), to: 10 },
   { step: 'db', tools: ['postgres'], anchor: w(532.5, 52.5, 49), to: 18 },
@@ -398,7 +401,7 @@ export function drawJourney() {
     const a = project(...c.anchor)
     const end: [number, number] =
       typeof c.to === 'number'
-        ? [a[0], a[1] - c.to]
+        ? [a[0] + (c.dx ?? 0), a[1] - c.to]
         : project(c.to[0], c.to[1], 1)
     svg += `<line class="leader" data-step="${c.step}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${end[0].toFixed(1)}" y2="${end[1].toFixed(1)}"/>`
     return {
@@ -422,9 +425,9 @@ export function drawJourney() {
 
   const overlays = {
     cloud: pct(project(...at(-45, 575, CLOUD_Z + 24))),
-    terminal: pct(project(...at(40, 600, CLOUD_Z + 14))),
+    terminal: pct(project(...at(70, 612, CLOUD_Z - 6))),
     stores: pct(project(...at(-330, 600, 96))),
-    deploy: pct(project(292, 318, 44))
+    deploy: pct(project(262.5, 333.5, 22))
   }
 
   return {
