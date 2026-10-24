@@ -105,6 +105,11 @@ export default function JourneyController({
     }
 
     const onClick = (event: MouseEvent) => {
+      if ((event.target as Element).closest('[data-deploy]')) {
+        if (active === 'ship') deploy()
+        else choose('ship')
+        return
+      }
       const step = (event.target as Element).closest<HTMLElement | SVGElement>(
         '[data-step]'
       )

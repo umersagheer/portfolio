@@ -12,11 +12,10 @@ import {
 } from '@/libs/iso'
 import type { StepId, ToolKey } from '@/components/about/journey/steps'
 
-// The panorama: u runs left to right on screen and v runs into the scene, so
-// everything at one v reads as a straight line. The request cable runs along
-// v = ROW; objects sit behind it (smaller v) or in front of it (larger v), so
-// the cable stays visible from end to end.
-const ROW = 640
+// The panorama: u runs left to right on screen and v runs into the scene.
+// Objects sit where they read best; the request wire then runs between them in
+// isometric steps (along x and y only, with rounded bends), into each component
+// and out the other side, so it passes through the system the way a request does.
 const BACK = 520
 const FRONT = 770
 const at = (u: number, v: number, z: number): Point3 => [
@@ -51,10 +50,26 @@ const cylAt = (
 const slab = (u0: number, u1: number, v0: number, v1: number, h: number) =>
   poly([at(u0, v0, h), at(u1, v0, h), at(u1, v1, h), at(u0, v1, h)], 'f-top') +
   poly([at(u0, v1, h), at(u1, v1, h), at(u1, v1, 0), at(u0, v1, 0)], 'f-front')
-// A short cable from an object to the request cable.
 const CABLE_Z = 3.5
-const spur = (u: number, v: number) =>
-  line([at(u, v, CABLE_Z), at(u, ROW, CABLE_Z)], 'cable')
+// A wire through world points on the floor, its bends rounded in screen space.
+function wire(points: [number, number][], radius = 7) {
+  const p = points.map(([x, y]) => project(x, y, CABLE_Z))
+  const f = (q: [number, number]) => `${q[0].toFixed(1)},${q[1].toFixed(1)}`
+  let d = `M${f(p[0])}`
+  for (let i = 1; i < p.length - 1; i++) {
+    const [a, b, c] = [p[i - 1], p[i], p[i + 1]]
+    const toward = (from: [number, number], to: [number, number]) => {
+      const len = Math.hypot(to[0] - from[0], to[1] - from[1])
+      const r = Math.min(radius, len / 2)
+      return [
+        from[0] + ((to[0] - from[0]) / len) * r,
+        from[1] + ((to[1] - from[1]) / len) * r
+      ] as [number, number]
+    }
+    d += `L${f(toward(b, a))}Q${f(b)} ${f(toward(b, c))}`
+  }
+  return `${d}L${f(p[p.length - 1])}`
+}
 
 const B = 3 // height of a group base
 
@@ -62,8 +77,6 @@ const device = () => {
   const [lx, ly] = xy(-560, 575)
   const [px, py] = xy(-470, 610)
   return (
-    spur(-560, 629) +
-    spur(-470, 620) +
     box(lx - 31, ly - 23, 0, 62, 46, 4) +
     topRect(lx - 25, ly - 15, 4, 50, 34, 'det') +
     box(lx - 31, ly - 23, 4, 62, 4, 52) +
@@ -92,9 +105,6 @@ const dataLayer = () => {
     )
     .join('')
   return (
-    spur(-350, 622) +
-    spur(-275, 626) +
-    spur(-312, 654) +
     shelves +
     box(sx - 24, sy + 10, B, 3, 3, 38) +
     box(sx + 21, sy + 10, B, 3, 3, 38) +
@@ -133,8 +143,6 @@ const server = () => {
   const [rx, ry] = xy(-60, 585)
   const [bx, by] = xy(-70, 690)
   return (
-    spur(-60, 624) +
-    spur(-70, 659) +
     box(rx - 28, ry - 11, 0, 56, 22, 40) +
     [0, 1, 2]
       .map(k => frontRect(rx - 22 + k * 17, ry + 11, 34, 12, 3, 'lit'))
@@ -160,9 +168,6 @@ const aiPipeline = () => {
   const [mx, my] = xy(150, 582)
   const [nx, ny] = xy(360, 690)
   return (
-    spur(40, 626) +
-    spur(150, 628) +
-    spur(360, 666) +
     box(dx - 18, dy - 21, B, 36, 42, 3) +
     box(dx - 15, dy - 23, B + 3, 36, 42, 3) +
     box(dx - 12, dy - 25, B + 6, 36, 42, 3) +
@@ -190,9 +195,6 @@ const aiPipeline = () => {
 }
 
 const databases = () =>
-  spur(480, 615) +
-  spur(560, 615) +
-  spur(520, 662) +
   cylAt(480, 585, B, 21, 46) +
   cylAt(560, 585, B, 21, 46) +
   cylAt(520, 692, B, 21, 32)
@@ -202,83 +204,86 @@ const databases = () =>
 const CLOUD_Z = 150
 const cloud = () =>
   `<g class="cloud">${cylAt(-45, 575, CLOUD_Z, 36, 16, false)}${cylAt(-100, 590, CLOUD_Z, 30, 12, false)}${cylAt(5, 592, CLOUD_Z, 26, 10, false)}</g>`
-const beamUp: Point3[] = [at(-60, 585, 40), at(-60, 585, CLOUD_Z)]
-const beamLaptop: Point3[] = [at(-100, 590, CLOUD_Z), at(-560, 560, 58)]
-const beamPhone: Point3[] = [at(-100, 590, CLOUD_Z), at(-470, 612, 46)]
-const deployBeam = (pts: Point3[], cls: string) =>
-  `<path class="deploy ${cls}" pathLength="1000" d="${pathData(pts)}"/>`
+const arc = (from: Point3, to: Point3, lift: number) => {
+  const a = project(...from)
+  const b = project(...to)
+  const c = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - lift]
+  return `M${a[0].toFixed(1)},${a[1].toFixed(1)}Q${c[0].toFixed(1)},${c[1].toFixed(1)} ${b[0].toFixed(1)},${b[1].toFixed(1)}`
+}
+const beamUp = pathData([at(-60, 585, 40), at(-60, 585, CLOUD_Z)])
+const beamLaptop = arc(at(-100, 590, CLOUD_Z), at(-560, 560, 58), 30)
+const beamPhone = arc(at(-100, 590, CLOUD_Z), at(-470, 612, 46), 18)
+// A dark line that appears with its stage, and a small pulse that runs along it.
+const deployBeam = (d: string, cls: string) =>
+  `<path class="deploy ${cls}" d="${d}"/><path class="zap ${cls}" pathLength="1000" d="${d}"/>`
 
 type Callout = {
   step: StepId
   tools: ToolKey[]
   anchor: Point3
-  // up: the chip floats this many units above the anchor; [u, v]: it sits on the floor there.
+  // up: the chip floats this many units above the anchor; [x, y]: it sits on the floor there.
   to: number | [number, number]
 }
 
+const w = (x: number, y: number, z: number): Point3 => [x, y, z]
 const CALLOUTS: Callout[] = [
   {
     step: 'device',
     tools: ['react', 'next', 'tailwind'],
-    anchor: at(-560, 560, 60),
-    to: 26
+    anchor: w(7.5, 546, 58),
+    to: 28
   },
-  {
-    step: 'device',
-    tools: ['expo'],
-    anchor: at(-470, 622, 0),
-    to: [-470, 712]
-  },
+  { step: 'device', tools: ['expo'], anchor: w(70, 540, 46), to: 74 },
   {
     step: 'data',
     tools: ['query', 'axios'],
-    anchor: at(-350, 585, 51),
+    anchor: w(117.5, 467.5, 51),
     to: 46
   },
-  { step: 'data', tools: ['zustand'], anchor: at(-275, 595, 47), to: 14 },
+  { step: 'data', tools: ['zustand'], anchor: w(160, 450, 47), to: 14 },
   {
     step: 'data',
     tools: ['rhf', 'zod'],
-    anchor: at(-284, 708, 6),
-    to: [-228, 712]
+    anchor: w(214, 520, 6),
+    to: [255, 445]
   },
   {
     step: 'server',
     tools: ['nest', 'express'],
-    anchor: at(-150, 640, 72),
+    anchor: w(249, 399, 72),
     to: 18
   },
   {
     step: 'server',
     tools: ['node', 'socket'],
-    anchor: at(-60, 585, 40),
+    anchor: w(262.5, 322.5, 40),
     to: 60
   },
   {
     step: 'server',
     tools: ['bullmq'],
-    anchor: at(-70, 700, 12),
-    to: [-12, 714]
+    anchor: w(330, 386, 12),
+    to: [360, 345]
   },
-  { step: 'ai', tools: ['rag'], anchor: at(40, 585, 12), to: 22 },
+  { step: 'ai', tools: ['rag'], anchor: w(312.5, 272.5, 12), to: 22 },
   {
     step: 'ai',
     tools: ['openai', 'langchain'],
-    anchor: at(150, 582, 11),
+    anchor: w(366, 216, 11),
     to: 62
   },
-  { step: 'ai', tools: ['guardrails'], anchor: at(270, 640, 43), to: 22 },
+  { step: 'ai', tools: ['guardrails'], anchor: w(457, 185, 43), to: 22 },
   {
     step: 'ai',
     tools: ['langgraph'],
-    anchor: at(200, ROW, 3.5),
-    to: [176, 712]
+    anchor: w(420, 200, 3.5),
+    to: [455, 262]
   },
-  { step: 'ai', tools: ['mem0'], anchor: at(360, 700, 26), to: [300, 716] },
-  { step: 'db', tools: ['postgres'], anchor: at(480, 585, 49), to: 18 },
-  { step: 'db', tools: ['mongo'], anchor: at(560, 585, 49), to: 52 },
-  { step: 'db', tools: ['prisma'], anchor: at(430, ROW, 3.5), to: [418, 712] },
-  { step: 'db', tools: ['redis'], anchor: at(540, 700, 35), to: [592, 716] }
+  { step: 'ai', tools: ['mem0'], anchor: w(525, 165, 26), to: 10 },
+  { step: 'db', tools: ['postgres'], anchor: w(532.5, 52.5, 49), to: 18 },
+  { step: 'db', tools: ['mongo'], anchor: w(572.5, 12.5, 49), to: 52 },
+  { step: 'db', tools: ['prisma'], anchor: w(542, 140, 3.5), to: [585, 115] },
+  { step: 'db', tools: ['redis'], anchor: w(606, 86, 35), to: 24 }
 ]
 
 export function drawJourney() {
@@ -303,10 +308,56 @@ export function drawJourney() {
   ]
   for (const [id, u0, u1] of bases)
     svg += `<g class="station" data-step="${id}"><g class="pad">${slab(u0, u1, 545, 748, B)}</g></g>`
-  const cable: Point3[] = [at(-560, ROW, CABLE_Z), at(560, ROW, CABLE_Z)]
-  svg +=
-    line(cable, 'cable main') +
-    `<path class="flow" pathLength="1000" d="${pathData(cable)}"/>`
+  // The request wire, laptop to databases, through every component on the way.
+  const request = wire([
+    [38.5, 570],
+    [110, 570],
+    [110, 470],
+    [225, 470],
+    [225, 400],
+    [270, 400],
+    [270, 322],
+    [312, 322],
+    [312, 272],
+    [366, 272],
+    [366, 200],
+    [525, 200],
+    [525, 165],
+    [542, 165],
+    [542, 52]
+  ])
+  // Side wires: the phone, the store drawer, the form, the queue, MongoDB, Redis.
+  const sides = [
+    [
+      [70, 542],
+      [70, 570]
+    ],
+    [
+      [160, 449],
+      [160, 470]
+    ],
+    [
+      [194, 488],
+      [194, 470]
+    ],
+    [
+      [285, 380],
+      [270, 380]
+    ],
+    [
+      [542, 100],
+      [572, 100],
+      [572, 34]
+    ],
+    [
+      [542, 125],
+      [600, 125],
+      [600, 106]
+    ]
+  ] as [number, number][][]
+  svg += sides.map(s => `<path class="cable" d="${wire(s, 5)}"/>`).join('')
+  svg += `<path class="cable main" d="${request}"/>`
+  svg += `<path class="pulse" pathLength="1000" d="${request}"/><path class="pulse late" pathLength="1000" d="${request}"/>`
 
   const stations: [StepId, () => string][] = [
     ['device', device],
@@ -348,7 +399,7 @@ export function drawJourney() {
     const end: [number, number] =
       typeof c.to === 'number'
         ? [a[0], a[1] - c.to]
-        : project(...at(c.to[0], c.to[1], 1))
+        : project(c.to[0], c.to[1], 1)
     svg += `<line class="leader" data-step="${c.step}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${end[0].toFixed(1)}" y2="${end[1].toFixed(1)}"/>`
     return {
       step: c.step,
@@ -358,19 +409,22 @@ export function drawJourney() {
     }
   })
 
-  const badges: Record<StepId, { left: number; top: number }> = {
+  const badges: Record<
+    Exclude<StepId, 'ship'>,
+    { left: number; top: number }
+  > = {
     device: pct(project(...at(-520, 762, 0))),
     data: pct(project(...at(-312, 762, 0))),
     server: pct(project(...at(-104, 762, 0))),
     ai: pct(project(...at(208, 762, 0))),
-    db: pct(project(...at(528, 762, 0))),
-    ship: pct(project(...at(-150, 585, CLOUD_Z - 4)))
+    db: pct(project(...at(528, 762, 0)))
   }
 
   const overlays = {
     cloud: pct(project(...at(-45, 575, CLOUD_Z + 24))),
     terminal: pct(project(...at(40, 600, CLOUD_Z + 14))),
-    stores: pct(project(...at(-330, 600, 96)))
+    stores: pct(project(...at(-330, 600, 96))),
+    deploy: pct(project(292, 318, 44))
   }
 
   return {

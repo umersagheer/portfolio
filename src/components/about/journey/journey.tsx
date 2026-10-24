@@ -96,17 +96,30 @@ export default function Journey() {
           dangerouslySetInnerHTML={{ __html: GLOW_FILTER + svg }}
         />
 
-        {STEPS.map((step, i) => (
-          <span
-            key={step.id}
-            data-step={step.id}
-            aria-hidden='true'
-            className={`${styles.badge} font-sourceCodePro`}
-            style={pos(badges[step.id])}
-          >
-            {i + 1}
-          </span>
-        ))}
+        {STEPS.map(
+          (step, i) =>
+            step.id !== 'ship' && (
+              <span
+                key={step.id}
+                data-step={step.id}
+                aria-hidden='true'
+                className={`${styles.badge} font-sourceCodePro`}
+                style={pos(badges[step.id])}
+              >
+                {i + 1}
+              </span>
+            )
+        )}
+
+        {/* Deploy lives on the server: it ships the builds and plays step 06. */}
+        <button
+          type='button'
+          data-deploy
+          className={`${styles.deployButton} font-sourceCodePro`}
+          style={pos(overlays.deploy)}
+        >
+          ↑ deploy
+        </button>
 
         {/* What each object is: shown for the chosen step only. */}
         {callouts.map(c => (
@@ -218,14 +231,6 @@ export default function Journey() {
         </span>
         <span className={styles.keys}>1–6 · ← → · ESC</span>
       </div>
-      <a
-        href='https://iso-glow.vercel.app'
-        target='_blank'
-        rel='noopener noreferrer'
-        className={`${styles.credit} font-sourceCodePro`}
-      >
-        Made with ISO-GLOW ↗
-      </a>
     </JourneyController>
   )
 }
