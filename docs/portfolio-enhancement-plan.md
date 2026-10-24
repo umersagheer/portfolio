@@ -23,7 +23,7 @@
 | **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
 | **4** | Projects as pages (+ Munshi) | ✅ 4A · 4B · 4C | `f0fca25`…`c0dbcd2` |
 | **5** | About page (+ iso-glow Fig. 01) | ✅ | `cea2787`…`3911886` |
-| **6** | Home page recomposition | ⬜ | |
+| **6** | Home page recomposition | ✅ | `54ae663`…`4a7e52b` |
 | **7** | SEO & sharing | ⬜ | |
 | **8** | Delight: ⌘K palette, 404 figure | ⬜ | |
 
@@ -678,6 +678,25 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 **Follow-ups:**
 - The CV source is drafted at `assets/cv/umer-sagheer-cv.tex` (gitignored). The owner compiles it in Overleaf, then the PDF replaces `public/umer-sagheer-cv.pdf`. Until then the site serves the old CV.
 - `portfolio_p5_test` was dropped at the end of the phase.
+
+### 2026-10-24: Phase 6 ✅ COMPLETE: `54ae663`…`4a7e52b`
+
+| Commit | Result |
+|---|---|
+| `54ae663` hero | An `h1` with the name (fixes A4) and the tagline "Full-stack engineer building AI into real products." (`siteProfile.role`). The status pill "Open to roles & freelance · Lahore, Pakistan · local time" (D6) has a live dot that pings only without reduced motion, and the location is hidden on phones so it stays on one line. Two sentences of intro, then "See my work ↓" (`#work`), "Book a 15-minute intro" (Cal.com, loaded on click) and "About me →". |
+| `f5eb3cf` work | "Selected work": featured projects (Munshi, Engagemo) as `ProjectCard`s with covers, the rest as `ProjectRows`. `ProjectCard` gains `headingLevel` (h3 under a section h2). Posts get the subtitle "Deep dives with demos you can play with." |
+| `442b0fe` stack | `stack-glance.tsx`: Client · Data · Server · Database · Cloud along a wire, using the main tools from the About figure's `STEPS` and its inlined icons, plus the GitHub heatmap. "The full picture →" links to /about. **The old "What I work with" bento is removed (G6).** |
+| `822dd28` fix | The GitHub calendar fetch gets a 5 s timeout. A build stalled for over 10 minutes on it; GitHub sometimes takes 4 s from here. A slow GitHub now just drops the heatmap. |
+| `4a7e52b` copy | Engagemo serves universities: "institutions" replaces "schools" in its tagline and case study. The fictional demo school in the screens note stays. |
+
+**Numbers:** home First Load JS **131 → 113 kB** (the bento's HeroUI `Card` and Tabler icons are gone). Home and /about are prerendered and revalidated daily for the heatmap.
+
+**Verified** at 1440, 1024 and 390 px, light and dark:
+- one `h1`, CLS 0, no overflow, no console errors or failed requests;
+- the hero's first call to action sits within the first screen (389 px of 900 on desktop, 468 px of 844 on a phone);
+- "See my work" lands on the work section;
+- four project links render, and the heatmap shows;
+- Cal.com makes no request before a click.
 
 ---
 
