@@ -67,14 +67,14 @@ const JOURNEY = [
   },
   {
     year: '2026',
-    text: 'Shipped Meridian Profits to both stores, started on NestJS microservices that talk to industrial sensors, and kept growing Munshi.'
+    text: 'Shipped Meridian Profits to both stores, took on a contract building NestJS microservices for an industrial automation client, and kept growing Munshi.'
   }
 ]
 
 const NOW = [
   {
     label: 'Building',
-    text: 'Munshi’s next product, grocery management, and NestJS microservices that read industrial sensors over OPC UA.'
+    text: 'Munshi’s next product, grocery management, and, for an industrial automation client, NestJS microservices that read sensors over OPC UA.'
   },
   {
     label: 'Learning',
