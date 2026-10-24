@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { ICONS, type IconSlug } from '@/components/about/journey/icons'
 import { drawJourney } from '@/components/about/journey/drawing'
 import JourneyController from '@/components/about/journey/journey-controller'
@@ -10,7 +11,13 @@ import {
 import styles from '@/components/about/journey/journey.module.css'
 
 // Drawn once on the server at build time; no drawing code reaches the browser.
-const { svg, viewBox, badges, callouts, overlays } = drawJourney()
+const { svg, viewBox, badges, callouts, overlays, stops } = drawJourney()
+const vbWidth = Number(viewBox.split(' ')[2])
+const tour = stops.map(({ step, at }) => ({
+  step,
+  at,
+  name: STEPS.find(s => s.id === step)!.name.toLowerCase()
+}))
 
 const tool = (key: ToolKey) => TOOLS[key] as { name: string; icon?: IconSlug }
 const pos = ({ left, top }: { left: number; top: number }) => ({
@@ -32,19 +39,24 @@ function Glyph({ slug, size }: { slug: IconSlug; size: number }) {
   )
 }
 
-// Icon and name, used in the callouts and the deployment labels.
-function Chip({ keys }: { keys: ToolKey[] }) {
+// What the object does, then the tools it's built with (icon and name).
+function Chip({ label, keys }: { label: string; keys: ToolKey[] }) {
   return (
     <>
-      {keys.map(key => {
-        const { name, icon } = tool(key)
-        return (
-          <span key={key} className={styles.chipItem}>
-            {icon && <Glyph slug={icon} size={12} />}
-            {name}
-          </span>
-        )
-      })}
+      <span className={`${styles.role} font-sourceCodePro`}>{label}</span>
+      {keys.length > 0 && (
+        <span className={styles.chipTools}>
+          {keys.map(key => {
+            const { name, icon } = tool(key)
+            return (
+              <span key={key} className={styles.chipItem}>
+                {icon && <Glyph slug={icon} size={12} />}
+                {name}
+              </span>
+            )
+          })}
+        </span>
+      )}
     </>
   )
 }
@@ -79,20 +91,36 @@ const GLOW_FILTER =
 
 export default function Journey() {
   return (
-    <JourneyController className={styles.root} platforms={PLATFORMS}>
+    <JourneyController
+      className={styles.root}
+      platforms={PLATFORMS}
+      tour={tour}
+    >
       <div className={`${styles.head} font-sourceCodePro`}>
         <span>
           FIG 01
           <span className='hidden sm:inline'> · ONE REQUEST, END TO END</span>
         </span>
+        <span className={styles.controls}>
+          <button type='button' data-replay className={styles.replay}>
+            ▶ replay
+          </button>
+          {/* Ships the builds and plays step 06. */}
+          <button type='button' data-deploy className={styles.deployButton}>
+            ↑ deploy
+          </button>
+        </span>
       </div>
 
-      <div className={styles.drawing}>
+      <div
+        className={styles.drawing}
+        style={{ '--vbw': vbWidth } as CSSProperties}
+      >
         <svg
           className={styles.svg}
           viewBox={viewBox}
           role='img'
-          aria-label='One request, end to end: a laptop and a phone send a request along one cable through the data layer and the server, through an AI pipeline (retrieve, model, guardrail, memory) to the databases. On deploy, builds rise from the server to the cloud, and the update comes back down to the laptop and the phone.'
+          aria-label='One request, end to end: a laptop and a phone send a request along one cable through the data layer (server cache, app state, forms) and the API server, through an AI pipeline (retrieval, model calls, guardrails) to the databases. On deploy, builds rise from the server to the cloud, and the update comes back down to the laptop and the phone.'
           dangerouslySetInnerHTML={{ __html: GLOW_FILTER + svg }}
         />
 
@@ -111,27 +139,17 @@ export default function Journey() {
             )
         )}
 
-        {/* Deploy lives on the server: it ships the builds and plays step 06. */}
-        <button
-          type='button'
-          data-deploy
-          className={`${styles.deployButton} font-sourceCodePro`}
-          style={pos(overlays.deploy)}
-        >
-          ↑ deploy
-        </button>
-
         {/* What each object is: shown for the chosen step only. */}
         {callouts.map(c => (
           <span
-            key={`${c.step}-${c.tools.join('-')}`}
+            key={`${c.step}-${c.label}`}
             data-step={c.step}
             data-up={c.up ? '' : undefined}
             aria-hidden='true'
             className={styles.callout}
             style={pos(c)}
           >
-            <Chip keys={c.tools} />
+            <Chip label={c.label} keys={c.tools} />
           </span>
         ))}
 
@@ -142,14 +160,14 @@ export default function Journey() {
           className={`${styles.callout} ${styles.cloudChip}`}
           style={pos(overlays.cloud)}
         >
-          <Chip keys={['aws', 'railway']} />
+          <Chip label='Cloud' keys={['aws', 'railway']} />
         </span>
         <span
           aria-hidden='true'
           className={`${styles.callout} ${styles.storeChip}`}
           style={pos(overlays.stores)}
         >
-          <Chip keys={['appstore', 'googleplay']} />
+          <Chip label='Stores' keys={['appstore', 'googleplay']} />
         </span>
         <div
           aria-hidden='true'

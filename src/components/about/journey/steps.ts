@@ -20,8 +20,6 @@ export const TOOLS = {
   langchain: { name: 'LangChain', icon: 'langchain' },
   openai: { name: 'OpenAI', icon: 'openai' },
   langgraph: { name: 'LangGraph' },
-  rag: { name: 'RAG' },
-  mem0: { name: 'mem0' },
   postgres: { name: 'PostgreSQL', icon: 'postgresql' },
   mongo: { name: 'MongoDB', icon: 'mongodb' },
   prisma: { name: 'Prisma', icon: 'prisma' },
@@ -32,7 +30,6 @@ export const TOOLS = {
   eas: { name: 'EAS', icon: 'expo' },
   sentry: { name: 'Sentry', icon: 'sentry' },
   vitest: { name: 'Vitest', icon: 'vitest' },
-  guardrails: { name: 'Guardrails' },
   appstore: { name: 'App Store', icon: 'appstore' },
   googleplay: { name: 'Google Play', icon: 'googleplay' }
 } satisfies Record<string, Tool>
@@ -95,13 +92,13 @@ export const STEPS: Step[] = [
     id: 'ai',
     name: 'AI pipeline',
     main: ['langchain', 'openai'],
-    supporting: ['langgraph', 'rag', 'mem0'],
+    supporting: ['langgraph'],
     does: 'Retrieve, prompt, check, remember: AI inside the product, not a chat box beside it.',
     patterns: [
       "Retrieval (RAG) over a product's own content.",
       'Multi-step model calls orchestrated with LangGraph.',
       'Guardrails: model output checked against real data before anyone sees it.',
-      'Conversation memory with mem0, so context carries across sessions.'
+      'Conversation memory, so context carries across sessions.'
     ],
     exploring: 'agent workflows, evals'
   },

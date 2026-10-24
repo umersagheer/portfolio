@@ -21,13 +21,27 @@
 }
 
 .head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
 
+/* Figure controls: replay the tour, run the deploy. */
+.controls {
+  display: inline-flex;
+  gap: 8px;
+}
+
 .drawing {
+  /* --vbw (the viewBox width) comes from the server; --lift turns the
+     stations' lift (14 drawing units) into the same distance for the chips. */
+  --lift: calc(-1400cqw / var(--vbw));
   position: relative;
+  container-type: inline-size;
   margin-top: 6px;
 }
 
@@ -99,6 +113,32 @@
 }
 .svg :global(.station) {
   cursor: pointer;
+}
+
+/* The tour's beam: hidden until the controller runs it between stations. */
+.svg :global(.beam) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 28 972;
+  opacity: 0;
+}
+.root:global(.touring) .svg :global(.pulse) {
+  animation: none;
+  opacity: 0;
+}
+
+/* The active station lifts off the floor; its base stays down and outlines. */
+.svg :global(.station.obj),
+.svg :global(.leader) {
+  transition:
+    transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    opacity 0.25s;
+}
+.svg :global(.station.obj.on),
+.svg :global(.leader.on) {
+  transform: translateY(-14px);
 }
 
 /* A chosen step: its station lights fully, the rest dim but stay solid. */
@@ -173,6 +213,7 @@
 
 /* Glow only in the dark theme; the light theme keeps flat accent. */
 :global(.dark) .svg :global(.pulse),
+:global(.dark) .svg :global(.beam),
 :global(.dark) .svg :global(.zap),
 :global(.dark) .svg :global(.station.on .lit),
 :global(.dark) .root:global(.dep-done) .svg :global(.screen) {
@@ -205,24 +246,33 @@
   }
 }
 
-/* The deploy control on the server. */
+.replay,
 .deployButton {
-  position: absolute;
-  z-index: 2;
-  transform: translate(-50%, -50%);
-  border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent);
+  border: 1px solid var(--j-line);
   border-radius: 999px;
   background: var(--background);
-  padding: 1px 8px;
+  padding: 1px 9px;
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--accent);
   white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 0.2s,
+    border-color 0.2s,
     color 0.2s;
+}
+
+.replay:hover,
+.replay:focus-visible,
+.root:global(.touring) .replay {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.deployButton {
+  border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  color: var(--accent);
 }
 
 .deployButton:hover,
@@ -230,6 +280,12 @@
 .root:global(.dep-up) .deployButton {
   background: var(--accent);
   color: var(--background);
+}
+
+.replay:focus-visible,
+.deployButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .badge {
@@ -258,24 +314,47 @@
   color: var(--background);
 }
 
-/* Callout chips: real icons over the objects they name. */
+/* Callout chips: what the object does, then the tools, as real icons. They
+   rise with the station they name. */
 .callout {
   position: absolute;
   z-index: 1;
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   transform: translate(-50%, -50%);
   border: 1px solid color-mix(in oklab, var(--accent) 60%, transparent);
   border-radius: 6px;
   background: var(--background);
   padding: 2px 7px;
-  font-size: 11px;
+  /* 11px on the wide figure, scaling down with it to 9px. */
+  font-size: clamp(9px, 1.06cqw, 11px);
+  line-height: 1.3;
   white-space: nowrap;
   color: var(--foreground);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s;
+  transition:
+    opacity 0.25s,
+    translate 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.callout:global(.on) {
+  translate: 0 var(--lift);
+}
+
+.role {
+  font-size: 0.86em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chipTools {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .callout[data-up] {
@@ -289,11 +368,10 @@
 }
 
 /* The two stores stack, one per line. */
-.storeChip {
+.storeChip .chipTools {
   flex-direction: column;
   align-items: flex-start;
   gap: 3px;
-  padding: 4px 8px;
 }
 
 .chipItem {
@@ -400,7 +478,8 @@
   opacity: 0.55;
 }
 
-.root[data-active] .row[aria-pressed='true'] {
+.root[data-active] .row[aria-pressed='true'],
+.root[data-active] .row:global(.on) {
   opacity: 1;
 }
 
@@ -419,7 +498,8 @@
   color: var(--muted);
 }
 
-.row[aria-pressed='true'] .name {
+.row[aria-pressed='true'] .name,
+.row:global(.on) .name {
   color: var(--accent);
 }
 
@@ -568,8 +648,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .svg :global(.pulse),
-  .svg :global(.zap) {
+  .svg :global(.beam),
+  .svg :global(.zap),
+  .replay {
     display: none;
+  }
+  .svg :global(.station.obj),
+  .svg :global(.leader) {
+    transition: none;
   }
   .svg :global(.deploy),
   .svg :global(.ship),
