@@ -14,6 +14,9 @@ export default async function RecentPosts() {
         href='/posts'
         linkText='All posts'
       />
+      <p className='text-muted -mt-2 mb-6 max-w-2xl leading-relaxed'>
+        Deep dives with demos you can play with.
+      </p>
       <Posts posts={posts} />
     </>
   )

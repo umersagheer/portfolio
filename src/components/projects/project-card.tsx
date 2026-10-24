@@ -6,8 +6,16 @@ import ScreenImage from '@/components/projects/screen-image'
 
 // A project on /projects: the first screen peeking out of a stage, then the
 // facts. The whole card is the link; the accent border marks hover/focus.
-export default function ProjectCard({ project }: { project: ProjectMeta }) {
+export default function ProjectCard({
+  project,
+  headingLevel = 'h2'
+}: {
+  project: ProjectMeta
+  // h2 on /projects; h3 where the cards sit under a section heading.
+  headingLevel?: 'h2' | 'h3'
+}) {
   const cover = project.screens[0]
+  const Heading = headingLevel
 
   return (
     <Link
@@ -48,7 +56,7 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
             height={24}
             className='size-6 object-contain'
           />
-          <h2 className='font-semibold'>{project.title}</h2>
+          <Heading className='font-semibold'>{project.title}</Heading>
         </div>
         <p className='text-muted line-clamp-2 text-sm leading-relaxed'>
           {project.tagline}
