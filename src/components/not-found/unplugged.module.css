@@ -1,0 +1,172 @@
+/* Fig. 404. Same visual language as Fig. 01: monochrome faces from the theme,
+   the accent only on what's live. */
+
+.figure {
+  --u-top: color-mix(in oklab, var(--foreground) 3%, var(--background));
+  --u-face: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --u-side: color-mix(in oklab, var(--foreground) 12%, var(--background));
+  --u-line: color-mix(in oklab, var(--foreground) 40%, var(--background));
+  --u-detail: color-mix(in oklab, var(--foreground) 20%, var(--background));
+  margin: 0;
+}
+
+:global(.dark) .figure {
+  --u-top: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --u-face: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --u-side: color-mix(in oklab, var(--foreground) 2%, var(--background));
+  --u-line: color-mix(in oklab, var(--foreground) 34%, var(--background));
+  --u-detail: color-mix(in oklab, var(--foreground) 17%, var(--background));
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.svg :global(*) {
+  vector-effect: non-scaling-stroke;
+}
+
+.svg :global(.f-top) {
+  fill: var(--u-top);
+  stroke: var(--u-line);
+}
+.svg :global(.f-front) {
+  fill: var(--u-face);
+  stroke: var(--u-line);
+}
+.svg :global(.f-side) {
+  fill: var(--u-side);
+  stroke: var(--u-line);
+}
+.svg :global(.det) {
+  fill: none;
+  stroke: var(--u-detail);
+}
+.svg :global(.port) {
+  fill: var(--background);
+  stroke: var(--u-line);
+}
+.svg :global(.screen) {
+  fill: var(--u-side);
+  stroke: var(--u-line);
+  transition:
+    fill 0.4s,
+    stroke 0.4s;
+}
+.svg :global(.led) {
+  fill: var(--u-detail);
+  stroke: var(--u-line);
+}
+.svg :global(.lit) {
+  fill: var(--accent);
+  fill-opacity: 0.6;
+  stroke: var(--accent);
+}
+.svg :global(.cable) {
+  fill: none;
+  stroke: color-mix(in oklab, var(--accent) 55%, var(--u-line));
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.3s;
+}
+.svg :global(.cable.taut) {
+  opacity: 0;
+}
+.svg :global(.pulse) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 12 988;
+  stroke-dashoffset: 1000;
+  opacity: 0;
+}
+.svg :global(.plug) {
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.svg :global(.plug:hover) {
+  filter: drop-shadow(0 0 4px var(--accent));
+}
+
+/* Plugged in: the plug slides home, the cable straightens. */
+.figure[data-state='plugged'] .svg :global(.plug),
+.figure[data-state='live'] .svg :global(.plug) {
+  transform: translate(var(--dx), var(--dy));
+}
+.figure[data-state='plugged'] .svg :global(.slack),
+.figure[data-state='live'] .svg :global(.slack) {
+  opacity: 0;
+}
+.figure[data-state='plugged'] .svg :global(.taut),
+.figure[data-state='live'] .svg :global(.taut) {
+  opacity: 1;
+}
+
+/* Power: the light comes on, a pulse runs to the screen, the screen lights. */
+.figure[data-state='live'] .svg :global(.led) {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+.figure[data-state='live'] .svg :global(.pulse) {
+  opacity: 1;
+  animation: power 0.7s linear forwards;
+}
+.figure[data-state='live'] .svg :global(.screen) {
+  fill: var(--accent);
+  stroke: var(--accent);
+  transition-delay: 0.6s;
+}
+
+:global(.dark) .figure[data-state='live'] .svg :global(.screen),
+:global(.dark) .figure[data-state='live'] .svg :global(.pulse),
+:global(.dark) .figure[data-state='live'] .svg :global(.led) {
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+
+@keyframes power {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+.button {
+  display: block;
+  margin: 18px auto 0;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.button:hover,
+.button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg :global(.plug),
+  .svg :global(.screen),
+  .svg :global(.cable) {
+    transition: none;
+  }
+  .figure[data-state='live'] .svg :global(.pulse) {
+    animation: none;
+    opacity: 0;
+  }
+}
