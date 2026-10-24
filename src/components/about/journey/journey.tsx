@@ -39,28 +39,6 @@ function Glyph({ slug, size }: { slug: IconSlug; size: number }) {
   )
 }
 
-// What the object does, then the tools it's built with (icon and name).
-function Chip({ label, keys }: { label: string; keys: ToolKey[] }) {
-  return (
-    <>
-      <span className={`${styles.role} font-sourceCodePro`}>{label}</span>
-      {keys.length > 0 && (
-        <span className={styles.chipTools}>
-          {keys.map(key => {
-            const { name, icon } = tool(key)
-            return (
-              <span key={key} className={styles.chipItem}>
-                {icon && <Glyph slug={icon} size={12} />}
-                {name}
-              </span>
-            )
-          })}
-        </span>
-      )}
-    </>
-  )
-}
-
 function MainTool({ toolKey }: { toolKey: ToolKey }) {
   const { name, icon } = tool(toolKey)
   return (
@@ -142,14 +120,14 @@ export default function Journey() {
         {/* What each object is: shown for the chosen step only. */}
         {callouts.map(c => (
           <span
-            key={`${c.step}-${c.label}`}
+            key={c.label}
             data-step={c.step}
             data-up={c.up ? '' : undefined}
             aria-hidden='true'
-            className={styles.callout}
+            className={`${styles.callout} font-sourceCodePro`}
             style={pos(c)}
           >
-            <Chip label={c.label} keys={c.tools} />
+            {c.label}
           </span>
         ))}
 
@@ -157,17 +135,17 @@ export default function Journey() {
         <span
           aria-hidden='true'
           data-up=''
-          className={`${styles.callout} ${styles.cloudChip}`}
+          className={`${styles.callout} ${styles.cloudChip} font-sourceCodePro`}
           style={pos(overlays.cloud)}
         >
-          <Chip label='Cloud' keys={['aws', 'railway']} />
+          Cloud
         </span>
         <span
           aria-hidden='true'
-          className={`${styles.callout} ${styles.storeChip}`}
+          className={`${styles.callout} ${styles.storeChip} font-sourceCodePro`}
           style={pos(overlays.stores)}
         >
-          <Chip label='Stores' keys={['appstore', 'googleplay']} />
+          App stores
         </span>
         <div
           aria-hidden='true'

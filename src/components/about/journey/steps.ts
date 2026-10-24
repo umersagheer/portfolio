@@ -117,8 +117,9 @@ export const STEPS: Step[] = [
   {
     id: 'ship',
     name: 'Ship',
-    main: ['docker', 'aws'],
-    supporting: ['railway', 'eas', 'sentry', 'vitest'],
+    // Where it ships, by name; how it's built and watched is in the panel.
+    main: ['aws', 'appstore', 'googleplay'],
+    supporting: ['docker'],
     does: 'Build, test, deploy: to Railway, AWS, the App Store and Google Play.',
     patterns: [
       'Docker locally; Railway and AWS in production; EAS builds and over-the-air updates.',

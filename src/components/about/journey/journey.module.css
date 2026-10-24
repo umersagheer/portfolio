@@ -38,8 +38,8 @@
 
 .drawing {
   /* --vbw (the viewBox width) comes from the server; --lift turns the
-     stations' lift (14 drawing units) into the same distance for the chips. */
-  --lift: calc(-1400cqw / var(--vbw));
+     stations' lift (18 drawing units) into the same distance for the chips. */
+  --lift: calc(-1800cqw / var(--vbw));
   position: relative;
   container-type: inline-size;
   margin-top: 6px;
@@ -138,7 +138,7 @@
 }
 .svg :global(.station.obj.on),
 .svg :global(.leader.on) {
-  transform: translateY(-14px);
+  transform: translateY(-18px);
 }
 
 /* A chosen step: its station lights fully, the rest dim but stay solid. */
@@ -314,23 +314,21 @@
   color: var(--background);
 }
 
-/* Callout chips: what the object does, then the tools, as real icons. They
-   rise with the station they name. */
+/* Callout chips: one word or two for what the object does (the list below
+   names the tools). They rise with the station they name. */
 .callout {
   position: absolute;
   z-index: 1;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
   transform: translate(-50%, -50%);
   border: 1px solid color-mix(in oklab, var(--accent) 60%, transparent);
   border-radius: 6px;
   background: var(--background);
   padding: 2px 7px;
-  /* 11px on the wide figure, scaling down with it to 9px. */
-  font-size: clamp(9px, 1.06cqw, 11px);
-  line-height: 1.3;
+  /* 10.5px on the wide figure, scaling down with it to 9px. */
+  font-size: clamp(9px, 1cqw, 10.5px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
   white-space: nowrap;
   color: var(--foreground);
   opacity: 0;
@@ -344,19 +342,6 @@
   translate: 0 var(--lift);
 }
 
-.role {
-  font-size: 0.86em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.chipTools {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .callout[data-up] {
   transform: translate(-50%, -100%);
 }
@@ -365,19 +350,6 @@
 .root:global(.dep-up) .cloudChip,
 .root:global(.dep-down) .storeChip {
   opacity: 1;
-}
-
-/* The two stores stack, one per line. */
-.storeChip .chipTools {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
-}
-
-.chipItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .terminal {
@@ -462,6 +434,7 @@
   cursor: pointer;
   transition:
     opacity 0.3s,
+    filter 0.3s,
     background-color 0.2s;
 }
 
@@ -474,13 +447,22 @@
   outline-offset: -2px;
 }
 
+/* While a step is lit, the other rows blur and fade; hover brings one back. */
 .root[data-active] .row {
-  opacity: 0.55;
+  opacity: 0.4;
+  filter: blur(1.2px);
+}
+
+.root[data-active] .row:hover,
+.root[data-active] .row:focus-visible {
+  opacity: 1;
+  filter: none;
 }
 
 .root[data-active] .row[aria-pressed='true'],
 .root[data-active] .row:global(.on) {
   opacity: 1;
+  filter: none;
 }
 
 .name {
@@ -654,7 +636,8 @@
     display: none;
   }
   .svg :global(.station.obj),
-  .svg :global(.leader) {
+  .svg :global(.leader),
+  .row {
     transition: none;
   }
   .svg :global(.deploy),

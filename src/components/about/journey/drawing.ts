@@ -10,7 +10,7 @@ import {
   topRect,
   type Point3
 } from '@/libs/iso'
-import type { StepId, ToolKey } from '@/components/about/journey/steps'
+import type { StepId } from '@/components/about/journey/steps'
 
 // The panorama: u runs left to right on screen and v runs into the scene.
 // Objects sit where they read best; the request wire then runs between them in
@@ -209,11 +209,11 @@ const beamPhone = arc(at(-100, 590, CLOUD_Z), at(-470, 612, 46), 18)
 const deployBeam = (d: string, cls: string) =>
   `<path class="deploy ${cls}" d="${d}"/><path class="zap ${cls}" pathLength="1000" d="${d}"/>`
 
-// Each callout names what the object does, then the tools it's built with.
+// Each callout names what the object does. The tools are in the list below,
+// so the figure reads at a glance, even while the tour moves on.
 type Callout = {
   step: StepId
   label: string
-  tools: ToolKey[]
   anchor: Point3
   // up: the chip floats this many units above the anchor; [x, y]: it sits on the floor there.
   to: number | [number, number]
@@ -251,7 +251,6 @@ const CALLOUTS: Callout[] = [
   {
     step: 'device',
     label: 'Web app',
-    tools: ['react', 'next'],
     anchor: w(7.5, 546, 58),
     to: 36,
     dx: 56
@@ -259,7 +258,6 @@ const CALLOUTS: Callout[] = [
   {
     step: 'device',
     label: 'Mobile app',
-    tools: ['expo'],
     anchor: w(70, 540, 46),
     to: 26,
     dx: 58
@@ -267,42 +265,36 @@ const CALLOUTS: Callout[] = [
   {
     step: 'data',
     label: 'Server cache',
-    tools: ['query'],
     anchor: w(117.5, 467.5, 51),
     to: 46
   },
   {
     step: 'data',
     label: 'App state',
-    tools: ['zustand'],
     anchor: w(160, 450, 47),
     to: 14
   },
   {
     step: 'data',
     label: 'Forms & validation',
-    tools: ['rhf', 'zod'],
     anchor: w(214, 520, 6),
     to: [255, 445]
   },
   {
     step: 'server',
     label: 'API',
-    tools: ['node', 'nest'],
     anchor: w(262.5, 322.5, 40),
     to: 60
   },
   {
     step: 'server',
     label: 'Background jobs',
-    tools: ['bullmq'],
     anchor: w(330, 386, 12),
     to: [360, 345]
   },
   {
     step: 'ai',
     label: 'Retrieval · RAG',
-    tools: ['langchain'],
     anchor: w(312.5, 272.5, 12),
     to: 22,
     dx: 8
@@ -310,29 +302,25 @@ const CALLOUTS: Callout[] = [
   {
     step: 'ai',
     label: 'Model calls',
-    tools: ['openai', 'langgraph'],
     anchor: w(366, 216, 11),
     to: 70
   },
   {
     step: 'ai',
     label: 'Guardrails',
-    tools: [],
     anchor: w(457, 185, 43),
     to: 22
   },
   {
     step: 'db',
     label: 'Relational',
-    tools: ['postgres', 'prisma'],
     anchor: w(532.5, 52.5, 49),
     to: 30,
-    dx: -142
+    dx: -104
   },
   {
     step: 'db',
     label: 'Documents',
-    tools: ['mongo'],
     anchor: w(572.5, 12.5, 49),
     to: 75
   },
@@ -340,7 +328,6 @@ const CALLOUTS: Callout[] = [
   {
     step: 'db',
     label: 'Cache & queues',
-    tools: ['redis'],
     anchor: w(606, 86, 35),
     to: 95
   }
@@ -448,7 +435,6 @@ export function drawJourney() {
     return {
       step: c.step,
       label: c.label,
-      tools: c.tools,
       up: typeof c.to === 'number',
       ...pct(end)
     }
