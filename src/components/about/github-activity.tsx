@@ -11,7 +11,8 @@ async function getCalendar(): Promise<{ days: Day[]; total: string } | null> {
   try {
     const res = await fetch(
       `https://github.com/users/${siteProfile.socials.github.label}/contributions`,
-      { next: { revalidate: 86400 } }
+      // A slow GitHub must never hang a build: give up and render nothing.
+      { next: { revalidate: 86400 }, signal: AbortSignal.timeout(5000) }
     )
     if (!res.ok) return null
     const html = await res.text()
