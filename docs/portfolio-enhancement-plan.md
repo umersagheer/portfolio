@@ -714,6 +714,15 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - The sitemap lists 15 URLs with no drafts. The RSS parses, with 6 items. The JSON-LD parses on home, a post and a project.
 - I looked at the preview PNGs. The first round had a description running under the Munshi screenshot and a thin display cut at small sizes; both are fixed.
 
+**Follow-up (2026-10-24):** keyword-led copy, based on web research.
+
+| Commit | Change |
+|---|---|
+| `ab3f143` | Each page's search title is under 60 characters, with the key phrase first and "Full-Stack Developer" where hiring searches look (home, contact). Descriptions are 120–160 characters. Projects and posts get an optional `seoTitle` frontmatter field (posts keep their story headings on the page): e.g. "Expo Router Protected Routes: Stack.Protected Guide" and "Munshi – Offline-First Restaurant POS (Next.js, PostgreSQL)". About opens with a plain facts line. |
+| `79e068a` | `/llms.txt`: a plain map for AI assistants (who, stack, projects, posts, contact). |
+
+**Realistic targets:** your name; "full stack developer Lahore / Pakistan"; and long-tail blog queries. Generic "full stack engineer" belongs to job boards.
+
 **After deploy:** paste a link into LinkedIn's Post Inspector (linkedin.com/post-inspector) to warm its cache, and submit `/sitemap.xml` in Google Search Console.
 
 ---
