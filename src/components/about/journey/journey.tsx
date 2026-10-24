@@ -16,7 +16,8 @@ const vbWidth = Number(viewBox.split(' ')[2])
 const tour = stops.map(({ step, at }) => ({
   step,
   at,
-  name: STEPS.find(s => s.id === step)!.name.toLowerCase()
+  name: STEPS.find(s => s.id === step)!.name.toLowerCase(),
+  labels: callouts.filter(c => c.step === step).length
 }))
 
 const tool = (key: ToolKey) => TOOLS[key] as { name: string; icon?: IconSlug }

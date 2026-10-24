@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, type ReactNode } from 'react'
 
-type Stop = { step: string; at: number; name: string }
+// labels: how many callouts the station shows, which sets how long it holds.
+type Stop = { step: string; at: number; name: string; labels: number }
 
 type JourneyControllerProps = {
   className: string
@@ -13,10 +14,12 @@ type JourneyControllerProps = {
 }
 
 const STAGES = ['dep-up', 'dep-term', 'dep-down', 'dep-done']
-// Tour timing: a station lifts and holds, settles, then the beam moves on.
-const HOLD = 1800
-const SETTLE = 350
-const TRAVEL = 850
+// Tour timing: a station lifts and holds long enough to read its labels and
+// glance at its row (about 3.4s for two labels, 4.1s for three), settles,
+// then the beam moves on.
+const hold = (labels: number) => 2000 + 700 * labels
+const SETTLE = 450
+const TRAVEL = 1000
 const DASH = 28
 const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
@@ -165,7 +168,7 @@ export default function JourneyController({
           light(stop.step)
           say(`request · ${stop.name}`)
         })
-        t += HOLD
+        t += hold(stop.labels)
         at(t, () => light(null))
         t += SETTLE
       })
