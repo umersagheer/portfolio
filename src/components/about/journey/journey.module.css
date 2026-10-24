@@ -3,11 +3,12 @@
    SVG markup, so they are reached with :global() under the module's root. */
 
 .root {
-  --j-top: color-mix(in oklab, var(--foreground) 2%, var(--background));
-  --j-face: color-mix(in oklab, var(--foreground) 5%, var(--background));
-  --j-side: color-mix(in oklab, var(--foreground) 9%, var(--background));
-  --j-line: color-mix(in oklab, var(--foreground) 28%, var(--background));
-  --j-detail: color-mix(in oklab, var(--foreground) 15%, var(--background));
+  --j-top: color-mix(in oklab, var(--foreground) 3%, var(--background));
+  --j-face: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --j-side: color-mix(in oklab, var(--foreground) 12%, var(--background));
+  --j-line: color-mix(in oklab, var(--foreground) 40%, var(--background));
+  --j-detail: color-mix(in oklab, var(--foreground) 20%, var(--background));
+  position: relative;
   margin: 0;
   border: 1px solid var(--hair);
   border-radius: 16px;
@@ -15,44 +16,17 @@
 }
 
 :global(.dark) .root {
-  --j-top: color-mix(in oklab, var(--foreground) 9%, var(--background));
-  --j-face: color-mix(in oklab, var(--foreground) 6%, var(--background));
-  --j-side: color-mix(in oklab, var(--foreground) 4%, var(--background));
-  --j-line: color-mix(in oklab, var(--foreground) 24%, var(--background));
-  --j-detail: color-mix(in oklab, var(--foreground) 14%, var(--background));
+  --j-top: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --j-face: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --j-side: color-mix(in oklab, var(--foreground) 2%, var(--background));
+  --j-line: color-mix(in oklab, var(--foreground) 34%, var(--background));
+  --j-detail: color-mix(in oklab, var(--foreground) 17%, var(--background));
 }
 
 .head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--muted);
-}
-
-.ship {
-  flex: none;
-  white-space: nowrap;
-  border: 1px solid var(--hair);
-  border-radius: 999px;
-  padding: 3px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--foreground);
-  cursor: pointer;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
-}
-
-.ship:hover,
-.ship:focus-visible,
-.root[data-shipping] .ship {
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
 .drawing {
@@ -89,9 +63,9 @@
 }
 .svg :global(.lit) {
   fill: var(--accent);
-  fill-opacity: 0.4;
+  fill-opacity: 0.45;
   stroke: var(--accent);
-  stroke-opacity: 0.5;
+  stroke-opacity: 0.6;
   transition:
     fill-opacity 0.3s,
     stroke-opacity 0.3s;
@@ -100,36 +74,33 @@
   fill: none;
   stroke: var(--accent);
   stroke-width: 1.6;
-  stroke-opacity: 0.55;
+  stroke-opacity: 0.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.svg :global(.bus) {
+
+/* The request cable: one continuous line, with spurs into every object. */
+.svg :global(.cable) {
   fill: none;
   stroke: var(--accent);
-  stroke-opacity: 0.3;
+  stroke-opacity: 0.5;
   stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.svg :global(.cable.main) {
+  stroke-opacity: 0.6;
+  stroke-width: 2;
 }
 .svg :global(.flow) {
   fill: none;
   stroke: var(--accent);
-  stroke-width: 2.5;
+  stroke-width: 3;
   stroke-linecap: round;
-  stroke-dasharray: 70 930;
-  animation: flow 3.2s ease-in-out infinite alternate;
+  stroke-dasharray: 60 940;
+  animation: flow 3.4s ease-in-out infinite alternate;
 }
 .svg :global(.station) {
   cursor: pointer;
-}
-.svg :global(.live) {
-  fill: var(--accent);
-  fill-opacity: 1;
-  stroke: var(--accent);
-  stroke-opacity: 1;
-}
-.svg :global(.crate) {
-  opacity: 0;
-  transition: opacity 0.3s;
 }
 
 /* A chosen step: its station lights fully, the rest dim but stay solid. */
@@ -140,8 +111,7 @@
 .root[data-active] .svg :global(.ink) {
   stroke-opacity: 0.2;
 }
-.root[data-active] .svg :global(.station.on .lit),
-.root[data-active] .svg :global(.lit.live) {
+.root[data-active] .svg :global(.station.on .lit) {
   fill-opacity: 1;
   stroke-opacity: 1;
 }
@@ -149,16 +119,55 @@
   stroke-opacity: 1;
 }
 .svg :global(.station.on .pad .f-top),
-.svg :global(.station.on .pad .f-front),
-.svg :global(.station.on .pad .f-side) {
+.svg :global(.station.on .pad .f-front) {
   stroke: var(--accent);
+}
+
+/* Leaders from an object up (or down) to its callout chip. */
+.svg :global(.leader) {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.svg :global(.leader.on) {
+  opacity: 0.9;
+}
+
+/* Deployment: hidden until it plays, then drawn in stages. */
+.svg :global(.ship) {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.svg :global(.deploy) {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 0.9s ease-in-out;
+}
+.root:global(.dep-up) .svg :global(.ship) {
+  opacity: 1;
+}
+.root:global(.dep-up) .svg :global(.deploy.up),
+.root:global(.dep-down) .svg :global(.deploy.down) {
+  stroke-dashoffset: 0;
+}
+.root:global(.dep-done) .svg :global(.screen) {
+  fill-opacity: 1;
+  stroke-opacity: 1;
 }
 
 /* Glow only in the dark theme; the light theme keeps flat accent. */
 :global(.dark) .svg :global(.flow),
-:global(.dark) .svg :global(.live),
-:global(.dark) .svg :global(.station.on .lit) {
-  filter: drop-shadow(0 0 5px var(--accent));
+:global(.dark) .svg :global(.cable.main),
+:global(.dark) .svg :global(.deploy),
+:global(.dark) .svg :global(.station.on .lit),
+:global(.dark) .root:global(.dep-done) .svg :global(.screen) {
+  filter: url(#journey-glow);
 }
 
 @keyframes flow {
@@ -166,7 +175,7 @@
     stroke-dashoffset: 1000;
   }
   to {
-    stroke-dashoffset: 70;
+    stroke-dashoffset: 60;
   }
 }
 
@@ -194,6 +203,97 @@
   border-color: var(--accent);
   background: var(--accent);
   color: var(--background);
+}
+
+/* Callout chips: real icons over the objects they name. */
+.callout {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -50%);
+  border: 1px solid color-mix(in oklab, var(--accent) 60%, transparent);
+  border-radius: 6px;
+  background: var(--background);
+  padding: 2px 7px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--foreground);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.callout[data-up] {
+  transform: translate(-50%, -100%);
+}
+
+.callout:global(.on),
+.root:global(.dep-up) .cloudChip,
+.root:global(.dep-down) .storeChip {
+  opacity: 1;
+}
+
+.chipItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.terminal {
+  position: absolute;
+  z-index: 1;
+  transform: translateY(-50%);
+  border: 1px solid var(--j-line);
+  border-radius: 6px;
+  background: var(--background);
+  padding: 6px 9px;
+  font-size: 10.5px;
+  line-height: 1.55;
+  white-space: nowrap;
+  color: var(--foreground);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.terminal p {
+  margin: 0;
+}
+
+.terminal span {
+  color: var(--muted);
+}
+
+.terminal b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.root:global(.dep-term) .terminal {
+  opacity: 1;
+}
+
+.root:global(.dep-term) .terminal p {
+  animation: type 0.35s both;
+}
+
+.root:global(.dep-term) .terminal p:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.root:global(.dep-term) .terminal p:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 .legend {
@@ -360,6 +460,20 @@
   color: var(--muted);
 }
 
+.credit {
+  position: absolute;
+  right: 4px;
+  bottom: -22px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: color-mix(in oklab, var(--muted) 70%, transparent);
+  transition: color 0.2s;
+}
+
+.credit:hover {
+  color: var(--accent);
+}
+
 @media (max-width: 800px) {
   .legend {
     grid-template-columns: 1fr;
@@ -380,6 +494,12 @@
     font-size: 8px;
     line-height: 14px;
   }
+  /* Too small for labels on a phone: the list and panel name every tool. */
+  .callout,
+  .terminal,
+  .svg :global(.leader) {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -387,5 +507,14 @@
     animation: none;
     stroke-dasharray: none;
     stroke-opacity: 0.5;
+  }
+  .svg :global(.deploy),
+  .svg :global(.ship),
+  .callout,
+  .terminal {
+    transition: none;
+  }
+  .root:global(.dep-term) .terminal p {
+    animation: none;
   }
 }

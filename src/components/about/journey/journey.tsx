@@ -1,5 +1,5 @@
 import { ICONS, type IconSlug } from '@/components/about/journey/icons'
-import { SHIP_STOPS, drawJourney } from '@/components/about/journey/drawing'
+import { drawJourney } from '@/components/about/journey/drawing'
 import JourneyController from '@/components/about/journey/journey-controller'
 import {
   PLATFORMS,
@@ -10,7 +10,13 @@ import {
 import styles from '@/components/about/journey/journey.module.css'
 
 // Drawn once on the server at build time; no drawing code reaches the browser.
-const { svg, viewBox, badges } = drawJourney()
+const { svg, viewBox, badges, callouts, overlays } = drawJourney()
+
+const tool = (key: ToolKey) => TOOLS[key] as { name: string; icon?: IconSlug }
+const pos = ({ left, top }: { left: number; top: number }) => ({
+  left: `${left.toFixed(2)}%`,
+  top: `${top.toFixed(2)}%`
+})
 
 function Glyph({ slug, size }: { slug: IconSlug; size: number }) {
   return (
@@ -26,8 +32,25 @@ function Glyph({ slug, size }: { slug: IconSlug; size: number }) {
   )
 }
 
-function MainTool({ tool }: { tool: ToolKey }) {
-  const { name, icon } = TOOLS[tool] as { name: string; icon?: IconSlug }
+// Icon and name, used in the callouts and the deployment labels.
+function Chip({ keys }: { keys: ToolKey[] }) {
+  return (
+    <>
+      {keys.map(key => {
+        const { name, icon } = tool(key)
+        return (
+          <span key={key} className={styles.chipItem}>
+            {icon && <Glyph slug={icon} size={12} />}
+            {name}
+          </span>
+        )
+      })}
+    </>
+  )
+}
+
+function MainTool({ toolKey }: { toolKey: ToolKey }) {
+  const { name, icon } = tool(toolKey)
   return (
     <span className={styles.tool}>
       {icon && <Glyph slug={icon} size={15} />}
@@ -36,8 +59,8 @@ function MainTool({ tool }: { tool: ToolKey }) {
   )
 }
 
-function SupportingTool({ tool }: { tool: ToolKey }) {
-  const { name, icon } = TOOLS[tool] as { name: string; icon?: IconSlug }
+function SupportingTool({ toolKey }: { toolKey: ToolKey }) {
+  const { name, icon } = tool(toolKey)
   if (!icon)
     return <span className={`${styles.word} font-sourceCodePro`}>{name}</span>
   return (
@@ -49,25 +72,19 @@ function SupportingTool({ tool }: { tool: ToolKey }) {
 
 const toolNames = (keys: ToolKey[]) => keys.map(k => TOOLS[k].name).join(' · ')
 
+// Glow as an SVG filter in user space: a CSS drop-shadow on a perfectly
+// horizontal line has a zero-height box and vanishes.
+const GLOW_FILTER =
+  '<defs><filter id="journey-glow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="4000" height="4000"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+
 export default function Journey() {
   return (
-    <JourneyController
-      className={styles.root}
-      stops={SHIP_STOPS}
-      platforms={PLATFORMS}
-    >
+    <JourneyController className={styles.root} platforms={PLATFORMS}>
       <div className={`${styles.head} font-sourceCodePro`}>
         <span>
           FIG 01
           <span className='hidden sm:inline'> · ONE REQUEST, END TO END</span>
         </span>
-        <button
-          type='button'
-          data-ship
-          className={`${styles.ship} font-sourceCodePro`}
-        >
-          SHIP IT ▸
-        </button>
       </div>
 
       <div className={styles.drawing}>
@@ -75,23 +92,67 @@ export default function Journey() {
           className={styles.svg}
           viewBox={viewBox}
           role='img'
-          aria-label='One request, end to end: a phone and laptop send a request through the data layer to the server, through an AI pipeline (retrieve, model, guardrail, memory) to the databases and back. A delivery lane below builds, tests and deploys to Railway, AWS, the App Store and Google Play.'
-          dangerouslySetInnerHTML={{ __html: svg }}
+          aria-label='One request, end to end: a laptop and a phone send a request along one cable through the data layer and the server, through an AI pipeline (retrieve, model, guardrail, memory) to the databases. On deploy, builds rise from the server to the cloud, and the update comes back down to the laptop and the phone.'
+          dangerouslySetInnerHTML={{ __html: GLOW_FILTER + svg }}
         />
+
         {STEPS.map((step, i) => (
           <span
             key={step.id}
             data-step={step.id}
             aria-hidden='true'
             className={`${styles.badge} font-sourceCodePro`}
-            style={{
-              left: `${badges[step.id].left.toFixed(2)}%`,
-              top: `${badges[step.id].top.toFixed(2)}%`
-            }}
+            style={pos(badges[step.id])}
           >
             {i + 1}
           </span>
         ))}
+
+        {/* What each object is: shown for the chosen step only. */}
+        {callouts.map(c => (
+          <span
+            key={`${c.step}-${c.tools.join('-')}`}
+            data-step={c.step}
+            data-up={c.up ? '' : undefined}
+            aria-hidden='true'
+            className={styles.callout}
+            style={pos(c)}
+          >
+            <Chip keys={c.tools} />
+          </span>
+        ))}
+
+        {/* Deployment, shown while it plays. */}
+        <span
+          aria-hidden='true'
+          data-up=''
+          className={`${styles.callout} ${styles.cloudChip}`}
+          style={pos(overlays.cloud)}
+        >
+          <Chip keys={['aws', 'railway']} />
+        </span>
+        <span
+          aria-hidden='true'
+          className={`${styles.callout} ${styles.storeChip}`}
+          style={pos(overlays.stores)}
+        >
+          <Chip keys={['appstore', 'googleplay']} />
+        </span>
+        <div
+          aria-hidden='true'
+          className={`${styles.terminal} font-sourceCodePro`}
+          style={pos(overlays.terminal)}
+        >
+          <p>
+            <span>$</span> build <b>✓</b> api · web · app
+          </p>
+          <p>
+            <span>$</span> test <b>✓</b> passed
+          </p>
+          <p>
+            <span>$</span> deploy <b>→</b> aws · railway
+          </p>
+        </div>
       </div>
 
       <div className={styles.legend}>
@@ -112,12 +173,12 @@ export default function Journey() {
                 {step.name}
               </span>
               <span className={styles.tools}>
-                {step.main.map(tool => (
-                  <MainTool key={tool} tool={tool} />
+                {step.main.map(key => (
+                  <MainTool key={key} toolKey={key} />
                 ))}
                 <span className={styles.supporting}>
-                  {step.supporting.map(tool => (
-                    <SupportingTool key={tool} tool={tool} />
+                  {step.supporting.map(key => (
+                    <SupportingTool key={key} toolKey={key} />
                   ))}
                 </span>
               </span>
@@ -157,6 +218,14 @@ export default function Journey() {
         </span>
         <span className={styles.keys}>1–6 · ← → · ESC</span>
       </div>
+      <a
+        href='https://iso-glow.vercel.app'
+        target='_blank'
+        rel='noopener noreferrer'
+        className={`${styles.credit} font-sourceCodePro`}
+      >
+        Made with ISO-GLOW ↗
+      </a>
     </JourneyController>
   )
 }

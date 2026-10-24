@@ -10,332 +10,374 @@ import {
   topRect,
   type Point3
 } from '@/libs/iso'
-import type { StepId } from '@/components/about/journey/steps'
+import type { StepId, ToolKey } from '@/components/about/journey/steps'
 
-// The panorama: u runs left to right on screen and v runs into the scene, so a
-// row of stations at one v reads as a straight line. `at` maps (u, v, z) onto
-// the iso floor.
+// The panorama: u runs left to right on screen and v runs into the scene, so
+// everything at one v reads as a straight line. The request cable runs along
+// v = ROW; objects sit behind it (smaller v) or in front of it (larger v), so
+// the cable stays visible from end to end.
+const ROW = 640
+const BACK = 520
+const FRONT = 770
 const at = (u: number, v: number, z: number): Point3 => [
   (v + u) / 2,
   (v - u) / 2,
   z
 ]
-const floor = (pts: Point3[], cls: string) =>
-  poly(
-    pts.map(([u, v, z]) => at(u, v, z)),
-    cls
-  )
-
-const U = 640
-const V0 = 520
-const V1 = 880
-const ROW = 640 // the request row
-const LANE = 804 // the delivery lane
-const HALF = 52 // half a station tile
-const BEAM_Z = 84
-
-const tileCenter = (t: number) => {
-  const [x, y] = at(-520 + 208 * t, ROW, 0)
-  return [x, y] as const
+const xy = (u: number, v: number) => [(v + u) / 2, (v - u) / 2] as const
+const boxAt = (
+  u: number,
+  v: number,
+  z: number,
+  w: number,
+  d: number,
+  h: number
+) => {
+  const [x, y] = xy(u, v)
+  return box(x - w / 2, y - d / 2, z, w, d, h)
 }
-const tile = (t: number) => {
-  const [cx, cy] = tileCenter(t)
-  return `<g class="pad">${box(cx - HALF, cy - HALF, 0, 2 * HALF, 2 * HALF, 3)}</g>`
+const cylAt = (
+  u: number,
+  v: number,
+  z: number,
+  r: number,
+  h: number,
+  lit = true
+) => {
+  const [x, y] = xy(u, v)
+  return cylinder(x, y, z, r, h, lit)
 }
+// A flat slab of floor between two u and two v values (reads as a screen rectangle).
+const slab = (u0: number, u1: number, v0: number, v1: number, h: number) =>
+  poly([at(u0, v0, h), at(u1, v0, h), at(u1, v1, h), at(u0, v1, h)], 'f-top') +
+  poly([at(u0, v1, h), at(u1, v1, h), at(u1, v1, 0), at(u0, v1, 0)], 'f-front')
+// A short cable from an object to the request cable.
+const CABLE_Z = 3.5
+const spur = (u: number, v: number) =>
+  line([at(u, v, CABLE_Z), at(u, ROW, CABLE_Z)], 'cable')
 
-const stations: Record<Exclude<StepId, 'ship'>, () => string> = {
-  // A laptop and a phone, screens lit.
-  device: () => {
-    const [cx, cy] = tileCenter(0)
-    return (
-      tile(0) +
-      box(cx - 38, cy - 26, 3, 62, 46, 4) +
-      topRect(cx - 32, cy - 20, 7, 50, 34, 'det') +
-      box(cx - 38, cy - 26, 7, 62, 4, 52) +
-      frontRect(cx - 33, cy - 22, 56, 52, 42, 'lit') +
-      box(cx + 30, cy - 4, 3, 16, 4, 42) +
-      frontRect(cx + 32, cy, 41, 12, 36, 'lit')
-    )
-  },
-  // A cache shelf (React Query), a store drawer (Zustand) and a form with a tick.
-  data: () => {
-    const [cx, cy] = tileCenter(1)
-    const shelves = [3, 19, 35]
-      .map(
-        z =>
-          box(cx - 46, cy - 46, z, 48, 26, 3) +
-          [0, 1, 2]
-            .map(
-              k =>
-                box(cx - 42 + k * 15, cy - 42, z + 3, 11, 12, 9) +
-                topRect(cx - 41 + k * 15, cy - 41, z + 12, 9, 10, 'lit')
-            )
-            .join('')
-      )
-      .join('')
-    return (
-      tile(1) +
-      shelves +
-      box(cx - 46, cy - 23, 3, 3, 3, 38) +
-      box(cx - 1, cy - 23, 3, 3, 3, 38) +
-      box(cx + 10, cy - 46, 3, 34, 28, 40) +
-      [14, 27]
-        .map(z => frontRect(cx + 13, cy - 18, 3 + z, 28, 0.1, 'det'))
-        .join('') +
-      box(cx + 14, cy - 18, 30, 26, 12, 10) +
-      topRect(cx + 18, cy - 15, 40, 18, 6, 'lit') +
-      box(cx - 42, cy + 6, 3, 56, 36, 3) +
-      [0, 1, 2]
-        .map(k =>
-          line(
-            [
-              [cx - 34, cy + 14 + k * 9, 6],
-              [cx - 6, cy + 14 + k * 9, 6]
-            ],
-            'det'
-          )
-        )
-        .join('') +
-      line(
-        [
-          [cx, cy + 22, 6],
-          [cx + 5, cy + 28, 6],
-          [cx + 13, cy + 13, 6]
-        ],
-        'ink'
-      )
-    )
-  },
-  // The gateway every request passes through, a rack, and a queue belt.
-  server: () => {
-    const [cx, cy] = tileCenter(2)
-    return (
-      tile(2) +
-      box(cx - 44, cy - 48, 3, 8, 8, 62) +
-      box(cx - 44, cy + 40, 3, 8, 8, 62) +
-      box(cx - 44, cy - 48, 65, 8, 96, 8) +
-      sideRect(cx - 36, cy - 40, 71, 80, 4, 'lit') +
-      box(cx - 12, cy - 48, 3, 56, 22, 40) +
-      [0, 1, 2]
-        .map(k => frontRect(cx - 6 + k * 17, cy - 26, 34, 12, 3, 'lit'))
-        .join('') +
-      box(cx - 8, cy + 8, 3, 50, 12, 4) +
-      [0, 1, 2].map(k => box(cx - 4 + k * 16, cy + 9, 7, 10, 10, 8)).join('')
-    )
-  },
-  // Documents to retrieve, the model, a guardrail gate and stacked memory.
-  ai: () => {
-    const [ax, ay] = tileCenter(3)
-    const [bx, by] = tileCenter(4)
-    return (
-      tile(3) +
-      tile(4) +
-      line([at(-104, ROW, 4), at(312, ROW, 4)], 'ink') +
-      box(ax - 42, ay - 34, 3, 36, 42, 3) +
-      box(ax - 39, ay - 36, 6, 36, 42, 3) +
-      box(ax - 36, ay - 38, 9, 36, 42, 3) +
-      topRect(ax - 30, ay - 32, 12, 24, 4, 'det') +
-      topRect(ax - 30, ay - 24, 12, 24, 4, 'det') +
-      topRect(ax - 30, ay - 16, 12, 14, 4, 'lit') +
-      box(ax + 6, ay - 40, 3, 46, 46, 8) +
-      topRect(ax + 16, ay - 30, 11, 26, 26, 'lit') +
-      [0, 1, 2]
-        .map(
-          k =>
-            frontRect(ax + 14 + k * 12, ay + 6, 7, 6, 3, 'det') +
-            sideRect(ax + 52, ay - 32 + k * 12, 7, 6, 3, 'det')
-        )
-        .join('') +
-      box(bx - 40, by - 44, 3, 5, 5, 36) +
-      box(bx - 40, by + 34, 3, 5, 5, 36) +
-      box(bx - 40, by - 44, 39, 5, 83, 4) +
-      box(bx - 40, by - 39, 22, 5, 73, 2) +
-      sideRect(bx - 35, by - 16, 36, 32, 12, 'lit') +
-      cylinder(bx + 22, by - 8, 3, 17, 7, false) +
-      cylinder(bx + 22, by - 8, 11, 17, 7, false) +
-      cylinder(bx + 22, by - 8, 19, 17, 7)
-    )
-  },
-  db: () => {
-    const [cx, cy] = tileCenter(5)
-    return (
-      tile(5) +
-      cylinder(cx - 22, cy - 20, 3, 21, 46) +
-      cylinder(cx + 24, cy - 22, 3, 21, 46) +
-      cylinder(cx + 2, cy + 24, 3, 21, 32)
-    )
-  }
-}
+const B = 3 // height of a group base
 
-// The delivery lane: build, test and deploy along a track, then four platforms.
-// The crate is drawn at u = 0 and moved along the lane by the controller.
-export const SHIP_STOPS = [-470, -170, 130, 420]
-const shipLane = () => {
-  const station = (
-    u: number,
-    w: number,
-    h: number,
-    extra: (x: number, y: number) => string
-  ) => {
-    const [x, y] = at(u, LANE, 0)
-    return box(x - w / 2, y - w / 2, 3, w, w, h) + extra(x, y)
-  }
-  const pads = [
-    [455, 790],
-    [535, 790],
-    [455, 850],
-    [535, 850]
-  ]
-    .map(([u, v], i) => {
-      const [x, y] = at(u, v, 0)
-      return (
-        box(x - 17, y - 17, 3, 34, 34, 5) +
-        `<g class="dest" data-dest="${i}">${topRect(x - 12, y - 12, 8, 24, 24, 'lit')}</g>`
-      )
-    })
-    .join('')
-  const [crateX, crateY] = at(0, LANE, 0)
+const device = () => {
+  const [lx, ly] = xy(-560, 575)
+  const [px, py] = xy(-470, 610)
   return (
-    floor(
-      [
-        [-560, 790, 3],
-        [430, 790, 3],
-        [430, 818, 3],
-        [-560, 818, 3]
-      ],
-      'f-top'
-    ) +
-    floor(
-      [
-        [-560, 818, 3],
-        [430, 818, 3],
-        [430, 818, 0],
-        [-560, 818, 0]
-      ],
-      'f-front'
-    ) +
-    station(SHIP_STOPS[0], 30, 26, (x, y) =>
-      frontRect(x - 9, y + 15, 23, 18, 8, 'lit')
-    ) +
-    station(
-      SHIP_STOPS[1],
-      26,
-      20,
-      (x, y) =>
-        `<g data-lamp="test">${topRect(x - 8, y - 8, 23, 16, 16, 'lit')}</g>` +
+    spur(-560, 629) +
+    spur(-470, 620) +
+    box(lx - 31, ly - 23, 0, 62, 46, 4) +
+    topRect(lx - 25, ly - 15, 4, 50, 34, 'det') +
+    box(lx - 31, ly - 23, 4, 62, 4, 52) +
+    frontRect(lx - 26, ly - 19, 52, 52, 42, 'lit screen') +
+    box(px - 8, py - 2, 0, 16, 4, 44) +
+    frontRect(px - 6, py + 2, 41, 12, 36, 'lit screen')
+  )
+}
+
+// A cache shelf (React Query), a store drawer (Zustand), a form with a tick.
+const dataLayer = () => {
+  const [sx, sy] = xy(-350, 585)
+  const [dx, dy] = xy(-275, 595)
+  const [cx, cy] = xy(-312, 700)
+  const shelves = [B, B + 16, B + 32]
+    .map(
+      z =>
+        box(sx - 24, sy - 13, z, 48, 26, 3) +
+        [0, 1, 2]
+          .map(
+            k =>
+              box(sx - 20 + k * 15, sy - 9, z + 3, 11, 12, 9) +
+              topRect(sx - 19 + k * 15, sy - 8, z + 12, 9, 10, 'lit')
+          )
+          .join('')
+    )
+    .join('')
+  return (
+    spur(-350, 622) +
+    spur(-275, 626) +
+    spur(-312, 654) +
+    shelves +
+    box(sx - 24, sy + 10, B, 3, 3, 38) +
+    box(sx + 21, sy + 10, B, 3, 3, 38) +
+    box(dx - 17, dy - 14, B, 34, 28, 40) +
+    [14, 27]
+      .map(z => frontRect(dx - 14, dy + 14, B + z, 28, 0.1, 'det'))
+      .join('') +
+    box(dx - 13, dy + 14, B + 27, 26, 12, 10) +
+    topRect(dx - 9, dy + 17, B + 37, 18, 6, 'lit') +
+    box(cx - 28, cy - 18, B, 56, 36, 3) +
+    [0, 1, 2]
+      .map(k =>
         line(
           [
-            [x - 5, y + 1, 24],
-            [x - 1, y + 5, 24],
-            [x + 6, y - 5, 24]
+            [cx - 20, cy - 10 + k * 9, B + 3],
+            [cx + 8, cy - 10 + k * 9, B + 3]
           ],
-          'ink'
+          'det'
         )
-    ) +
-    station(
-      SHIP_STOPS[2],
-      32,
-      8,
-      (x, y) =>
-        `<g data-lamp="deploy">${topRect(x - 10, y - 10, 11, 20, 20, 'lit')}</g>`
-    ) +
-    pads +
-    `<g class="crate" data-crate>${box(crateX - 9, crateY - 9, 6, 18, 18, 14)}${frontRect(crateX - 6, crateY + 9, 18, 12, 3, 'live')}</g>`
+      )
+      .join('') +
+    line(
+      [
+        [cx + 13, cy - 2, B + 3],
+        [cx + 18, cy + 4, B + 3],
+        [cx + 26, cy - 11, B + 3]
+      ],
+      'ink'
+    )
   )
 }
+
+// The gateway straddles the cable (every request passes the door), a rack of
+// services behind it and a queue belt in front.
+const server = () => {
+  const [rx, ry] = xy(-60, 585)
+  const [bx, by] = xy(-70, 690)
+  return (
+    spur(-60, 624) +
+    spur(-70, 659) +
+    box(rx - 28, ry - 11, 0, 56, 22, 40) +
+    [0, 1, 2]
+      .map(k => frontRect(rx - 22 + k * 17, ry + 11, 34, 12, 3, 'lit'))
+      .join('') +
+    box(245, 351, 0, 8, 8, 62) +
+    box(245, 439, 0, 8, 8, 62) +
+    box(245, 351, 62, 8, 96, 8) +
+    sideRect(253, 359, 68, 80, 4, 'lit') +
+    box(bx - 25, by - 6, 0, 50, 12, 4) +
+    [0, 1, 2]
+      .map(
+        k =>
+          box(bx - 21 + k * 16, by - 5, 4, 10, 10, 8) +
+          topRect(bx - 19 + k * 16, by - 3, 12, 6, 6, 'lit')
+      )
+      .join('')
+  )
+}
+
+// Documents to retrieve, the model, a guardrail gate across the cable, memory.
+const aiPipeline = () => {
+  const [dx, dy] = xy(40, 585)
+  const [mx, my] = xy(150, 582)
+  const [nx, ny] = xy(360, 690)
+  return (
+    spur(40, 626) +
+    spur(150, 628) +
+    spur(360, 666) +
+    box(dx - 18, dy - 21, B, 36, 42, 3) +
+    box(dx - 15, dy - 23, B + 3, 36, 42, 3) +
+    box(dx - 12, dy - 25, B + 6, 36, 42, 3) +
+    topRect(dx - 6, dy - 19, B + 9, 24, 4, 'det') +
+    topRect(dx - 6, dy - 11, B + 9, 24, 4, 'det') +
+    topRect(dx - 6, dy - 3, B + 9, 14, 4, 'lit') +
+    box(mx - 23, my - 23, B, 46, 46, 8) +
+    topRect(mx - 13, my - 13, B + 8, 26, 26, 'lit') +
+    [0, 1, 2]
+      .map(
+        k =>
+          frontRect(mx - 15 + k * 12, my + 23, B + 4, 6, 3, 'det') +
+          sideRect(mx + 23, my - 15 + k * 12, B + 4, 6, 3, 'det')
+      )
+      .join('') +
+    box(455, 147, B, 5, 5, 36) +
+    box(455, 218, B, 5, 5, 36) +
+    box(455, 147, B + 36, 5, 76, 4) +
+    box(455, 152, B + 19, 5, 66, 2) +
+    sideRect(460, 165, B + 33, 32, 12, 'lit') +
+    cylinder(nx, ny, B, 17, 7, false) +
+    cylinder(nx, ny, B + 8, 17, 7, false) +
+    cylinder(nx, ny, B + 16, 17, 7)
+  )
+}
+
+const databases = () =>
+  spur(480, 615) +
+  spur(560, 615) +
+  spur(520, 662) +
+  cylAt(480, 585, B, 21, 46) +
+  cylAt(560, 585, B, 21, 46) +
+  cylAt(520, 692, B, 21, 32)
+
+// Deployment, hidden until Ship plays: builds rise from the server to a cloud,
+// then the update comes down to the laptop and the phone.
+const CLOUD_Z = 150
+const cloud = () =>
+  `<g class="cloud">${cylAt(-45, 575, CLOUD_Z, 36, 16, false)}${cylAt(-100, 590, CLOUD_Z, 30, 12, false)}${cylAt(5, 592, CLOUD_Z, 26, 10, false)}</g>`
+const beamUp: Point3[] = [at(-60, 585, 40), at(-60, 585, CLOUD_Z)]
+const beamLaptop: Point3[] = [at(-100, 590, CLOUD_Z), at(-560, 560, 58)]
+const beamPhone: Point3[] = [at(-100, 590, CLOUD_Z), at(-470, 612, 46)]
+const deployBeam = (pts: Point3[], cls: string) =>
+  `<path class="deploy ${cls}" pathLength="1000" d="${pathData(pts)}"/>`
+
+type Callout = {
+  step: StepId
+  tools: ToolKey[]
+  anchor: Point3
+  // up: the chip floats this many units above the anchor; [u, v]: it sits on the floor there.
+  to: number | [number, number]
+}
+
+const CALLOUTS: Callout[] = [
+  {
+    step: 'device',
+    tools: ['react', 'next', 'tailwind'],
+    anchor: at(-560, 560, 60),
+    to: 26
+  },
+  {
+    step: 'device',
+    tools: ['expo'],
+    anchor: at(-470, 622, 0),
+    to: [-470, 712]
+  },
+  {
+    step: 'data',
+    tools: ['query', 'axios'],
+    anchor: at(-350, 585, 51),
+    to: 46
+  },
+  { step: 'data', tools: ['zustand'], anchor: at(-275, 595, 47), to: 14 },
+  {
+    step: 'data',
+    tools: ['rhf', 'zod'],
+    anchor: at(-284, 708, 6),
+    to: [-228, 712]
+  },
+  {
+    step: 'server',
+    tools: ['nest', 'express'],
+    anchor: at(-150, 640, 72),
+    to: 18
+  },
+  {
+    step: 'server',
+    tools: ['node', 'socket'],
+    anchor: at(-60, 585, 40),
+    to: 60
+  },
+  {
+    step: 'server',
+    tools: ['bullmq'],
+    anchor: at(-70, 700, 12),
+    to: [-12, 714]
+  },
+  { step: 'ai', tools: ['rag'], anchor: at(40, 585, 12), to: 22 },
+  {
+    step: 'ai',
+    tools: ['openai', 'langchain'],
+    anchor: at(150, 582, 11),
+    to: 62
+  },
+  { step: 'ai', tools: ['guardrails'], anchor: at(270, 640, 43), to: 22 },
+  {
+    step: 'ai',
+    tools: ['langgraph'],
+    anchor: at(200, ROW, 3.5),
+    to: [176, 712]
+  },
+  { step: 'ai', tools: ['mem0'], anchor: at(360, 700, 26), to: [300, 716] },
+  { step: 'db', tools: ['postgres'], anchor: at(480, 585, 49), to: 18 },
+  { step: 'db', tools: ['mongo'], anchor: at(560, 585, 49), to: 52 },
+  { step: 'db', tools: ['prisma'], anchor: at(430, ROW, 3.5), to: [418, 712] },
+  { step: 'db', tools: ['redis'], anchor: at(540, 700, 35), to: [592, 716] }
+]
 
 export function drawJourney() {
   let svg =
-    floor(
+    slab(-640, 640, BACK, FRONT, 0) +
+    poly(
       [
-        [-U, V0, 0],
-        [U, V0, 0],
-        [U, V1, 0],
-        [-U, V1, 0]
-      ],
-      'f-top'
-    ) +
-    floor(
-      [
-        [-U, V1, 0],
-        [U, V1, 0],
-        [U, V1, -10],
-        [-U, V1, -10]
-      ],
-      'f-front'
-    ) +
-    floor(
-      [
-        [-U + 10, V0 + 8, 0],
-        [U - 10, V0 + 8, 0],
-        [U - 10, V1 - 8, 0],
-        [-U + 10, V1 - 8, 0]
+        at(-630, BACK + 8, 0),
+        at(630, BACK + 8, 0),
+        at(630, FRONT - 8, 0),
+        at(-630, FRONT - 8, 0)
       ],
       'det'
     )
 
-  for (const id of ['device', 'data', 'server', 'ai', 'db'] as const) {
-    svg += `<g class="station" data-step="${id}">${stations[id]()}</g>`
-  }
-  svg += `<g class="station" data-step="ship">${shipLane()}</g>`
-
-  // The request: an overhead beam from the device to the databases that drops
-  // into every station; a dash of light travels along it.
-  const posts = [-600, 600].map(u => {
-    const [x, y] = at(u, ROW, 0)
-    return box(x, y, 0, 3, 3, BEAM_Z)
-  })
-  const drops = [
-    [-520, 62],
-    [-312, 44],
-    [-104, 76],
-    [104, 14],
-    [312, 40],
-    [520, 50]
+  // Passes, back to front: the group bases, the request cable on top of them
+  // (a dash of light travels along it), then the objects standing on it.
+  const bases: [StepId, number, number][] = [
+    ['data', -410, -214],
+    ['ai', 0, 416],
+    ['db', 440, 616]
   ]
-    .map(([u, top]) => line([at(u, ROW, BEAM_Z), at(u, ROW, top + 4)], 'bus'))
-    .join('')
-  const beam: Point3[] = [at(-600, ROW, BEAM_Z), at(600, ROW, BEAM_Z)]
+  for (const [id, u0, u1] of bases)
+    svg += `<g class="station" data-step="${id}"><g class="pad">${slab(u0, u1, 545, 748, B)}</g></g>`
+  const cable: Point3[] = [at(-560, ROW, CABLE_Z), at(560, ROW, CABLE_Z)]
   svg +=
-    posts.join('') +
-    drops +
-    line(beam, 'bus') +
-    `<path class="flow" pathLength="1000" d="${pathData(beam)}"/>`
+    line(cable, 'cable main') +
+    `<path class="flow" pathLength="1000" d="${pathData(cable)}"/>`
+
+  const stations: [StepId, () => string][] = [
+    ['device', device],
+    ['data', dataLayer],
+    ['server', server],
+    ['ai', aiPipeline],
+    ['db', databases]
+  ]
+  for (const [id, draw] of stations)
+    svg += `<g class="station" data-step="${id}">${draw()}</g>`
+
+  svg += `<g class="ship">${deployBeam(beamUp, 'up')}${cloud()}${deployBeam(beamLaptop, 'down')}${deployBeam(beamPhone, 'down')}</g>`
 
   const extremes: Point3[] = [
-    at(-U, V0, 0),
-    at(U, V0, 0),
-    at(U, V1, -10),
-    at(-U, V1, -10),
-    at(0, ROW, BEAM_Z + 6)
+    at(-640, BACK, 0),
+    at(640, BACK, 0),
+    at(640, FRONT, 0),
+    at(-640, FRONT, 0),
+    at(-45, 575, CLOUD_Z + 40)
   ]
   const pts = extremes.map(p => project(...p))
   const xs = pts.map(p => p[0])
   const ys = pts.map(p => p[1])
   const m = 10
-  const viewBox = [
+  const vb = [
     Math.min(...xs) - m,
     Math.min(...ys) - m,
     Math.max(...xs) - Math.min(...xs) + 2 * m,
     Math.max(...ys) - Math.min(...ys) + 2 * m
   ]
+  const pct = ([x, y]: [number, number]) => ({
+    left: ((x - vb[0]) / vb[2]) * 100,
+    top: ((y - vb[1]) / vb[3]) * 100
+  })
 
-  // Step numbers sit over the drawing as HTML, placed in percent of the view.
-  const badgeAt = (p: Point3) => {
-    const [x, y] = project(...p)
+  // Callouts: a leader line in the drawing, a chip of real icons over it in HTML.
+  const callouts = CALLOUTS.map(c => {
+    const a = project(...c.anchor)
+    const end: [number, number] =
+      typeof c.to === 'number'
+        ? [a[0], a[1] - c.to]
+        : project(...at(c.to[0], c.to[1], 1))
+    svg += `<line class="leader" data-step="${c.step}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${end[0].toFixed(1)}" y2="${end[1].toFixed(1)}"/>`
     return {
-      left: ((x - viewBox[0]) / viewBox[2]) * 100,
-      top: ((y - viewBox[1]) / viewBox[3]) * 100
+      step: c.step,
+      tools: c.tools,
+      up: typeof c.to === 'number',
+      ...pct(end)
     }
-  }
+  })
+
   const badges: Record<StepId, { left: number; top: number }> = {
-    device: badgeAt(at(-520, 752, 3)),
-    data: badgeAt(at(-312, 752, 3)),
-    server: badgeAt(at(-104, 752, 3)),
-    ai: badgeAt(at(208, 752, 3)),
-    db: badgeAt(at(520, 752, 3)),
-    ship: badgeAt(at(-600, LANE, 3))
+    device: pct(project(...at(-520, 762, 0))),
+    data: pct(project(...at(-312, 762, 0))),
+    server: pct(project(...at(-104, 762, 0))),
+    ai: pct(project(...at(208, 762, 0))),
+    db: pct(project(...at(528, 762, 0))),
+    ship: pct(project(...at(-150, 585, CLOUD_Z - 4)))
   }
 
-  return { svg, viewBox: viewBox.map(n => +n.toFixed(1)).join(' '), badges }
+  const overlays = {
+    cloud: pct(project(...at(-45, 575, CLOUD_Z + 24))),
+    terminal: pct(project(...at(40, 600, CLOUD_Z + 14))),
+    stores: pct(project(...at(-330, 600, 96)))
+  }
+
+  return {
+    svg,
+    viewBox: vb.map(n => +n.toFixed(1)).join(' '),
+    badges,
+    callouts,
+    overlays
+  }
 }

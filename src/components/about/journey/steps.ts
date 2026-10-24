@@ -31,7 +31,10 @@ export const TOOLS = {
   railway: { name: 'Railway', icon: 'railway' },
   eas: { name: 'EAS', icon: 'expo' },
   sentry: { name: 'Sentry', icon: 'sentry' },
-  vitest: { name: 'Vitest', icon: 'vitest' }
+  vitest: { name: 'Vitest', icon: 'vitest' },
+  guardrails: { name: 'Guardrails' },
+  appstore: { name: 'App Store', icon: 'appstore' },
+  googleplay: { name: 'Google Play', icon: 'googleplay' }
 } satisfies Record<string, Tool>
 
 export type ToolKey = keyof typeof TOOLS
