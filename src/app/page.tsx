@@ -1,7 +1,7 @@
 import Intro from '@/components/intro'
 import RecentPosts from '@/components/recent-posts'
 import RecentProjects from '@/components/recent-projects'
-import TechStackGrid from '@/components/tech-stack-grid'
+import StackGlance from '@/components/stack-glance'
 import { FadeIn } from '@/components/fade-in'
 
 // data-section: the label of the section being read lights up (live-sections).
@@ -12,7 +12,7 @@ export default function Home() {
     <div className='w-full'>
       {/* The intro is the main content: it paints immediately. */}
       <Intro />
-      <section data-section className={section}>
+      <section id='work' data-section className={`${section} scroll-mt-20`}>
         <FadeIn delay={0.05}>
           <RecentProjects />
         </FadeIn>
@@ -24,7 +24,7 @@ export default function Home() {
       </section>
       <section data-section className={section}>
         <FadeIn delay={0.15}>
-          <TechStackGrid />
+          <StackGlance />
         </FadeIn>
       </section>
     </div>
