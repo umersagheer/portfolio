@@ -22,7 +22,7 @@
 | **2** | Performance & hygiene | ✅ | `d23c9ea`…`016035e` |
 | **3** | Visual system | ✅ | `4b48889`…`24b5fb5` |
 | **4** | Projects as pages (+ Munshi) | ✅ 4A · 4B · 4C | `f0fca25`…`c0dbcd2` |
-| **5** | About page (+ iso-glow Fig. 01) | ⬜ | |
+| **5** | About page (+ iso-glow Fig. 01) | ✅ | `cea2787`…`3911886` |
 | **6** | Home page recomposition | ⬜ | |
 | **7** | SEO & sharing | ⬜ | |
 | **8** | Delight: ⌘K palette, 404 figure | ⬜ | |
@@ -636,6 +636,48 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - Munshi runs about double the 600–900-word target. Kept for the flagship; the "What people use" list is the first cut if it needs trimming.
 - Add `munshi.app` to Munshi's links once the domain resolves (not yet, 2026-10-22).
 - The `Softaims/postpartum-diet-app` repo now returns 404 to the owner's account. A committed Firebase Admin key was reported to the owner for rotation; it is not in the portfolio.
+
+### 2026-10-24: Phase 5 ✅ COMPLETE: `cea2787`…`3911886`
+
+**Fig. 01, "One request, end to end"** (`src/components/about/journey/`). The plan's phone/laptop/rack figure became a journey after three prototype rounds with the owner. Rejected along the way:
+- a "stack city" board (too small to read, districts added noise);
+- six vertical layers (too tall, and they shaded each other when selected);
+- three vertical layers (still a logo wall; "a toolbox, not a story").
+
+**What it is:**
+- **Stations on one panorama board:** device, data layer, server, AI pipeline, databases.
+- **The wire:** dark, purple-tinted, running in iso steps through every component with rounded bends. One small pulse travels it every 3.8 s.
+- **Picking a step** (click, 1–6, ←/→, Esc) lights its station and shows callout chips with real icons (Simple Icons, inlined, no requests), plus a legend and a panel of patterns that link back to the owner's own skills (`react-query-layer`, `zustand-store`, `form-feature`).
+- **Deploy** (the server's "↑ deploy" button, step 06, and once on first view): a build pulse rises to an AWS + Railway cloud, a terminal types build ✓ / test ✓ / deploy, and the update comes down through App Store / Google Play to the devices.
+- **Built for speed:** drawn on the server at build time (`src/libs/iso.ts`, kernel from iso-figure, MIT). The client controller is about 1.8 kB. It breaks out to 1040 px on wide screens; text stays in the 768 px column. Glow is dark-only. Reduced motion shows the finished state.
+- **Labels:** an automated overlap check (puppeteer-core, five widths, every step and the deploy state) passes clean. Phones hide the in-drawing chips; the list names every tool.
+
+**The page** (`src/app/about/page.tsx`):
+- **Opening:** fundamentals from before AI, now building AI into products; 4 years, Munshi, Engagemo (7,000+ users, 30–40 institutions), two store apps.
+- **01 How I work:** four traits, each linking to proof on the site.
+- **02 How I build:** Fig. 01.
+- **03 Journey:** 2021 → 2026.
+- **04 Now:** Building / Learning, plus a GitHub calendar. Private contributions are on (1,416 in the last year); it is fetched on the server and revalidated daily, with no client JS.
+- **05 Off the clock.**
+- **06 Contact,** with two paths:
+  - *Hiring?* View CV (an in-page `<dialog>` on desktop, the PDF loaded only on open; the native viewer on phones), a 15-min intro, LinkedIn and email.
+  - *Building something?* Contact form, WhatsApp (pre-filled message) and a 30-min project call.
+  - Cal.com loads only on click (its `embed.js`); otherwise the link opens the booking page.
+- **Elsewhere:** About is in the nav. The footer call to action is skipped on /about and /contact.
+
+**Decisions:**
+- **Positioning:** "engineer who ships" blended with "pre-AI roots, AI now"; aiming at AI product engineer roles. MERN is the headline stack, framed as a tool rather than an identity.
+- **Industrial SCADA work:** a contract for an *unnamed industrial automation client*, never a personal project.
+- **"Institutions" (universities), never "schools".**
+
+**Verified:**
+- Lint, types and build pass. `/about` First Load JS is 110 kB (shared 104 kB).
+- Every internal link and the CV return 200. Both Cal.com modals open the right event.
+- There are no errors and no overflow at 1440, 1024 and 390 px in both themes.
+
+**Follow-ups:**
+- The CV source is drafted at `assets/cv/umer-sagheer-cv.tex` (gitignored). The owner compiles it in Overleaf, then the PDF replaces `public/umer-sagheer-cv.pdf`. Until then the site serves the old CV.
+- `portfolio_p5_test` was dropped at the end of the phase.
 
 ---
 
