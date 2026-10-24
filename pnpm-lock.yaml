@@ -47,6 +47,9 @@ importers:
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@19.2.8)
+      minisearch:
+        specifier: ^7.2.0
+        version: 7.2.0
       next:
         specifier: 15.5.25
         version: 15.5.25(@types/node@24.19.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3080,6 +3083,9 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
+  minisearch@7.2.0:
+    resolution: {integrity: sha512-dqT2XBYUOZOiC5t2HRnwADjhNS2cecp9u+TJRiJ1Qp/f5qjkeT5APcGPjHw+bz89Ms8Jp+cG4AlE+QZ/QnDglg==}
+
   motion-dom@11.18.1:
     resolution: {integrity: sha512-g76KvA001z+atjfxczdRtw/RXOM3OMSdd1f4DL77qCTF/+avrRJiawSG4yDibEQ215sr9kpinSlX2pCTJ9zbhw==}
 
@@ -5006,14 +5012,14 @@ snapshots:
       '@remotion/studio-shared': 4.0.434(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@rspack/core': 1.7.6(@swc/helpers@0.5.17)
       '@rspack/plugin-react-refresh': 1.6.1(react-refresh@0.18.0)
-      css-loader: 5.2.7(webpack@5.105.0(esbuild@0.25.0))
+      css-loader: 5.2.7(webpack@5.105.0)
       esbuild: 0.25.0
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       react-refresh: 0.18.0
       remotion: 4.0.434(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       source-map: 0.7.3
-      style-loader: 4.0.0(webpack@5.105.0(esbuild@0.25.0))
+      style-loader: 4.0.0(webpack@5.105.0)
       webpack: 5.105.0(esbuild@0.25.0)
     transitivePeerDependencies:
       - '@swc/core'
@@ -6005,7 +6011,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@5.2.7(webpack@5.105.0(esbuild@0.25.0)):
+  css-loader@5.2.7(webpack@5.105.0):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.6)
       loader-utils: 2.0.4
@@ -7574,6 +7580,8 @@ snapshots:
 
   minimist@1.2.8: {}
 
+  minisearch@7.2.0: {}
+
   motion-dom@11.18.1:
     dependencies:
       motion-utils: 11.18.1
@@ -8412,7 +8420,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  style-loader@4.0.0(webpack@5.105.0(esbuild@0.25.0)):
+  style-loader@4.0.0(webpack@5.105.0):
     dependencies:
       webpack: 5.105.0(esbuild@0.25.0)
 
