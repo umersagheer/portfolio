@@ -201,8 +201,8 @@ export default function Journey() {
 
         <div id='journey-panel' className={styles.panel} aria-live='polite'>
           <div data-panel='none' className={styles.hint}>
-            Every product I build follows this path. Pick a step to see how I
-            handle it.
+            Pick a step to see how I handle it, and what each part is built
+            with.
           </div>
           {STEPS.map(step => (
             <div key={step.id} data-panel={step.id} hidden>
