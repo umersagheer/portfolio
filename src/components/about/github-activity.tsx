@@ -31,7 +31,7 @@ async function getCalendar(): Promise<{ days: Day[]; total: string } | null> {
 }
 
 const levelFill = [
-  'color-mix(in oklab, var(--foreground) 7%, var(--background))',
+  'color-mix(in oklab, var(--foreground) 11%, var(--background))',
   'color-mix(in oklab, var(--accent) 35%, var(--background))',
   'color-mix(in oklab, var(--accent) 55%, var(--background))',
   'color-mix(in oklab, var(--accent) 78%, var(--background))',

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import BookCall from '@/components/about/book-call'
 import GithubActivity from '@/components/about/github-activity'
 import Journey from '@/components/about/journey/journey'
 import SectionHeader from '@/components/section-header'
@@ -231,14 +232,7 @@ export default function AboutPage() {
                 <span aria-hidden='true'>↗</span>
               </a>
               {siteProfile.booking && (
-                <a
-                  href={siteProfile.booking}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className={linkClass}
-                >
-                  Book a call <span aria-hidden='true'>↗</span>
-                </a>
+                <BookCall href={siteProfile.booking} className={linkClass} />
               )}
             </div>
           </div>
