@@ -27,8 +27,11 @@ export default function Intro() {
         <span className='text-foreground'>Available now</span>
         <span aria-hidden='true'>·</span>
         <span>remote · full-time or freelance</span>
-        <span aria-hidden='true'>·</span>
-        <span>
+        {/* On phones the clock gets its own line instead of a dangling dot. */}
+        <span aria-hidden='true' className='hidden sm:inline'>
+          ·
+        </span>
+        <span className='w-full sm:w-auto'>
           <LocalTime /> in Lahore
           <TimeAhead prefix=', ' />
         </span>
