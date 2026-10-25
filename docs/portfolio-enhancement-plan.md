@@ -26,6 +26,8 @@
 | **6** | Home page recomposition | ✅ | `54ae663`…`4a7e52b` |
 | **7** | SEO & sharing | ✅ | `213c6f9`…`f7e81f3` |
 | **8** | Delight: ⌘K palette, 404 figure | ✅ | `11fe28b`…`34c0414` |
+| **9** | Hire-ability: one call to action, contact hub, shared reading layout | ✅ | `5dc9171`…`75462e0` |
+| **10** | Content pass: length and clarity of About and case studies | ⬜ | |
 
 Legend: ⬜ Not started · 📝 Planned (plan approved) · 🔄 In progress · ✅ Done · ⚠️ Blocked
 
@@ -740,6 +742,24 @@ First Load (Next): `/` 131 kB, `/projects` 112 kB, `/projects/[slug]` 130 kB.
 - Palette: opens with each trigger; search, scopes, sections (it lands on the heading), recents after a reload, Esc to close. No errors.
 - 404: no overflow on a phone or desktop; the plug-in flow lands on `/`.
 - A stale `.next` from a build that overlapped a running server once gave 500s; a clean rebuild fixed it. Don't run `pnpm build` while `pnpm start` is serving.
+
+
+### 2026-10-25: Phase 9 ✅ COMPLETE: `5dc9171`…`75462e0`
+
+From a live review: the hero didn't name the stack, ways to reach me differed per page, /contact looked like another site, case studies left the right side empty, and Meridian's card cover was a blank splash.
+
+| Commit | Result |
+|---|---|
+| `5dc9171` covers | Optional `cover` frontmatter (must be one of the project's screens, or the build fails). Meridian shows the pricing insight. The first card's cover preloads at high priority, the twin matching the system theme only (mobile LCP was the lazy first cover, 3.6s in PageSpeed). |
+| `a29ef3e` contact | Every page ends with `ReachOut`: Book a 15-min call (the one filled button, `.cta-primary`, monochrome) + WhatsApp, the reply time, "More ways to reach me". `/contact` holds the Hiring / Building lists (moved off About, plus GitHub) above a hairline form; its hiring/project toggle tags the email subject `[Hiring]` / `[Project]`. |
+| `e9a828c` footer | Inline social glyphs (no requests); X shows the logo only. |
+| `b0620c6` `2ffc5f4` `6a249a5` hero | No photo on home (it moved beside About's title). The role line names React, Node.js/NestJS and Expo in one sentence. The status pill became one line: available now, remote, my time in Lahore and how far it is from the reader's ("5h ahead of you"). A working-hours overlap strip was previewed and dropped as too much to decode. About's facts row got a reading order (name and role under the title, stack on its own labelled line). |
+| `2bfcf11` `75462e0` stack | "One stack, end to end": a static iso strip (screens → server → databases) drawn on the server, with the main tools under each stop, linking to `/about#how-i-build`. One level cable on the ground joins the three (the stops' centres share a screen height). |
+| `3d9c08f` reading layout | Posts and case studies share `components/reading/*`: context rail on the left (author, or facts + core stack with "+N more"), right rail with the lit contents list, neighbours and the shortcut hint, `Pager` cards at the end, Esc / ← → on both (ignored while a control or dialog has focus), and a CSS scroll-timeline progress bar. The TOC lost framer-motion and now tracks the section with a per-frame scroll check. Posts open title → summary → details → cover. |
+
+**Verified:** `pnpm build` and lint clean; home 114 kB first load (113 before). Checked at 1440 and 390, light and dark: footer CTA everywhere but /contact; the toggle changes the placeholder; contents lights the right section after a jump; ← and Esc work on posts and projects.
+
+**Next:** Phase 10, the content pass (how much text About and the case studies really need).
 
 ---
 

@@ -52,11 +52,11 @@ Each project is ONE file: `src/content/projects/<slug>.mdx`.
 
 **Frontmatter** is validated by a Zod schema in `src/libs/projects.ts`; an invalid field fails the build and names the file. Fields:
 - Required: `title`, `tagline`, `logo`, `order`, `status`, `platform`
-- Optional: `client`, `role`, `period`, `screensNote`, `featured`
+- Optional: `client`, `role`, `period`, `screensNote`, `featured`, `cover` (the `screens[].file` shown on the project's card; defaults to the first screen)
 - Lists: `links[] {label, href}`, `stack[] {name, icon?}`, `screens[] {file, alt, caption?}`
 - `code`: `private` or a repo URL
 
-`stack[].icon` is a slug on the pinned icon CDN (`TheSvgIcon`); omit it when the CDN lacks one.
+`stack[].icon` is a slug on the pinned icon CDN (`TheSvgIcon`); omit it when the CDN lacks one. Order `stack` core-first: the first five show on the case study, the rest sit behind "+N more".
 
 **The MDX body** is the case study. Its `##` headings become the page's "On this page" anchors.
 
@@ -70,9 +70,9 @@ A `screens[].file` that isn't in the manifest fails the build, so a missing imag
 
 **Pages:**
 - `/projects` renders `ProjectCard`s; the home page renders `ProjectRows`.
-- `/projects/[slug]` mirrors the post layout: a server-rendered `ProjectRail`, device frames, and a native-`<dialog>` screenshot lightbox.
-- `BackLink` returns to the list with `router.back()` when the reader came from it (scroll restored), using `nav-history.tsx`. `KeyboardNav` maps Esc to back and ←/→ to the previous/next project.
-- No framer-motion on project pages.
+- `/projects/[slug]` and `/posts/[postId]` share one reading layout (`src/components/reading/`): a left rail for context (`ProjectRail` with facts and stack; `AuthorSidebar` on posts), `SideNav` on the right (the contents list lit by scroll position, prev/next, shortcut hint), `Pager` cards at the end, and the CSS-only `ScrollProgress`. Both open label → title → summary → details → media.
+- `BackLink` returns to the list with `router.back()` when the reader came from it (scroll restored), using `nav-history.tsx`. `KeyboardNav` maps Esc to back and ←/→ to previous/next; it ignores keys while a control or a `<dialog>` has focus, so post demos keep their arrow keys.
+- No framer-motion on project pages (`TableOfContents` uses none, so it works on both).
 
 ### Routing Structure
 
@@ -81,13 +81,13 @@ A `screens[].file` that isn't in the manifest fails the build, so a missing imag
 - `/posts/[postId]` - Individual post page (dynamic route, postId = filename without .mdx)
 - `/projects` - Project cards
 - `/projects/[slug]` - Case study (slug = filename without .mdx; statically generated, `dynamicParams = false`)
-- `/contact` - Contact form page
+- `/contact` - Every way to reach me (Hiring / Building lists) above the contact form. The only page with the full list; every other page ends with `ReachOut` (`src/components/reach-out.tsx`: book a 15-min call + WhatsApp + reply time), shown via the footer (`footer-cta.tsx` skips /contact)
 
 ### Server Actions
 
 `src/libs/actions.ts`:
 - `sendEmail()` - Server action for contact form using Resend API
-- Validates input with Zod schema from `src/libs/schemas.ts`
+- Validates input with Zod schema from `src/libs/schemas.ts`; `intent` (`project` | `hiring`) tags the subject `[Project]` / `[Hiring]`
 - Returns `{ ok: true } | { ok: false, error }`; the form shows an error toast and keeps the input on failure
 - Sender/recipients come from `CONTACT_FROM_EMAIL` / `CONTACT_TO_EMAIL` (defaults: Resend's test sender → mhadisb1212@gmail.com); `replyTo` is the visitor's email
 - Requires `RESEND_API_KEY` environment variable
@@ -114,6 +114,7 @@ A `screens[].file` that isn't in the manifest fails the build, so a missing imag
 
 **Visual system** (see `docs/portfolio-enhancement-plan.md`):
 - Monochrome structure on a flat background. Dividers are `border-hair` (a theme-aware hairline token). No decorative frames or background images
+- Calls to action are links styled `.cta-primary` (the one filled, monochrome main action per view) or `.cta-outline`; a HeroUI Button that is the main action uses `button--inverse`
 - The accent is only for live states: the current nav item, the label of the section being read, hover, focus and the TOC's current item
 - Section headings: `src/components/section-header.tsx` (`01 · Work` mono label over a serif title). Put `data-section` on the section wrapper and `live-sections.tsx` (mounted in the layout) lights its `.section-label` while it's under the reading line
 - framer-motion's reduced-motion config is page-level: wrap framer-using UI in `src/components/reduced-motion.tsx` (post pages and the project list already are)
