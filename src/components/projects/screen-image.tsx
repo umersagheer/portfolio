@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
+import { preload } from 'react-dom'
 import type { ProjectScreen } from '@/libs/projects'
 
 type ScreenImageProps = {
@@ -9,7 +10,9 @@ type ScreenImageProps = {
 
 // A screenshot, with its dark-theme twin when there is one. The twins swap in
 // CSS via the `dark` class; both are lazy, so the hidden one is never fetched
-// unless the theme flips. Single images can be prioritised (above the fold).
+// unless the theme flips. A prioritised pair preloads the twin that matches
+// the system theme (the default), so the visible one is already in the cache
+// when it lays out, without fetching both.
 export default function ScreenImage({
   screen,
   sizes,
@@ -29,6 +32,28 @@ export default function ScreenImage({
         className={className}
       />
     )
+  }
+
+  if (priority) {
+    for (const [src, scheme] of [
+      [screen.src, 'light'],
+      [screen.srcDark, 'dark']
+    ]) {
+      const { props } = getImageProps({
+        src,
+        alt: '',
+        width: screen.width,
+        height: screen.height,
+        sizes
+      })
+      preload(props.src, {
+        as: 'image',
+        imageSrcSet: props.srcSet,
+        imageSizes: props.sizes,
+        fetchPriority: 'high',
+        media: `(prefers-color-scheme: ${scheme})`
+      })
+    }
   }
 
   return (

@@ -19,8 +19,13 @@ export default function RecentProjects() {
         linkText='All projects'
       />
       <div className='grid gap-6 sm:grid-cols-2'>
-        {featured.map(project => (
-          <ProjectCard key={project.slug} project={project} headingLevel='h3' />
+        {featured.map((project, index) => (
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            headingLevel='h3'
+            priority={index === 0}
+          />
         ))}
       </div>
       {rest.length > 0 && (

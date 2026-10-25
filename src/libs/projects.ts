@@ -39,6 +39,10 @@ const FrontmatterSchema = z.object({
     )
     .default([]),
   screensNote: z.string().optional(),
+  // The screen shown on the project's card (a `screens[].file`); defaults to
+  // the first screen. Lets the card show the product's value while the case
+  // study keeps its own order.
+  cover: z.string().optional(),
   // The <title> in search results (under 60 characters, keyword first).
   seoTitle: z.string().max(60).optional()
 })
@@ -62,9 +66,13 @@ export type ProjectScreen = {
   caption?: string
 }
 
-export type ProjectMeta = Omit<z.infer<typeof FrontmatterSchema>, 'screens'> & {
+export type ProjectMeta = Omit<
+  z.infer<typeof FrontmatterSchema>,
+  'screens' | 'cover'
+> & {
   slug: string
   screens: ProjectScreen[]
+  cover?: ProjectScreen
 }
 
 export type Project = {
@@ -117,9 +125,18 @@ function readProject(fileName: string): Project {
     )
   }
 
-  const { screens, ...rest } = parsed.data
+  const { screens: refs, cover: coverFile, ...rest } = parsed.data
+  const screens = resolveScreens(slug, refs, fileName)
+  const coverIndex = coverFile
+    ? refs.findIndex(ref => ref.file === coverFile)
+    : 0
+  if (coverIndex === -1) {
+    throw new Error(
+      `src/content/projects/${fileName}: cover "${coverFile}" is not one of its screens.`
+    )
+  }
   return {
-    meta: { ...rest, slug, screens: resolveScreens(slug, screens, fileName) },
+    meta: { ...rest, slug, screens, cover: screens[coverIndex] },
     content
   }
 }

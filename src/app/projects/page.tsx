@@ -23,8 +23,12 @@ export default function ProjectsPage() {
         </p>
       </div>
       <div className='grid gap-6 sm:grid-cols-2'>
-        {projects.map(project => (
-          <ProjectCard key={project.slug} project={project} />
+        {projects.map((project, index) => (
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            priority={index === 0}
+          />
         ))}
       </div>
     </div>

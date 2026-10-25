@@ -8,13 +8,17 @@ import ScreenImage from '@/components/projects/screen-image'
 // facts. The whole card is the link; the accent border marks hover/focus.
 export default function ProjectCard({
   project,
-  headingLevel = 'h2'
+  headingLevel = 'h2',
+  priority = false
 }: {
   project: ProjectMeta
   // h2 on /projects; h3 where the cards sit under a section heading.
   headingLevel?: 'h2' | 'h3'
+  // The first card's cover is in the first screen on phones and is the page's
+  // LCP element there: fetch it eagerly instead of lazily.
+  priority?: boolean
 }) {
-  const cover = project.screens[0]
+  const { cover } = project
   const Heading = headingLevel
 
   return (
@@ -35,6 +39,7 @@ export default function ProjectCard({
                   ? '160px'
                   : '(max-width: 640px) 100vw, 340px'
               }
+              priority={priority}
             />
           </DeviceFrame>
         ) : (
@@ -58,7 +63,7 @@ export default function ProjectCard({
           />
           <Heading className='font-semibold'>{project.title}</Heading>
         </div>
-        <p className='text-muted line-clamp-2 text-sm leading-relaxed'>
+        <p className='text-muted line-clamp-3 text-sm leading-relaxed'>
           {project.tagline}
         </p>
         <p className='font-sourceCodePro text-muted text-xs'>
