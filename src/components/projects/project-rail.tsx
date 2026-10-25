@@ -1,91 +1,28 @@
-import Link from 'next/link'
 import type { ProjectMeta } from '@/libs/projects'
-import type { TocItem } from '@/libs/toc'
-import BackLink from '@/components/projects/back-link'
-
-type ProjectRailProps = {
-  meta: ProjectMeta
-  toc: TocItem[]
-  previous: ProjectMeta | null
-  next: ProjectMeta | null
-}
+import BackLink from '@/components/reading/back-link'
+import StackList from '@/components/projects/stack-list'
 
 // The left rail on wide screens, mirroring the post page's author rail:
-// back link, the facts, the page's sections and the neighbouring projects.
-// Server-rendered links only; no client JS.
-export default function ProjectRail({
-  meta,
-  toc,
-  previous,
-  next
-}: ProjectRailProps) {
+// back to the list, then the facts and what it's built with. Navigation
+// (sections, neighbours) lives in the right rail. Server-rendered; the only
+// client JS is the back link.
+export default function ProjectRail({ meta }: { meta: ProjectMeta }) {
   return (
     <aside
       aria-label='Project details'
       className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden max-h-[calc(100vh-7rem)] w-48 overflow-y-auto xl:block'
     >
-      <BackLink />
+      <BackLink href='/projects' label='All projects' />
 
       <ProjectFacts meta={meta} className='mt-6' />
 
-      {toc.length > 0 && (
-        <nav
-          aria-label='On this page'
-          className='border-hair mt-6 border-t pt-4'
-        >
-          <p className='font-sourceCodePro text-muted mb-2 text-xs'>
-            On this page
-          </p>
-          <ul className='space-y-1.5 text-xs'>
-            {toc.map(item => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className='text-muted hover:text-foreground transition-colors'
-                >
-                  {item.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {meta.stack.length > 0 && (
+        <div className='border-hair mt-6 space-y-2 border-t pt-4'>
+          <p className='font-sourceCodePro text-muted text-xs'>Built with</p>
+          <StackList stack={meta.stack} />
+        </div>
       )}
-
-      {(previous || next) && (
-        <nav
-          aria-label='More projects'
-          className='border-hair mt-6 space-y-3 border-t pt-4 text-xs'
-        >
-          {previous && <RailNeighbour label='Previous' project={previous} />}
-          {next && <RailNeighbour label='Next' project={next} />}
-        </nav>
-      )}
-
-      <p className='font-sourceCodePro text-muted mt-6 text-[11px] leading-relaxed'>
-        esc · back
-        <br />← → · projects
-      </p>
     </aside>
-  )
-}
-
-function RailNeighbour({
-  label,
-  project
-}: {
-  label: string
-  project: ProjectMeta
-}) {
-  return (
-    <div className='flex flex-col gap-0.5'>
-      <span className='font-sourceCodePro text-muted'>{label}</span>
-      <Link
-        href={`/projects/${project.slug}`}
-        className='hover:text-accent transition-colors'
-      >
-        {project.title}
-      </Link>
-    </div>
   )
 }
 

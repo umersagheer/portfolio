@@ -20,7 +20,7 @@ export default function NavHistory() {
       }
       sessionStorage.setItem(CURRENT, pathname)
     } catch {
-      // Storage can be unavailable (private mode); back links fall back to /projects.
+      // Storage can be unavailable (private mode); back links fall back to the list page.
     }
   }, [pathname])
 

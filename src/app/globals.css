@@ -411,3 +411,32 @@ html {
     color: var(--accent);
   }
 }
+
+/* Reading progress (components/ui/scroll-progress.tsx), driven by the page's
+   scroll position with no JS. Hidden where scroll timelines aren't
+   supported. */
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+    display: block;
+    height: 3px;
+    background: var(--accent);
+    transform-origin: left;
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes scroll-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

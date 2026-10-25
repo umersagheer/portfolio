@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import MDXContent from '@/components/mdx-content'
-import BackLink from '@/components/projects/back-link'
+import BackLink from '@/components/reading/back-link'
 import DeviceFrame from '@/components/projects/device-frame'
-import KeyboardNav from '@/components/projects/keyboard-nav'
+import KeyboardNav from '@/components/reading/keyboard-nav'
+import Pager, { type PagerEntry } from '@/components/reading/pager'
+import SideNav from '@/components/reading/side-nav'
+import { ScrollProgress } from '@/components/ui/scroll-progress'
 import ProjectRail, { ProjectFacts } from '@/components/projects/project-rail'
 import ScreenImage from '@/components/projects/screen-image'
 import ScreenshotGallery from '@/components/projects/screenshot-gallery'
@@ -83,18 +85,34 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     author: personRef
   }
 
+  const toEntry = (p: ProjectMeta | null): PagerEntry | null =>
+    p
+      ? { href: `/projects/${p.slug}`, title: p.title, summary: p.tagline }
+      : null
+  const previousEntry = toEntry(previous)
+  const nextEntry = toEntry(next)
+
   return (
     <>
       <JsonLd data={work} />
       <KeyboardNav
-        previousHref={previous ? `/projects/${previous.slug}` : null}
-        nextHref={next ? `/projects/${next.slug}` : null}
+        backHref='/projects'
+        previousHref={previousEntry?.href ?? null}
+        nextHref={nextEntry?.href ?? null}
       />
-      <ProjectRail meta={meta} toc={toc} previous={previous} next={next} />
+      <ScrollProgress />
+      <ProjectRail meta={meta} />
+      <SideNav
+        toc={toc}
+        previous={previousEntry}
+        next={nextEntry}
+        listLabel='projects'
+      />
 
       <div className='pb-8'>
-        <BackLink className='xl:hidden' />
+        <BackLink href='/projects' label='All projects' className='xl:hidden' />
 
+        {/* What it is and my part in it, then the screens, then the story. */}
         <header className='mt-6 space-y-5 xl:mt-0'>
           <p className='font-sourceCodePro text-muted text-xs tracking-wide'>
             Case study
@@ -106,7 +124,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {meta.tagline}
           </p>
           <ProjectFacts meta={meta} className='xl:hidden' />
-          <StackList stack={meta.stack} />
         </header>
 
         {hero.length > 0 && (
@@ -131,6 +148,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         )}
 
+        {/* On wide screens the stack sits in the left rail. */}
+        {meta.stack.length > 0 && (
+          <div className='mt-8 space-y-2 xl:hidden'>
+            <p className='font-sourceCodePro text-muted text-xs'>Built with</p>
+            <StackList stack={meta.stack} />
+          </div>
+        )}
+
         <article className='prose dark:prose-invert mt-12 max-w-none'>
           <MDXContent source={content} />
         </article>
@@ -149,59 +174,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </section>
         )}
 
-        <ProjectPager previous={previous} next={next} />
+        <Pager
+          label='More projects'
+          previous={previousEntry}
+          next={nextEntry}
+        />
       </div>
     </>
-  )
-}
-
-function ProjectPager({
-  previous,
-  next
-}: {
-  previous: ProjectMeta | null
-  next: ProjectMeta | null
-}) {
-  if (!previous && !next) return null
-
-  return (
-    <nav
-      aria-label='More projects'
-      className='border-hair mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2'
-    >
-      {previous ? (
-        <PagerLink project={previous} label='← Previous' />
-      ) : (
-        <span />
-      )}
-      {next && <PagerLink project={next} label='Next →' alignEnd />}
-    </nav>
-  )
-}
-
-function PagerLink({
-  project,
-  label,
-  alignEnd = false
-}: {
-  project: ProjectMeta
-  label: string
-  alignEnd?: boolean
-}) {
-  return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className={`border-hair hover:border-accent group rounded-xl border p-4 transition-colors ${
-        alignEnd ? 'sm:text-right' : ''
-      }`}
-    >
-      <span className='font-sourceCodePro text-muted text-xs'>{label}</span>
-      <span className='group-hover:text-accent mt-1 block font-semibold transition-colors'>
-        {project.title}
-      </span>
-      <span className='text-muted mt-0.5 line-clamp-1 text-sm'>
-        {project.tagline}
-      </span>
-    </Link>
   )
 }

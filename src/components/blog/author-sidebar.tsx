@@ -1,36 +1,34 @@
 'use client'
 
 import NextImage from 'next/image'
-import Link from 'next/link'
 import { Tooltip } from '@heroui/react'
 import { Link as AriaLink } from 'react-aria-components'
 import { CalendarIcon, ClockIcon, MailIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
-import { PostMetadata } from '@/types'
 import formatDate from '@/libs/utils'
 import TheSvgIcon from '@/components/blog/shared/the-svg-icon'
+import BackLink from '@/components/reading/back-link'
 
 type AuthorSidebarProps = {
-  adjacentPosts: {
-    newerPost: PostMetadata | null
-    olderPost: PostMetadata | null
-  }
   publishedAt: string
   readingTime: number
 }
 
+// The left rail on wide screens: back to the list, then who wrote it and
+// when. Navigation (sections, neighbours) lives in the right rail.
 export default function AuthorSidebar({
-  adjacentPosts,
   publishedAt,
   readingTime
 }: AuthorSidebarProps) {
-  const { newerPost, olderPost } = adjacentPosts
-
   return (
-    <div className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden w-48 xl:block'>
-      {/* Author info */}
-      <div className='flex flex-col gap-2'>
+    <aside
+      aria-label='About this post'
+      className='fixed top-24 right-[calc(50%+384px+1.5rem)] hidden w-48 xl:block'
+    >
+      <BackLink href='/posts' label='All posts' />
+
+      <div className='mt-6 flex flex-col gap-2'>
         <NextImage
           src={siteProfile.avatar}
           alt={siteProfile.name}
@@ -111,83 +109,6 @@ export default function AuthorSidebar({
           </span>
         </div>
       </div>
-
-      {/* Divider */}
-      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
-
-      {/* Adjacent posts navigation */}
-      <div className='flex flex-col gap-3'>
-        {newerPost && (
-          <div className='flex flex-col gap-1'>
-            <span className='text-muted text-[10px] tracking-wider uppercase'>
-              Previous Article
-            </span>
-            <Tooltip delay={500}>
-              <AriaLink
-                href={`/posts/${newerPost.postId}`}
-                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
-              >
-                {newerPost.title}
-              </AriaLink>
-
-              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
-                <div className='flex flex-col'>
-                  {newerPost.image && (
-                    <NextImage
-                      src={newerPost.image}
-                      alt={newerPost.title ?? ''}
-                      width={208}
-                      height={117}
-                      className='aspect-video w-full rounded-none object-cover'
-                    />
-                  )}
-                  <span className='px-2 py-1.5 text-xs'>{newerPost.title}</span>
-                </div>
-              </Tooltip.Content>
-            </Tooltip>
-          </div>
-        )}
-        {olderPost && (
-          <div className='flex flex-col gap-1'>
-            <span className='text-muted text-[10px] tracking-wider uppercase'>
-              Next Article
-            </span>
-            <Tooltip delay={500}>
-              <AriaLink
-                href={`/posts/${olderPost.postId}`}
-                className='text-foreground hover:text-accent line-clamp-2 text-xs transition-colors'
-              >
-                {olderPost.title}
-              </AriaLink>
-
-              <Tooltip.Content className='max-w-52 overflow-hidden p-0'>
-                <div className='flex flex-col'>
-                  {olderPost.image && (
-                    <NextImage
-                      src={olderPost.image}
-                      alt={olderPost.title ?? ''}
-                      width={208}
-                      height={117}
-                      className='aspect-video w-full rounded-none object-cover'
-                    />
-                  )}
-                  <span className='px-2 py-1.5 text-xs'>{olderPost.title}</span>
-                </div>
-              </Tooltip.Content>
-            </Tooltip>
-          </div>
-        )}
-      </div>
-
-      {/* Divider + Back */}
-      <div className='bg-surface-tertiary my-3 h-px w-3/4' />
-
-      <Link
-        href='/posts'
-        className='text-muted hover:text-accent text-xs transition-colors'
-      >
-        &larr; Back to posts
-      </Link>
-    </div>
+    </aside>
   )
 }

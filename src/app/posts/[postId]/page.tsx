@@ -1,20 +1,22 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import NextImage from 'next/image'
-import Link from 'next/link'
-import { ArrowLeftIcon } from 'lucide-react'
 
 import { siteProfile } from '@/constants/site-profile'
 import { getAdjacentPosts, getPostById, getPosts } from '@/libs/posts'
 import { getAbsoluteUrl, getOpenGraphImageMetadata } from '@/libs/metadata'
 import MDXContent from '@/components/mdx-content'
-import TableOfContents from '@/components/table-of-contents'
 import ChevronLikeButton from '@/components/chevron-like-button'
 import ReducedMotion from '@/components/reduced-motion'
 import { ScrollProgress } from '@/components/ui/scroll-progress'
 import AuthorSidebar from '@/components/blog/author-sidebar'
 import AuthorCardInline from '@/components/blog/author-card-inline'
 import { extractToc } from '@/libs/toc'
+import { getPostCategoryLabel } from '@/libs/post-category'
+import BackLink from '@/components/reading/back-link'
+import KeyboardNav from '@/components/reading/keyboard-nav'
+import Pager, { type PagerEntry } from '@/components/reading/pager'
+import SideNav from '@/components/reading/side-nav'
 import JsonLd, { personRef } from '@/components/json-ld'
 
 type PostProps = {
@@ -106,102 +108,88 @@ export default async function Post({ params }: PostProps) {
       }
   const toc = extractToc(content)
   const { newerPost, olderPost } = await getAdjacentPosts(postId)
+  // List order is newest first, so the previous entry is the newer post.
+  const toEntry = (p: typeof newerPost): PagerEntry | null =>
+    p
+      ? {
+          href: `/posts/${p.postId}`,
+          title: p.title ?? p.postId,
+          summary: p.summary
+        }
+      : null
+  const previous = toEntry(newerPost)
+  const next = toEntry(olderPost)
+  const label = [getPostCategoryLabel(metadata.category), metadata.topic]
+    .filter(Boolean)
+    .join(' · ')
 
   return (
     <ReducedMotion>
       {article && <JsonLd data={article} />}
+      <KeyboardNav
+        backHref='/posts'
+        previousHref={previous?.href ?? null}
+        nextHref={next?.href ?? null}
+      />
+      <ScrollProgress />
+      <AuthorSidebar
+        publishedAt={publishedAt ?? ''}
+        readingTime={readingTime ?? 1}
+      />
+      <SideNav
+        toc={toc}
+        previous={previous}
+        next={next}
+        listLabel='posts'
+        reserveBottom
+      />
+
       <section className='pb-20'>
-        <ScrollProgress className='h-[3px]' />
-        <div className='space-y-4'>
-          {image && (
-            <NextImage
-              src={image}
-              alt={title ?? ''}
-              width={2560}
-              height={1440}
-              sizes='(max-width: 768px) 100vw, 768px'
-              priority
-              className='h-auto w-full rounded-xl'
-            />
+        <BackLink href='/posts' label='All posts' className='xl:hidden' />
+
+        {/* What it is, whether it's worth the time, then the cover. */}
+        <header className='mt-6 space-y-4 xl:mt-0'>
+          <p className='font-sourceCodePro text-muted text-xs tracking-wide'>
+            {label}
+          </p>
+          <h1 className='title'>{title}</h1>
+          {metadata.summary && (
+            <p className='text-muted max-w-2xl text-lg leading-relaxed'>
+              {metadata.summary}
+            </p>
           )}
-          <header>
-            <h1 className='title'>{title}</h1>
-            <div className='xl:hidden'>
-              <AuthorCardInline
-                publishedAt={publishedAt ?? ''}
-                readingTime={readingTime ?? 1}
-              />
-            </div>
-          </header>
-        </div>
-
-        <div className='relative mt-10'>
-          <article className='prose dark:prose-invert max-w-3xl'>
-            <MDXContent source={content} />
-          </article>
-        </div>
-
-        <div className='fixed top-24 bottom-28 left-[calc(50%+384px+1.5rem)] hidden w-56 xl:flex xl:flex-col'>
-          <div className='min-h-0 flex-1'>
-            <TableOfContents items={toc} />
+          <div className='xl:hidden'>
+            <AuthorCardInline
+              publishedAt={publishedAt ?? ''}
+              readingTime={readingTime ?? 1}
+            />
           </div>
-        </div>
+        </header>
 
-        {/* One like button (one fetch, one state): floats bottom-right on small
-            screens, sits centred under the table of contents on xl. */}
-        <div className='fixed right-6 bottom-6 z-50 xl:right-auto xl:bottom-14 xl:left-[calc(50%+384px+1.5rem)] xl:flex xl:w-56 xl:justify-center'>
-          <ChevronLikeButton postId={postId} />
-        </div>
+        {image && (
+          <NextImage
+            src={image}
+            alt=''
+            width={2560}
+            height={1440}
+            sizes='(max-width: 768px) 100vw, 768px'
+            priority
+            className='mt-10 h-auto w-full rounded-xl'
+          />
+        )}
 
-        <AuthorSidebar
-          adjacentPosts={{ newerPost, olderPost }}
-          publishedAt={publishedAt ?? ''}
-          readingTime={readingTime ?? 1}
-        />
+        <article className='prose dark:prose-invert mt-10 max-w-3xl'>
+          <MDXContent source={content} />
+        </article>
 
-        {/* Mobile prev/next nav */}
-        <nav className='border-border mt-16 flex flex-col gap-4 border-t pt-6 xl:hidden'>
-          <div className='flex justify-between gap-4'>
-            {newerPost ? (
-              <Link
-                href={`/posts/${newerPost.postId}`}
-                className='flex flex-col gap-1'
-              >
-                <span className='text-muted text-[10px] tracking-wider uppercase'>
-                  Previous
-                </span>
-                <span className='text-foreground hover:text-accent line-clamp-1 text-sm transition-colors'>
-                  {newerPost.title}
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )}
-            {olderPost ? (
-              <Link
-                href={`/posts/${olderPost.postId}`}
-                className='flex flex-col items-end gap-1 text-right'
-              >
-                <span className='text-muted text-[10px] tracking-wider uppercase'>
-                  Next
-                </span>
-                <span className='text-foreground hover:text-accent line-clamp-1 text-sm transition-colors'>
-                  {olderPost.title}
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )}
-          </div>
-          <Link
-            href='/posts'
-            className='text-muted hover:text-accent flex items-center gap-1.5 text-xs transition-colors'
-          >
-            <ArrowLeftIcon size={12} />
-            Back to posts
-          </Link>
-        </nav>
+        <Pager label='More posts' previous={previous} next={next} />
       </section>
+
+      {/* One like button (one fetch, one state): floats bottom-right on small
+          screens, sits centred under the side navigation on xl. */}
+      <div className='fixed right-6 bottom-6 z-50 xl:right-auto xl:bottom-14 xl:left-[calc(50%+384px+1.5rem)] xl:flex xl:w-56 xl:justify-center'>
+        <ChevronLikeButton postId={postId} />
+      </div>
     </ReducedMotion>
   )
 }

@@ -2,22 +2,31 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useBackToProjects } from '@/components/projects/back-link'
+import { useBackTo } from '@/components/reading/back-link'
 
 type KeyboardNavProps = {
+  backHref: string
   previousHref: string | null
   nextHref: string | null
 }
 
-// Esc goes back to the list; arrow keys step through projects. Ignored while
-// typing, with modifier keys, or while the screenshot lightbox is open (Esc
-// closes the lightbox first).
+// Keys belong to whatever has focus when it's a field or a control: the
+// post demos are buttons, tabs and sliders, and pressing an arrow there must
+// not leave the page. Links are left out, so the pager link that was just
+// followed doesn't swallow the next arrow press.
+const OWNS_KEYS =
+  'input, textarea, select, button, [contenteditable="true"], [tabindex], [role="slider"], [role="tab"], [role="radio"], [role="listbox"], [role="menu"], [role="grid"]'
+
+// Esc goes back to the list; arrow keys step to the previous / next entry.
+// Ignored with modifier keys, while focus is on a control, or while a dialog
+// is open (⌘K, the screenshot lightbox: Esc closes those first).
 export default function KeyboardNav({
+  backHref,
   previousHref,
   nextHref
 }: KeyboardNavProps) {
   const router = useRouter()
-  const back = useBackToProjects()
+  const back = useBackTo(backHref)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -25,7 +34,7 @@ export default function KeyboardNav({
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey)
         return
       const target = event.target as HTMLElement | null
-      if (target?.closest('input, textarea, select, [contenteditable="true"]'))
+      if (target && target !== document.body && target.closest(OWNS_KEYS))
         return
       if (document.querySelector('dialog[open]')) return
 
