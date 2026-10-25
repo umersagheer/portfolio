@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import GithubActivity from '@/components/about/github-activity'
 import { ICONS, type IconSlug } from '@/components/about/journey/icons'
 import {
@@ -8,22 +7,16 @@ import {
   type ToolKey
 } from '@/components/about/journey/steps'
 import SectionHeader from '@/components/section-header'
+import StackStrip from '@/components/stack-strip/stack-strip'
 import { siteProfile } from '@/constants/site-profile'
 
-// The stack in five seconds: one stop per layer along a wire, read from the
-// same data as the About page's figure. The full picture lives on /about.
-const STOPS: { label: string; tools: ToolKey[] }[] = [
-  ...(['device', 'data', 'server', 'db'] as StepId[]).map(id => {
-    const step = STEPS.find(s => s.id === id)!
-    const label = {
-      device: 'Client',
-      data: 'Data',
-      server: 'Server',
-      db: 'Database'
-    }[id as 'device' | 'data' | 'server' | 'db']
-    return { label, tools: step.main }
-  }),
-  { label: 'Cloud', tools: ['aws', 'railway'] }
+// The stack in five seconds: a small Fig. 01 (screen → server → data) with
+// the main tools under each stop, read from the same data as the About
+// page's figure. The full picture lives on /about.
+const STOPS: { label: string; step: StepId }[] = [
+  { label: 'Screen', step: 'device' },
+  { label: 'Server', step: 'server' },
+  { label: 'Data', step: 'db' }
 ]
 
 function Tool({ toolKey }: { toolKey: ToolKey }) {
@@ -52,38 +45,29 @@ export default function StackGlance() {
       <SectionHeader
         index='03'
         label='Stack'
-        title='How I build'
-        href='/about'
+        title='One stack, end to end'
+        href='/about#how-i-build'
         linkText='The full picture'
       />
-      <div className='relative'>
-        {/* The wire the stops sit on (wide screens, where they share a row). */}
-        <span
-          aria-hidden='true'
-          className='absolute top-[5px] right-[10%] left-0 hidden h-px sm:block'
-          style={{
-            background: 'color-mix(in oklab, var(--accent) 45%, var(--hair))'
-          }}
-        />
-        <ol className='relative grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-5'>
-          {STOPS.map(stop => (
-            <li key={stop.label} className='space-y-2.5'>
-              <span
-                aria-hidden='true'
-                className='border-accent bg-background block size-[11px] rounded-full border-2'
-              />
-              <p className='font-sourceCodePro text-muted text-xs tracking-wide uppercase'>
-                {stop.label}
-              </p>
-              <ul className='space-y-1.5'>
-                {stop.tools.map(tool => (
-                  <Tool key={tool} toolKey={tool} />
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ol>
-      </div>
+      <p className='text-muted -mt-2 mb-6 max-w-2xl leading-relaxed'>
+        TypeScript from the screen to the server: React and Expo up front, Node
+        and NestJS behind, Postgres underneath.
+      </p>
+      <StackStrip />
+      <ol className='mt-4 grid grid-cols-3 gap-4'>
+        {STOPS.map(stop => (
+          <li key={stop.label} className='space-y-2'>
+            <p className='font-sourceCodePro text-muted text-xs tracking-wide uppercase'>
+              {stop.label}
+            </p>
+            <ul className='space-y-1.5'>
+              {STEPS.find(s => s.id === stop.step)!.main.map(tool => (
+                <Tool key={tool} toolKey={tool} />
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
       {siteProfile.showGithubActivity && <GithubActivity />}
     </>
   )

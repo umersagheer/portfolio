@@ -1,0 +1,59 @@
+/* The small Fig. 01. Same visual language as the About figure and Fig. 404:
+   monochrome faces from the theme, the accent only on what's live. */
+
+.figure {
+  --s-top: color-mix(in oklab, var(--foreground) 3%, var(--background));
+  --s-face: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --s-side: color-mix(in oklab, var(--foreground) 12%, var(--background));
+  --s-line: color-mix(in oklab, var(--foreground) 40%, var(--background));
+  --s-detail: color-mix(in oklab, var(--foreground) 20%, var(--background));
+  margin: 0;
+}
+
+:global(.dark) .figure {
+  --s-top: color-mix(in oklab, var(--foreground) 7%, var(--background));
+  --s-face: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  --s-side: color-mix(in oklab, var(--foreground) 2%, var(--background));
+  --s-line: color-mix(in oklab, var(--foreground) 34%, var(--background));
+  --s-detail: color-mix(in oklab, var(--foreground) 17%, var(--background));
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.svg :global(*) {
+  vector-effect: non-scaling-stroke;
+}
+
+.svg :global(.f-top) {
+  fill: var(--s-top);
+  stroke: var(--s-line);
+}
+.svg :global(.f-front) {
+  fill: var(--s-face);
+  stroke: var(--s-line);
+}
+.svg :global(.f-side) {
+  fill: var(--s-side);
+  stroke: var(--s-line);
+}
+.svg :global(.det) {
+  fill: none;
+  stroke: var(--s-detail);
+}
+.svg :global(.lit) {
+  fill: var(--accent);
+  fill-opacity: 0.6;
+  stroke: var(--accent);
+}
+.svg :global(.wire) {
+  fill: none;
+  stroke: color-mix(in oklab, var(--accent) 70%, var(--s-line));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

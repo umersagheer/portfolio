@@ -6,7 +6,7 @@ import StackGlance from '@/components/stack-glance'
 import { FadeIn } from '@/components/fade-in'
 
 // data-section: the label of the section being read lights up (live-sections).
-const section = 'border-hair border-t py-12'
+const section = 'border-hair border-t py-12 last:pb-0'
 
 export default function Home() {
   return (

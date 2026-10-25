@@ -147,7 +147,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section data-section>
+      <section id='how-i-build' data-section className='scroll-mt-20'>
         <SectionHeader
           index='02'
           label='How I build'
