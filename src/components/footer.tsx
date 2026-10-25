@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import FooterCta from '@/components/footer-cta'
 import LocalTime from '@/components/local-time'
+import ReachOut from '@/components/reach-out'
 import { siteProfile } from '@/constants/site-profile'
 
 const socials = [
@@ -22,19 +22,14 @@ export function Footer() {
     <footer className='container max-w-3xl pb-10'>
       <div className='border-hair space-y-10 border-t pt-12'>
         <FooterCta>
-          <div data-section className='space-y-3'>
+          <div data-section className='space-y-4'>
             <p className='section-label font-sourceCodePro text-muted text-xs tracking-wide'>
               Contact
             </p>
             <p className='font-display text-4xl leading-tight'>
               Let&apos;s build something.
             </p>
-            <Link
-              href='/contact'
-              className='border-hair hover:border-accent hover:text-accent focus-visible:outline-accent inline-block rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-2'
-            >
-              Start a conversation →
-            </Link>
+            <ReachOut />
           </div>
         </FooterCta>
 

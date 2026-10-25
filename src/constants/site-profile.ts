@@ -6,6 +6,8 @@ export const siteProfile = {
   role: 'Full-stack engineer building AI into real products.',
   status: 'Open to roles & freelance',
   location: 'Lahore, Pakistan',
+  availability: 'Available now · remote · full-time or freelance',
+  replyTime: 'I reply within a day, Mon–Sat, PKT (UTC+5).',
   email: 'umersagheer0075@gmail.com',
   // wa.me wants the full international number, digits only.
   whatsapp: { number: '923018155698', label: '+92 301 8155698' },
@@ -39,3 +41,10 @@ export const siteProfile = {
     }
   }
 } as const
+
+// A WhatsApp chat with a first message already typed.
+export function whatsappHref(
+  text = 'Hi Umer, I found your portfolio and wanted to get in touch.'
+) {
+  return `https://wa.me/${siteProfile.whatsapp.number}?text=${encodeURIComponent(text)}`
+}

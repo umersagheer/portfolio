@@ -1,12 +1,18 @@
 type ContactFormEmailProps = {
+  intent: 'project' | 'hiring'
   name: string
   email: string
   message: string
 }
 
-const ContactFormEmail = ({ name, email, message }: ContactFormEmailProps) => (
+const ContactFormEmail = ({
+  intent,
+  name,
+  email,
+  message
+}: ContactFormEmailProps) => (
   <div>
-    <h1>Contact form submission</h1>
+    <h1>{intent === 'hiring' ? 'Hiring enquiry' : 'Project enquiry'}</h1>
     <p>
       From <strong>{name}</strong> at {email}
     </p>

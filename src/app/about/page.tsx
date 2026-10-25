@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import BookCall from '@/components/about/book-call'
-import CvPreview from '@/components/about/cv-preview'
 import GithubActivity from '@/components/about/github-activity'
 import Journey from '@/components/about/journey/journey'
 import SectionHeader from '@/components/section-header'
@@ -86,8 +84,6 @@ const NOW = [
 
 const linkClass =
   'hover:text-accent focus-visible:outline-accent inline-flex items-center gap-1 rounded-sm text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2'
-
-const whatsappHref = `https://wa.me/${siteProfile.whatsapp.number}?text=${encodeURIComponent('Hi Umer, I found your portfolio and wanted to talk about a project.')}`
 
 export default function AboutPage() {
   return (
@@ -192,65 +188,6 @@ export default function AboutPage() {
           playing table tennis or badminton. I’ll happily take a recommendation
           for either.
         </p>
-      </section>
-
-      <section data-section>
-        <SectionHeader index='06' label='Contact' title='Let’s talk' />
-        <p className='text-muted mb-6 max-w-2xl leading-relaxed'>
-          Open to full-time roles and freelance work.
-        </p>
-        <div className='grid gap-4 sm:grid-cols-2'>
-          <div className='border-hair space-y-3 rounded-xl border p-5'>
-            <h3 className='font-medium'>Hiring?</h3>
-            <p className='text-muted text-sm leading-relaxed'>
-              Here’s my CV and the quickest ways to reach me.
-            </p>
-            <div className='flex flex-col items-start gap-1.5'>
-              <CvPreview href={siteProfile.cv} className={linkClass} />
-              <BookCall
-                href={siteProfile.booking.intro}
-                label='Book a 15-minute intro'
-                className={linkClass}
-              />
-              <a
-                href={siteProfile.socials.linkedin.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={linkClass}
-              >
-                LinkedIn <span aria-hidden='true'>↗</span>
-              </a>
-              <a href={`mailto:${siteProfile.email}`} className={linkClass}>
-                {siteProfile.email}
-              </a>
-            </div>
-          </div>
-          <div className='border-hair space-y-3 rounded-xl border p-5'>
-            <h3 className='font-medium'>Building something?</h3>
-            <p className='text-muted text-sm leading-relaxed'>
-              Tell me about the problem you’re solving.
-            </p>
-            <div className='flex flex-col items-start gap-1.5'>
-              <Link href='/contact' className={linkClass}>
-                Send a message <span aria-hidden='true'>→</span>
-              </Link>
-              <a
-                href={whatsappHref}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={linkClass}
-              >
-                WhatsApp {siteProfile.whatsapp.label}{' '}
-                <span aria-hidden='true'>↗</span>
-              </a>
-              <BookCall
-                href={siteProfile.booking.project}
-                label='Book a 30-minute project call'
-                className={linkClass}
-              />
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   )

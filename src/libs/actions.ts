@@ -32,16 +32,17 @@ export async function sendEmail(
     }
   }
 
-  const { email, message, name } = result.data
+  const { email, message, name, intent } = result.data
+  const tag = intent === 'hiring' ? '[Hiring]' : '[Project]'
 
   try {
     const { error } = await resend.emails.send({
       from: CONTACT_FROM,
       to: CONTACT_TO,
       replyTo: email,
-      subject: `New message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-      react: ContactFormEmail({ name, email, message })
+      subject: `${tag} New message from ${name}`,
+      text: `${tag}\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      react: ContactFormEmail({ name, email, message, intent })
     })
 
     if (error) {

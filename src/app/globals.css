@@ -147,6 +147,15 @@
     --button-fg: var(--secondary-foreground);
   }
 
+  /* The page's one main action: monochrome, so the accent stays for live
+     states. Paired with variant='primary'. */
+  .button--inverse {
+    --button-bg: var(--foreground);
+    --button-bg-hover: color-mix(in oklab, var(--foreground) 82%, var(--accent));
+    --button-bg-pressed: var(--button-bg-hover);
+    --button-fg: var(--background);
+  }
+
   /* v2's success colour and its flat (soft) warning/success styles carry
      meaning in the demos (safe vs unsafe, fixed vs buggy); v3 only ships
      danger / danger-soft. Same variable contract as above. */
@@ -358,4 +367,43 @@ html {
   background: color-mix(in oklab, var(--foreground) 7%, transparent);
   padding: 0.1em 0.35em;
   font-weight: 500;
+}
+
+/* Link buttons (calls to action are links, not HeroUI Buttons). One filled
+   per view, for the main action; the rest are hairline. */
+@layer components {
+  .cta-primary,
+  .cta-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--radius-lg);
+    padding: 0.5rem 0.875rem;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    font-weight: 500;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .cta-primary:focus-visible,
+  .cta-outline:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .cta-primary {
+    background: var(--foreground);
+    color: var(--background);
+  }
+  .cta-primary:hover {
+    background: color-mix(in oklab, var(--foreground) 82%, var(--accent));
+  }
+  .cta-outline {
+    border: 1px solid var(--hair);
+  }
+  .cta-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 }
