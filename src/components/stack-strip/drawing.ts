@@ -26,9 +26,11 @@ export function drawStackStrip() {
   const s1 = at(1)
   const s2 = at(2)
 
-  // Wires first, so the objects stand on them.
-  let svg = line([s0([46, 50, 0]), s0([112, 50, 0]), s0([112, -27, 0])], 'wire')
-  svg += line([s1([49, 48, 0]), s1([113, 48, 0]), s1([113, -29, 0])], 'wire')
+  // One cable on the ground, drawn first so the objects stand on it: it runs
+  // from under the laptop, through the server, into the databases. The stops'
+  // centres share a screen height (the shift keeps x + y constant), so it's a
+  // single level run that shows only in the gaps between objects.
+  let svg = line([s0([27, 36, 0]), s1([35, 28, 0]), s2([36, 27, 0])], 'wire')
 
   // 1 · a laptop and a phone, screens lit
   svg += plate(0)
