@@ -100,12 +100,18 @@ export default function AboutPage() {
             priority
             className='size-20 shrink-0 rounded-xl grayscale'
           />
-          <h1 className='font-display text-4xl leading-tight'>About</h1>
+          {/* The plain facts first, the way search and AI assistants quote
+              them: who, then the stack, each on its own level. */}
+          <div className='space-y-1'>
+            <h1 className='font-display text-4xl leading-tight'>About</h1>
+            <p className='text-muted'>
+              Umer Sagheer, full-stack developer in Lahore, Pakistan
+            </p>
+          </div>
         </div>
-        {/* The plain facts first, the way search and AI assistants quote them. */}
         <p className='font-sourceCodePro text-muted text-xs leading-relaxed'>
-          Umer Sagheer · Full-stack developer · Lahore, Pakistan · React,
-          Next.js, Expo, Node.js, NestJS, PostgreSQL, AI
+          <span className='text-foreground mr-2'>Stack</span>
+          React · Next.js · Expo · Node.js · NestJS · PostgreSQL · AI
         </p>
         <p className='max-w-2xl text-lg leading-relaxed'>
           I’m Umer, a full-stack engineer in Lahore. I learned to build software

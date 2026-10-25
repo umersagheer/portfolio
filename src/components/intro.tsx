@@ -13,9 +13,8 @@ export default function Intro() {
         {siteProfile.name}
       </h1>
       <p className='text-muted mt-2 leading-snug'>
-        Full-stack engineer ·{' '}
-        <span className='text-foreground'>React, Node.js/NestJS, Expo</span> · I
-        build AI into real products.
+        Full-stack engineer building AI into real products with{' '}
+        <span className='text-foreground'>React, Node.js/NestJS and Expo</span>.
       </p>
 
       {/* Availability, then my time and how far it is from the reader's: the
