@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import NextImage from 'next/image'
 
 import GithubActivity from '@/components/about/github-activity'
 import Journey from '@/components/about/journey/journey'
@@ -89,7 +90,18 @@ export default function AboutPage() {
   return (
     <div className='space-y-16'>
       <div className='space-y-4'>
-        <h1 className='font-display text-4xl leading-tight'>About</h1>
+        <div className='flex items-center gap-4'>
+          {/* Above the fold: sized to its 80px box and fetched eagerly. */}
+          <NextImage
+            src={siteProfile.avatar}
+            alt={siteProfile.name}
+            width={80}
+            height={80}
+            priority
+            className='size-20 shrink-0 rounded-xl grayscale'
+          />
+          <h1 className='font-display text-4xl leading-tight'>About</h1>
+        </div>
         {/* The plain facts first, the way search and AI assistants quote them. */}
         <p className='font-sourceCodePro text-muted text-xs leading-relaxed'>
           Umer Sagheer · Full-stack developer · Lahore, Pakistan · React,

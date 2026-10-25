@@ -6,7 +6,6 @@ export const siteProfile = {
   role: 'Full-stack engineer building AI into real products.',
   status: 'Open to roles & freelance',
   location: 'Lahore, Pakistan',
-  availability: 'Available now · remote · full-time or freelance',
   replyTime: 'I reply within a day, Mon–Sat, PKT (UTC+5).',
   email: 'umersagheer0075@gmail.com',
   // wa.me wants the full international number, digits only.
