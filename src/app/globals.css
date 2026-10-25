@@ -151,7 +151,11 @@
      states. Paired with variant='primary'. */
   .button--inverse {
     --button-bg: var(--foreground);
-    --button-bg-hover: color-mix(in oklab, var(--foreground) 82%, var(--accent));
+    --button-bg-hover: color-mix(
+      in oklab,
+      var(--foreground) 82%,
+      var(--accent)
+    );
     --button-bg-pressed: var(--button-bg-hover);
     --button-fg: var(--background);
   }

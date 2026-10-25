@@ -1,3 +1,4 @@
+import { ICONS } from '@/components/about/journey/icons'
 import FooterCta from '@/components/footer-cta'
 import LocalTime from '@/components/local-time'
 import ReachOut from '@/components/reach-out'
@@ -45,9 +46,22 @@ export function Footer() {
                     href={social.url}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='text-muted hover:text-accent transition-colors'
+                    className='text-muted hover:text-accent inline-flex items-center gap-1.5 transition-colors'
                   >
-                    {social.platform}
+                    <svg
+                      viewBox='0 0 24 24'
+                      width={14}
+                      height={14}
+                      aria-hidden='true'
+                      className='shrink-0'
+                    >
+                      <path d={ICONS[social.iconSlug]} fill='currentColor' />
+                    </svg>
+                    {/* X's logo is the letter itself; the name stays for
+                        screen readers. */}
+                    <span className={social.iconSlug === 'x' ? 'sr-only' : ''}>
+                      {social.platform}
+                    </span>
                   </a>
                 </li>
               ))}
